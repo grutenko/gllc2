@@ -11,9 +11,9 @@ struct _gllc_NW_vtable {
   void (*paint)(struct _gllc_NW *w, void *data);
   void (*size)(struct _gllc_NW *w, int width, int height, void *data);
   void (*mouse_move)(struct _gllc_NW *w, int x, int y, void *data);
-  void (*mouse_click)(struct _gllc_NW *wn, int x, int y, int mode, int action,
-                      void *data);
+  void (*mouse_click)(struct _gllc_NW *wn, int x, int y, int mode, int action, void *data);
   void (*mouse_scroll)(struct _gllc_NW *wn, int dx, int dy, void *data);
+  void (*mouse_leave)(struct _gllc_NW *wn, void *data);
 };
 
 struct _gllc_NW {
@@ -28,11 +28,9 @@ struct _gllc_NW {
   struct _gllc_NW *prev;
 };
 
-int _gllc_NW_create(struct _gllc_NW *NW, struct _gllc_NW_vtable *vtable,
-                    void *data);
+int _gllc_NW_create(struct _gllc_NW *NW, void *parent, struct _gllc_NW_vtable *vtable, void *data);
 void _gllc_NW_destroy(struct _gllc_NW *NW);
 void _gllc_NW_get_cursor(struct _gllc_NW *w, int *x, int *y);
-void _gllc_NW_destroy(struct _gllc_NW *w);
 void _gllc_NW_make_context_current(struct _gllc_NW *w);
 void _gllc_NW_get_size(struct _gllc_NW *w, int *width, int *height);
 void _gllc_NW_set_size(struct _gllc_NW *w, int x, int y, int width, int height);

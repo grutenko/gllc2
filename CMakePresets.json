@@ -2,8 +2,8 @@
     "version": 8,
     "configurePresets": [
         {
-            "name": "GCC 13.2.0 x86_64-w64-mingw32",
-            "displayName": "GCC 13.2.0 x86_64-w64-mingw32",
+            "name": "debug",
+            "displayName": "Debug GCC 13.2.0 x86_64-w64-mingw32",
             "description": "Using compilers: C = C:\\Strawberry\\c\\bin\\gcc.exe, CXX = C:\\Strawberry\\c\\bin\\g++.exe",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "generator": "Ninja",
@@ -12,6 +12,20 @@
                 "CMAKE_C_COMPILER": "C:/Strawberry/c/bin/gcc.exe",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release GCC 13.2.0 x86_64-w64-mingw32",
+            "description": "Using compilers: C = C:\\Strawberry\\c\\bin\\gcc.exe, CXX = C:\\Strawberry\\c\\bin\\g++.exe",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "C:/Strawberry/c/bin/gcc.exe",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_FLAGS_RELEASE": "-O3 -DNDEBUG"
             }
         }
     ]

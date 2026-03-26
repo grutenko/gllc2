@@ -19,10 +19,10 @@
 #define LC_WS_SUNKEN 8      // Window has a border with a sunken edge
 #define LC_WS_STATICEDGE 16 // Window has a three-dimensional border style
 #define LC_WS_RULERS 256    // Window has rulers
-#define LC_WS_VIEWTABS                                                         \
+#define LC_WS_VIEWTABS \
   512 // Window has View Tabs (border frame automatically added)
-#define LC_WS_FILETABS                                                         \
-  1024 // Window has File Tabs (border frame automatically added)
+#define LC_WS_FILETABS \
+  1024                  // Window has File Tabs (border frame automatically added)
 #define LC_WS_DEFAULT 3 // Combination of LC_WS_VSCROLL and LC_WS_HSCROLL styles
 
 #define LC_MRU_IMAGE_W 348 // same as MRU_IMAGE_W
@@ -50,11 +50,11 @@
 #define LC_FILL_VERTICAL 6
 
 // ResizeFilter types ( lcImageResize & lcWndToRaster )
-#define LC_IMGRES_BOX                                                          \
-  0 // Box, pulse, Fourier window, 1st order (constant) B-Spline
-#define LC_IMGRES_BILINEAR 1 // Bilinear filter
-#define LC_IMGRES_BSPLINE 2  // 4th order (cubic) B-Spline
-#define LC_IMGRES_BICUBIC 3  // Mitchell and Netravali's two-param cubic filter
+#define LC_IMGRES_BOX \
+  0                            // Box, pulse, Fourier window, 1st order (constant) B-Spline
+#define LC_IMGRES_BILINEAR 1   // Bilinear filter
+#define LC_IMGRES_BSPLINE 2    // 4th order (cubic) B-Spline
+#define LC_IMGRES_BICUBIC 3    // Mitchell and Netravali's two-param cubic filter
 #define LC_IMGRES_CATMULLROM 4 // Catmull-Rom spline, Overhauser spline
 #define LC_IMGRES_LANCZOS3 5   // Lanczos-windowed sinc filter
 
@@ -423,45 +423,45 @@
 #define LC_HELP_DG_SELLINFILL 74
 
 // values for lcWndMessage uType parameter
-#define LC_MB_OK                                                               \
+#define LC_MB_OK \
   0 // 0x0000L The message box contains one push button: OK. This is the
     // default.
-#define LC_MB_OKCANCEL                                                         \
+#define LC_MB_OKCANCEL \
   1 // 0x0001L The message box contains two push buttons: OK and Cancel.
-#define LC_MB_ABORTRETRYIGNORE                                                 \
+#define LC_MB_ABORTRETRYIGNORE \
   2 // 0x0002L The message box contains three push buttons: Abort, Retry, and
     // Ignore.
-#define LC_MB_YESNOCANCEL                                                      \
+#define LC_MB_YESNOCANCEL \
   3 // 0x0003L The message box contains three push buttons: Yes, No, and Cancel.
-#define LC_MB_YESNO                                                            \
+#define LC_MB_YESNO \
   4 // 0x0004L The message box contains two push buttons: Yes and No.
-#define LC_MB_RETRYCANCEL                                                      \
+#define LC_MB_RETRYCANCEL \
   5 // 0x0005L The message box contains two push buttons: Retry and Cancel.
-#define LC_MB_CANCELTRYCONTINUE                                                \
+#define LC_MB_CANCELTRYCONTINUE \
   6 // 0x0006L The message box contains three push buttons: Cancel, Try Again,
     // Continue. Use this message box type instead of MB_ABORTRETRYIGNORE.
-#define LC_MB_HELP                                                             \
+#define LC_MB_HELP \
   16384 // 0x4000L Adds a Help button to the message box. When the user clicks
         // the Help button or presses F1, the system sends a WM_HELP message to
         // the owner.
-#define LC_MB_ICONSTOP                                                         \
+#define LC_MB_ICONSTOP \
   16 // 0x0010L A stop-sign icon appears in the message
      // box.
-#define LC_MB_ICONERROR                                                        \
+#define LC_MB_ICONERROR \
   16 // 0x0010L A stop-sign icon appears in the message box.
-#define LC_MB_ICONHAND                                                         \
+#define LC_MB_ICONHAND \
   16 // 0x0010L A stop-sign icon appears in the message
      // box.
-#define LC_MB_ICONQUESTION                                                     \
+#define LC_MB_ICONQUESTION \
   32 // 0x0020L A question-mark icon appears in the message box.
-#define LC_MB_ICONEXCLAMATION                                                  \
+#define LC_MB_ICONEXCLAMATION \
   48 // 0x0030L An exclamation-point icon appears in the message box.
-#define LC_MB_ICONWARNING                                                      \
+#define LC_MB_ICONWARNING \
   48 // 0x0030L An exclamation-point icon appears in the message box.
-#define LC_MB_ICONINFORMATION                                                  \
+#define LC_MB_ICONINFORMATION \
   64 // 0x0040L An icon consisting of a lowercase letter i in a circle appears
      // in the message box.
-#define LC_MB_ICONASTERISK                                                     \
+#define LC_MB_ICONASTERISK \
   64 // 0x0040L An icon consisting of a lowercase letter i in a circle appears
      // in the message box.
 
@@ -541,13 +541,13 @@
 #define LC_ENT_ALL 32767 // used for bulk properties
 
 // Lineweights
-#define LC_LWEIGHT_DEFAULT                                                     \
+#define LC_LWEIGHT_DEFAULT \
   -3 // Default lineweight. Width is controlled by LC_PROP_DRW_LWDEFAULT
      // property.
-#define LC_LWEIGHT_BYBLOCK                                                     \
+#define LC_LWEIGHT_BYBLOCK \
   -2 // Only for entities contained in block. Universal lineweight specified
      // within a BlockRef entity.
-#define LC_LWEIGHT_BYLAYER                                                     \
+#define LC_LWEIGHT_BYLAYER \
   -1 // Only for entities. Universal lineweight specified in the entity's layer.
 #define LC_LWIDTH_DEFAULT -3
 #define LC_LWIDTH_BYBLOCK -2
@@ -585,8 +585,8 @@
 
 // Plugin Interface Types
 // Do not change this values, because it must be the same in plugin DLLs
-#define LC_PLUG_IMPDRW                                                         \
-  2 // load a drawing from a file into LiteCAD database (in memory)
+#define LC_PLUG_IMPDRW \
+  2                      // load a drawing from a file into LiteCAD database (in memory)
 #define LC_PLUG_EXPDRW 3 // save a drawing from LiteCAD database into a file
 #define LC_PLUG_IMGDIB 4 // load an image from a file into LiteCAD DIB
 
@@ -599,35 +599,35 @@
 
 // Snap modes ( LC_PROP_WND_OSNAP )
 #define LC_OSNAP_NULL 0 // 0x00000 no snap at all
-#define LC_OSNAP_NODE                                                          \
+#define LC_OSNAP_NODE \
   1 // 0x00001 to a Point object, dimension definition point, or dimension text
     // origin.
-#define LC_OSNAP_ENDPOINT                                                      \
+#define LC_OSNAP_ENDPOINT \
   2 // 0x00002 to the closest endpoint of an Arc, Elliptical Arc, Line,
     // Multiline, Polyline segment, Ray
-#define LC_OSNAP_MIDPOINT                                                      \
+#define LC_OSNAP_MIDPOINT \
   4 // 0x00004 to the midpoint of an arc, ellipse, elliptical arc, line,
     // multiline, polyline segment, region, solid, spline, or xline.
-#define LC_OSNAP_CENTER                                                        \
+#define LC_OSNAP_CENTER \
   8 // 0x00008 to the center of an arc, circle, ellipse, or elliptical arc.
-#define LC_OSNAP_NEAREST                                                       \
+#define LC_OSNAP_NEAREST \
   16 // 0x00010 to the nearest point on an arc, circle, ellipse, elliptical arc,
      // line, multiline, point, polyline, ray, spline, or xline.
-#define LC_OSNAP_INTER                                                         \
+#define LC_OSNAP_INTER \
   32 // 0x00020 to the intersection of an arc, circle, ellipse, elliptical arc,
      // line, multiline, polyline, ray, region, spline, or xline.
-#define LC_OSNAP_PERPEND                                                       \
+#define LC_OSNAP_PERPEND \
   64 // 0x00040 to a point perpendicular to an arc, circle, ellipse, elliptical
      // arc, line, multiline, polyline, ray, region, solid, spline, or xline
-#define LC_OSNAP_TANGENT                                                       \
+#define LC_OSNAP_TANGENT \
   128 // 0x00080 to the tangent of an arc, circle, ellipse, elliptical arc, or
       // spline.
-#define LC_OSNAP_QUADRANT                                                      \
+#define LC_OSNAP_QUADRANT \
   256 // 0x00100 to a quadrant point of an arc, circle, ellipse, or elliptical
       // arc.
-#define LC_OSNAP_INSERT                                                        \
-  512 // 0x00200 to the insertion point of an attribute, a block, a shape, or
-      // text.
+#define LC_OSNAP_INSERT \
+  512                      // 0x00200 to the insertion point of an attribute, a block, a shape, or
+                           // text.
 #define LC_OSNAP_NONE 1024 // 0x00400 temporary disable object snap
 #define LC_OSNAP_ALL 1023  // 0x003FF all modes
 
@@ -690,8 +690,8 @@
 //-----------------------------------------------
 
 // File I/O commands
-#define LC_CMD_FILESAVE                                                        \
-  1 // Save drawing to file. Call dialog "Save As" if filename is undefined
+#define LC_CMD_FILESAVE \
+  1                         // Save drawing to file. Call dialog "Save As" if filename is undefined
 #define LC_CMD_FILESAVEAS 2 // Call dialog "Save File As"
 #define LC_CMD_PRINT 3      // Call dialog "Print"
 #define LC_CMD_RASTERIZE 4  // Call dialog "Export to raster image"
@@ -720,8 +720,8 @@
 #define LC_CMD_PAGENEXT 53  // Display next layout
 #define LC_CMD_PAGEPREV 54  // Display previous layout
 #define LC_CMD_PAGEMODEL 55 // Display "Model Space" layout
-#define LC_CMD_PAGEVPORT                                                       \
-  56 // Display layout of active viewport (called by popup menu on AVP)
+#define LC_CMD_PAGEVPORT \
+  56                           // Display layout of active viewport (called by popup menu on AVP)
 #define LC_CMD_VP_ACT 57       // activate viewport
 #define LC_CMD_VP_DEACT 58     // deactivate viewport
 #define LC_CMD_EDITMODE_ON 59  //
@@ -762,9 +762,9 @@
 #define LC_CMD_CENTERCURSOR 142 // set cursor at window center
 
 #define LC_CMD_HELP 1001 // Display Context Help
-#define LC_CMD_RESET                                                           \
-  1003 // Cancel currently active command, de-select all entities, redraw
-       // drawing
+#define LC_CMD_RESET \
+  1003                          // Cancel currently active command, de-select all entities, redraw
+                                // drawing
 #define LC_CMD_SW_GRID 1011     // Toggles "Show coordinate grid" mode
 #define LC_CMD_SW_GRIDSNAP 1012 // Toggles "Snap to coordinate grid" mode
 #define LC_CMD_SW_OSNAP 1014    // Toggles "Object Snap" mode
@@ -787,7 +787,7 @@
 #define LC_CMD_LMESH 204    // Draw mesh
 #define LC_CMD_POLYLINE 205 // Draw Polyline
 #define LC_CMD_PLINE 205    //   same as LC_CMD_POLYLINE
-#define LC_CMD_SPLINE 206 // Draw Spline (polyline with FitType=LC_PLFIT_SPLINE)
+#define LC_CMD_SPLINE 206   // Draw Spline (polyline with FitType=LC_PLFIT_SPLINE)
 #define LC_CMD_RPOLYGON 207 // Draw regular polygon
 #define LC_CMD_RECT 208     // Draw Rectangle
 #define LC_RECT_2P 1        //   2 points
@@ -860,17 +860,17 @@
 #define LC_CMD_CRECTS 250
 #define LC_CMD_ATTDEF 251 // attribute definition
 
-#define LC_CMD_TIN_LOAD                                                        \
+#define LC_CMD_TIN_LOAD \
   301 // Add new TIN entity by loading TIN model from a file
-#define LC_CMD_TIN_LOADPT                                                      \
-  302 // Add new TIN entity by loading TIN points from a file
-#define LC_CMD_TIN_ADDPT 303  // Add new TIN entity by adding points on-screen
-#define LC_CMD_TIN_DELETE 304 // delete active TIN (see also lcBlockDeleteEnt )
-#define LC_CMD_TIN_PROPS 305  // TIN: dialog "Properties"
-#define LC_CMD_TIN_PTYPES 306 // dialog "TIN Point types"
-#define LC_CMD_TIN_MOVEPT 307 // TIN: move points
-#define LC_CMD_TIN_EDITPT 308 // TIN: edit points (dialog)
-#define LC_CMD_TIN_DELPT 309  // TIN: delete points
+#define LC_CMD_TIN_LOADPT \
+  302                            // Add new TIN entity by loading TIN points from a file
+#define LC_CMD_TIN_ADDPT 303     // Add new TIN entity by adding points on-screen
+#define LC_CMD_TIN_DELETE 304    // delete active TIN (see also lcBlockDeleteEnt )
+#define LC_CMD_TIN_PROPS 305     // TIN: dialog "Properties"
+#define LC_CMD_TIN_PTYPES 306    // dialog "TIN Point types"
+#define LC_CMD_TIN_MOVEPT 307    // TIN: move points
+#define LC_CMD_TIN_EDITPT 308    // TIN: edit points (dialog)
+#define LC_CMD_TIN_DELPT 309     // TIN: delete points
 #define LC_CMD_TIN_BNDDELPT 310  // TIN:
 #define LC_CMD_TIN_DELPTDUP 311  // TIN: delete duplicate points
 #define LC_CMD_TIN_DELTRALL 312  // TIN: delete all triangles
@@ -952,17 +952,17 @@
 #define LC_CMD_JOINALL 465 // Join all connected entities into polylines
 #define LC_CMD_ENTEXT 468  // draw entities extents on/off
 #define LC_CMD_JUMPS 469   // draw jump lines on/off
-#define LC_CMD_UNSIMG 470 // toggle flag "Unscalable" for selected raster images
-#define LC_CMD_UPDATE 474 // update all entities or selected, in ViewBlock
+#define LC_CMD_UNSIMG 470  // toggle flag "Unscalable" for selected raster images
+#define LC_CMD_UPDATE 474  // update all entities or selected, in ViewBlock
 #define LC_CMD_DELOVER 475 // delete overlapped lines
 #define LC_CMD_CMPD 476    // compare with other drawing
 
 // Format
 #define LC_CMD_LAYER 501    // Call dialog "Layers"
 #define LC_CMD_LAYERORD 502 // Call dialog "Layers order"
-#define LC_CMD_COLOR                                                           \
-  503 // Call dialog "Color", CmdPrm: LC_PROP_DRW_COLOR, LC_PROP_DRW_FCOLOR,
-      // LC_PROP_ENT_COLOR, LC_PROP_ENT_FCOLOR
+#define LC_CMD_COLOR \
+  503                        // Call dialog "Color", CmdPrm: LC_PROP_DRW_COLOR, LC_PROP_DRW_FCOLOR,
+                             // LC_PROP_ENT_COLOR, LC_PROP_ENT_FCOLOR
 #define LC_CMD_FCOLOR 504    // Call dialog "Filling Color"
 #define LC_CMD_LINETYPE 505  // Call dialog "Linetypes"
 #define LC_CMD_TEXTSTYLE 507 // Call dialog "Text Styles"
@@ -981,9 +981,9 @@
 #define LC_CMD_SYSPRM 523    // Call dialog "System properties"
 
 // 3D
-#define LC_CMD_3DVIEW                                                          \
-  601 // enable/disable 3D view (Tab). CmdPrm: 0-switch, 1-on, 2-off
-#define LC_CMD_3D 601 // same as LC_CMD_3DVIEW (also see LC_PROP_DRW_3DVIEW)
+#define LC_CMD_3DVIEW \
+  601                           // enable/disable 3D view (Tab). CmdPrm: 0-switch, 1-on, 2-off
+#define LC_CMD_3D 601           // same as LC_CMD_3DVIEW (also see LC_PROP_DRW_3DVIEW)
 #define LC_CMD_3D_STDVIEW 602   // Set default view
 #define LC_CMD_3D_PARAMS 603    // Settings...
 #define LC_CMD_3D_SAVEIMAGE 604 // Save Image...
@@ -998,64 +998,64 @@
 // Global properties
 #define LC_PROP_G_REGCODE 1 //  W string; registration code
 #define LC_PROP_G_VERSION 2 // R  string; Litecad version
-#define LC_PROP_G_MSGTITLE                                                     \
-  3 // RW string; title for messages (default "LiteCAD")
+#define LC_PROP_G_MSGTITLE \
+  3                             // RW string; title for messages (default "LiteCAD")
 #define LC_PROP_G_APPFILENAME 4 //  W string; application filename
 #define LC_PROP_G_DWGAPP 5      //  W string; DWG application filename
 #define LC_PROP_G_DXFAPP 6      //  W string; DXF application filename
-#define LC_PROP_G_HELPFILE                                                     \
-  10 // RW string; name of help file ("Litecad.chm" by default)
+#define LC_PROP_G_HELPFILE \
+  10                        // RW string; name of help file ("Litecad.chm" by default)
 #define LC_PROP_G_DIRDLL 11 // R  string; directory of Litecad.dll
-#define LC_PROP_G_DIRFONTS                                                     \
+#define LC_PROP_G_DIRFONTS \
   13 // RW string; directory of font files (*.lcf), by default
      // <LC_PROP_G_DIRDLL>\Fonts
-#define LC_PROP_G_DIRLNG                                                       \
+#define LC_PROP_G_DIRLNG \
   14 // RW string; directory of LNG files, by default
      // <LC_PROP_G_DIRDLL>\Languages
-#define LC_PROP_G_DIRTPL                                                       \
+#define LC_PROP_G_DIRTPL \
   16 // RW string; directory of "New File" templates (*.lcd), by default
      // <LC_PROP_G_DIRDLL>\Templates
-#define LC_PROP_G_DIRCFG                                                       \
-  17 // RW string; directory of config files (the directory must have write
-     // permit), by default <LC_PROP_G_DIRDLL>\Config
-#define LC_PROP_G_ICON16 20   // RW string|void *|int; replaces icon for dialogs
-#define LC_PROP_G_ICON32 21   // RW string|void *|int; replaces icon for dialogs
-#define LC_PROP_G_RULERBMP 22 // W void *; bitmap for rulers corner
+#define LC_PROP_G_DIRCFG \
+  17                            // RW string; directory of config files (the directory must have write
+                                // permit), by default <LC_PROP_G_DIRDLL>\Config
+#define LC_PROP_G_ICON16 20     // RW string|void *|int; replaces icon for dialogs
+#define LC_PROP_G_ICON32 21     // RW string|void *|int; replaces icon for dialogs
+#define LC_PROP_G_RULERBMP 22   // W void *; bitmap for rulers corner
 #define LC_PROP_G_PRNUSEBMP 25  // RW bool; use bitmap for printing
 #define LC_PROP_G_PRNBMPFILE 26 // RW string; file to save the print bitmap
-#define LC_PROP_G_PRNBTNRAS                                                    \
+#define LC_PROP_G_PRNBTNRAS \
   27 // RW bool; visibility of button "Raster" in the "Print" dialog
-#define LC_PROP_G_PRNBTNSRIF                                                   \
+#define LC_PROP_G_PRNBTNSRIF \
   28 // RW bool; visibility of button "Save Raster Image to File" in the
      // "Print/Raster" dialog
-#define LC_PROP_G_PNTPIXSIZE                                                   \
+#define LC_PROP_G_PNTPIXSIZE \
   29 // RW bool; meaning of negative PtSize parameter of lcPaint_DrawPoint
      // function, if TRUE - size in pixels, FALSE - % of window height  // undoc
-#define LC_PROP_G_GETDELENT                                                    \
-  30 // RW bool; controls if lcBlockGetEnt... function will retrieve deleted
-     // entities or not
+#define LC_PROP_G_GETDELENT \
+  30                            // RW bool; controls if lcBlockGetEnt... function will retrieve deleted
+                                // entities or not
 #define LC_PROP_G_SBARHEIGHT 32 // R  int; StatusBar default height
-#define LC_PROP_G_FILEPROGRESS                                                 \
+#define LC_PROP_G_FILEPROGRESS \
   33 // RW bool; Display progress box during file load/save
-#define LC_PROP_G_FILEDEFEXT                                                   \
-  35                         // RW string; default extention on file open dialog
-#define LC_PROP_G_FILELCD 31 // RW bool; enable *.lcd file filter
+#define LC_PROP_G_FILEDEFEXT \
+  35                           // RW string; default extention on file open dialog
+#define LC_PROP_G_FILELCD 31   // RW bool; enable *.lcd file filter
 #define LC_PROP_G_DEMOTEXT 36  // RW string; demo text drawn over a window
 #define LC_PROP_G_DEMOSIZE 37  // RW int; size of demo text (pixels)
 #define LC_PROP_G_DEMOCOLOR 38 // RW int; RGB color of demo text
 #define LC_PROP_G_TABCMDWND 39 // RW bool; command window on <Tab> key
-#define LC_PROP_G_UNDOMSG                                                      \
+#define LC_PROP_G_UNDOMSG \
   40 // RW bool; display a message when Undo/Redo buffer is empty
-#define LC_PROP_G_MINCHARSIZE                                                  \
-  41 // RW int; 3..15 below this value a char will be drawn as a rectangle
+#define LC_PROP_G_MINCHARSIZE \
+  41                               // RW int; 3..15 below this value a char will be drawn as a rectangle
 #define LC_PROP_G_PANREDQUAL 42    // RW bool; reduce draw quality when panning
 #define LC_PROP_G_ENTEXT 43        // RW bool; draw entity's extents rectangle
 #define LC_PROP_G_BLKRELOADMODE 44 //  W int; resets g_BlkReloadMode
-#define LC_PROP_G_TABFILE                                                      \
+#define LC_PROP_G_TABFILE \
   45 //  W string; the file to be opened in lcCreateWindow with LC_WS_FILETABS
      //  style
-#define LC_PROP_G_MSGSAVEAS                                                    \
-  46 // RW bool; display message "Saved As" in the function _lcDrwSave
+#define LC_PROP_G_MSGSAVEAS \
+  46                          // RW bool; display message "Saved As" in the function _lcDrwSave
 #define LC_PROP_G_JUR 47      // RW bool;   // undoc
 #define LC_PROP_G_FILEEXTS 48 // RW string; supported file extentions
 #define LC_PROP_G_DLGVAL 50   // RW string; dialog value for lcDgGetValue
@@ -1063,53 +1063,53 @@
 #define LC_PROP_G_INT 52      // R  int;    g_PropInt
 #define LC_PROP_G_FLOAT 53    // R  float;  g_PropFloat
 #define LC_PROP_G_void *54    // R  void *; g_Propvoid *
-#define LC_PROP_G_DELKEYERASE                                                  \
+#define LC_PROP_G_DELKEYERASE \
   55 // RW bool; using <Delete> key for "Erase" command (LC_CMD_ERASE)
 
 // Selection Options
-#define LC_PROP_SEL_PICKBOXSIZE                                                \
+#define LC_PROP_SEL_PICKBOXSIZE \
   61 // RW int; Half-size of selecting square, in pixels
-#define LC_PROP_SEL_PICKBYRECT                                                 \
+#define LC_PROP_SEL_PICKBYRECT \
   62 // RW bool; Implied windowing for objects selection (AutoCAD PICKAUTO)
-#define LC_PROP_SEL_PICKDRAG                                                   \
+#define LC_PROP_SEL_PICKDRAG \
   63 // RW bool; Selection Rect: Press and Drag (same as AutoCAD PICKDRAG system
      // variable)
-#define LC_PROP_SEL_PICKADD                                                    \
+#define LC_PROP_SEL_PICKADD \
   64 // RW bool; Controls whether subsequent selections replace the current
      // selection set or add to
-#define LC_PROP_SEL_PICKBYLAYER                                                \
+#define LC_PROP_SEL_PICKBYLAYER \
   65 // RW bool; Select entities only on active layer
-#define LC_PROP_SEL_PICKINPGON                                                 \
-  66 // RW bool; Select polygons by click on inner area
+#define LC_PROP_SEL_PICKINPGON \
+  66                               // RW bool; Select polygons by click on inner area
 #define LC_PROP_SEL_PICKINPGONF 67 // RW bool; -/- Only filled polygons
-#define LC_PROP_SEL_PICKINIMG                                                  \
+#define LC_PROP_SEL_PICKINIMG \
   68                           // RW bool; Select images by click on inner area
 #define LC_PROP_SEL_COLORL1 69 // RW int; Line Color of selected entities
 #define LC_PROP_SEL_COLORL2 70 // RW int; Line Bg Color of selected entities
 #define LC_PROP_SEL_COLORF 71  // RW int; Fill color of selected entities
-#define LC_PROP_SEL_HATCHFILL                                                  \
-  72 // RW bool; Draw hatch filling when entity is selected
+#define LC_PROP_SEL_HATCHFILL \
+  72                               // RW bool; Draw hatch filling when entity is selected
 #define LC_PROP_SEL_ENABLEGRIPS 73 // RW bool; Draw grips on selected entities
 #define LC_PROP_SEL_GRIPSIZE 74    // RW int; Size of grip square, in pixels
 #define LC_PROP_SEL_GRIPCOLORF 75  // RW int; Grips filling color  (COLORREF)
 #define LC_PROP_SEL_GRIPCOLORB 76  // RW int; Grips border color (COLORREF)
-#define LC_PROP_SEL_GRIPENTLIM                                                 \
-  77 // RW int; Max number of selected entities to display grips
+#define LC_PROP_SEL_GRIPENTLIM \
+  77                           // RW int; Max number of selected entities to display grips
 #define LC_PROP_SEL_GRIPNUM 78 // RW bool; Draw grips numbers (for polyline)
 
 #define LC_PROP_G_CAMERA_COUNT 90 // R  int; number of camera devices
 #define LC_PROP_G_CAMERA_I 91     // RW int; set camera index
-#define LC_PROP_G_CAMERA_INAME                                                 \
-  92 // R  string; name of camera by index (LC_PROP_G_CAMERA_I)
+#define LC_PROP_G_CAMERA_INAME \
+  92                                  // R  string; name of camera by index (LC_PROP_G_CAMERA_I)
 #define LC_PROP_G_CAMERA_CONNECTED 93 // R  bool; TRUE if camera is connected
 // for connected camera:
-#define LC_PROP_G_CAMERA_NAME 94 // R  string; name of connected camera
-#define LC_PROP_G_CAMERA_TIME 95 // RW int; interval between camera shots (msec)
+#define LC_PROP_G_CAMERA_NAME 94   // R  string; name of connected camera
+#define LC_PROP_G_CAMERA_TIME 95   // RW int; interval between camera shots (msec)
 #define LC_PROP_G_CAMERA_WIDTH 96  // R  int; width of camera image (pixels)
 #define LC_PROP_G_CAMERA_HEIGHT 97 // R  int; height of camera image (pixels)
 #define LC_PROP_G_CAMERA_BPP 98    // R  int; bits per pixel
-#define LC_PROP_G_CAMERA_COFO                                                  \
-  99 // R  int; color format (LC_COFO_RGB24 and others)
+#define LC_PROP_G_CAMERA_COFO \
+  99                               // R  int; color format (LC_COFO_RGB24 and others)
 #define LC_PROP_G_CAMERA_BITS 100  // R  void *|int; pointer to image bits
 #define LC_PROP_G_CAMERA_BPROW 101 // R  int; bytes per row
 
@@ -1117,9 +1117,9 @@
 #define LC_PROP_G_PTBUFCLR 132    // RW bool; auto clear Ptbuf after draw
 #define LC_PROP_G_MPGONCLR 133    // RW bool; auto clear Mpgon after draw
 
-#define LC_PROP_G_TEXT_ALIGN 141 // RW int; LC_TA_LEFBOT, LC_TA_CENBOT, etc
-#define LC_PROP_G_TEXT_H 142     // RW float; Text height
-#define LC_PROP_G_TEXT_WS 143 // RW float; Width scale coefficient (0.1 - 10.0)
+#define LC_PROP_G_TEXT_ALIGN 141  // RW int; LC_TA_LEFBOT, LC_TA_CENBOT, etc
+#define LC_PROP_G_TEXT_H 142      // RW float; Text height
+#define LC_PROP_G_TEXT_WS 143     // RW float; Width scale coefficient (0.1 - 10.0)
 #define LC_PROP_G_TEXT_CSPACE 144 // RW float; Charspace coefficient (0.0 - 3.0)
 #define LC_PROP_G_TEXT_ANG 145    // RW float; Rotation angle
 #define LC_PROP_G_TEXT_OBL 146    // RW float; Oblique angle
@@ -1128,26 +1128,26 @@
 #define LC_PROP_G_TEXT_FILL 149   // RW bool;
 #define LC_PROP_G_TEXT_BORDER 150 // RW bool;
 
-#define LC_PROP_G_BARC_CENTER                                                  \
-  161 // RW bool; if TRUE - basepoint is a center, FALSE - left bottom corner
+#define LC_PROP_G_BARC_CENTER \
+  161                            // RW bool; if TRUE - basepoint is a center, FALSE - left bottom corner
 #define LC_PROP_G_BARC_ANGLE 162 // RW float; rotation angle around base point
-#define LC_PROP_G_BARC_BELOW                                                   \
-  163 // RW float; height below baseline (for EAN8, EAN13)
+#define LC_PROP_G_BARC_BELOW \
+  163                             // RW float; height below baseline (for EAN8, EAN13)
 #define LC_PROP_G_BARC_QZONE 164  // RW float; size of quiet space
 #define LC_PROP_G_BARC_CHKSUM 165 // RW bool; add checksum digit at the end
-#define LC_PROP_G_BARC_ECL                                                     \
-  166 // RW int; error correction level (LC_BARC_QRECL_M or other)
+#define LC_PROP_G_BARC_ECL \
+  166                             // RW int; error correction level (LC_BARC_QRECL_M or other)
 #define LC_PROP_G_BARC_INVERT 167 // RW bool; negative filling
-#define LC_PROP_G_BARC_WRATIO                                                  \
-  168 // RW float; <wide bar> / <narrow bar> (varies from 2.0 to 3.0)
+#define LC_PROP_G_BARC_WRATIO \
+  168                            // RW float; <wide bar> / <narrow bar> (varies from 2.0 to 3.0)
 #define LC_PROP_G_BARC_LINEW 169 // RW float; compensation of line width
 
-#define LC_PROP_G_BEAMCOLOR0D                                                  \
-  191 // RW int; lcPaint_DrawPoint with PtMode=LC_POINT_BEAM1
+#define LC_PROP_G_BEAMCOLOR0D \
+  191                             // RW int; lcPaint_DrawPoint with PtMode=LC_POINT_BEAM1
 #define LC_PROP_G_BEAMCOLOR1D 192 // RW int;
 #define LC_PROP_G_BEAMCOLOR2D 193 // RW int;
-#define LC_PROP_G_BEAMCOLOR0U                                                  \
-  194 // RW int; lcPaint_DrawPoint with PtMode=LC_POINT_BEAM0
+#define LC_PROP_G_BEAMCOLOR0U \
+  194                             // RW int; lcPaint_DrawPoint with PtMode=LC_POINT_BEAM0
 #define LC_PROP_G_BEAMCOLOR1U 195 // RW int;
 #define LC_PROP_G_BEAMCOLOR2U 196 // RW int;
 
@@ -1160,16 +1160,16 @@
 #define LC_PROP_G_JL_EAW 211   // RW int; Half-width of entity's arrow (pixels)
 #define LC_PROP_G_JL_JALEN 212 // RW int; Length of jump arrow (pixels)
 #define LC_PROP_G_JL_JAW 213   // RW int; Half-width of jump arrow (pixels)
-#define LC_PROP_G_JL_ACOLOR                                                    \
+#define LC_PROP_G_JL_ACOLOR \
   214 // RW int; Color of jump arrow, RGB value (COLORREF)
-#define LC_PROP_G_JL_NUMFONT                                                   \
+#define LC_PROP_G_JL_NUMFONT \
   215 // RW string; Numbers font name, 0 means default GUI font
-#define LC_PROP_G_JL_NUMSIZE                                                   \
+#define LC_PROP_G_JL_NUMSIZE \
   216 // RW int; Numbers font size, ignored if the font name is empty
-#define LC_PROP_G_JL_NUMCOLOR                                                  \
-  217 // RW int; Color of numbers, RGB value (COLORREF)
+#define LC_PROP_G_JL_NUMCOLOR \
+  217                             // RW int; Color of numbers, RGB value (COLORREF)
 #define LC_PROP_G_JL_DRAWJARR 218 // RW bool; Draw arrows of jump lines
-#define LC_PROP_G_JL_DRAWJLINE                                                 \
+#define LC_PROP_G_JL_DRAWJLINE \
   219                             // RW bool; Draw jump lines (between entities)
 #define LC_PROP_G_JL_DRAWEDOT 220 // RW bool; Draw dots on entity lines
 #define LC_PROP_G_JL_DRAWEARR 221 // RW bool; Draw arrows on entity lines
@@ -1177,25 +1177,25 @@
 
 #define LC_PROP_G_OSNAP_MARK 226 // RW bool; display osnap marker
 #define LC_PROP_G_OSNAP_APER 227 // RW bool; display osnap aperture box
-#define LC_PROP_G_OSNAP_MARKSIZE                                               \
+#define LC_PROP_G_OSNAP_MARKSIZE \
   228 // RW int;  half-size of marker indicating snap point, pixels (1-15)
-#define LC_PROP_G_OSNAP_APERSIZE                                               \
+#define LC_PROP_G_OSNAP_APERSIZE \
   229 // RW int;  half-size of square around cursor, used for snap, pixels
       // (1-15)
-#define LC_PROP_G_OSNAP_MARKCOLOR                                              \
+#define LC_PROP_G_OSNAP_MARKCOLOR \
   230 // RW int;  color of osnap marker (COLORREF)
 
 //^ #define LC_PROP_G_ORDSEQ_AUTO     231   // RW bool;  Auto-sort connected
 // entities (LC_CMD_ORDER_SEQ)
 
-#define LC_PROP_G_EMUL_OVERDIST                                                \
-  232 // RW float; Min. dist to treat near lines as overlapped
+#define LC_PROP_G_EMUL_OVERDIST \
+  232                                // RW float; Min. dist to treat near lines as overlapped
 #define LC_PROP_G_EMUL_OVERCOLOR 233 // RW int; Color for overlapped parts
 
 // options of export a drawing to raster image
 #define LC_PROP_G_RAS_FILL 250 // RW bool; enable filling
-#define LC_PROP_G_RAS_COLOR                                                    \
-  251 // RW bool; enable colors  when save as raster image
+#define LC_PROP_G_RAS_COLOR \
+  251                             // RW bool; enable colors  when save as raster image
 #define LC_PROP_G_RAS_NOPRINT 252 // RW bool; enable layer "no print" option
 
 // options for lcWndWaitPoint function
@@ -1212,26 +1212,26 @@
 #define LC_PROP_WND_ID 301     // RW int; identifier
 #define LC_PROP_WND_WIDTH 302  // R  int; Width of drawing's area (pixels)
 #define LC_PROP_WND_HEIGHT 303 // R  int; Height of drawing's area (pixels)
-#define LC_PROP_WND_PIXELSIZE                                                  \
+#define LC_PROP_WND_PIXELSIZE \
   304 // RW float; Current scale of the drawing in the window, units per pixel
-#define LC_PROP_WND_PICKBOXSIZE                                                \
+#define LC_PROP_WND_PICKBOXSIZE \
   305 // R  float; Half-size of selecting square (drawing's units)
-#define LC_PROP_WND_CURSORX                                                    \
-  306 // R  int|float; Cursor position X (pixels)|Cursor position X (drawing's
-      // units)
+#define LC_PROP_WND_CURSORX \
+  306                        // R  int|float; Cursor position X (pixels)|Cursor position X (drawing's
+                             // units)
 #define LC_PROP_WND_CURX 306 //    LC_PROP_WND_CURSORX
-#define LC_PROP_WND_CURSORY                                                    \
-  307 // R  int|float; Cursor position Y (pixels)|Cursor position Y (drawing's
-      // units)
+#define LC_PROP_WND_CURSORY \
+  307                        // R  int|float; Cursor position Y (pixels)|Cursor position Y (drawing's
+                             // units)
 #define LC_PROP_WND_CURY 307 // R  LC_PROP_WND_CURSORY
-#define LC_PROP_WND_CURLEF                                                     \
+#define LC_PROP_WND_CURLEF \
   308 // R  float; left side of selecting square, in drawing units
-#define LC_PROP_WND_CURBOT                                                     \
+#define LC_PROP_WND_CURBOT \
   309 // R  float; bottom side of selecting square, in drawing units
-#define LC_PROP_WND_CURRIG                                                     \
+#define LC_PROP_WND_CURRIG \
   310 // R  float; right side of selecting square, in drawing units
-#define LC_PROP_WND_CURTOP                                                     \
-  311 // R  float; top side of selecting square, in drawing units
+#define LC_PROP_WND_CURTOP \
+  311                        // R  float; top side of selecting square, in drawing units
 #define LC_PROP_WND_XMIN 312 // R  float;
 #define LC_PROP_WND_YMIN 313 // R  float;
 #define LC_PROP_WND_XMAX 314 // R  float;
@@ -1240,8 +1240,8 @@
 #define LC_PROP_WND_YCEN 317 // R  float;
 #define LC_PROP_WND_DX 318   // R  float;
 #define LC_PROP_WND_DY 319   // R  float;
-#define LC_PROP_WND_RULERSENABLE                                               \
-  320 // R  bool;   true if window was created with LC_WS_RULERS flag
+#define LC_PROP_WND_RULERSENABLE \
+  320                               // R  bool;   true if window was created with LC_WS_RULERS flag
 #define LC_PROP_WND_RULERS 321      // RW bool;
 #define LC_PROP_WND_SELECT 322      // RW bool; enable/disable to select objects
 #define LC_PROP_WND_VIEWBLOCK 323   // R  void *; void * to active block
@@ -1252,15 +1252,15 @@
 #define LC_PROP_WND_HASFILETABS 327 // R  bool; window has File Tabs
 #define LC_PROP_WND_NUMFILETABS 328 // R  int; number of drawings in the list
 #define LC_PROP_WND_NUMDRW 328      // same as LC_PROP_WND_NUMFILETABS
-#define LC_PROP_WND_DROPFILES                                                  \
-  329 // RW bool; Registers whether a window accepts dropped files
+#define LC_PROP_WND_DROPFILES \
+  329                             // RW bool; Registers whether a window accepts dropped files
 #define LC_PROP_WND_ZOOMWHEEL 330 // RW bool; enable zoom by wheel
 //^ #define LC_PROP_WND_CRECTS_EDIT     327    // RW bool; "Edit ClipRects" mode
 //^ #define LC_PROP_WND_CRECTS_VISIBLE  328    // RW bool; display cliprects
 // when not active
 #define LC_PROP_WND_JUMPLINES 339 // RW bool; display jump lines
-#define LC_PROP_WND_MAGNIFIER                                                  \
-  340 // RW bool; display magnifier at window rig-bot corner
+#define LC_PROP_WND_MAGNIFIER \
+  340                                // RW bool; display magnifier at window rig-bot corner
 #define LC_PROP_WND_NAVIGATOR 341    // RW bool; display "Aerial View" window
 #define LC_PROP_WND_COLORBG 342      // RW int; background color
 #define LC_PROP_WND_COLORCURSOR 343  // RW int; cursor color
@@ -1269,72 +1269,72 @@
 #define LC_PROP_WND_COLORINFBORD 346 // RW int; info box border color
 #define LC_PROP_WND_COLORINFTEXT 347 // RW int; info box text color
 #define LC_PROP_WND_CURSORSYS 348    //    same as LC_PROP_WND_CURSORARROW
-#define LC_PROP_WND_CURSORARROW                                                \
-  348 // RW bool|int|void *; Enable arrow cursor | set cursor (LC_CURSOR_ARROW
-      // or other)
+#define LC_PROP_WND_CURSORARROW \
+  348                               // RW bool|int|void *; Enable arrow cursor | set cursor (LC_CURSOR_ARROW
+                                    // or other)
 #define LC_PROP_WND_CURSORCROSS 349 // RW bool; Enable crosshair cursor
-#define LC_PROP_WND_CURSORSIZE                                                 \
-  350 // RW int; Size of crosshair cursor, % of screen, if negative - size in
-      // pixels
+#define LC_PROP_WND_CURSORSIZE \
+  350                              // RW int; Size of crosshair cursor, % of screen, if negative - size in
+                                   // pixels
 #define LC_PROP_WND_CURSORPBOX 351 // RW bool; Enable cursor pickbox rect
-#define LC_PROP_WND_COORDS                                                     \
+#define LC_PROP_WND_COORDS \
   352 // RW bool; display cursor coords at left-bottom corner
-#define LC_PROP_WND_ENT                                                        \
-  353 // R  void *; picked entity (see lcWndPickEnt function)
+#define LC_PROP_WND_ENT \
+  353                            // R  void *; picked entity (see lcWndPickEnt function)
 #define LC_PROP_WND_PROPWND 354  // R  void *; void * to properties window
 #define LC_PROP_WND_BLOCKBPT 355 // RW bool; display block basepoint
-#define LC_PROP_WND_LWMODE                                                     \
-  355 // RW int;  line width mode (LC_LW_THIN, LC_LW_REAL, LC_LW_PIXEL)
+#define LC_PROP_WND_LWMODE \
+  355                           // RW int;  line width mode (LC_LW_THIN, LC_LW_REAL, LC_LW_PIXEL)
 #define LC_PROP_WND_LWSCALE 356 // RW float; line width screen scale, mm / pixel
 //^ #define LC_PROP_WND_BREAKPOINTS     347    // RW bool; display breakpoints
 //^ #define LC_PROP_WND_BREAKPTNUMS     348    // RW bool; display numbers of
 // breakpoints
-#define LC_PROP_WND_ALPHABLEND                                                 \
+#define LC_PROP_WND_ALPHABLEND \
   360 // RW bool; enable alpha blend (transparent filling)
-#define LC_PROP_WND_STDBLKFRAME                                                \
-  361 // RW bool; draw red frame around the window if standard block is active
+#define LC_PROP_WND_STDBLKFRAME \
+  361                             // RW bool; draw red frame around the window if standard block is active
 #define LC_PROP_WND_BLKBASEPT 362 // RW bool; display block basepoint
-#define LC_PROP_WND_SIZE                                                       \
-  363 // R  string; window size, pixels (format "%d x %d", PSWidth(), PSHeight()
-      // )
+#define LC_PROP_WND_SIZE \
+  363                         // R  string; window size, pixels (format "%d x %d", PSWidth(), PSHeight()
+                              // )
 #define LC_PROP_WND_DTIME 364 // R  int; redraw time, milliseconds
-#define LC_PROP_WND_DRAWPAPER                                                  \
-  365 // RW bool; draw paper sheet for "Paper space" blocks
+#define LC_PROP_WND_DRAWPAPER \
+  365                              // RW bool; draw paper sheet for "Paper space" blocks
 #define LC_PROP_WND_FROZEN 366     // RW bool; "Frozen" mode
 #define LC_PROP_WND_FROZENVIEW 367 // RW bool; if true - can't chnage view rect
-#define LC_PROP_WND_COMMAND                                                    \
-  368 // R  int|void *|bool; Id of active command | void * to active command |
-      // TRUE if has active command
+#define LC_PROP_WND_COMMAND \
+  368                       // R  int|void *|bool; Id of active command | void * to active command |
+                            // TRUE if has active command
 #define LC_PROP_WND_CMD 368 // same as LC_PROP_WND_COMMAND
-#define LC_PROP_WND_CMDENT1                                                    \
+#define LC_PROP_WND_CMDENT1 \
   369 // RW bool; TRUE - only one entity added by command, FALSE - several
       // entities
-#define LC_PROP_WND_OSNAP                                                      \
+#define LC_PROP_WND_OSNAP \
   370 // RW int|bool; object snap mode  LC_OSNAP_NODE and others | On/Off
-#define LC_PROP_WND_OSNAPMENU                                                  \
-  371 // RW bool; display "object snap" menu on <shift>+<RBDown>
-      // (CBaseWnd::BaseOnRButtonDown)
+#define LC_PROP_WND_OSNAPMENU \
+  371                                 // RW bool; display "object snap" menu on <shift>+<RBDown>
+                                      // (CBaseWnd::BaseOnRButtonDown)
 #define LC_PROP_WND_ORTHO 372         // RW bool; ortho mode
 #define LC_PROP_WND_PTRACK 373        // RW bool; polar tracking on/off
 #define LC_PROP_WND_PTRACK_ANGLE 374  // RW float; step angle for polar tracking
 #define LC_PROP_WND_PTRACK_ANGREL 375 // RW bool; relative / absolute angle
-#define LC_PROP_WND_PTRACK_DIST                                                \
-  376 // RW bool|float; use distance step along polar vector | value of dist.
-      // step
-#define LC_PROP_WND_BASEPT 377     // R  bool; Has Base point   // undoc
-#define LC_PROP_WND_BASEX 378      // R  float; Base point position X   // undoc
-#define LC_PROP_WND_BASEY 379      // R  float; Base point position Y   // undoc
-#define LC_PROP_WND_GRIDSNAP 380   // RW bool;
-#define LC_PROP_WND_GRIDSHOW 381   // RW bool; Display coordinate grid
-#define LC_PROP_WND_GRIDDX 382     // RW float; Grid & snap step
-#define LC_PROP_WND_GRIDDY 383     // RW float;
-#define LC_PROP_WND_GRIDX0 384     // RW float; Origin point
-#define LC_PROP_WND_GRIDY0 385     // RW float;
-#define LC_PROP_WND_GRIDBOLDX 386  // RW int; Bold step X
-#define LC_PROP_WND_GRIDBOLDY 387  // RW int; Bold step Y
-#define LC_PROP_WND_GRIDCOLOR 388  // RW int; Line color
-#define LC_PROP_WND_GRIDDOTTED 389 // RW bool; Line is dotted
-#define LC_PROP_WND_GRIDCOLOR2 390 // RW int; Bold Line color
+#define LC_PROP_WND_PTRACK_DIST \
+  376                               // RW bool|float; use distance step along polar vector | value of dist.
+                                    // step
+#define LC_PROP_WND_BASEPT 377      // R  bool; Has Base point   // undoc
+#define LC_PROP_WND_BASEX 378       // R  float; Base point position X   // undoc
+#define LC_PROP_WND_BASEY 379       // R  float; Base point position Y   // undoc
+#define LC_PROP_WND_GRIDSNAP 380    // RW bool;
+#define LC_PROP_WND_GRIDSHOW 381    // RW bool; Display coordinate grid
+#define LC_PROP_WND_GRIDDX 382      // RW float; Grid & snap step
+#define LC_PROP_WND_GRIDDY 383      // RW float;
+#define LC_PROP_WND_GRIDX0 384      // RW float; Origin point
+#define LC_PROP_WND_GRIDY0 385      // RW float;
+#define LC_PROP_WND_GRIDBOLDX 386   // RW int; Bold step X
+#define LC_PROP_WND_GRIDBOLDY 387   // RW int; Bold step Y
+#define LC_PROP_WND_GRIDCOLOR 388   // RW int; Line color
+#define LC_PROP_WND_GRIDDOTTED 389  // RW bool; Line is dotted
+#define LC_PROP_WND_GRIDCOLOR2 390  // RW int; Bold Line color
 #define LC_PROP_WND_GRIDDOTTED2 391 // RW bool; Bold Line is dotted
 
 #define LC_PROP_WND_RSNAP 402     // RW bool; Enable snap to rectangle border
@@ -1345,25 +1345,25 @@
 #define LC_PROP_WND_RSNAPTOP 407  // RW float; Y top
 #define LC_PROP_WND_RSNAPW 408    // RW float; Width (from X left)
 #define LC_PROP_WND_RSNAPH 409    // RW float; Height (from Y bottom)
-#define LC_PROP_WND_RSNAPCOLORM                                                \
+#define LC_PROP_WND_RSNAPCOLORM \
   410 // RW int; Rectangle filling color on Model space
-#define LC_PROP_WND_RSNAPCOLORP                                                \
+#define LC_PROP_WND_RSNAPCOLORP \
   411 // RW int; Rectangle filling color on Paper space
 
 #define LC_PROP_WND_PANSTEP 420 // RW int; Minimal step, pixels
-#define LC_PROP_WND_PANLW                                                      \
+#define LC_PROP_WND_PANLW \
   421 // RW bool; optimize line width (draw as 1pix size)
-#define LC_PROP_WND_PANIMAGE                                                   \
+#define LC_PROP_WND_PANIMAGE \
   422 // RW bool; optimize raster images (draw as hatch)
-#define LC_PROP_WND_PANFILL                                                    \
+#define LC_PROP_WND_PANFILL \
   423 // RW bool; optimize polygon filling (don't fill)
-#define LC_PROP_WND_PANPIXSZ                                                   \
+#define LC_PROP_WND_PANPIXSZ \
   424 // RW bool; reduce resolution (increase pixel size)
 
-#define LC_PROP_WND_MEASCOLORPNT                                               \
+#define LC_PROP_WND_MEASCOLORPNT \
   430 // RW int; COLORREF for points of DIST, AREA tools
-#define LC_PROP_WND_MEASCOLORLINE                                              \
-  431 // RW int; COLORREF for lines of DIST, AREA tools
+#define LC_PROP_WND_MEASCOLORLINE \
+  431                                // RW int; COLORREF for lines of DIST, AREA tools
 #define LC_PROP_WND_MEASLINESIZE 432 // RW int; line size for DIST, AREA tools
 #define LC_PROP_WND_MEASFONTSIZE 433 // RW int; font size
 #define LC_PROP_WND_MEASFILLAREA 434 // RW int; fill area polygons with hatch
@@ -1373,19 +1373,19 @@
 #define LC_PROP_WND_KBMOVE_ANGLE 439  // RW float; angle step
 #define LC_PROP_WND_KBMOVE_SCALE 440  // RW float; scale step
 
-#define LC_PROP_WND_XLINEANG                                                   \
+#define LC_PROP_WND_XLINEANG \
   444 // RW float; direction angle for command LC_CMD_XLINE
-#define LC_PROP_WND_BGIMAGE                                                    \
+#define LC_PROP_WND_BGIMAGE \
   445 // RW string|bool; Background image filename | Display
-#define LC_PROP_WND_LTVIEWMIN                                                  \
+#define LC_PROP_WND_LTVIEWMIN \
   446 // RW int; Linetype visibility, min size of pattern, pixels
-#define LC_PROP_WND_LTVIEWMAX                                                  \
+#define LC_PROP_WND_LTVIEWMAX \
   447 // RW int; Linetype visibility, max size of pattern, pixels
 
-#define LC_PROP_WND_FRAME_LEFT                                                 \
+#define LC_PROP_WND_FRAME_LEFT \
   451 // R  int; Left position on parent window (pixels)
-#define LC_PROP_WND_FRAME_TOP                                                  \
-  452 // R  int; Top position on parent window (pixels)
+#define LC_PROP_WND_FRAME_TOP \
+  452                                // R  int; Top position on parent window (pixels)
 #define LC_PROP_WND_FRAME_WIDTH 453  // R  int; Frame width (pixels)
 #define LC_PROP_WND_FRAME_HEIGHT 454 // R  int; Frame height (pixels)
 
@@ -1482,8 +1482,8 @@
 #define LC_PROP_TINPNT_Z 705     // RW float;
 #define LC_PROP_TINPNT_COLOR 706 // R  int; color (from point type)
 #define LC_PROP_TINPNT_NAME 707  // R  string; name (from point type)
-#define LC_PROP_TINPNT_ONAME                                                   \
-  708 // RW string; own name (overrides name of point type)
+#define LC_PROP_TINPNT_ONAME \
+  708                               // RW string; own name (overrides name of point type)
 #define LC_PROP_TINPNT_DESCR 709    // RW string; point description
 #define LC_PROP_TINPNT_IMGFILE 715  // RW string
 #define LC_PROP_TINPNT_IMGFILE2 716 // R  string; full filename with path
@@ -1566,13 +1566,13 @@
 
 // Custom command
 #define LC_PROP_CMD__MIN 2001
-#define LC_PROP_CMD_ID 2001    // R  int; command identifier LC_CMD_CUSTOM+n
-#define LC_PROP_CMD_PARAM 2002 // R  int; parameter passed by lcWndExeCommand
-#define LC_PROP_CMD_STEP 2003  // RW int; command step
-#define LC_PROP_CMD_LCWND 2004 // R  handle; design window
-#define LC_PROP_CMD_HWND 2005  // R  handle; HWND window void *
-#define LC_PROP_CMD_DRW 2006   // R  handle; drawing
-#define LC_PROP_CMD_BLOCK 2007 // R  handle; block
+#define LC_PROP_CMD_ID 2001          // R  int; command identifier LC_CMD_CUSTOM+n
+#define LC_PROP_CMD_PARAM 2002       // R  int; parameter passed by lcWndExeCommand
+#define LC_PROP_CMD_STEP 2003        // RW int; command step
+#define LC_PROP_CMD_LCWND 2004       // R  handle; design window
+#define LC_PROP_CMD_HWND 2005        // R  handle; HWND window void *
+#define LC_PROP_CMD_DRW 2006         // R  handle; drawing
+#define LC_PROP_CMD_BLOCK 2007       // R  handle; block
 #define LC_PROP_CMD_CURSORCROSS 2008 // RW bool; Enable crosshair cursor
 #define LC_PROP_CMD_INT0 2010        // RW int; user value
 #define LC_PROP_CMD_INT1 2011        // RW int; user value
@@ -1618,62 +1618,62 @@
 #define LC_PROP_DRW_COMMENT 3003  // sane as LC_PROP_DRW_DESCR
 #define LC_PROP_DRW_READONLY 3004 // RW bool; "Readonly" flag
 #define LC_PROP_DRW_DIRTY 3005    // RW bool; "Drawing was modified" flag
-#define LC_PROP_DRW_IDMAX                                                      \
-  3006 // R  int64|string; max Unique Identifier    // undoc
+#define LC_PROP_DRW_IDMAX \
+  3006                            // R  int64|string; max Unique Identifier    // undoc
 #define LC_PROP_DRW_SYNCZOOM 3011 // RW bool; "Synchronize Layouts zoom" flag
-#define LC_PROP_DRW_HASALPHABLEND                                              \
+#define LC_PROP_DRW_HASALPHABLEND \
   3013 // R  bool; true is used alpha blend (transparent filling)
-#define LC_PROP_DRW_BLKREFGRIPS                                                \
-  3014 // RW int; BlockRef grips: 0-all grips, 1-only Pos, 2-Pos&Rotation
+#define LC_PROP_DRW_BLKREFGRIPS \
+  3014                            // RW int; BlockRef grips: 0-all grips, 1-only Pos, 2-Pos&Rotation
 #define LC_PROP_DRW_JL_BASE 3015  // RW bool; Begin jump lines from basepoint
 #define LC_PROP_DRW_JL_BASEX 3016 // RW float; Basepoint X
 #define LC_PROP_DRW_JL_BASEY 3017 // RW float; Basepoint Y
-#define LC_PROP_DRW_JL_LAYER                                                   \
+#define LC_PROP_DRW_JL_LAYER \
   3018 // RW bool; enable layers for jump lines (add column in "Layers" dialog)
-#define LC_PROP_DRW_EXTOFFLAYER                                                \
-  3019 // RW bool; enable invisible layers for extents calculation
+#define LC_PROP_DRW_EXTOFFLAYER \
+  3019                              // RW bool; enable invisible layers for extents calculation
 #define LC_PROP_DRW_ENABLEUNDO 3021 // RW bool; Enable undo recording
-#define LC_PROP_DRW_LOCKSEL 3022 // RW bool; enable selection on locked layers
-#define LC_PROP_DRW_MAXHATDASH                                                 \
+#define LC_PROP_DRW_LOCKSEL 3022    // RW bool; enable selection on locked layers
+#define LC_PROP_DRW_MAXHATDASH \
   3023 // RW int; max number of hatch dashes in Hatch entities
-#define LC_PROP_DRW_PROPLINFILL                                                \
+#define LC_PROP_DRW_PROPLINFILL \
   3024 // RW bool; if TRUE then display LinFill item in Properties window
-#define LC_PROP_DRW_PROPZTH                                                    \
-  3025 // RW bool; if TRUE then display Z and Thickness items in Properties
-       // window
+#define LC_PROP_DRW_PROPZTH \
+  3025                          // RW bool; if TRUE then display Z and Thickness items in Properties
+                                // window
 #define LC_PROP_DRW_3DVIEW 3026 // R  bool; has 3D view (see LC_CMD_3DVIEW)
 #define LC_PROP_DRW_PBTEXT 3027 // RW string; Text of progress box
 
 // system variables (similar names as in AutoCAD)
-#define LC_PROP_DRW_LUNITS                                                     \
+#define LC_PROP_DRW_LUNITS \
   3031 // RW int; Linear units (LC_LUNIT_SCIEN and others)
-#define LC_PROP_DRW_LUPREC                                                     \
+#define LC_PROP_DRW_LUPREC \
   3032 // RW int; Precision for linear units (number of decimal digits)
-#define LC_PROP_DRW_AUNITS                                                     \
+#define LC_PROP_DRW_AUNITS \
   3033 // RW int; Angle units (LC_AUNIT_DEGREE and others)
-#define LC_PROP_DRW_AUPREC                                                     \
-  3034 // RW int; Precision for angular units (number of decimal digits)
+#define LC_PROP_DRW_AUPREC \
+  3034                           // RW int; Precision for angular units (number of decimal digits)
 #define LC_PROP_DRW_ANGBASE 3035 // RW int; base angle
-#define LC_PROP_DRW_ANGDIR                                                     \
-  3036 // RW int; angle direction, 0-counterclockwise, 1-clockwise
+#define LC_PROP_DRW_ANGDIR \
+  3036                            // RW int; angle direction, 0-counterclockwise, 1-clockwise
 #define LC_PROP_DRW_INSUNITS 3037 // RW int;  (LC_INSUNIT_UNDEFINED and others)
-#define LC_PROP_DRW_PDMODE                                                     \
+#define LC_PROP_DRW_PDMODE \
   3038 // RW int; default point draw mode, LC_POINT_PIXEL and others
-#define LC_PROP_DRW_PDSIZE                                                     \
+#define LC_PROP_DRW_PDSIZE \
   3039 // RW float; default point size, negative value means percent of a window
-#define LC_PROP_DRW_CMLJUST                                                    \
-  3040 // RW int; Current multiline justification 0 = Top; 1 = Middle; 2 =
-       // Bottom
+#define LC_PROP_DRW_CMLJUST \
+  3040                            // RW int; Current multiline justification 0 = Top; 1 = Middle; 2 =
+                                  // Bottom
 #define LC_PROP_DRW_CMLSCALE 3041 // RW float; Current multiline scale
 
 // Background, foreground and cursor colors
-#define LC_PROP_DRW_COLORBACKM 3051 // RW int; background color for Model Space
-#define LC_PROP_DRW_COLORBACKP 3052 // RW int; background color for Paper Space
-#define LC_PROP_DRW_COLORFOREM 3053 // RW int; foreground color on Model Space
-#define LC_PROP_DRW_COLORFOREP 3054 // RW int; foreground color on Paper Space
+#define LC_PROP_DRW_COLORBACKM 3051   // RW int; background color for Model Space
+#define LC_PROP_DRW_COLORBACKP 3052   // RW int; background color for Paper Space
+#define LC_PROP_DRW_COLORFOREM 3053   // RW int; foreground color on Model Space
+#define LC_PROP_DRW_COLORFOREP 3054   // RW int; foreground color on Paper Space
 #define LC_PROP_DRW_COLORCURSORM 3055 // RW int; cursor color on Model Space
 #define LC_PROP_DRW_COLORCURSORP 3056 // RW int; cursor color on Paper Space
-#define LC_PROP_DRW_COLORPAPER                                                 \
+#define LC_PROP_DRW_COLORPAPER \
   3057 // RW int; color of paper sheet on Paper Space
 
 // Active outline color
@@ -1687,89 +1687,89 @@
 #define LC_PROP_DRW_FCOLOR 3066        // RW string; Active filling color
 #define LC_PROP_DRW_FCOLORBYLAYER 3067 // RW bool; filling Color "ByLayer"
 #define LC_PROP_DRW_FCOLORBYBLOCK 3068 // RW bool; filling Color "ByBlock"
-#define LC_PROP_DRW_FCOLORI 3069 // RW int; R bool; Active filling Color Index
-#define LC_PROP_DRW_FCOLORT 3070 // RW int; R bool; Active filling True Color
+#define LC_PROP_DRW_FCOLORI 3069       // RW int; R bool; Active filling Color Index
+#define LC_PROP_DRW_FCOLORT 3070       // RW int; R bool; Active filling True Color
 
 // Active objects and parameters, used on creating new entities
-#define LC_PROP_DRW_LAYER                                                      \
+#define LC_PROP_DRW_LAYER \
   3081 // RW handle|string; void *to active layer|Name of active layer
-#define LC_PROP_DRW_LINETYPE                                                   \
-  3082 // RW handle|string; void *to active linetype|Name of active linetype
+#define LC_PROP_DRW_LINETYPE \
+  3082                           // RW handle|string; void *to active linetype|Name of active linetype
 #define LC_PROP_DRW_LTSCALE 3083 // RW float; active linetype scale
-#define LC_PROP_DRW_TEXTSTYLE                                                  \
+#define LC_PROP_DRW_TEXTSTYLE \
   3084 // RW handle|string; void *to active text style|Name of active text style
-#define LC_PROP_DRW_DIMSTYLE                                                   \
+#define LC_PROP_DRW_DIMSTYLE \
   3085 // RW handle|string; void *to active dim style|Name of active dim style
-#define LC_PROP_DRW_PNTSTYLE                                                   \
+#define LC_PROP_DRW_PNTSTYLE \
   3086 // RW handle|string; void *to active point style|Name of active point
        // style
-#define LC_PROP_DRW_MLSTYLE                                                    \
+#define LC_PROP_DRW_MLSTYLE \
   3087 // RW handle|string; void *to active mline style|Name of active mline
        // style
-#define LC_PROP_DRW_BLOCK                                                      \
+#define LC_PROP_DRW_BLOCK \
   3089 // RW handle|string; void *to active block|Name of active block
-#define LC_PROP_DRW_VISBLOCK                                                   \
+#define LC_PROP_DRW_VISBLOCK \
   3090 // RW handle|string; void *to currently visible block|Name of currently
        // visible block
-#define LC_PROP_DRW_LAYOUT                                                     \
+#define LC_PROP_DRW_LAYOUT \
   3091 // RW handle|string; void *to active layout (Tab)
-#define LC_PROP_DRW_BARCTYPE                                                   \
+#define LC_PROP_DRW_BARCTYPE \
   3092 // RW int; active barcode type, LC_BARTYPE_CODE39 and others
-#define LC_PROP_DRW_BARCSOLID                                                  \
+#define LC_PROP_DRW_BARCSOLID \
   3093 // RW bool; draw barcode without filling option
-#define LC_PROP_DRW_LWMODE                                                     \
+#define LC_PROP_DRW_LWMODE \
   3094 // RW int;  line width mode (LC_LW_THIN, LC_LW_REAL, LC_LW_PIXEL)
-#define LC_PROP_DRW_LWSCALE                                                    \
+#define LC_PROP_DRW_LWSCALE \
   3095                          // RW float; line width screen scale, mm / pixel
 #define LC_PROP_DRW_LWIDTH 3096 // RW int; active Linewidth (for new entities)
-#define LC_PROP_DRW_LWDEFAULT                                                  \
+#define LC_PROP_DRW_LWDEFAULT \
   3097 // RW int; Default linewidth (if linewidth==LC_LWIDTH_DEFAULT)
-#define LC_PROP_DRW_LINFILL                                                    \
-  3098 // RW handle|string; void *to active linfill|Name of active linfill
+#define LC_PROP_DRW_LINFILL \
+  3098                          // RW handle|string; void *to active linfill|Name of active linfill
 #define LC_PROP_DRW_TINPNT 3102 // R  handle; active TIN point (snapped)
-#define LC_PROP_DRW_TINTR                                                      \
-  3103 // R  handle; TIN triangle used by COkTIN::GetZ(..)
+#define LC_PROP_DRW_TINTR \
+  3103                          // R  handle; TIN triangle used by COkTIN::GetZ(..)
 #define LC_PROP_DRW_TINXY0 3104 // RW bool; normalize TIN XY coordinates to 0.0
 
 // Explode options
-#define LC_PROP_DRW_EXPLODEARC                                                 \
+#define LC_PROP_DRW_EXPLODEARC \
   3131 // RW bool; enable exploding of arcs, circles, ellipses
-#define LC_PROP_DRW_EXPPLINELA                                                 \
+#define LC_PROP_DRW_EXPPLINELA \
   3132 // RW bool; explode bulge polylines: TRUE-to lines and arcs, FALSE-to
        // lines
-#define LC_PROP_DRW_EXPSIMPLINE                                                \
+#define LC_PROP_DRW_EXPSIMPLINE \
   3133 // RW bool; explode simple polylines to lines
-#define LC_PROP_DRW_EXPTEXTSPLINE                                              \
+#define LC_PROP_DRW_EXPTEXTSPLINE \
   3134 // RW bool; explode TT text to splines (FALSE - to lines)
 
 // Default named objects
 #define LC_PROP_DRW_BLOCK_MODEL 3151 // R  handle; void *to "*Model_Space" block
 #define LC_PROP_DRW_LAYER_0 3152     // R  handle; void *to layer "0"
-#define LC_PROP_DRW_LINETYPE_CONT                                              \
+#define LC_PROP_DRW_LINETYPE_CONT \
   3153 // R  handle; void *to linetype "Continuous"
-#define LC_PROP_DRW_LINETYPE_BYLAY                                             \
+#define LC_PROP_DRW_LINETYPE_BYLAY \
   3154 // R  handle; void *to linetype "ByLayer"
-#define LC_PROP_DRW_LINETYPE_BYBLK                                             \
+#define LC_PROP_DRW_LINETYPE_BYBLK \
   3155 // R  handle; void *to linetype "ByBlock"
-#define LC_PROP_DRW_TEXTSTYLE_STD                                              \
+#define LC_PROP_DRW_TEXTSTYLE_STD \
   3156                              // R  handle; void *to text style "Standard"
 #define LC_PROP_DRW_TSTYLE_STD 3156 // same as LC_PROP_DRW_TEXTSTYLE_STD
-#define LC_PROP_DRW_PNTSTYLE_STD                                               \
+#define LC_PROP_DRW_PNTSTYLE_STD \
   3157 // R  handle; void *to point style "Standard"
-#define LC_PROP_DRW_DIMSTYLE_STD                                               \
+#define LC_PROP_DRW_DIMSTYLE_STD \
   3158 // R  handle; void *to dim style "Standard"
-#define LC_PROP_DRW_MLSTYLE_STD                                                \
+#define LC_PROP_DRW_MLSTYLE_STD \
   3159 // R  handle; void *to mline style "Standard"
 
 // Default resolution
-#define LC_PROP_DRW_RESOLARC                                                   \
-  3171 // RW int; default resolution for arc/circle/ellipse/bulge
+#define LC_PROP_DRW_RESOLARC \
+  3171                               // RW int; default resolution for arc/circle/ellipse/bulge
 #define LC_PROP_DRW_RESOLSPLINE 3172 // RW int; default resolution for splines
 #define LC_PROP_DRW_RESOLTEXT 3173   // RW int; default resolution for TTF text
 
 // Limits (also lcDrwSetLimits )
-#define LC_PROP_DRW_LIM_MINPIXSIZE                                             \
-  3181 // RW float; minimal pixel size (drawing units)
+#define LC_PROP_DRW_LIM_MINPIXSIZE \
+  3181                              // RW float; minimal pixel size (drawing units)
 #define LC_PROP_DRW_LIM_MAXLEF 3182 // RW float; Xmin of limits rect
 #define LC_PROP_DRW_LIM_MAXBOT 3183 // RW float; Ymin of limits rect
 #define LC_PROP_DRW_LIM_MAXRIG 3184 // RW float; Xmax of limits rect
@@ -1824,31 +1824,31 @@
 #define LC_PROP_TABLE_DRW 4004        // R  handle; Handler to owner drawing
 #define LC_PROP_TABLE_DELETED 4005    // R  bool; "Deleted" flag
 #define LC_PROP_TABLE_ODA_HANDLE 4010 // RW string; ODA table handle  // undoc
-#define LC_PROP_TABLE_TYPE 4011 // R  int; object type (LC_OBJ_LAYER and others)
-#define LC_PROP_TABLE_PRIORITY 4012  // RW int; priority for sorting
-#define LC_PROP_TABLE_NREFS 4013     // R  int; number of references to a table
-#define LC_PROP_TABLE_XDATASIZE 4051 // RW int; size of extra data (bytes)
-#define LC_PROP_TABLE_XDATA 4052     // RW handle; pointer to extra data
-#define LC_PROP_TABLE_XSTR 4053   // RW string; user string (uses XDATA buffer)
-#define LC_PROP_TABLE_INT0 4060   // RW int; user value
-#define LC_PROP_TABLE_INT1 4061   // RW int; user value
-#define LC_PROP_TABLE_INT2 4062   // RW int; user value
-#define LC_PROP_TABLE_INT3 4063   // RW int; user value
-#define LC_PROP_TABLE_INT4 4064   // RW int; user value
-#define LC_PROP_TABLE_FLOAT0 4070 // RW float; user value
-#define LC_PROP_TABLE_FLOAT1 4071 // RW float; user value
-#define LC_PROP_TABLE_FLOAT2 4072 // RW float; user value
-#define LC_PROP_TABLE_FLOAT3 4073 // RW float; user value
-#define LC_PROP_TABLE_FLOAT4 4074 // RW float; user value
+#define LC_PROP_TABLE_TYPE 4011       // R  int; object type (LC_OBJ_LAYER and others)
+#define LC_PROP_TABLE_PRIORITY 4012   // RW int; priority for sorting
+#define LC_PROP_TABLE_NREFS 4013      // R  int; number of references to a table
+#define LC_PROP_TABLE_XDATASIZE 4051  // RW int; size of extra data (bytes)
+#define LC_PROP_TABLE_XDATA 4052      // RW handle; pointer to extra data
+#define LC_PROP_TABLE_XSTR 4053       // RW string; user string (uses XDATA buffer)
+#define LC_PROP_TABLE_INT0 4060       // RW int; user value
+#define LC_PROP_TABLE_INT1 4061       // RW int; user value
+#define LC_PROP_TABLE_INT2 4062       // RW int; user value
+#define LC_PROP_TABLE_INT3 4063       // RW int; user value
+#define LC_PROP_TABLE_INT4 4064       // RW int; user value
+#define LC_PROP_TABLE_FLOAT0 4070     // RW float; user value
+#define LC_PROP_TABLE_FLOAT1 4071     // RW float; user value
+#define LC_PROP_TABLE_FLOAT2 4072     // RW float; user value
+#define LC_PROP_TABLE_FLOAT3 4073     // RW float; user value
+#define LC_PROP_TABLE_FLOAT4 4074     // RW float; user value
 #define LC_PROP_TABLEBASE__MAX 4100
 
 // Layer ----------------------------------------
-#define LC_PROP_LAYER_ID                                                       \
+#define LC_PROP_LAYER_ID \
   4001 // R  int64|string; Unique Identifier,  same as LC_PROP_TABLE_ID
-#define LC_PROP_LAYER_NAME                                                     \
+#define LC_PROP_LAYER_NAME \
   4002 // RW string; Layer Name,  same as LC_PROP_TABLE_NAME
-#define LC_PROP_LAYER_DESC                                                     \
-  4003 // RW string; Description, same as LC_PROP_TABLE_DESC
+#define LC_PROP_LAYER_DESC \
+  4003                             // RW string; Description, same as LC_PROP_TABLE_DESC
 #define LC_PROP_LAYER_DESCR 4003   // RW string; Description
 #define LC_PROP_LAYER_DRW 4004     // R  handle; Handle to owner drawing~
 #define LC_PROP_LAYER_DELETED 4005 // R  bool; "Deleted" flag
@@ -1858,91 +1858,91 @@
 #define LC_PROP_LAYER_FCOLOR 4104  // RW string; Filling Color
 #define LC_PROP_LAYER_FCOLORI 4105 // RW int; R bool; Filling Color Index
 #define LC_PROP_LAYER_FCOLORT 4106 // RW int; R bool; Filling True Color
-#define LC_PROP_LAYER_LINETYPE                                                 \
-  4111 // RW handle|string; Handle to Linetype|Name of Linetype
+#define LC_PROP_LAYER_LINETYPE \
+  4111                             // RW handle|string; Handle to Linetype|Name of Linetype
 #define LC_PROP_LAYER_LWEIGHT 4112 // RW int; Linewidth
 #define LC_PROP_LAYER_LWIDTH 4112  // same as LC_PROP_LAYER_LWEIGHT
 #define LC_PROP_LAYER_LOCKED 4113  // RW bool; "No edit" flag
 #define LC_PROP_LAYER_NOPRINT 4114 // RW bool; "Not printed" flag
 #define LC_PROP_LAYER_VISIBLE 4115 // RW bool; "Visible"; flag
 #define LC_PROP_LAYER_0 4116       // R  bool; "Layer 0" flag
-#define LC_PROP_LAYER_NODLG                                                    \
+#define LC_PROP_LAYER_NODLG \
   4117 // RW bool; not displayed in the "Layers" dialog
-#define LC_PROP_LAYER_JUMPLINES                                                \
+#define LC_PROP_LAYER_JUMPLINES \
   4118 // RW bool; enable jump lines for entities of this layer
-#define LC_PROP_LAYER_OSNAP                                                    \
-  4119 // RW bool; enable object snap for entities of this layer
+#define LC_PROP_LAYER_OSNAP \
+  4119                              // RW bool; enable object snap for entities of this layer
 #define LC_PROP_LAYER_NOEXPORT 4120 // RW bool; "Not exportable" flag
 
 // Linetype -------------------------------------
-#define LC_PROP_LINETYPE_ID 4001    // R  int64|string; same as LC_PROP_TABLE_ID
-#define LC_PROP_LINETYPE_NAME 4002  // RW string; same as LC_PROP_TABLE_NAME
-#define LC_PROP_LINETYPE_DESC 4003  // RW string; same as LC_PROP_TABLE_DESC
-#define LC_PROP_LINETYPE_DESCR 4003 // RW string; Description
-#define LC_PROP_LINETYPE_DRW 4004   // R  handle; Handle to owner drawing~
-#define LC_PROP_LINETYPE_DELETED 4005 // R  bool; "Deleted" flag
-#define LC_PROP_LINETYPE_DATA 4145    // RW string; Linetype data in text form
-#define LC_PROP_LINETYPE_SCALE 4146 // RW float; Global scale for this linetype
+#define LC_PROP_LINETYPE_ID 4001         // R  int64|string; same as LC_PROP_TABLE_ID
+#define LC_PROP_LINETYPE_NAME 4002       // RW string; same as LC_PROP_TABLE_NAME
+#define LC_PROP_LINETYPE_DESC 4003       // RW string; same as LC_PROP_TABLE_DESC
+#define LC_PROP_LINETYPE_DESCR 4003      // RW string; Description
+#define LC_PROP_LINETYPE_DRW 4004        // R  handle; Handle to owner drawing~
+#define LC_PROP_LINETYPE_DELETED 4005    // R  bool; "Deleted" flag
+#define LC_PROP_LINETYPE_DATA 4145       // RW string; Linetype data in text form
+#define LC_PROP_LINETYPE_SCALE 4146      // RW float; Global scale for this linetype
 #define LC_PROP_LINETYPE_CONTINUOUS 4147 // R  bool; "Continuous" flag
 #define LC_PROP_LINETYPE_BYLAYER 4148    // R  bool; "By Layer" flag
 #define LC_PROP_LINETYPE_BYBLOCK 4149    // R  bool; "By Block" flag
-#define LC_PROP_LINETYPE_STD                                                   \
-  4150 // R  bool; standard linetype ("Continuous" or "By Layer" or "By Block")
-       // // undoc
+#define LC_PROP_LINETYPE_STD \
+  4150                               // R  bool; standard linetype ("Continuous" or "By Layer" or "By Block")
+                                     // // undoc
 #define LC_PROP_LINETYPE_PATLEN 4151 // R  float; Pattern length
 #define LC_PROP_LINETYPE_NELEM 4153  // R  int; number of elements
 #define LC_PROP_LINETYPE_IELEM 4154  //  W int; set index of active element
 #define LC_PROP_LTELEM_LEN 4155      // R  float; segment length
-#define LC_PROP_LTELEM_COMPLEX                                                 \
+#define LC_PROP_LTELEM_COMPLEX \
   4156 // R  bool; TRUE - element contains shape or text
-#define LC_PROP_LTELEM_SHAPE                                                   \
-  4157 // R  bool; TRUE - text style is used, FALSE - draw only szText[0] and
-       // fontfile is used
+#define LC_PROP_LTELEM_SHAPE \
+  4157                           // R  bool; TRUE - text style is used, FALSE - draw only szText[0] and
+                                 // fontfile is used
 #define LC_PROP_LTELEM_TEXT 4158 // R  string; Text
-#define LC_PROP_LTELEM_STYLE                                                   \
+#define LC_PROP_LTELEM_STYLE \
   4159 // R  handle; text style (valid if LC_PROP_LTELEM_SHAPE is FALSE)
-#define LC_PROP_LTELEM_FONTNAME                                                \
-  4160 // R  string; fontname (valid if LC_PROP_LTELEM_SHAPE is TRUE)
+#define LC_PROP_LTELEM_FONTNAME \
+  4160                            // R  string; fontname (valid if LC_PROP_LTELEM_SHAPE is TRUE)
 #define LC_PROP_LTELEM_SCALE 4161 // R  float; shape scale
-#define LC_PROP_LTELEM_ANGLE                                                   \
-  4162 // R  float; rotation angle in radians for a text element in the linetype
+#define LC_PROP_LTELEM_ANGLE \
+  4162                               // R  float; rotation angle in radians for a text element in the linetype
 #define LC_PROP_LTELEM_ABSANGLE 4163 // R  bool; if TRUE - RotAngle is absolute
 #define LC_PROP_LTELEM_X 4164        // R  float; x offset of a shape
 #define LC_PROP_LTELEM_Y 4165        // R  float; y offset of a shape
 
 // Text style
-#define LC_PROP_TSTYLE_ID 4001      // R  int64|string; same as LC_PROP_TABLE_ID
-#define LC_PROP_TSTYLE_NAME 4002    // RW string; same as LC_PROP_TABLE_NAME
-#define LC_PROP_TSTYLE_DESC 4003    // RW string; same as LC_PROP_TABLE_DESC
-#define LC_PROP_TSTYLE_DESCR 4003   // RW string; Description
-#define LC_PROP_TSTYLE_DRW 4004     // R  handle; Handle to owner drawing
-#define LC_PROP_TSTYLE_DELETED 4005 // R  bool; "Deleted" flag
-#define LC_PROP_TSTYLE_FONT 4175    // RW string; Font filename
-#define LC_PROP_TSTYLE_HFONT 4176   // R  handle; Handle to font
-#define LC_PROP_TSTYLE_HEIGHT 4177  // RW float; Default height
-#define LC_PROP_TSTYLE_WSCALE 4178  // RW float; Default width scale
-#define LC_PROP_TSTYLE_OBLIQUE 4179 // RW float; Default obluque angle
-#define LC_PROP_TSTYLE_ANGLE 4180   // RW float; Default rotation angle
-#define LC_PROP_TSTYLE_ALIGN 4181   // RW int; Default alignment
-#define LC_PROP_TSTYLE_UPDOWN 4182  // RW bool; "Upside down" flag
+#define LC_PROP_TSTYLE_ID 4001        // R  int64|string; same as LC_PROP_TABLE_ID
+#define LC_PROP_TSTYLE_NAME 4002      // RW string; same as LC_PROP_TABLE_NAME
+#define LC_PROP_TSTYLE_DESC 4003      // RW string; same as LC_PROP_TABLE_DESC
+#define LC_PROP_TSTYLE_DESCR 4003     // RW string; Description
+#define LC_PROP_TSTYLE_DRW 4004       // R  handle; Handle to owner drawing
+#define LC_PROP_TSTYLE_DELETED 4005   // R  bool; "Deleted" flag
+#define LC_PROP_TSTYLE_FONT 4175      // RW string; Font filename
+#define LC_PROP_TSTYLE_HFONT 4176     // R  handle; Handle to font
+#define LC_PROP_TSTYLE_HEIGHT 4177    // RW float; Default height
+#define LC_PROP_TSTYLE_WSCALE 4178    // RW float; Default width scale
+#define LC_PROP_TSTYLE_OBLIQUE 4179   // RW float; Default obluque angle
+#define LC_PROP_TSTYLE_ANGLE 4180     // RW float; Default rotation angle
+#define LC_PROP_TSTYLE_ALIGN 4181     // RW int; Default alignment
+#define LC_PROP_TSTYLE_UPDOWN 4182    // RW bool; "Upside down" flag
 #define LC_PROP_TSTYLE_BACKWARD 4183  // RW bool; "Backward" flag
 #define LC_PROP_TSTYLE_LINESPACE 4184 // RW float; Default linespace
 #define LC_PROP_TSTYLE_CHARSPACE 4185 // RW float; Default charspace
 #define LC_PROP_TSTYLE_STANDARD 4186  // R  bool; "Standard" flag
 #define LC_PROP_TSTYLE_SHAPES 4187    // R  bool; "Shapes" flag
-#define LC_PROP_TSTYLE_WINFONT                                                 \
-  4188 // RW bool; if TRUE - Windows True Type font is used
+#define LC_PROP_TSTYLE_WINFONT \
+  4188                             // RW bool; if TRUE - Windows True Type font is used
 #define LC_PROP_TSTYLE_SOLID 4189  // RW bool; Solid text
 #define LC_PROP_TSTYLE_CLOSED 4190 // R  bool; font has closed shape
 #define LC_PROP_TSTYLE_HOLLOW 4191 // R  bool; not solid and closed shape
 #define LC_PROP_TSTYLE_BOLD 4192   // RW bool; "Bold" flag (for LC_ENT_TEXTWIN)
-#define LC_PROP_TSTYLE_ITALIC                                                  \
+#define LC_PROP_TSTYLE_ITALIC \
   4193 // RW bool; "Italic" flag (for LC_ENT_TEXTWIN)
-#define LC_PROP_TSTYLE_UNDERLINE                                               \
+#define LC_PROP_TSTYLE_UNDERLINE \
   4194 // RW bool; "Underline" flag (for LC_ENT_TEXTWIN)
-#define LC_PROP_TSTYLE_STRIKEOUT                                               \
+#define LC_PROP_TSTYLE_STRIKEOUT \
   4195 // RW bool; "Strikeout" flag (for LC_ENT_TEXTWIN)
-#define LC_PROP_TSTYLE_MONOWIDTH                                               \
+#define LC_PROP_TSTYLE_MONOWIDTH \
   4196 // RW float; Width for monospaced font (0.0 - use default)
 
 // Dimension style
@@ -1953,73 +1953,73 @@
 #define LC_PROP_DIMST_DRW 4004      // R  handle;
 #define LC_PROP_DIMST_DELETED 4005  // R  bool;
 #define LC_PROP_DIMST_STANDARD 4205 // R  bool;
-#define LC_PROP_DIMST_ADEC                                                     \
+#define LC_PROP_DIMST_ADEC \
   4211 // RW int; Number of precision places displayed in angular dimensions
-#define LC_PROP_DIMST_ASZ                                                      \
+#define LC_PROP_DIMST_ASZ \
   4212 // RW float; Controls dimension arrowhead size and hookline size
-#define LC_PROP_DIMST_AUNIT                                                    \
+#define LC_PROP_DIMST_AUNIT \
   4213 // RW int; Controls the angle format for angular dimensions
-#define LC_PROP_DIMST_AZIN                                                     \
-  4214 // RW int; Controls suppression of zeros for angular dimensions
+#define LC_PROP_DIMST_AZIN \
+  4214                          // RW int; Controls suppression of zeros for angular dimensions
 #define LC_PROP_DIMST_BLK1 4215 // RW int|string; arrow1 type
 #define LC_PROP_DIMST_BLK2 4216 // RW int|string; arrow2 type
-#define LC_PROP_DIMST_CEN                                                      \
+#define LC_PROP_DIMST_CEN \
   4217 // RW float; Determines style of center marks for arcs or circles being
        // dimensioned
-#define LC_PROP_DIMST_CLRD                                                     \
+#define LC_PROP_DIMST_CLRD \
   4218 // RW int; Sets color for dimension leader lines, arrowheads, dimension
        // lines and leaders
-#define LC_PROP_DIMST_CLRE                                                     \
-  4219 // RW int; Sets color for dimension extension lines
+#define LC_PROP_DIMST_CLRE \
+  4219                          // RW int; Sets color for dimension extension lines
 #define LC_PROP_DIMST_CLRT 4220 // RW int; Sets color for dimension text
-#define LC_PROP_DIMST_DEC                                                      \
+#define LC_PROP_DIMST_DEC \
   4221 // RW int; Controls the precision for a primary units dimension's
        // tolerance values
-#define LC_PROP_DIMST_DSEP                                                     \
+#define LC_PROP_DIMST_DSEP \
   4222 // RW int; Single-character decimal separator used when creating
        // dimensions whose unit format is decimal
-#define LC_PROP_DIMST_EXE                                                      \
+#define LC_PROP_DIMST_EXE \
   4223 // RW float; Controls extension of extension line beyond dimension line
-#define LC_PROP_DIMST_EXO                                                      \
+#define LC_PROP_DIMST_EXO \
   4224 // RW float; Offset of extension lines from origin points
-#define LC_PROP_DIMST_GAP                                                      \
-  4225 // RW float; Determines the gap around dimension text when the dimension
-       // line is broken to fit the text
+#define LC_PROP_DIMST_GAP \
+  4225                            // RW float; Determines the gap around dimension text when the dimension
+                                  // line is broken to fit the text
 #define LC_PROP_DIMST_LDRBLK 4226 // RW int|string; leader arrow type
-#define LC_PROP_DIMST_LFAC                                                     \
-  4227 // RW float; Global scale factor for linear dimensioning measurements
+#define LC_PROP_DIMST_LFAC \
+  4227                         // RW float; Global scale factor for linear dimensioning measurements
 #define LC_PROP_DIMST_LWD 4228 // RW int; Dimension line lineweight
 #define LC_PROP_DIMST_LWE 4229 // RW int; Extension line lineweight
-#define LC_PROP_DIMST_POST                                                     \
+#define LC_PROP_DIMST_POST \
   4230 // RW string; Sets a dimension prefix or suffix for the measurement text
-#define LC_PROP_DIMST_RND                                                      \
+#define LC_PROP_DIMST_RND \
   4231 // RW float; Sets a rounding value for dimensions.
-#define LC_PROP_DIMST_SCALE                                                    \
+#define LC_PROP_DIMST_SCALE \
   4232 // RW float; Overall scale factor applied to dimension variables for
        // sizes, distances and offsets
-#define LC_PROP_DIMST_TAD                                                      \
+#define LC_PROP_DIMST_TAD \
   4233 // RW int; Determines text vertical position relative to the dimension
        // line
-#define LC_PROP_DIMST_TIH                                                      \
+#define LC_PROP_DIMST_TIH \
   4234 // RW int; If 1, text between extension lines is always drawn
        // horizontally
-#define LC_PROP_DIMST_TXT                                                      \
-  4235 // RW float; Dimension text height if the current dimstyle has no fixed
-       // text height
+#define LC_PROP_DIMST_TXT \
+  4235                            // RW float; Dimension text height if the current dimstyle has no fixed
+                                  // text height
 #define LC_PROP_DIMST_TXSTY 4236  // RW handle|string; Text style
 #define LC_PROP_DIMST_TSTYLE 4236 //    LC_PROP_DIMST_TXSTY
-#define LC_PROP_DIMST_LUNIT                                                    \
+#define LC_PROP_DIMST_LUNIT \
   4237 // RW int; Sets units for all dimension types except Angular
-#define LC_PROP_DIMST_ZIN                                                      \
+#define LC_PROP_DIMST_ZIN \
   4238 // RW int; Controls the suppression of zeros in the primary unit value
 
 // Point style
-#define LC_PROP_PSTYLE_ID 4001      // R  int64|string; same as LC_PROP_TABLE_ID
-#define LC_PROP_PSTYLE_NAME 4002    // RW string; same as LC_PROP_TABLE_NAME
-#define LC_PROP_PSTYLE_DESC 4003    // RW string; same as LC_PROP_TABLE_DESC
-#define LC_PROP_PSTYLE_DESCR 4003   // RW string;
-#define LC_PROP_PSTYLE_DRW 4004     // R  handle;
-#define LC_PROP_PSTYLE_DELETED 4005 // R  bool;
+#define LC_PROP_PSTYLE_ID 4001       // R  int64|string; same as LC_PROP_TABLE_ID
+#define LC_PROP_PSTYLE_NAME 4002     // RW string; same as LC_PROP_TABLE_NAME
+#define LC_PROP_PSTYLE_DESC 4003     // RW string; same as LC_PROP_TABLE_DESC
+#define LC_PROP_PSTYLE_DESCR 4003    // RW string;
+#define LC_PROP_PSTYLE_DRW 4004      // R  handle;
+#define LC_PROP_PSTYLE_DELETED 4005  // R  bool;
 #define LC_PROP_PSTYLE_STANDARD 4265 // R  bool;
 #define LC_PROP_PSTYLE_BLOCK 4266    // RW handle|string;
 #define LC_PROP_PSTYLE_BSCALE 4267   // RW float;
@@ -2090,38 +2090,38 @@
 //-----------------------------------------------
 // Block
 //-----------------------------------------------
-#define LC_PROP_BLOCK_ID 4001      // R  int64|string; same as LC_PROP_TABLE_ID
-#define LC_PROP_BLOCK_NAME 4002    // RW string; same as LC_PROP_TABLE_NAME
-#define LC_PROP_BLOCK_DESC 4003    // RW string; same as LC_PROP_TABLE_DESC
-#define LC_PROP_BLOCK_DESCR 4003   // RW string;
-#define LC_PROP_BLOCK_DRW 4004     // R  handle; Handle to owner drawing
-#define LC_PROP_BLOCK_DELETED 4005 // R  bool;
-#define LC_PROP_BLOCK_X 4801       // RW float;
-#define LC_PROP_BLOCK_Y 4802       // RW float;
-#define LC_PROP_BLOCK_UFSCALING 4803 // RW bool;
-#define LC_PROP_BLOCK_UNITS 4804     // RW int;   LC_INSUNIT_UNDEFINED and other
-#define LC_PROP_BLOCK_UNITSCALE 4810 // R  float;
-#define LC_PROP_BLOCK_MODEL 4811     // R  bool;
-#define LC_PROP_BLOCK_PAPER 4812     // R  bool;
-#define LC_PROP_BLOCK_LAYOUT 4813    // R  bool;  MODEL or  PAPER
-#define LC_PROP_BLOCK_STANDARD 4814  // R  bool;
+#define LC_PROP_BLOCK_ID 4001         // R  int64|string; same as LC_PROP_TABLE_ID
+#define LC_PROP_BLOCK_NAME 4002       // RW string; same as LC_PROP_TABLE_NAME
+#define LC_PROP_BLOCK_DESC 4003       // RW string; same as LC_PROP_TABLE_DESC
+#define LC_PROP_BLOCK_DESCR 4003      // RW string;
+#define LC_PROP_BLOCK_DRW 4004        // R  handle; Handle to owner drawing
+#define LC_PROP_BLOCK_DELETED 4005    // R  bool;
+#define LC_PROP_BLOCK_X 4801          // RW float;
+#define LC_PROP_BLOCK_Y 4802          // RW float;
+#define LC_PROP_BLOCK_UFSCALING 4803  // RW bool;
+#define LC_PROP_BLOCK_UNITS 4804      // RW int;   LC_INSUNIT_UNDEFINED and other
+#define LC_PROP_BLOCK_UNITSCALE 4810  // R  float;
+#define LC_PROP_BLOCK_MODEL 4811      // R  bool;
+#define LC_PROP_BLOCK_PAPER 4812      // R  bool;
+#define LC_PROP_BLOCK_LAYOUT 4813     // R  bool;  MODEL or  PAPER
+#define LC_PROP_BLOCK_STANDARD 4814   // R  bool;
 #define LC_PROP_BLOCK_LAYOUTNAME 4815 // RW string;
-#define LC_PROP_BLOCK_LAYOUTORDER                                              \
-  4816 // RW int; value used for window tabs order  // undoc
+#define LC_PROP_BLOCK_LAYOUTORDER \
+  4816                            // RW int; value used for window tabs order  // undoc
 #define LC_PROP_BLOCK_HIDDEN 4818 // R  bool;
 #define LC_PROP_BLOCK_DIM 4819    // R  bool;
 #define LC_PROP_BLOCK_HATCH 4820  // R  bool;
-#define LC_PROP_BLOCK_NOBJ                                                     \
+#define LC_PROP_BLOCK_NOBJ \
   4821 // R  int; number of graphic objects (not deleted) in the block
-#define LC_PROP_BLOCK_NENTS                                                    \
-  4821 // R  int; number of graphic objects (not deleted) in the block
+#define LC_PROP_BLOCK_NENTS \
+  4821                              // R  int; number of graphic objects (not deleted) in the block
 #define LC_PROP_BLOCK_NSELOBJ 4822  // R  int; number of selected objects
 #define LC_PROP_BLOCK_NSELENTS 4822 // R  int; number of selected objects
 #define LC_PROP_BLOCK_ATTRIBS 4827  // R  bool;  "Block has attributes" flag
 // #define LC_PROP_BLOCK_TIN            4828  // RW handle;  active TIN entity
-#define LC_PROP_BLOCK_ODA_LAYOUTHANDLE                                         \
+#define LC_PROP_BLOCK_ODA_LAYOUTHANDLE \
   4829 // RW string; ODA layout handle  // undoc
-#define LC_PROP_BLOCK_ODA_VPORTHANDLE                                          \
+#define LC_PROP_BLOCK_ODA_VPORTHANDLE \
   4830 // RW string; ODA overall viewport handle  // undoc
 
 // #define LC_PROP_BLOCK_PLACE          4828  // RW bool; uses "block place"
@@ -2146,15 +2146,15 @@
 #define LC_PROP_BLOCK_SELYCEN 4848 // R  float;
 #define LC_PROP_SHAPE_ANGLE 4849   // RW float; Shape rotation angle
 #define LC_PROP_PAPER__MIN 4851    //
-#define LC_PROP_PAPER_INCH                                                     \
+#define LC_PROP_PAPER_INCH \
   4851 // RW bool; original paper units (used when import drawing from DWG)
-#define LC_PROP_PAPER_X0                                                       \
+#define LC_PROP_PAPER_X0 \
   4852 // RW float; X coordinate of paper left-bottom corner
-#define LC_PROP_PAPER_Y0                                                       \
-  4853 // RW float; Y coordinate of paper left-bottom corner
+#define LC_PROP_PAPER_Y0 \
+  4853                          // RW float; Y coordinate of paper left-bottom corner
 #define LC_PROP_PAPER_SIZE 4854 // R  int; Paper size (LC_PAPER_A0 and others)
-#define LC_PROP_PAPER_ORIENT                                                   \
-  4855 // R  int; Paper orientation (LC_PAPER_BOOK and others)
+#define LC_PROP_PAPER_ORIENT \
+  4855                       // R  int; Paper orientation (LC_PAPER_BOOK and others)
 #define LC_PROP_PAPER_W 4856 // R  float; Paper width, mm
 #define LC_PROP_PAPER_H 4857 // R  float; Paper height, mm
 
@@ -2165,18 +2165,18 @@
 #define LC_PROP_ENT_TYPE 5030 // R  int;
 #define LC_PROP_ENT_ID 5001   // R  int64|string; Unique Identifier
 #define LC_PROP_ENT_KEY 5002  // RW int; User value
-#define LC_PROP_ENT_BLOCK                                                      \
+#define LC_PROP_ENT_BLOCK \
   5024                       // R  handle|string; Handle to Block|Name of Block
 #define LC_PROP_ENT_DRW 5025 // R  handle; Handle to drawing
-#define LC_PROP_ENT_LAYER                                                      \
+#define LC_PROP_ENT_LAYER \
   5020 // RW handle|string; Handle to Layer|Name of Layer
-#define LC_PROP_ENT_LINETYPE                                                   \
-  5021 // RW handle|string; Handle to Linetype|Name of Linetype
+#define LC_PROP_ENT_LINETYPE \
+  5021                            // RW handle|string; Handle to Linetype|Name of Linetype
 #define LC_PROP_ENT_LTSCALE 5022  // RW float; Linetype scale
 #define LC_PROP_ENT_LWEIGHT 5023  // RW int; Lineweight
 #define LC_PROP_ENT_LWIDTH 5023   // same as LC_PROP_ENT_LWEIGHT
 #define LC_PROP_ENT_PRIORITY 5040 // RW int64|string; priority for sorting
-#define LC_PROP_ENT_FROMCB                                                     \
+#define LC_PROP_ENT_FROMCB \
   5035 // R  bool; TRUE if entity was added from ClipBoard
 // Outline Color
 #define LC_PROP_ENT_COLOR 5003        // RW string|int; Color name | RGB color
@@ -2185,18 +2185,18 @@
 #define LC_PROP_ENT_COLORBYLAYER 5006 // RW bool; Color "ByLayer"
 #define LC_PROP_ENT_COLORBYBLOCK 5007 // RW bool; Color "ByBlock"
 // Entity filling (for closed entities)
-#define LC_PROP_ENT_SOLIDFILL 5008 // RW bool; same as LC_PROP_ENT_FILLED
-#define LC_PROP_ENT_FILLED 5008    // RW bool;
-#define LC_PROP_ENT_FILLING 5008   // RW bool; same as LC_PROP_ENT_FILLED
-#define LC_PROP_ENT_WIPEOUT 5011   // RW bool; filled with background color
-#define LC_PROP_ENT_FCOLOR 5012    // RW string|int; Filling Color | RGB color
-#define LC_PROP_ENT_FCOLORI 5013   // RW int; R bool; Filling Color Index
-#define LC_PROP_ENT_FCOLORT 5014   // RW int; R bool; Filling True Color
+#define LC_PROP_ENT_SOLIDFILL 5008     // RW bool; same as LC_PROP_ENT_FILLED
+#define LC_PROP_ENT_FILLED 5008        // RW bool;
+#define LC_PROP_ENT_FILLING 5008       // RW bool; same as LC_PROP_ENT_FILLED
+#define LC_PROP_ENT_WIPEOUT 5011       // RW bool; filled with background color
+#define LC_PROP_ENT_FCOLOR 5012        // RW string|int; Filling Color | RGB color
+#define LC_PROP_ENT_FCOLORI 5013       // RW int; R bool; Filling Color Index
+#define LC_PROP_ENT_FCOLORT 5014       // RW int; R bool; Filling True Color
 #define LC_PROP_ENT_FCOLORBYLAYER 5015 // RW bool; Filling Color "ByLayer"
 #define LC_PROP_ENT_FCOLORBYBLOCK 5016 // RW bool; Filling Color "ByBlock"
 #define LC_PROP_ENT_FALPHA 5017        // RW int; Filling Color alpha value
-#define LC_PROP_ENT_LINFILL                                                    \
-  5018 // RW handle|string; Handle to Lfilling type|Name of Lfilling type
+#define LC_PROP_ENT_LINFILL \
+  5018                             // RW handle|string; Handle to Lfilling type|Name of Lfilling type
 #define LC_PROP_ENT_LINFILLNL 5019 // R  int; number of generated filling lines
 // Flags
 #define LC_PROP_ENT_LOCKED 5026   // R  bool;
@@ -2216,8 +2216,8 @@
 #define LC_PROP_ENT_YCEN 5057 // R  float; Y center of entity
 #define LC_PROP_ENT_DX 5058   // R  float; width of entity
 #define LC_PROP_ENT_DY 5059   // R  float; height of entity
-#define LC_PROP_ENT_LEN                                                        \
-  5060 // R  float; length (line, pline, arc, circle, ellipse, rect)
+#define LC_PROP_ENT_LEN \
+  5060                             // R  float; length (line, pline, arc, circle, ellipse, rect)
 #define LC_PROP_ENT_Z 5061         // RW float; Z coord for 2D objects
 #define LC_PROP_ENT_THICKNESS 5062 // RW float; thickness of extrusion
 
@@ -2226,12 +2226,12 @@
 #define LC_PROP_ENT_XDATAFLAGS 5042 // RW int; flags of xdata
 #define LC_PROP_ENT_XDATASIZE 5043  // R  int; size of extra data (bytes)
 #define LC_PROP_ENT_XDATA 5044      // RW handle; pointer to extra data
-#define LC_PROP_ENT_XSTR 5045 // RW string; user string (uses XDATA buffer)
+#define LC_PROP_ENT_XSTR 5045       // RW string; user string (uses XDATA buffer)
 #define LC_PROP_ENTBASE__MAX 5100
 
 // Point
-#define LC_PROP_POINT_STYLE                                                    \
-  5101 // RW handle|string; Handle to Point Style|Name of Point Style
+#define LC_PROP_POINT_STYLE \
+  5101                             // RW handle|string; Handle to Point Style|Name of Point Style
 #define LC_PROP_POINT_X 5102       // RW float;
 #define LC_PROP_POINT_Y 5103       // RW float;
 #define LC_PROP_POINT_Z 5061       // RW float; same as LC_PROP_ENT_Z
@@ -2251,7 +2251,7 @@
 #define LC_PROP_PTARR_DIR 5114      // R  string; file directory
 #define LC_PROP_PTARR_LOADED 5115   // R  bool; TRUE if file is loaded
 #define LC_PROP_PTARR_NUM 5116      // R  int; number of points
-#define LC_PROP_PTARR_NUMVIS 5117 // R  int; number of currently visible points
+#define LC_PROP_PTARR_NUMVIS 5117   // R  int; number of currently visible points
 #define LC_PROP_PTARR_TEXTVLIM 5118 // RW float; text view limit
 #define LC_PROP_PTARR_VLIM10 5119   // RW float; view limit 1/10
 #define LC_PROP_PTARR_VLIM100 5120  // RW float; view limit 1/100
@@ -2338,8 +2338,8 @@
 #define LC_PROP_ELL_RATIO 5266 // RW float; R2/R1
 #define LC_PROP_ELL_ANGLE 5267 // RW float; Rotation angle
 #define LC_PROP_ELL_ANG0 5268  // RW float; Start angle (for elliptical arc)
-#define LC_PROP_ELL_ANGARC                                                     \
-  5269 // RW float; Arc included angle. Positive - counter-clockwise,
+#define LC_PROP_ELL_ANGARC \
+  5269                          // RW float; Arc included angle. Positive - counter-clockwise,
 #define LC_PROP_ELL_ANGEND 5270 // R  float; End angle
 #define LC_PROP_ELL_X0 5271     // R  float; Start point X
 #define LC_PROP_ELL_Y0 5272     // R  float; Start point Y
@@ -2357,8 +2357,8 @@
 #define LC_PROP_PLINE_FIT 5301    // RW int; Fit type
 #define LC_PROP_PLINE_CLOSED 5302 // RW bool; Closed polyline
 #define LC_PROP_PLINE_NVERS 5303  // R  int; Number of vertices
-#define LC_PROP_PLINE_WIDTH                                                    \
-  5305 // RW float|bool; Constant width | Has const width
+#define LC_PROP_PLINE_WIDTH \
+  5305                            // RW float|bool; Constant width | Has const width
 #define LC_PROP_PLINE_LEN 5306    // R  float; Length
 #define LC_PROP_PLINE_AREA 5307   // R  float; Area
 #define LC_PROP_PLINE_CW 5308     // R  bool; "ClockWise direction" flag
@@ -2367,25 +2367,25 @@
 #define LC_PROP_PLINE_CONSTZ 5311 // R  bool; all vertices have same Z
 #define LC_PROP_PLINE_RESOLA 5312 // RW int; resolution for arc segments
 #define LC_PROP_PLINE_RESOLS 5313 // RW int; resolution for spline segments
-#define LC_PROP_PLINE_RADIUS                                                   \
+#define LC_PROP_PLINE_RADIUS \
   5314 // RW float|bool; Constant radius (for rounded polyline) | Has const
        // radius
-#define LC_PROP_PLINE_CHAMFER                                                  \
-  5315 // RW bool; Chamfer or arc (for rounded polyline)
+#define LC_PROP_PLINE_CHAMFER \
+  5315                             // RW bool; Chamfer or arc (for rounded polyline)
 #define LC_PROP_PLINE_HASANG0 5316 // RW bool; Has start angle (for fit spline)
 #define LC_PROP_PLINE_ANG0 5317    // RW float; Start angle (for fit spline)
 #define LC_PROP_PLINE_HASANG2 5318 // RW bool; Has end angle (for fit spline)
 #define LC_PROP_PLINE_ANG2 5319    // RW float; End angle (for fit spline)
 #define LC_PROP_PLINE_WIPEOUT 5325 // RW bool; "wipeout" type polygon
-#define LC_PROP_PLINE_ODSOLID                                                  \
+#define LC_PROP_PLINE_ODSOLID \
   5326 // RW bool; made from SOLID entity at ODA import
 
 // Multiline Polyline
-#define LC_PROP_MLINE_STYLE                                                    \
-  5351 // RW handle|string; Handle to mline style|Name of mline style
-#define LC_PROP_MLINE_JUST 5352  // RW int; justification LC_MLINE_TOP and other
-#define LC_PROP_MLINE_SCALE 5353 // RW float; mline scale
-#define LC_PROP_MLINE_NVERS 5354 // R  int; Number of vertices
+#define LC_PROP_MLINE_STYLE \
+  5351                            // RW handle|string; Handle to mline style|Name of mline style
+#define LC_PROP_MLINE_JUST 5352   // RW int; justification LC_MLINE_TOP and other
+#define LC_PROP_MLINE_SCALE 5353  // RW float; mline scale
+#define LC_PROP_MLINE_NVERS 5354  // R  int; Number of vertices
 #define LC_PROP_MLINE_CLOSED 5355 // RW bool; closed polyline
 #define LC_PROP_MLINE_FIT 5356    // RW int; Fit type
 #define LC_PROP_MLINE_LEN 5357    // R  float; Length
@@ -2424,49 +2424,49 @@
 #define LC_PROP_CRECT_AREA 5399  // R  float; Area
 
 // Text (LC_ENT_TEXT)
-#define LC_PROP_TEXT_STYLE                                                     \
-  5401 // RW handle|string; Handle to text style|Name of text style
+#define LC_PROP_TEXT_STYLE \
+  5401                        // RW handle|string; Handle to text style|Name of text style
 #define LC_PROP_TEXT_STR 5402 // RW string; Text content
-#define LC_PROP_TEXT_STRT                                                      \
+#define LC_PROP_TEXT_STRT \
   5403                        // R  string; Text content (with translated codes)
 #define LC_PROP_TEXT_LEN 5404 // R  int; Number of characters in the Text string
-#define LC_PROP_TEXT_ALIGN                                                     \
+#define LC_PROP_TEXT_ALIGN \
   5405 // RW int; Alignment type (LC_TA_LEFBOT and others)
-#define LC_PROP_TEXT_H                                                         \
-  5406 // RW float; Height (0-ByStyle, <0-pixel height, -1-default GUI size)
-#define LC_PROP_TEXT_X 5407  // RW float; Insertion point X
-#define LC_PROP_TEXT_Y 5408  // RW float; Insertion point Y
-#define LC_PROP_TEXT_DX 5409 // RW int; Offset X (valid if Pixel Height is true)
-#define LC_PROP_TEXT_DY 5410 // RW int; Offset Y (valid if Pixel Height is true)
+#define LC_PROP_TEXT_H \
+  5406                              // RW float; Height (0-ByStyle, <0-pixel height, -1-default GUI size)
+#define LC_PROP_TEXT_X 5407         // RW float; Insertion point X
+#define LC_PROP_TEXT_Y 5408         // RW float; Insertion point Y
+#define LC_PROP_TEXT_DX 5409        // RW int; Offset X (valid if Pixel Height is true)
+#define LC_PROP_TEXT_DY 5410        // RW int; Offset Y (valid if Pixel Height is true)
 #define LC_PROP_TEXT_WSCALE 5412    // RW float; Width factor (horisontal scale)
 #define LC_PROP_TEXT_ANGLE 5413     // RW float; Rotation angle
 #define LC_PROP_TEXT_OBLIQUE 5414   // RW float; Oblique angle
 #define LC_PROP_TEXT_CHARSPACE 5415 // RW float;
-#define LC_PROP_TEXT_WRECT 5416  // R  float; Width of a text bounding rectange
-#define LC_PROP_TEXT_X0 5417     // R  float; X coordinate of left-bottom corner
-#define LC_PROP_TEXT_Y0 5418     // R  float; Y coordinate of left-bottom corner
-#define LC_PROP_TEXT_XFIT 5419   // RW float;
-#define LC_PROP_TEXT_YFIT 5420   // RW float;
-#define LC_PROP_TEXT_UPDOWN 5421 // RW bool; Indication "Upside-down text"
-#define LC_PROP_TEXT_BACKWARD 5422 // RW bool; Indication "Backward text"
-#define LC_PROP_TEXT_RESOL 5423    // RW int; Resolution
+#define LC_PROP_TEXT_WRECT 5416     // R  float; Width of a text bounding rectange
+#define LC_PROP_TEXT_X0 5417        // R  float; X coordinate of left-bottom corner
+#define LC_PROP_TEXT_Y0 5418        // R  float; Y coordinate of left-bottom corner
+#define LC_PROP_TEXT_XFIT 5419      // RW float;
+#define LC_PROP_TEXT_YFIT 5420      // RW float;
+#define LC_PROP_TEXT_UPDOWN 5421    // RW bool; Indication "Upside-down text"
+#define LC_PROP_TEXT_BACKWARD 5422  // RW bool; Indication "Backward text"
+#define LC_PROP_TEXT_RESOL 5423     // RW int; Resolution
 
 // TextWin (LC_ENT_TEXTWIN)
-#define LC_PROP_TEXTW_STYLE                                                    \
-  5431 // RW handle|string; Handle to text style|Name of text style
+#define LC_PROP_TEXTW_STYLE \
+  5431                         // RW handle|string; Handle to text style|Name of text style
 #define LC_PROP_TEXTW_STR 5432 // RW string; Text content
-#define LC_PROP_TEXTW_STRT                                                     \
+#define LC_PROP_TEXTW_STRT \
   5433 // R  string; Text content (with translated codes)
-#define LC_PROP_TEXTW_LEN                                                      \
-  5434 // R  int; Number of characters in the Text string
+#define LC_PROP_TEXTW_LEN \
+  5434                           // R  int; Number of characters in the Text string
 #define LC_PROP_TEXTW_ALIGN 5435 // RW int; Alignment type
 #define LC_PROP_TEXTW_X 5436     // RW float; Insertion point X
 #define LC_PROP_TEXTW_Y 5437     // RW float; Insertion point Y
 #define LC_PROP_TEXTW_H 5438     // RW float; Height
-#define LC_PROP_TEXTW_DX                                                       \
+#define LC_PROP_TEXTW_DX \
   5440 // RW int; Offset X (valid if Pixel Height is true)
-#define LC_PROP_TEXTW_DY                                                       \
-  5441 // RW int; Offset Y (valid if Pixel Height is true)
+#define LC_PROP_TEXTW_DY \
+  5441                            // RW int; Offset Y (valid if Pixel Height is true)
 #define LC_PROP_TEXTW_WSCALE 5442 // RW float; Width factor (horisontal scale)
 #define LC_PROP_TEXTW_ANGLE 5443  // RW float; Rotation angle
 
@@ -2495,8 +2495,8 @@
 #define LC_PROP_ATEXT__MIN 5481
 #define LC_PROP_ATEXT_STYLE 5481 // RW handle|string; Text style
 #define LC_PROP_ATEXT_STR 5482   // RW string;
-#define LC_PROP_ATEXT_STRT                                                     \
-  5483 // R  string; Text content (with translated codes)
+#define LC_PROP_ATEXT_STRT \
+  5483                               // R  string; Text content (with translated codes)
 #define LC_PROP_ATEXT_LEN 5484       // R  int;
 #define LC_PROP_ATEXT_X 5485         // RW float; Center X
 #define LC_PROP_ATEXT_Y 5486         // RW float; Center Y
@@ -2516,23 +2516,23 @@
 
 // Attribute definition & Attribute
 #define LC_PROP_ATT_MODE 5501 // RW int;
-#define LC_PROP_ATT_TSTYLE                                                     \
-  5502 // RW handle|string; Handle to text style|Name of text style
-#define LC_PROP_ATT_TAG 5503     // RW string;
-#define LC_PROP_ATT_PROMPT 5504  // RW string;
-#define LC_PROP_ATT_VALUE 5505   // RW string;
-#define LC_PROP_ATT_ALIGN 5506   // RW int; Alignment type
-#define LC_PROP_ATT_X 5507       // RW float; Insertion point X
-#define LC_PROP_ATT_Y 5508       // RW float; Insertion point Y
-#define LC_PROP_ATT_H 5510       // RW float; Height
-#define LC_PROP_ATT_WSCALE 5511  // RW float; Width factor (horisontal scale)
-#define LC_PROP_ATT_ANGLE 5512   // RW float; Rotation angle
-#define LC_PROP_ATT_OBLIQUE 5513 // RW float; Oblique angle
-#define LC_PROP_ATT_X0 5514      // R  float; X coordinate of left-bottom corner
-#define LC_PROP_ATT_Y0 5515      // R  float; Y coordinate of left-bottom corner
-#define LC_PROP_ATT_XFIT 5516    // RW float;
-#define LC_PROP_ATT_YFIT 5517    // RW float;
-#define LC_PROP_ATT_UPDOWN 5518  // RW bool; Indication "Upside-down text"
+#define LC_PROP_ATT_TSTYLE \
+  5502                            // RW handle|string; Handle to text style|Name of text style
+#define LC_PROP_ATT_TAG 5503      // RW string;
+#define LC_PROP_ATT_PROMPT 5504   // RW string;
+#define LC_PROP_ATT_VALUE 5505    // RW string;
+#define LC_PROP_ATT_ALIGN 5506    // RW int; Alignment type
+#define LC_PROP_ATT_X 5507        // RW float; Insertion point X
+#define LC_PROP_ATT_Y 5508        // RW float; Insertion point Y
+#define LC_PROP_ATT_H 5510        // RW float; Height
+#define LC_PROP_ATT_WSCALE 5511   // RW float; Width factor (horisontal scale)
+#define LC_PROP_ATT_ANGLE 5512    // RW float; Rotation angle
+#define LC_PROP_ATT_OBLIQUE 5513  // RW float; Oblique angle
+#define LC_PROP_ATT_X0 5514       // R  float; X coordinate of left-bottom corner
+#define LC_PROP_ATT_Y0 5515       // R  float; Y coordinate of left-bottom corner
+#define LC_PROP_ATT_XFIT 5516     // RW float;
+#define LC_PROP_ATT_YFIT 5517     // RW float;
+#define LC_PROP_ATT_UPDOWN 5518   // RW bool; Indication "Upside-down text"
 #define LC_PROP_ATT_BACKWARD 5519 // RW bool; Indication "Backward text"
 #define LC_PROP_ATT_COLOR 5521    // R str;
 #define LC_PROP_ATT_LAYER 5522    // R handle;
@@ -2544,10 +2544,10 @@
 #define LC_PROP_ATT_MTEXT 5528    // RW bool; Mode: multiline text
 
 // Block Reference
-#define LC_PROP_BLKREF_BLOCK                                                   \
-  5531                        // RW handle|string; Handle to Block|Name of Block
-#define LC_PROP_BLKREF_X 5532 // RW float; Insertion point X
-#define LC_PROP_BLKREF_Y 5533 // RW float; Insertion point Y
+#define LC_PROP_BLKREF_BLOCK \
+  5531                               // RW handle|string; Handle to Block|Name of Block
+#define LC_PROP_BLKREF_X 5532        // RW float; Insertion point X
+#define LC_PROP_BLKREF_Y 5533        // RW float; Insertion point Y
 #define LC_PROP_BLKREF_SCALE 5534    // RW float;
 #define LC_PROP_BLKREF_SCX 5535      // RW float;
 #define LC_PROP_BLKREF_SCY 5536      // RW float;
@@ -2563,44 +2563,44 @@
 // only for using with LC_CMD_INSERT
 #define LC_PROP_BLKREF_ONS_XY 5546    // RW bool; Specify position on-screen
 #define LC_PROP_BLKREF_ONS_SCALE 5547 // RW bool; Specify scale on-screen
-#define LC_PROP_BLKREF_ONS_ANGLE                                               \
+#define LC_PROP_BLKREF_ONS_ANGLE \
   5548 // RW bool; Specify rotation angle on-screen
-#define LC_PROP_BLKREF_RETURN                                                  \
+#define LC_PROP_BLKREF_RETURN \
   5549 // R  handle; Handle to inserted object (block reference) after execution
 
 // Raster Image reference
-#define LC_PROP_IMGREF_IMAGE                                                   \
-  5551 // RW handle|string;  Handle to Image | Name of Image
-#define LC_PROP_IMGREF_XC 5552    // RW float; X coordinate of center point
-#define LC_PROP_IMGREF_YC 5553    // RW float; Y coordinate of center point
-#define LC_PROP_IMGREF_W 5554     // RW float; Width
-#define LC_PROP_IMGREF_H 5555     // RW float; Height
-#define LC_PROP_IMGREF_WPIX 5556  // R  int; Image width in pixels
-#define LC_PROP_IMGREF_HPIX 5557  // R  int; Image height in pixels
-#define LC_PROP_IMGREF_SCALE 5558 // RW float; uniform scale, units per pixel
+#define LC_PROP_IMGREF_IMAGE \
+  5551                                // RW handle|string;  Handle to Image | Name of Image
+#define LC_PROP_IMGREF_XC 5552        // RW float; X coordinate of center point
+#define LC_PROP_IMGREF_YC 5553        // RW float; Y coordinate of center point
+#define LC_PROP_IMGREF_W 5554         // RW float; Width
+#define LC_PROP_IMGREF_H 5555         // RW float; Height
+#define LC_PROP_IMGREF_WPIX 5556      // R  int; Image width in pixels
+#define LC_PROP_IMGREF_HPIX 5557      // R  int; Image height in pixels
+#define LC_PROP_IMGREF_SCALE 5558     // RW float; uniform scale, units per pixel
 #define LC_PROP_IMGREF_PIXELSIZE 5558 // same as LC_PROP_IMGREF_SCALE
 #define LC_PROP_IMGREF_SCALEX 5560    // RW float; X scale, units per pixel
 #define LC_PROP_IMGREF_SCALEY 5561    // RW float; Y scale, units per pixel
-#define LC_PROP_IMGREF_SQPIX 5562 // RW bool; if TRUE - uniform scale for puxel
-#define LC_PROP_IMGREF_ANGLE                                                   \
-  5564 // RW float; rotation angle, around left-bottom corner
+#define LC_PROP_IMGREF_SQPIX 5562     // RW bool; if TRUE - uniform scale for puxel
+#define LC_PROP_IMGREF_ANGLE \
+  5564                             // RW float; rotation angle, around left-bottom corner
 #define LC_PROP_IMGREF_BORDER 5565 // RW bool;  "Draw a border" flag
-#define LC_PROP_IMGREF_TRANSP                                                  \
-  5566 // RW int; transparency: 0-none, 1-TransColor, 2-AlphaValue
-#define LC_PROP_IMGREF_TRCOLOR 5567  // RW int; transparent color (COLORREF)
-#define LC_PROP_IMGREF_TRALPHA 5568  // RW int; alpha value (0-255)
-#define LC_PROP_IMGREF_GRAYS 5569    // RW bool;
-#define LC_PROP_IMGREF_GREY 5569     // RW bool; same as LC_PROP_IMGREF_GRAYS
-#define LC_PROP_IMGREF_FLIPHOR 5570  // RW bool;
-#define LC_PROP_IMGREF_FLIPVER 5571  // RW bool;
-#define LC_PROP_IMGREF_PATH 5573     // R  string; image full filename
-#define LC_PROP_IMGREF_GP_X 5574     // R  float; result of lcImgRefGetPixel
-#define LC_PROP_IMGREF_GP_Y 5575     // R  float; result of lcImgRefGetPixel
-#define LC_PROP_IMGREF_GP_COLOR 5576 // R  int; result of lcImgRefGetPixel
-#define LC_PROP_IMGREF_GP_GRAY 5577  // RW bool; color mode for lcImgRefGetPixel
+#define LC_PROP_IMGREF_TRANSP \
+  5566                                 // RW int; transparency: 0-none, 1-TransColor, 2-AlphaValue
+#define LC_PROP_IMGREF_TRCOLOR 5567    // RW int; transparent color (COLORREF)
+#define LC_PROP_IMGREF_TRALPHA 5568    // RW int; alpha value (0-255)
+#define LC_PROP_IMGREF_GRAYS 5569      // RW bool;
+#define LC_PROP_IMGREF_GREY 5569       // RW bool; same as LC_PROP_IMGREF_GRAYS
+#define LC_PROP_IMGREF_FLIPHOR 5570    // RW bool;
+#define LC_PROP_IMGREF_FLIPVER 5571    // RW bool;
+#define LC_PROP_IMGREF_PATH 5573       // R  string; image full filename
+#define LC_PROP_IMGREF_GP_X 5574       // R  float; result of lcImgRefGetPixel
+#define LC_PROP_IMGREF_GP_Y 5575       // R  float; result of lcImgRefGetPixel
+#define LC_PROP_IMGREF_GP_COLOR 5576   // R  int; result of lcImgRefGetPixel
+#define LC_PROP_IMGREF_GP_GRAY 5577    // RW bool; color mode for lcImgRefGetPixel
 #define LC_PROP_IMGREF_UNSCALABLE 5578 // RW bool; "Unscalable image" flag
 #define LC_PROP_IMGREF_UNSSCALE 5579   // RW float; scale for unscalable image
-#define LC_PROP_IMGREF_UNSALIGN                                                \
+#define LC_PROP_IMGREF_UNSALIGN \
   5580 // RW int; Alignment of unscalable image, relative to LC_PROP_IMGREF_XC,
        // LC_PROP_IMGREF_YC (LC_IMGA_CENTER or other)
 
@@ -2610,31 +2610,31 @@
 #define LC_PROP_ECW_WPIX 5583     // R  int; Width (pixels)
 #define LC_PROP_ECW_HPIX 5584     // R  int; Height (pixels)
 #define LC_PROP_ECW_CBIT 5585     // R  int; Color bits
-#define LC_PROP_ECW_XMIN 5586   // R  float; X coordinate of left-bottom corner
-#define LC_PROP_ECW_YMIN 5587   // R  float; Y coordinate of left-bottom corner
-#define LC_PROP_ECW_XMAX 5588   // R  float; X coordinate of right-top corner
-#define LC_PROP_ECW_YMAX 5589   // R  float; Y coordinate of right-top corner
-#define LC_PROP_ECW_W 5590      // R  float; Width (drawing units)
-#define LC_PROP_ECW_H 5591      // R  float; Height (drawing units)
-#define LC_PROP_ECW_SCALEX 5592 // R  float;
-#define LC_PROP_ECW_SCALEY 5593 // R  float;
-#define LC_PROP_ECW_BORDER 5594 // RW bool; "Draw a border" flag
-#define LC_PROP_ECW_GRAYS 5595  // RW bool; "Draw as grayscale" flag
-#define LC_PROP_ECW_BRIGHT 5596 // RW int;  change brightness -200...+200
+#define LC_PROP_ECW_XMIN 5586     // R  float; X coordinate of left-bottom corner
+#define LC_PROP_ECW_YMIN 5587     // R  float; Y coordinate of left-bottom corner
+#define LC_PROP_ECW_XMAX 5588     // R  float; X coordinate of right-top corner
+#define LC_PROP_ECW_YMAX 5589     // R  float; Y coordinate of right-top corner
+#define LC_PROP_ECW_W 5590        // R  float; Width (drawing units)
+#define LC_PROP_ECW_H 5591        // R  float; Height (drawing units)
+#define LC_PROP_ECW_SCALEX 5592   // R  float;
+#define LC_PROP_ECW_SCALEY 5593   // R  float;
+#define LC_PROP_ECW_BORDER 5594   // RW bool; "Draw a border" flag
+#define LC_PROP_ECW_GRAYS 5595    // RW bool; "Draw as grayscale" flag
+#define LC_PROP_ECW_BRIGHT 5596   // RW int;  change brightness -200...+200
 
 // Big Raster Image
 #define LC_PROP_BRI_FILENAME 5601 // R  string; Image filename
 #define LC_PROP_BRI_LOADED 5602   // R  bool; "Image is loaded" flag
 #define LC_PROP_BRI_WPIX 5603     // R  int; Width (pixels)
 #define LC_PROP_BRI_HPIX 5604     // R  int; Height (pixels)
-#define LC_PROP_BRI_XMIN 5605    // R  float; X coordinate of left-bottom corner
-#define LC_PROP_BRI_YMIN 5606    // R  float; Y coordinate of left-bottom corner
-#define LC_PROP_BRI_XMAX 5607    // R  float; X coordinate of right-top corner
-#define LC_PROP_BRI_YMAX 5608    // R  float; Y coordinate of right-top corner
-#define LC_PROP_BRI_W 5609       // R  float; Width (drawing units)
-#define LC_PROP_BRI_H 5610       // R  float; Height (drawing units)
-#define LC_PROP_BRI_PIXSIZE 5611 // R  float; drawing units per pixel
-#define LC_PROP_BRI_BORDER 5612  // RW bool; "Draw a border" flag
+#define LC_PROP_BRI_XMIN 5605     // R  float; X coordinate of left-bottom corner
+#define LC_PROP_BRI_YMIN 5606     // R  float; Y coordinate of left-bottom corner
+#define LC_PROP_BRI_XMAX 5607     // R  float; X coordinate of right-top corner
+#define LC_PROP_BRI_YMAX 5608     // R  float; Y coordinate of right-top corner
+#define LC_PROP_BRI_W 5609        // R  float; Width (drawing units)
+#define LC_PROP_BRI_H 5610        // R  float; Height (drawing units)
+#define LC_PROP_BRI_PIXSIZE 5611  // R  float; drawing units per pixel
+#define LC_PROP_BRI_BORDER 5612   // RW bool; "Draw a border" flag
 
 // Camera view
 #define LC_PROP_CAMERA_X 5621 // RW float; left of camera view rect
@@ -2651,14 +2651,14 @@
 #define LC_PROP_HATCH_ASSOC 5636   // RW bool; "Associative hatch" flag
 #define LC_PROP_HATCH_SOLID 5637   // RW bool; Solid fill
 #define LC_PROP_HATCH_CUSTOM 5638  // R  bool; Custom pattern
-#define LC_PROP_HATCH_NENTS                                                    \
-  5639 // R  int; number of boundary entities (for Associative hatch)
+#define LC_PROP_HATCH_NENTS \
+  5639                           // R  int; number of boundary entities (for Associative hatch)
 #define LC_PROP_HATCH_NPT 5640   // R  int; number of points
 #define LC_PROP_HATCH_NLOOP 5641 // R  int; number of loops
 #define LC_PROP_HATCH_NHPL 5642  // R  int; number of pattern lines
 #define LC_PROP_HATCH_IHPL 5643  // W  int; set index of active pattern line
-#define LC_PROP_HATCH_FALPHA                                                   \
-  5644 // RW int; transparency alpha value (only for Solid hatch)
+#define LC_PROP_HATCH_FALPHA \
+  5644                             // RW int; transparency alpha value (only for Solid hatch)
 #define LC_PROP_HATCH_AREA 5645    // R  float; Area
 #define LC_PROP_HATCH_NDASHES 5646 // R  int; number of hatch dashes
 #define LC_PROP_HPL_ANGLE 5651     // R  float;
@@ -2698,8 +2698,8 @@
 #define LC_PROP_BARC_W 5753   // RW float; Width
 #define LC_PROP_BARC_H 5754   // RW float; Height
 #define LC_PROP_BARC_ANG 5755 // RW float; Rotation angle
-#define LC_PROP_BARC_TYPE                                                      \
-  5756 // RW int; barcode type, LC_BARTYPE_CODE39 and others
+#define LC_PROP_BARC_TYPE \
+  5756                              // RW int; barcode type, LC_BARTYPE_CODE39 and others
 #define LC_PROP_BARC_CODE 5757      // RW string;
 #define LC_PROP_BARC_TEXT 5757      // RW string; same as LC_PROP_BARC_CODE
 #define LC_PROP_BARC_CHECKSUM 5758  // RW bool; add checksum
@@ -2711,20 +2711,20 @@
 #define LC_PROP_BARC_OFFSET 5764    // RW float;
 #define LC_PROP_BARC_INVERT 5765    // RW bool;
 #define LC_PROP_BARC_HIDETEXT 5766  // RW bool; do not display text
-#define LC_PROP_BARC_TSTYLE                                                    \
-  5767 // RW handle|string; Handle to text style|Name of text style
+#define LC_PROP_BARC_TSTYLE \
+  5767                              // RW handle|string; Handle to text style|Name of text style
 #define LC_PROP_BARC_TEXTH 5768     // RW float; text height
 #define LC_PROP_BARC_TEXTW 5769     // RW float; text width scale
 #define LC_PROP_BARC_TEXTCS 5770    // RW float; text charspace
 #define LC_PROP_BARC_TEXTALIGN 5771 // RW int; text alignment
-#define LC_PROP_BARC_TEXTRES                                                   \
-  5772 // RW int; Resolution (if 0 then use LC_PROP_DRW_RESOLTEXT)
+#define LC_PROP_BARC_TEXTRES \
+  5772                             // RW int; Resolution (if 0 then use LC_PROP_DRW_RESOLTEXT)
 #define LC_PROP_BARC_ECLEVEL 5773  // RW int; error correction level
 #define LC_PROP_BARC_MASKPAT 5774  // R  int; mask pattern (0-7)
 #define LC_PROP_BARC_DATATYPE 5775 // R  int; data type
-#define LC_PROP_BARC_SIZE 5776 // R  int|string; size of 2D barcode, H x W, dots
-#define LC_PROP_BARC_NBARS                                                     \
-  5777 // R  int; same as LC_PROP_BARC_NMODX (for 1D - number of bars)
+#define LC_PROP_BARC_SIZE 5776     // R  int|string; size of 2D barcode, H x W, dots
+#define LC_PROP_BARC_NBARS \
+  5777                          // R  int; same as LC_PROP_BARC_NMODX (for 1D - number of bars)
 #define LC_PROP_BARC_NMODX 5777 // R  int; number of horizontal modules
 #define LC_PROP_BARC_NMODY 5778 // R  int; number of vertical modules
 
@@ -2766,8 +2766,8 @@
 #define LC_PROP_XREF_ANGLE 5848    // RW float;
 
 // Dimension
-#define LC_PROP_DIM_STYLE                                                      \
-  6001 // RW handle|string; Handle to dim style|Name of dim style
+#define LC_PROP_DIM_STYLE \
+  6001                        // RW handle|string; Handle to dim style|Name of dim style
 #define LC_PROP_DIM_MEAS 6003 // R  float; measured value
 #define LC_PROP_DIM_TEXT 6004 // RW string;
 
@@ -2857,8 +2857,8 @@
 #define LC_PROP_DIMRAD__MAX 6099
 
 #define LC_PROP_DIMORD__MIN 6101
-#define LC_PROP_DIMORD_XORD                                                    \
-  6101 // RW bool; TRUE - X ordinate, FALSE - Y ordinate
+#define LC_PROP_DIMORD_XORD \
+  6101                          // RW bool; TRUE - X ordinate, FALSE - Y ordinate
 #define LC_PROP_DIMORD_DPX 6102 // RW float; def point
 #define LC_PROP_DIMORD_DPY 6103 // RW float;
 #define LC_PROP_DIMORD_TPX 6104 // RW float; text point
@@ -2886,11 +2886,11 @@
 #define LC_PROP_DIMLIN__MAX 6139
 
 // Leader
-#define LC_PROP_LEADER_STYLE                                                   \
-  6202 // RW handle|string; Handle to dim style|Name of dim style
+#define LC_PROP_LEADER_STYLE \
+  6202                           // RW handle|string; Handle to dim style|Name of dim style
 #define LC_PROP_LEADER_TEXT 6203 // RW string;
-#define LC_PROP_LEADER_ALIGN                                                   \
-  6204 // RW int; text alignment (LC_LEADER_TLEFT and other)
+#define LC_PROP_LEADER_ALIGN \
+  6204                             // RW int; text alignment (LC_LEADER_TLEFT and other)
 #define LC_PROP_LEADER_TPX 6205    // RW float; text center X
 #define LC_PROP_LEADER_TPY 6206    // RW float; text center Y
 #define LC_PROP_LEADER_APX 6207    // RW float; arrow endpoint X
@@ -2922,8 +2922,8 @@
 #define LC_PROP_FACE_EDGE2 6294 // RW bool; 2nd edge visibility
 #define LC_PROP_FACE_EDGE3 6295 // RW bool; 3rd edge visibility
 #define LC_PROP_FACE_EDGE4 6296 // RW bool; 4th edge visibility
-#define LC_PROP_FACE_EDGE                                                      \
-  6297 // RW int; A combination of LC_FACE_EDGE1INVIS ... constants
+#define LC_PROP_FACE_EDGE \
+  6297                         // RW int; A combination of LC_FACE_EDGE1INVIS ... constants
 #define LC_PROP_FACE_NPTS 6298 // RW int; Number of points, 3 or 4
 
 // Road Plan
@@ -2965,7 +2965,7 @@
 #define LC_PROP_TIN_IMG_ZSTEP 7041 // RW float; Color Filling: Z step
 #define LC_PROP_TIN_IMG_PSIZE 7043 // RW float; Color Filling: pixel size
 #define LC_PROP_TIN_IMG_NX 7044    // R int; Color Filling: image width (pixels)
-#define LC_PROP_TIN_IMG_NY 7045 // R int; Color Filling: image height (pixels)
+#define LC_PROP_TIN_IMG_NY 7045    // R int; Color Filling: image height (pixels)
 
 #define LC_PROP_TIN_VIEWPT 7051   // RW bool; point
 #define LC_PROP_TIN_VIEWPTN 7052  // RW bool; point type name
@@ -2991,11 +2991,11 @@
 #define LC_PROP_TIN_COLISOW 7076 // RW int; color of water isolines
 #define LC_PROP_TIN_COLBND 7077  // RW int; color of boundary
 #define LC_PROP_TIN_COLBNDP 7078 // RW int; color of boundary point
-#define LC_PROP_TIN_COLTRF                                                     \
+#define LC_PROP_TIN_COLTRF \
   7079 // RW int; color of triangle filling (used in step triangulation)
-#define LC_PROP_TIN_COLFRONT0                                                  \
+#define LC_PROP_TIN_COLFRONT0 \
   7080 // RW int; color of start front line (used in step triangulation)
-#define LC_PROP_TIN_COLFRONT                                                   \
+#define LC_PROP_TIN_COLFRONT \
   7081 // RW int; color of front line (used in step triangulation)
 
 #define LC_PROP_TIN_LX_PRJNAME 7091 // RW string; LandXML project name
@@ -3013,8 +3013,8 @@
 #define LC_PROP_VER_X 10001 // RW float; Coordinate X~
 #define LC_PROP_VER_Y 10002 // RW float; Coordinate Y~
 #define LC_PROP_VER_Z 10003 // RW float; Coordinate Y~
-#define LC_PROP_VER_FIX                                                        \
-  10006 // RW bool; "Fixed vertex" flag (for LC_PLFIT_LINQUAD).
+#define LC_PROP_VER_FIX \
+  10006                          // RW bool; "Fixed vertex" flag (for LC_PLFIT_LINQUAD).
 #define LC_PROP_VER_RADIUS 10007 // RW float; Radius value~
 #define LC_PROP_VER_WEIGHT 10008 // RW float; point weight
 #define LC_PROP_VER_INDEX 10009  // R  int; index of the vertex
@@ -3069,13 +3069,13 @@
 #define LC_PROP_OTHER__MIN 11001
 #define LC_PROP_CMDWND_ENABLE 11001  // RW bool; Command window is enabled
 #define LC_PROP_PROPWND_ENABLE 11002 // RW bool; Properties window is enabled
-#define LC_PROP_PROPWND_DIVCOEF                                                \
+#define LC_PROP_PROPWND_DIVCOEF \
   11003 // RW float; ratio of the name/value columns widths
 #define LC_PROP_OTHER__MAX 11999
 
 // event parameters
 #define LC_PROP_EVENT__MIN 12001
-#define LC_PROP_EVENT_TYPE 12001 // R  int; event type LC_EVENT_HELP and others
+#define LC_PROP_EVENT_TYPE 12001    // R  int; event type LC_EVENT_HELP and others
 #define LC_PROP_EVENT_APPPRM1 12002 // R  int;    application parameter1
 #define LC_PROP_EVENT_APPPRM2 12003 // R  handle; application parameter2
 #define LC_PROP_EVENT_WND 12004     // R  handle; Window
@@ -3085,8 +3085,8 @@
 #define LC_PROP_EVENT_ENT 12007     //    LC_PROP_EVENT_ENTITY
 #define LC_PROP_EVENT_HCMD 12008    // R  handle; custom command object
 #define LC_PROP_EVENT_HOBJ 12008    //    LC_PROP_EVENT_HCMD
-#define LC_PROP_EVENT_HDC                                                      \
-  12009 // R  handle; device context (for LC_EVENT_PAINT)
+#define LC_PROP_EVENT_HDC \
+  12009                            // R  handle; device context (for LC_EVENT_PAINT)
 #define LC_PROP_EVENT_MODE 12010   // RW int;
 #define LC_PROP_EVENT_INT1 12021   // RW int;
 #define LC_PROP_EVENT_INT2 12022   // RW int;
