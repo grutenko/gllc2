@@ -24,7 +24,7 @@ set(SOURCES
   ui_cursor.c
   ui_grid.c
   ui_selection.c
-  vertex.c
+  ui_vertex.c
   window.c
   tess2/bucketalloc.c
   tess2/dict.c
@@ -88,7 +88,7 @@ add_custom_target(Fonts ALL DEPENDS ${GENERATED_FONT_HEADERS})
 add_library(gllc SHARED ${SOURCES})
 
 target_compile_options(gllc PRIVATE
-    $<$<CONFIG:Release>:-O3 -DNDEBUG>
+    $<$<CONFIG:Release>:-O2 -DNDEBUG>
 )
 
 target_link_libraries(gllc PRIVATE cglm)

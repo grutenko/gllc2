@@ -6,7 +6,7 @@
 
 struct gllc_block;
 struct gllc_layer;
-struct gllc_DB;
+struct ds_draw;
 struct gllc_linetype;
 
 #define GLLC_ENT_POLYLINE 0x1
@@ -28,7 +28,7 @@ struct gllc_entity;
 
 struct gllc_entity_vtable {
   int type;
-  void (*build)(struct gllc_entity *, struct gllc_DB *, GLfloat scale);
+  void (*build)(struct gllc_entity *, struct ds_draw *, GLfloat scale);
   void (*destroy)(struct gllc_entity *);
   int (*vertices)(struct gllc_entity *, double, double *);
   int (*selected)(struct gllc_entity *, double, double, double, double, double);
@@ -50,7 +50,7 @@ struct gllc_entity {
   struct gllc_block *block;
   struct gllc_layer *layer;
   struct gllc_entity_props props;
-  int falpha;
+  float falpha;
   float ltscale;
   int lwidth;
   struct gllc_entity *prev;
@@ -58,6 +58,28 @@ struct gllc_entity {
   int order;
 };
 
-#define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE)
+extern struct gllc_prop G_entity_props[];
+extern struct gllc_object_vtable G_entity_obj_vtable;
+
+#define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE)                                         \
+  do {                                                                                    \
+    memset(E, 0, sizeof(struct gllc_entity));                                             \
+    GLLC_OBJECT_INIT((struct gllc_entity *)(E), (PROPS), &G_entity_obj_vtable);           \
+    ((struct gllc_entity *)(E))->block = (BLOCK);                                         \
+    ((struct gllc_entity *)(E))->vtable = (VTABLE);                                       \
+    ((struct gllc_entity *)(E))->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED; \
+    ((struct gllc_entity *)(E))->falpha = 1.0f;                                             \
+  } while (0)
+
+#define GLLC_COLOR_RED(C) (((C) >> 16) & 0xFF)
+#define GLLC_COLOR_GREEN(C) (((C) >> 8) & 0xFF)
+#define GLLC_COLOR_BLUE(C) ((C) & 0xFF)
+
+int gllc_entity_color(struct gllc_entity *ent);
+int gllc_entity_fcolor(struct gllc_entity *ent);
+int gllc_entity_set_color(struct gllc_entity *ent, int color);
+int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor);
+
+void gllc_entity_destroy(struct gllc_entity *ent);
 
 #endif

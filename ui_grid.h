@@ -16,6 +16,12 @@ struct ui_grid {
   GLuint VAO;
   GLuint VBO;
   GLuint VBO_cnt;
+  double last_scale;
+  double last_x0;
+  double last_y0;
+  double last_x1;
+  double last_y1;
+  double last_vcnt;
 };
 
 void ui_grid_init(struct ui_grid *grid);

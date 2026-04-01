@@ -7,8 +7,8 @@
 
 void ui_cursor_init(struct ui_cursor *cur) {
   cur->color[0] = 1.0f;
-  cur->color[1] = 1.0f;
-  cur->color[2] = 1.0f;
+  cur->color[1] = 0.0f;
+  cur->color[2] = 0.0f;
   cur->color[3] = 1.0f;
 }
 
@@ -22,12 +22,14 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) 
     GLuint stride = sizeof(struct ds_vertex);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, p));
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, n));
+    glVertexAttribPointer(1, 2, GL_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, n));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, uv));
+    glVertexAttribPointer(2, 2, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, uv));
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
     glEnableVertexAttribArray(3);
+    glVertexAttribIPointer(4, 1, GL_UNSIGNED_SHORT, stride, (void *)offsetof(struct ds_vertex, thickness));
+    glEnableVertexAttribArray(4);
   } else {
     glBindVertexArray(c->VAO);
     glBindBuffer(GL_ARRAY_BUFFER, c->VBO);
@@ -53,18 +55,18 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) 
     V[(I)].c[3] = a;            \
   } while (0)
 
-  SET_VER(0, mx, 0);
-  SET_VER(1, mx, height);
-  SET_VER(2, 0, my);
-  SET_VER(3, width, my);
-  SET_VER(4, (double)mx - 4.5f, (double)my - 4.5f);
-  SET_VER(5, (double)mx + 4.5f, (double)my - 4.5f);
-  SET_VER(6, (double)mx + 4.5f, (double)my - 4.5f);
-  SET_VER(7, (double)mx + 4.5f, (double)my + 4.5f);
-  SET_VER(8, (double)mx + 4.5f, (double)my + 4.5f);
-  SET_VER(9, (double)mx - 4.5f, (double)my + 4.5f);
+  SET_VER(0, mx, (double)my - 99.5f);
+  SET_VER(1, mx, (double)my + 99.5f);
+  SET_VER(2, (double)mx - 99.5f, my);
+  SET_VER(3, (double)mx + 99.5f, my);
+  SET_VER(4, (double)mx - 4.0f, (double)my - 4.0f);
+  SET_VER(5, (double)mx + 4.0f, (double)my - 4.0f);
+  SET_VER(6, (double)mx + 4.0f, (double)my - 4.0f);
+  SET_VER(7, (double)mx + 4.0f, (double)my + 4.0f);
+  SET_VER(8, (double)mx + 4.0f, (double)my + 4.0f);
+  SET_VER(9, (double)mx - 4.0f, (double)my + 4.0f);
   SET_VER(10, (double)mx - 4.5f, (double)my + 4.5f);
-  SET_VER(11, (double)mx - 4.5f, (double)my - 4.5f);
+  SET_VER(11, (double)mx - 4.0f, (double)my - 4.0f);
 
   glBufferSubData(GL_ARRAY_BUFFER, 0, CURSOR_VBO_SIZE, V);
   glDrawArrays(GL_LINES, 0, CURSOR_VCOUNT);

@@ -36,5 +36,6 @@ void _gllc_NW_get_size(struct _gllc_NW *w, int *width, int *height);
 void _gllc_NW_set_size(struct _gllc_NW *w, int x, int y, int width, int height);
 void _gllc_NW_swap_buffers(struct _gllc_NW *w);
 void _gllc_NW_dirty(struct _gllc_NW *w);
+void _gllc_NW_show_cursor(int show);
 
 #endif

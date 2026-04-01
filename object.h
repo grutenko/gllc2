@@ -48,10 +48,10 @@ struct gllc_object {
 #define P_HANDLE_RO(P, G) {(P), T_PROP_HANDLE, (G), 0, 1}
 #define P_END {-1, -1, 0, 0, -1}
 
-#define GLLC_OBJECT_INIT(O, PROPS, VTABLE)                                     \
-  do {                                                                         \
-    ((struct gllc_object *)(O))->props = (PROPS);                              \
-    ((struct gllc_object *)(O))->vtable = (VTABLE);                            \
+#define GLLC_OBJECT_INIT(O, PROPS, VTABLE)                             \
+  do {                                                                 \
+    ((struct gllc_object *)(O))->props = (struct gllc_prop **)(PROPS); \
+    ((struct gllc_object *)(O))->vtable = (VTABLE);                    \
   } while (0)
 
 void gllc_object_destroy(struct gllc_object *obj);

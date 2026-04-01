@@ -1,5 +1,6 @@
 #include "window.h"
 #include "alloc.h"
+#include "block.h"
 #include "cglm/include/cglm/common.h"
 #include "draw.h"
 #include "frag.h"
@@ -7,8 +8,10 @@
 #include "platform.h"
 #include "ui_cursor.h"
 #include "ui_grid.h"
+#include "ui_selection.h"
 #include "vert.h"
 
+#include <stdio.h>
 #include <string.h>
 
 static void _destroy(struct gllc_object *obj) {}
@@ -244,23 +247,46 @@ static struct gllc_prop *_all_props[] = {_props, NULL};
 static struct gllc_object_vtable _vtable = {
     .destroy = _destroy};
 
+static inline void screen_to_world(struct gllc_window *w, double x, double y, double *xd, double *yd) {
+  *xd = (x - ((double)w->UI.width / 2)) * w->cam.scale - w->cam.dx;
+  *yd = (y - ((double)w->UI.height / 2)) * w->cam.scale - w->cam.dy;
+}
+
 static void draw(struct gllc_window *wnd) {
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   double x0, y0, x1, y1;
-  gllc_window_wnd_to_drw(wnd, 0.0f, 0.0f, &x0, &y0);
-  gllc_window_wnd_to_drw(wnd, wnd->UI.width, wnd->UI.height, &x1, &y1);
+  screen_to_world(wnd, 0.0f, 0.0f, &x0, &y0);
+  screen_to_world(wnd, wnd->UI.width, wnd->UI.height, &x1, &y1);
 
   _gllc_NW_make_context_current(&wnd->nw);
 
   glClear(GL_COLOR_BUFFER_BIT);
   glUseProgram(wnd->GPU.program);
   glUniformMatrix4fv(wnd->GPU.loc_uMVP, 1, GL_FALSE, (const float *)wnd->cam.mMVP);
+  glUniform2f(wnd->GPU.loc_uViewportSize, (float)wnd->UI.width, (float)wnd->UI.height);
 
-  ui_grid_draw(&(wnd->UI.grid), wnd->cam.scale, x0, y0, x1, y1);
+  if (wnd->UI.grid_enable) {
+    ui_grid_draw(&(wnd->UI.grid), wnd->cam.scale, x0, y0, x1, y1);
+  }
+
+  if (wnd->block) {
+    if (ds_draw_dirty(&wnd->block->cmn_batch.draw)) {
+      ds_sync(&wnd->block->cmn_batch.draw, &wnd->GPU.cmn);
+    }
+    ds_draw(&wnd->GPU.cmn);
+  }
+
+  if (wnd->UI.mpressed && wnd->UI.mbtn == 1) {
+    double sx1, sy1;
+    screen_to_world(wnd, (double)wnd->UI.mx, (double)wnd->UI.my, &sx1, &sy1);
+    ui_selection_draw(&(wnd->UI.sel), wnd->UI.sel_x0, wnd->UI.sel_y0, sx1, sy1);
+  }
 
   // Screen view
   glUniformMatrix4fv(wnd->GPU.loc_uMVP, 1, GL_FALSE, (const float *)wnd->cam.mScreenMVP);
 
-  if(wnd->UI.menter) {
+  if (wnd->UI.menter) {
     ui_cursor_draw(&wnd->UI.cursor, wnd->UI.mx, wnd->UI.my, wnd->UI.width, wnd->UI.height);
   }
 
@@ -274,7 +300,7 @@ static void on_paint(struct _gllc_NW *w, void *data) {
 static inline void update_camera(struct gllc_window *w) {
   float half_w = (float)w->UI.width / 2.0f * w->cam.scale;
   float half_h = (float)w->UI.height / 2.0f * w->cam.scale;
-  glm_ortho(-half_w, half_w, -half_h, half_h, -1.0f, 1.0f, w->cam.mProj);
+  glm_ortho(-half_w, half_w, half_h, -half_h, -1.0f, 1.0f, w->cam.mProj);
   glm_mat4_identity(w->cam.mView);
   vec4 t = {w->cam.dx, w->cam.dy, 0.0f, 1.0f};
   glm_translate(w->cam.mView, t);
@@ -295,25 +321,20 @@ static void on_size(struct _gllc_NW *w, int width, int height, void *data) {
   wnd->UI.width = width;
   wnd->UI.height = height;
   update_camera((struct gllc_window *)data);
-  _gllc_NW_make_context_current(w);
+  _gllc_NW_make_context_current(&wnd->nw);
   glViewport(0, 0, width, height);
+
   _gllc_NW_dirty(w);
 }
 
 static void on_mouse_move(struct _gllc_NW *w, int x, int y, void *data) {
   struct gllc_window *wnd = (struct gllc_window *)data;
 
-  _gllc_NW_get_cursor(w, &x, &y);
-
   if (wnd->UI.mpressed && wnd->UI.mbtn == 3) {
-    wnd->cam.dx += (x - wnd->UI.mx) * wnd->cam.scale;
-    wnd->cam.dy -= (y - wnd->UI.my) * wnd->cam.scale;
+    wnd->cam.dx += ((double)x - wnd->UI.mx) * wnd->cam.scale;
+    wnd->cam.dy += ((double)y - wnd->UI.my) * wnd->cam.scale;
 
     update_camera(wnd);
-  }
-
-  if (wnd->UI.mpressed && wnd->UI.mbtn == 1) {
-
   }
 
   wnd->UI.mx = x;
@@ -321,6 +342,7 @@ static void on_mouse_move(struct _gllc_NW *w, int x, int y, void *data) {
   wnd->UI.menter = 1;
 
   _gllc_NW_dirty(w);
+  _gllc_NW_show_cursor(0);
 }
 
 static void on_mouse_click(struct _gllc_NW *wn, int x, int y, int mode, int action, void *data) {
@@ -330,6 +352,7 @@ static void on_mouse_click(struct _gllc_NW *wn, int x, int y, int mode, int acti
   if (action) {
     wnd->UI.mdownx = x;
     wnd->UI.mdowny = y;
+    screen_to_world(wnd, (double)x, (double)y, &wnd->UI.sel_x0, &wnd->UI.sel_y0);
   }
   _gllc_NW_dirty(wn);
 }
@@ -342,17 +365,17 @@ static void on_mouse_scroll(struct _gllc_NW *wn, int dx, int dy, void *data) {
   if (dy <= -10)
     dy = -2;
 
-  if ((w->cam.scale > 300.0f && dy > 0) || (w->cam.scale < 0.005f && dy < 0))
+  if ((w->cam.scale > 300.0f && dy < 0) || (w->cam.scale < 0.005f && dy > 0))
     return;
 
   double old_scale = w->cam.scale;
-  w->cam.scale *= 1.0f + ((double)dy * 0.05);
+  w->cam.scale *= 1.0f - ((double)dy * 0.2);
 
   w->cam.dx += (w->UI.mx - (int)(w->UI.width / 2)) * (w->cam.scale - old_scale);
-  w->cam.dy += ((w->UI.height - w->UI.my) - (int)(w->UI.height / 2)) * (w->cam.scale - old_scale);
+  w->cam.dy += (w->UI.my - (int)(w->UI.height / 2)) * (w->cam.scale - old_scale);
 
   update_camera(w);
-  
+
   _gllc_NW_dirty(wn);
 }
 
@@ -362,6 +385,7 @@ static void on_mouse_leave(struct _gllc_NW *wn, void *data) {
   wnd->UI.menter = 0;
 
   _gllc_NW_dirty(wn);
+  _gllc_NW_show_cursor(1);
 }
 
 static struct _gllc_NW_vtable _nw_vtable = {
@@ -453,6 +477,7 @@ static void load_GL_uniform_loc(struct gllc_window *w) {
 
   LOADLOC(w->GPU.loc_uMVP, "uMVP");
   LOADLOC(w->GPU.loc_uScale, "uScale");
+  LOADLOC(w->GPU.loc_uViewportSize, "uViewportSize");
 }
 
 struct gllc_window *gllc_window_create(void *p) {
@@ -467,10 +492,11 @@ struct gllc_window *gllc_window_create(void *p) {
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
     memcpy(wnd->UI.back_color, black, sizeof(black));
-    memcpy(wnd->UI.sel_color, white, sizeof(white));
 
+    wnd->UI.grid_enable = 1;
     ui_grid_init(&wnd->UI.grid);
     ui_cursor_init(&wnd->UI.cursor);
+    ui_selection_init(&wnd->UI.sel);
 
     if (_gllc_NW_create(&wnd->nw, p, &_nw_vtable, wnd)) {
       _gllc_NW_make_context_current(&wnd->nw);
@@ -480,6 +506,7 @@ struct gllc_window *gllc_window_create(void *p) {
         glBlendEquation(GL_FUNC_ADD);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDisable(GL_CULL_FACE);
+        glClearColor(wnd->UI.back_color[0], wnd->UI.back_color[1], wnd->UI.back_color[2], wnd->UI.back_color[3]);
 
         load_GL_program(wnd);
         glUseProgram(wnd->GPU.program);
@@ -512,4 +539,19 @@ void gllc_window_resize(struct gllc_window *window, int x, int y, int width, int
 void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *xd, double *yd) {
   *xd = (x - ((double)w->UI.width / 2)) * w->cam.scale - w->cam.dx;
   *yd = (y - ((double)w->UI.height / 2)) * w->cam.scale - w->cam.dy;
+}
+
+void gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block) {
+  wnd->block = block;
+  _gllc_NW_dirty(&wnd->nw);
+}
+
+void gllc_window_destroy(struct gllc_window *w) {
+  _gllc_NW_make_context_current(&w->nw);
+  ds_gpu_clear(&w->GPU.cmn);
+  ui_grid_cleanup(&w->UI.grid);
+  ui_cursor_cleanup(&w->UI.cursor);
+  ui_selection_cleanup(&w->UI.sel);
+  _gllc_NW_destroy(&w->nw);
+  free(w);
 }

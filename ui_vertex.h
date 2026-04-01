@@ -1,5 +1,5 @@
-#ifndef vertex_h
-#define vertex_h
+#ifndef ui_vertex_h
+#define ui_vertex_h
 
 #include "entity.h"
 

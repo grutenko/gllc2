@@ -12,8 +12,8 @@ struct gllc_drawing {
   int block_cnt;
 };
 
-struct gllc_drawing *gllc_drawing_create();
-struct gllc_block *gllc_drawing_add_block(struct gllc_drawing *drawing, const char *name, double dx, double dy);
-void gllc_drawing_destroy(struct gllc_drawing *drawing);
+struct gllc_drawing *gllc_drw_create();
+struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing, const char *name, double dx, double dy);
+void gllc_drw_destroy(struct gllc_drawing *drawing);
 
 #endif

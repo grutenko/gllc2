@@ -336,6 +336,10 @@ _error:
   return 0;
 }
 
+void _gllc_NW_show_cursor(int show) {
+  ShowCursor(show);
+}
+
 void _gllc_NW_destroy(struct _gllc_NW *w) {
   if (!w)
     return;

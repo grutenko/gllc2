@@ -3,7 +3,14 @@
 
 #include "glad.h"
 
-void ui_selection_draw(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1,
-                       float *color);
+struct ui_selection {
+  GLfloat color[4];
+  GLuint VAO;
+  GLuint VBO;
+};
+
+void ui_selection_init(struct ui_selection *sel);
+void ui_selection_draw(struct ui_selection *sel, double x0, double y0, double x1, double y1);
+void ui_selection_cleanup(struct ui_selection *sel);
 
 #endif

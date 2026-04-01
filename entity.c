@@ -1,6 +1,9 @@
 #include "entity.h"
+#include "block.h"
+#include "layer.h"
 #include "litecad.h"
 #include "object.h"
+#include <stdlib.h>
 
 static union gllc_variant _ent_type_GET(struct gllc_object *obj, int prop, int type) {
   union gllc_variant v;
@@ -302,3 +305,66 @@ struct gllc_prop G_entity_props[] = {
     P_FLOAT_RO(LC_PROP_ENT_DY, _ent_dy_GET),
     P_FLOAT_RO(LC_PROP_ENT_LEN, _ent_len_GET),
     P_END};
+
+static void obj_entity_destroy(struct gllc_object *obj) {
+  struct gllc_entity *ent = (struct gllc_entity *)obj;
+  if (ent->vtable && ent->vtable->destroy) {
+    ent->vtable->destroy(ent);
+  }
+}
+
+struct gllc_object_vtable G_entity_obj_vtable = {
+    .destroy = obj_entity_destroy};
+
+int gllc_entity_color(struct gllc_entity *ent) {
+  if (ent->props.color != -1) {
+    return ent->props.color;
+  }
+  if (ent->layer && ent->layer->props.color != -1) {
+    return ent->layer->props.color;
+  }
+  if (ent->block && ent->block->props.color != -1) {
+    return ent->block->props.color;
+  }
+  return 0;
+}
+
+int gllc_entity_fcolor(struct gllc_entity *ent) {
+  if (ent->props.fcolor != -1) {
+    return ent->props.fcolor;
+  }
+  if (ent->layer && ent->layer->props.fcolor != -1) {
+    return ent->layer->props.fcolor;
+  }
+  if (ent->block && ent->block->props.fcolor != -1) {
+    return ent->block->props.fcolor;
+  }
+  return 0;
+}
+
+void gllc_entity_destroy(struct gllc_entity *ent) {
+  if (ent) {
+    if (ent->vtable && ent->vtable->destroy) {
+      ent->vtable->destroy(ent);
+    }
+    free(ent);
+  }
+}
+
+int gllc_entity_set_color(struct gllc_entity *ent, int color) {
+  if (ent) {
+    ent->props.color = color;
+    ent->flags |= GLLC_ENT_MODIFIED;
+    return 1;
+  }
+  return 0;
+}
+
+int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor) {
+  if (ent) {
+    ent->props.fcolor = fcolor;
+    ent->flags |= GLLC_ENT_MODIFIED;
+    return 1;
+  }
+  return 0;
+}
