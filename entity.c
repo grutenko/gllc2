@@ -4,6 +4,7 @@
 #include "litecad.h"
 #include "object.h"
 #include <stdlib.h>
+#include <string.h>
 
 static union gllc_variant _ent_type_GET(struct gllc_object *obj, int prop, int type) {
   union gllc_variant v;
@@ -367,4 +368,13 @@ int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor) {
     return 1;
   }
   return 0;
+}
+
+void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props, struct gllc_entity_vtable *vtable) {
+  memset(ent, 0, sizeof(struct gllc_entity));
+  ent->block = block;
+  GLLC_OBJECT_INIT(&ent->_obj, props, &G_entity_obj_vtable);
+  ent->vtable = vtable;
+  ent->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED;
+  ent->falpha = 1.0f;
 }

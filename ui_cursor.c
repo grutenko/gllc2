@@ -19,17 +19,8 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) 
     glGenBuffers(1, &c->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, c->VBO);
     glBufferData(GL_ARRAY_BUFFER, CURSOR_VBO_SIZE, NULL, GL_STREAM_DRAW);
-    GLuint stride = sizeof(struct ds_vertex);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, p));
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, n));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, uv));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
-    glEnableVertexAttribArray(3);
-    glVertexAttribIPointer(4, 1, GL_UNSIGNED_SHORT, stride, (void *)offsetof(struct ds_vertex, thickness));
-    glEnableVertexAttribArray(4);
+
+    ds_attrib_ptr();
   } else {
     glBindVertexArray(c->VAO);
     glBindBuffer(GL_ARRAY_BUFFER, c->VBO);

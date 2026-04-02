@@ -11,7 +11,6 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, GLfloat scale) 
   if (pline->cnt < 2) {
     return;
   }
-
   if (!pline->unit) {
     pline->unit = ds_unit_create(draw);
   }
@@ -25,12 +24,17 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, GLfloat scale) 
   lb.in.ver_cnt = pline->cnt;
   lb.in.ver = pline->pts;
   lb.in.weight = 1.0f;
+  // Считаем приблизительные значения которые немного больше чем реальные
+  // Получается небольшой перерасход по памяти, возможно в будущем исправлю
   lb_stats(&lb);
   struct ds_vertex *ver_ptr = ds_unit_reserve_vertex(pline->unit, lb.out.ver_cnt);
   GLuint *ind_ptr = ds_unit_reserve_index(pline->unit, lb.out.ind_cnt);
   lb.out.ver_ptr = ver_ptr;
   lb.out.ind_ptr = ind_ptr;
   lb_build(&lb);
+  // Записываем актуальные после билда
+  pline->unit->V_cnt = lb.out.ver_cnt;
+  pline->unit->I_cnt = lb.out.ver_cnt;
 }
 
 static void destroy(struct gllc_entity *ent) {
@@ -75,10 +79,11 @@ static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, int closed, int filled) {
   struct gllc_polyline *pl = malloc(sizeof(struct gllc_polyline));
   if (pl) {
-    GLLC_ENTITY_INIT(&pl->_ent, block, pline_props, &vtable);
+    GLLC_ENTITY_INIT(&pl->_ent, block, all_props, &vtable);
     pl->_ent.flags |= (closed ? GLLC_ENT_CLOSED : 0) | (filled ? GLLC_ENT_FILLED : 0);
     pl->pts = NULL;
     pl->cnt = 0;
+    pl->cap = 0;
     pl->unit = NULL;
   }
   return pl;
@@ -86,7 +91,15 @@ struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, int closed,
 
 void gllc_pline_add_ver(struct gllc_polyline *pline, double x, double y) {
   if (pline) {
-    pline->pts = realloc(pline->pts, (pline->cnt + 1) * 2 * sizeof(double));
+    if (pline->cap - pline->cnt <= 1) {
+      size_t new_cap = pline->cap ? pline->cap * 2 : 8;
+      double *new_pts = realloc(pline->pts, new_cap * 2 * sizeof(double));
+      if (!new_pts)
+        return;
+      pline->pts = new_pts;
+      pline->cap = new_cap;
+    }
+
     pline->pts[pline->cnt * 2] = x;
     pline->pts[pline->cnt * 2 + 1] = y;
     pline->cnt++;

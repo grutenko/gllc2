@@ -123,17 +123,7 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
     glBindVertexArray(grid->VAO);
     glBindBuffer(GL_ARRAY_BUFFER, grid->VBO);
 
-    GLuint stride = sizeof(struct ds_vertex);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, p));
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, n));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, uv));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
-    glEnableVertexAttribArray(3);
-    glVertexAttribIPointer(4, 1, GL_UNSIGNED_SHORT, stride, (void *)offsetof(struct ds_vertex, thickness));
-      glEnableVertexAttribArray(4);
+    ds_attrib_ptr();
   } else {
     glBindVertexArray(grid->VAO);
     glBindBuffer(GL_ARRAY_BUFFER, grid->VBO);
@@ -156,7 +146,6 @@ void ui_grid_draw(struct ui_grid *grid, double scale, double x0, double y0, doub
   } else {
     // Иначе просто чисуем готовый VBO
     glBindVertexArray(grid->VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, grid->VBO);
   }
   glDrawArrays(GL_LINES, 0, grid->last_vcnt);
 

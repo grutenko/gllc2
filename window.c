@@ -79,10 +79,20 @@ static union gllc_variant _wnd_hasfocus_GET(struct gllc_object *obj, int prop, i
 }
 
 static union gllc_variant _wnd_pixelsize_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.float_ = ((struct gllc_window *)obj)->cam.scale;
   return (union gllc_variant)0;
 }
 
+static inline void update_camera(struct gllc_window *w);
+
 static int _wnd_pixelsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value) {
+  if (value.float_ < 300.0f && value.float_ < 0.005f) {
+    ((struct gllc_window *)obj)->cam.scale = value.float_;
+    update_camera((struct gllc_window *)obj);
+    _gllc_NW_dirty(&((struct gllc_window *)obj)->nw);
+    return 1;
+  }
   return 0;
 }
 
@@ -249,15 +259,15 @@ static struct gllc_object_vtable _vtable = {
 
 static inline void screen_to_world(struct gllc_window *w, double x, double y, double *xd, double *yd) {
   *xd = (x - ((double)w->UI.width / 2)) * w->cam.scale - w->cam.dx;
-  *yd = (y - ((double)w->UI.height / 2)) * w->cam.scale - w->cam.dy;
+  *yd = (((double)w->UI.height - y) - ((double)w->UI.height / 2)) * w->cam.scale - w->cam.dy;
 }
 
 static void draw(struct gllc_window *wnd) {
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   double x0, y0, x1, y1;
-  screen_to_world(wnd, 0.0f, 0.0f, &x0, &y0);
-  screen_to_world(wnd, wnd->UI.width, wnd->UI.height, &x1, &y1);
+  screen_to_world(wnd, 0.0f, wnd->UI.height, &x0, &y0);
+  screen_to_world(wnd, wnd->UI.width, 0.0f, &x1, &y1);
 
   _gllc_NW_make_context_current(&wnd->nw);
 
@@ -300,7 +310,7 @@ static void on_paint(struct _gllc_NW *w, void *data) {
 static inline void update_camera(struct gllc_window *w) {
   float half_w = (float)w->UI.width / 2.0f * w->cam.scale;
   float half_h = (float)w->UI.height / 2.0f * w->cam.scale;
-  glm_ortho(-half_w, half_w, half_h, -half_h, -1.0f, 1.0f, w->cam.mProj);
+  glm_ortho(-half_w, half_w, -half_h, half_h, -1.0f, 1.0f, w->cam.mProj);
   glm_mat4_identity(w->cam.mView);
   vec4 t = {w->cam.dx, w->cam.dy, 0.0f, 1.0f};
   glm_translate(w->cam.mView, t);
@@ -332,7 +342,7 @@ static void on_mouse_move(struct _gllc_NW *w, int x, int y, void *data) {
 
   if (wnd->UI.mpressed && wnd->UI.mbtn == 3) {
     wnd->cam.dx += ((double)x - wnd->UI.mx) * wnd->cam.scale;
-    wnd->cam.dy += ((double)y - wnd->UI.my) * wnd->cam.scale;
+    wnd->cam.dy -= ((double)y - wnd->UI.my) * wnd->cam.scale;
 
     update_camera(wnd);
   }
@@ -340,6 +350,9 @@ static void on_mouse_move(struct _gllc_NW *w, int x, int y, void *data) {
   wnd->UI.mx = x;
   wnd->UI.my = y;
   wnd->UI.menter = 1;
+
+  double wx, wy;
+  screen_to_world(wnd, (double)x, (double)y, &wx, &wy);
 
   _gllc_NW_dirty(w);
   _gllc_NW_show_cursor(0);
@@ -372,7 +385,7 @@ static void on_mouse_scroll(struct _gllc_NW *wn, int dx, int dy, void *data) {
   w->cam.scale *= 1.0f - ((double)dy * 0.2);
 
   w->cam.dx += (w->UI.mx - (int)(w->UI.width / 2)) * (w->cam.scale - old_scale);
-  w->cam.dy += (w->UI.my - (int)(w->UI.height / 2)) * (w->cam.scale - old_scale);
+  w->cam.dy += ((w->UI.height - w->UI.my) - (int)(w->UI.height / 2)) * (w->cam.scale - old_scale);
 
   update_camera(w);
 

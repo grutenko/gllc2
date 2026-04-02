@@ -34,6 +34,8 @@ set(SOURCES
   tess2/sweep.c
   tess2/tess.c)
 
+set(ENV{LIBGL_ALWAYS_SOFTWARE} "1")
+set(ENV{MESA_LOADER_DRIVER_OVERRIDE} "llvmpipe")
 
 include_directories(. ${CMAKE_BINARY_DIR})
 

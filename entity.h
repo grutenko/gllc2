@@ -61,15 +61,9 @@ struct gllc_entity {
 extern struct gllc_prop G_entity_props[];
 extern struct gllc_object_vtable G_entity_obj_vtable;
 
-#define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE)                                         \
-  do {                                                                                    \
-    memset(E, 0, sizeof(struct gllc_entity));                                             \
-    GLLC_OBJECT_INIT((struct gllc_entity *)(E), (PROPS), &G_entity_obj_vtable);           \
-    ((struct gllc_entity *)(E))->block = (BLOCK);                                         \
-    ((struct gllc_entity *)(E))->vtable = (VTABLE);                                       \
-    ((struct gllc_entity *)(E))->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED; \
-    ((struct gllc_entity *)(E))->falpha = 1.0f;                                             \
-  } while (0)
+void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props, struct gllc_entity_vtable *vtable);
+
+#define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE) _gllc_entity_init((struct gllc_entity *)(E), (BLOCK), (PROPS), (VTABLE))
 
 #define GLLC_COLOR_RED(C) (((C) >> 16) & 0xFF)
 #define GLLC_COLOR_GREEN(C) (((C) >> 8) & 0xFF)

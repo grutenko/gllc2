@@ -8,6 +8,7 @@ struct gllc_polyline {
   struct ds_unit *unit;
   double *pts;
   size_t cnt;
+  size_t cap;
 };
 
 struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, int closed, int filled);

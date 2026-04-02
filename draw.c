@@ -128,6 +128,20 @@ static void gl_check_error(const char *file, int line) {
 
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
+void ds_attrib_ptr() {
+  GLuint stride = sizeof(struct ds_vertex);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, p));
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 2, GL_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, n));
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(2, 2, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, uv));
+  glEnableVertexAttribArray(2);
+  glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
+  glEnableVertexAttribArray(3);
+  glVertexAttribIPointer(4, 1, GL_UNSIGNED_SHORT, stride, (void *)offsetof(struct ds_vertex, thickness));
+  glEnableVertexAttribArray(4);
+}
+
 void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
   if (draw && gpu) {
     GLuint v_total = 0;
@@ -192,17 +206,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
       glBindVertexArray(gpu->VAO);
       glBindBuffer(GL_ARRAY_BUFFER, gpu->VBO);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gpu->EBO);
-      GLuint stride = sizeof(struct ds_vertex);
-      glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, p));
-      glEnableVertexAttribArray(0);
-      glVertexAttribPointer(1, 2, GL_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, n));
-      glEnableVertexAttribArray(1);
-      glVertexAttribPointer(2, 2, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, uv));
-      glEnableVertexAttribArray(2);
-      glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
-      glEnableVertexAttribArray(3);
-      glVertexAttribIPointer(4, 1, GL_UNSIGNED_SHORT, stride, (void *)offsetof(struct ds_vertex, thickness));
-      glEnableVertexAttribArray(4);
+      ds_attrib_ptr();
     } else {
       glBindVertexArray(gpu->VAO);
       glBindBuffer(GL_ARRAY_BUFFER, gpu->VBO);
