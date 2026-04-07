@@ -138,7 +138,7 @@ void ds_attrib_ptr() {
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
   glEnableVertexAttribArray(3);
-  glVertexAttribIPointer(4, 1, GL_UNSIGNED_SHORT, stride, (void *)offsetof(struct ds_vertex, thickness));
+  glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, thickness));
   glEnableVertexAttribArray(4);
 }
 

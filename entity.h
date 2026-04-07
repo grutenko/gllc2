@@ -25,6 +25,9 @@ struct gllc_entity;
 #define GLLC_ENT_INITIAL 0x20
 #define GLLC_ENT_SELECTED 0x40
 #define GLLC_ENT_GEOMETRY_MODIFIED 0x80
+#define GLLC_ENT_LW_REAL 0x100
+#define GLLC_ENT_LW_THIN 0x200
+#define GLLC_ENT_LW_SCREEN 0x400
 
 struct gllc_entity_vtable {
   int type;
@@ -52,7 +55,7 @@ struct gllc_entity {
   struct gllc_entity_props props;
   float falpha;
   float ltscale;
-  int lwidth;
+  float lwidth;
   struct gllc_entity *prev;
   struct gllc_entity *next;
   int order;

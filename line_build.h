@@ -5,9 +5,6 @@
 
 struct ds_vertex;
 
-#define LB_MITER 0x1
-#define LB_BEVEL 0x2
-
 struct lb {
   struct lb_in {
     int flags;
@@ -18,6 +15,7 @@ struct lb {
     GLfloat color[4];
     double *ver;
     GLuint ver_cnt;
+    GLuint ioffset;
   } in;
   struct lb_out {
     struct ds_vertex *ver_ptr;
@@ -29,8 +27,12 @@ struct lb {
 
 // Рассчитывает lb.out.ver_cnt, lb.out.ind_cnt из переданых данных в lb.in.*
 // Позволяет перед lb_build предоставить ver_ptr, ind_ptr необходимого размера
-void lb_stats(struct lb *lb);
-
-void lb_build(struct lb *lb);
+void lb_init(struct lb *lb);
+void lb_stats_bevel(struct lb *lb);
+void lb_stats_miter(struct lb *lb);
+void lb_stats_round(struct lb *lb);
+void lb_build_bevel(struct lb *lb);
+void lb_build_miter(struct lb *lb);
+void lb_build_round(struct lb *lb);
 
 #endif

@@ -25,6 +25,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
   return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+static float frand(float min, float max) {
+  return min + (float)rand() / (float)RAND_MAX * (max - min);
+}
+
+unsigned int rand_color() {
+  unsigned char r = rand() % 256;
+  unsigned char g = rand() % 256;
+  unsigned char b = rand() % 256;
+  return (r << 16) | (g << 8) | b;
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow) {
   srand((unsigned int)time(NULL));
@@ -52,12 +63,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   struct gllc_drawing *drw = gllc_drw_create();
   struct gllc_block *block = gllc_drw_add_block(drw, "block1", 0, 0);
   struct gllc_polyline *pline = gllc_block_add_polyline(block, 1, 0);
+  float x = 0.0f;
+  float y = 0.0f;
 
-  for (int i = 0; i < 4; i++) {
-    gllc_pline_add_ver(pline, rand() % 100, rand() % 100);
+  for (int i = 0; i < 1000000; i++) {
+    x += frand(-10.0f, 10.0f);
+    y += frand(-10.0f, 10.0f);
+    gllc_pline_add_ver(pline, x, y);
   }
-  gllc_entity_set_color(&pline->_ent, 0xFFffff);
-
+  gllc_entity_set_color(&pline->_ent, 0xffffff);
+  gllc_entity_set_fcolor(&pline->_ent, rand_color());
+  pline->_ent.falpha = 0.3f;
   gllc_block_update(block);
   gllc_window_set_block(w, block);
 

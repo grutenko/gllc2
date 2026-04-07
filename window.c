@@ -263,7 +263,7 @@ static inline void screen_to_world(struct gllc_window *w, double x, double y, do
 }
 
 static void draw(struct gllc_window *wnd) {
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   double x0, y0, x1, y1;
   screen_to_world(wnd, 0.0f, wnd->UI.height, &x0, &y0);
