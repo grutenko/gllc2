@@ -32,7 +32,8 @@ set(SOURCES
   tess2/mesh.c
   tess2/priorityq.c
   tess2/sweep.c
-  tess2/tess.c)
+  tess2/tess.c
+  litecad.c)
 
 set(ENV{LIBGL_ALWAYS_SOFTWARE} "1")
 set(ENV{MESA_LOADER_DRIVER_OVERRIDE} "llvmpipe")

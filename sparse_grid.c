@@ -14,14 +14,11 @@
 #define AVL_LR(node_)
 #define AVL_RL(node_)
 
-static int push_ent(struct gllc_SG_cell **grid, uint64_t hash,
-                    struct gllc_entity *ent) {
+static int push_ent(struct sg_cell **grid, uint64_t hash, struct gllc_entity *ent) {
   int pos;
   int i;
-  struct gllc_SG_cell **p = grid;
-  struct gllc_SG_cell *prev = NULL;
-
-  // Идем по бинарному дереву. Распределение - по хешу: (x << 24 | y).
+  struct sg_cell **p = grid;
+  struct sg_cell *prev = NULL;
   while (*p) {
     prev = *p;
     if ((*p)->hash > hash)
@@ -31,12 +28,8 @@ static int push_ent(struct gllc_SG_cell **grid, uint64_t hash,
     else
       break;
   }
-
-  // **p - прием для выбора места для вставки нового элемента. После выхода из
-  // цикла мы получаем указатель либо на необходимую cell либо на NULL, если ее
-  // нужно создать. *p = malloc(new_node) добавит элемент в нужное место
   if (!(*p)) {
-    *p = (struct gllc_SG_cell *)malloc(sizeof(struct gllc_SG_cell));
+    *p = (struct sg_cell *)malloc(sizeof(struct sg_cell));
     if (!(*p))
       return 0;
 
@@ -48,37 +41,23 @@ static int push_ent(struct gllc_SG_cell **grid, uint64_t hash,
     (*p)->ent_cap = 0ULL;
     (*p)->ent_size = 0ULL;
   }
-
-  // TODO: AVL balance
-
   if ((*p)->ent_cap <= (*p)->ent_size + 1) {
-    // Если необходимо - расширяем массив указателей на элементы в ячейке
-
     size_t new_cap = (*p)->ent_cap ? (*p)->ent_cap * 2 : 8;
-    struct gllc_entity **new_ent =
-        realloc((*p)->ent, sizeof(struct gllc_entity *) * new_cap);
+    struct gllc_entity **new_ent = realloc((*p)->ent, sizeof(struct gllc_entity *) * new_cap);
     if (!new_ent)
       return 0;
-
+    memset(&new_ent[(*p)->ent_cap], 0, sizeof(struct gllc_entity *) * (new_cap - (*p)->ent_cap));
     (*p)->ent = new_ent;
     (*p)->ent_cap = new_cap;
   }
-
   for (pos = 0; pos < (*p)->ent_size; pos++) {
-    // Ищем позицию для вставки нового элемента исходя из ent->order
-
     if ((*p)->ent[pos]->order <= ent->order)
       break;
   }
-
-  // Смещаем правую часть массива для освобождения места для нового указателя
   size_t copy_size = (*p)->ent_size - pos;
-  memmove(&(*p)->ent[pos + 1], &(*p)->ent[pos],
-          copy_size * sizeof(struct gllc_entity *));
-
+  memmove(&(*p)->ent[pos + 1], &(*p)->ent[pos], copy_size * sizeof(struct gllc_entity *));
   (*p)->ent[pos] = ent;
   (*p)->ent_size++;
-
   return 1;
 }
 
@@ -88,13 +67,13 @@ static inline void _swap(int *a, int *b) {
   *b = t;
 }
 
-int gllc_SG_push(struct gllc_SG_cell **grid, struct gllc_entity *ent,
-                 double bbox_x0, double bbox_y0, double bbox_x1,
-                 double bbox_y1) {
-  int cx0 = ((int)floor(bbox_x0)) >> GLLC_SG_CELL_SHIFT;
-  int cy0 = ((int)floor(bbox_y0)) >> GLLC_SG_CELL_SHIFT;
-  int cx1 = ((int)floor(bbox_x1)) >> GLLC_SG_CELL_SHIFT;
-  int cy1 = ((int)floor(bbox_y1)) >> GLLC_SG_CELL_SHIFT;
+int sg_push(struct sg_cell **grid, struct gllc_entity *ent,
+            double bbox_x0, double bbox_y0, double bbox_x1,
+            double bbox_y1) {
+  int cx0 = ((int)floor(bbox_x0)) >> SG_CELL_SHIFT;
+  int cy0 = ((int)floor(bbox_y0)) >> SG_CELL_SHIFT;
+  int cx1 = ((int)floor(bbox_x1)) >> SG_CELL_SHIFT;
+  int cy1 = ((int)floor(bbox_y1)) >> SG_CELL_SHIFT;
 
   if (cx0 > cx1)
     _swap(&cx0, &cx1);
@@ -106,33 +85,33 @@ int gllc_SG_push(struct gllc_SG_cell **grid, struct gllc_entity *ent,
   // Вставляем ссылку на элемент во все ячейки входящие в bbox
   for (x = cx0; x <= cx1; x++)
     for (y = cy0; y <= cy1; y++)
-      if (!push_ent(grid, GLLC_SG_HASH(x, y), ent))
+      if (!push_ent(grid, SG_HASH(x, y), ent))
         return 0;
 
   return 1;
 }
 
-void gllc_SG_remove_all(struct gllc_SG_cell **grid) {
+void sg_remove_all(struct sg_cell **grid) {
   // Быстрое удаление всех элементов из всех ячеек. Просто выставляет количество
   // элементов на 0 для всех ячеек
 
   if (!grid || !*grid)
     return;
 
-  gllc_SG_remove_all(&(*grid)->left);
-  gllc_SG_remove_all(&(*grid)->right);
+  sg_remove_all(&(*grid)->left);
+  sg_remove_all(&(*grid)->right);
 
   (*grid)->ent_size = 0;
 }
 
-void gllc_SG_remove(struct gllc_SG_cell **grid, struct gllc_entity *ent) {
+void sg_remove(struct sg_cell **grid, struct gllc_entity *ent) {
   assert(grid);
 
   if (!(*grid))
     return;
 
-  gllc_SG_remove(&(*grid)->left, ent);
-  gllc_SG_remove(&(*grid)->right, ent);
+  sg_remove(&(*grid)->left, ent);
+  sg_remove(&(*grid)->right, ent);
 
   if ((*grid)->ent_size == 0)
     return;
@@ -149,15 +128,13 @@ void gllc_SG_remove(struct gllc_SG_cell **grid, struct gllc_entity *ent) {
   // Смещаем следующие элементы на необходимый к удалению тем самы м удаляя его
   // из массива.
   size_t copy_size = (*grid)->ent_size - 1 - i;
-  memmove(&(*grid)->ent[i], &(*grid)->ent[i + 1],
-          copy_size * sizeof(struct gllc_entity *));
-
+  memmove(&(*grid)->ent[i], &(*grid)->ent[i + 1], copy_size * sizeof(struct gllc_entity *));
   (*grid)->ent_size--;
 }
 
-static struct gllc_SG_cell *find_cell(struct gllc_SG_cell **grid,
-                                      uint64_t hash) {
-  struct gllc_SG_cell *p = *grid;
+static struct sg_cell *find_cell(struct sg_cell **grid,
+                                 uint64_t hash) {
+  struct sg_cell *p = *grid;
 
   while (p) {
     if (p->hash > hash)
@@ -167,31 +144,37 @@ static struct gllc_SG_cell *find_cell(struct gllc_SG_cell **grid,
     else
       break;
   }
-  // Либо p->hash == hash и выход с нужным p, либо доходим до NULL и p == NULL
-
   return p;
 }
 
-struct gllc_SG_cell *gllc_SG_cell_at(struct gllc_SG_cell **grid, int x, int y) {
-  return find_cell(grid, GLLC_SG_HASH(x, y));
+uint64_t sg_hash(int x, int y) {
+  uint64_t h = x << 24 | y;
+  h ^= h >> 33;
+  h *= 0xff51afd7ed558ccdULL;
+  h ^= h >> 33;
+  return h;
 }
 
-struct gllc_SG_cell *gllc_SG_pick_cell(struct gllc_SG_cell **grid, double x,
-                                       double y) {
+struct sg_cell *sg_cell_at(struct sg_cell **grid, int x, int y) {
+  return find_cell(grid, SG_HASH(x, y));
+}
+
+struct sg_cell *sg_pick_cell(struct sg_cell **grid, double x,
+                             double y) {
   // Все ячейки размером 2**N => рассчет индекса ячейки можно сделать бинрным
   // сдвигом на N
-  int cx0 = ((int)floor(x)) >> GLLC_SG_CELL_SHIFT;
-  int cy0 = ((int)floor(y)) >> GLLC_SG_CELL_SHIFT;
+  int cx0 = ((int)floor(x)) >> SG_CELL_SHIFT;
+  int cy0 = ((int)floor(y)) >> SG_CELL_SHIFT;
 
-  return find_cell(grid, GLLC_SG_HASH(cx0, cy0));
+  return find_cell(grid, SG_HASH(cx0, cy0));
 }
 
-void gllc_SG_cleanup(struct gllc_SG_cell **grid) {
+void sg_cleanup(struct sg_cell **grid) {
   if (!grid || !*grid)
     return;
 
-  gllc_SG_cleanup(&(*grid)->left);
-  gllc_SG_cleanup(&(*grid)->right);
+  sg_cleanup(&(*grid)->left);
+  sg_cleanup(&(*grid)->right);
 
   free((*grid)->ent);
   free(*grid);

@@ -59,7 +59,7 @@ void gllc_object_destroy(struct gllc_object *obj);
 int gllc_prop_get_bool(struct gllc_object *obj, int prop);
 int gllc_prop_get_int(struct gllc_object *obj, int prop);
 double gllc_prop_get_float(struct gllc_object *obj, int prop);
-const char *gllc_prop_get_string(struct gllc_object *obj, int prop);
+char *gllc_prop_get_string(struct gllc_object *obj, int prop);
 void *gllc_prop_get_handle(struct gllc_object *obj, int prop);
 int gllc_prop_put_bool(struct gllc_object *obj, int prop, int value);
 int gllc_prop_put_int(struct gllc_object *obj, int prop, int value);

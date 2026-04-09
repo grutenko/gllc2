@@ -1,6 +1,7 @@
 #ifndef line_tess_h
 #define line_tess_h
 
+#include "entity_vertex.h"
 #include "glad.h"
 
 struct ds_vertex;
@@ -13,7 +14,7 @@ struct lb {
     GLfloat weight;
     GLfloat fillet_radius;
     GLfloat color[4];
-    double *ver;
+    struct ev *ver;
     GLuint ver_cnt;
     GLuint ioffset;
   } in;

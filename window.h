@@ -16,6 +16,7 @@ struct gllc_window_GPU {
   GLuint loc_uMVP;
   GLuint loc_uScale;
   GLuint loc_uViewportSize;
+  GLuint loc_uFlags;
   struct ds_gpu cmn;
   struct ds_gpu inter;
 };
@@ -62,8 +63,9 @@ struct gllc_window {
 };
 
 struct gllc_window *gllc_window_create(void *parent);
-void gllc_window_resize(struct gllc_window *window, int x, int y, int width, int height);
+int gllc_window_resize(struct gllc_window *window, int x, int y, int width, int height);
 void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *xd, double *yd);
-void gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block);
-void gllc_window_destroy(struct gllc_window *wnd);
+int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block);
+int gllc_window_destroy(struct gllc_window *wnd);
+int gllc_window_redraw(struct gllc_window *wnd);
 #endif

@@ -1,9 +1,10 @@
 #ifndef block_h
 #define block_h
 
-#include "object.h"
-#include "entity.h"
 #include "draw.h"
+#include "entity.h"
+#include "object.h"
+
 
 #include <stddef.h>
 
@@ -24,6 +25,7 @@ struct gllc_block {
   char name[64];
   double dx;
   double dy;
+  struct gllc_entity *hovered;
   struct gllc_block_batch cmn_batch;
   struct gllc_drawing *drawing;
   struct gllc_entity_props props;
@@ -35,6 +37,10 @@ struct gllc_block {
 struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *name, double dx, double dy);
 void gllc_block_update(struct gllc_block *block);
 void gllc_block_destroy(struct gllc_block *block);
+struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y);
+void gllc_block_hover(struct gllc_block *block, struct gllc_entity *ent);
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled);
+void gllc_block_hover_multi_by_bbox(struct gllc_block *block, double x0, double y0, double x1, double y1);
+void gllc_block_unhover_all(struct gllc_block *block);
 
 #endif

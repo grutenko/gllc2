@@ -3,6 +3,7 @@
 #include "draw.h"
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 void ui_grid_init(struct ui_grid *grid) {
@@ -12,11 +13,40 @@ void ui_grid_init(struct ui_grid *grid) {
   grid->offset_y = 0.0f;
   grid->v_cache = NULL;
   grid->v_cache_cap = 0;
-  grid->color[0] = 0.3f;
-  grid->color[1] = 0.3f;
-  grid->color[2] = 0.3f;
+  grid->color[0] = 0.8f;
+  grid->color[1] = 0.8f;
+  grid->color[2] = 0.8f;
   grid->color[3] = 1.0f;
 }
+
+static void gl_check_error(const char *file, int line) {
+  GLenum err;
+  while ((err = glGetError()) != GL_NO_ERROR) {
+    const char *err_str = "UNKNOWN";
+
+    switch (err) {
+    case GL_INVALID_ENUM:
+      err_str = "GL_INVALID_ENUM";
+      break;
+    case GL_INVALID_VALUE:
+      err_str = "GL_INVALID_VALUE";
+      break;
+    case GL_INVALID_OPERATION:
+      err_str = "GL_INVALID_OPERATION";
+      break;
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+      err_str = "GL_INVALID_FRAMEBUFFER_OPERATION";
+      break;
+    case GL_OUT_OF_MEMORY:
+      err_str = "GL_OUT_OF_MEMORY";
+      break;
+    }
+
+    fprintf(stderr, "OpenGL error: %s (%s:%d)\n", err_str, file, line);
+  }
+}
+
+#define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
 static void render(struct ui_grid *grid, double scale, double x0, double y0, double x1, double y1) {
   double gap_x = grid->gap_x;
@@ -122,7 +152,6 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
 
     glBindVertexArray(grid->VAO);
     glBindBuffer(GL_ARRAY_BUFFER, grid->VBO);
-
     ds_attrib_ptr();
   } else {
     glBindVertexArray(grid->VAO);
@@ -130,7 +159,7 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
   }
 
   if (vcap > grid->VBO_cnt) {
-    glBufferData(GL_ARRAY_BUFFER, i * sizeof(struct ds_vertex), grid->v_cache, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vcap * sizeof(struct ds_vertex), grid->v_cache, GL_STREAM_DRAW);
     grid->VBO_cnt = vcap;
   } else {
     glBufferSubData(GL_ARRAY_BUFFER, 0, i * sizeof(struct ds_vertex), grid->v_cache);

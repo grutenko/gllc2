@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 static void push_unit(struct ds_draw *draw, struct ds_unit *unit) {
   if (draw->tail) {
@@ -77,6 +78,7 @@ static void remove_unit(struct ds_draw *draw, struct ds_unit *unit) {
     draw->tail = unit->prev;
   }
   draw->unit_cnt--;
+  draw->dirty = 1;
 }
 
 void ds_unit_destroy(struct ds_unit *unit) {
@@ -120,9 +122,6 @@ static void gl_check_error(const char *file, int line) {
     }
 
     fprintf(stderr, "OpenGL error: %s (%s:%d)\n", err_str, file, line);
-
-    // удобно сразу стопорить
-    __debugbreak();
   }
 }
 
@@ -142,8 +141,36 @@ void ds_attrib_ptr() {
   glEnableVertexAttribArray(4);
 }
 
+#ifdef _WIN32
+#include <windows.h>
+
+static double now_sec() {
+  LARGE_INTEGER freq, counter;
+  QueryPerformanceFrequency(&freq);
+  QueryPerformanceCounter(&counter);
+  return (double)counter.QuadPart / (double)freq.QuadPart;
+}
+
+#else
+#include <time.h>
+
+static double now_sec() {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return ts.tv_sec + ts.tv_nsec * 1e-9;
+}
+#endif
+
+static void ds_sync_soft(struct ds_draw *draw, struct ds_gpu *gpu) {
+}
+
+static void ds_sync_all(struct ds_draw *draw, struct ds_gpu *gpu) {
+}
+
 void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
   if (draw && gpu) {
+    double t0 = now_sec();
+    double t1;
     GLuint v_total = 0;
     GLuint i_total = 0;
     struct ds_unit *unit = draw->head;
@@ -171,34 +198,39 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
       gpu->I_data = new_I_data;
       gpu->I_data_capacity = i_total;
     }
+    t1 = now_sec();
     unit = draw->head;
     GLuint offset = 0;
     GLuint i_offset = 0;
-    int batch_index = 0;
-    while (unit) {
-      memmove(&gpu->V_data[offset], unit->V, unit->V_cnt * sizeof(struct ds_vertex));
-      for (GLuint j = 0; j < unit->I_cnt; j++) {
-        gpu->I_data[i_offset + j] = unit->I[j] + offset;
-      }
-      offset += unit->V_cnt;
-      i_offset += unit->I_cnt;
-      unit = unit->next;
-    }
-    if (gpu->batch_cap < 1) {
-      struct ds_gpu_batch *new_batches = realloc(gpu->batches, 1 * sizeof(struct ds_gpu_batch));
+    int bi = 0;
+    if (gpu->batch_cap < draw->unit_cnt) {
+      struct ds_gpu_batch *new_batches = realloc(gpu->batches, draw->unit_cnt * sizeof(struct ds_gpu_batch));
       if (!new_batches) {
         // Handle allocation failure
         return;
       }
       gpu->batches = new_batches;
-      gpu->batch_cap = 1;
+      gpu->batch_cap = draw->unit_cnt;
     }
-    batch_index = 0;
-    gpu->batches[batch_index].tex_id = 0;
-    gpu->batches[batch_index].count = i_offset;
-    gpu->batches[batch_index].offset = 0;
+    t0 = now_sec();
+    for (unit = draw->head, bi = 0; unit; unit = unit->next, bi++) {
+      memmove(&gpu->V_data[offset], unit->V, unit->V_cnt * sizeof(struct ds_vertex));
+      for (GLuint j = 0; j < unit->I_cnt; j++) {
+        gpu->I_data[i_offset + j] = unit->I[j] + offset;
+      }
+      struct ds_gpu_batch *b = &gpu->batches[bi];
+      b->flags = unit->flags;
+      b->tex_id = 0;
+      b->count = unit->I_cnt;
+      b->offset = i_offset;
+      offset += unit->V_cnt;
+      i_offset += unit->I_cnt;
+      unit->dirty = 0;
+    }
     gpu->V_data_size = offset;
     gpu->I_data_size = i_offset;
+
+    t1 = now_sec();
     if (!gpu->VAO) {
       glGenVertexArrays(1, &gpu->VAO);
       glGenBuffers(1, &gpu->VBO);
@@ -213,32 +245,33 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gpu->EBO);
     }
     if (gpu->VBO_capacity < gpu->V_data_size) {
-      glBufferData(GL_ARRAY_BUFFER, gpu->V_data_size * sizeof(struct ds_vertex), gpu->V_data, GL_DYNAMIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, gpu->V_data_size * sizeof(struct ds_vertex), gpu->V_data, GL_STREAM_DRAW);
       gpu->VBO_capacity = gpu->V_data_size;
     } else {
       glBufferSubData(GL_ARRAY_BUFFER, 0, gpu->V_data_size * sizeof(struct ds_vertex), gpu->V_data);
     }
     if (gpu->I_data_size > gpu->EBO_capacity) {
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, gpu->I_data_size * sizeof(GLuint), gpu->I_data, GL_DYNAMIC_DRAW);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, gpu->I_data_size * sizeof(GLuint), gpu->I_data, GL_STREAM_DRAW);
       gpu->EBO_capacity = gpu->I_data_size;
     } else {
       glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, gpu->I_data_size * sizeof(GLuint), gpu->I_data);
     }
-    GL_CHECK();
-    gpu->batch_cnt = 1;
+    gpu->batch_cnt = bi;
     draw->dirty = 0;
   }
 }
 
-void ds_draw(struct ds_gpu *gpu) {
+void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags) {
   if (gpu) {
     // Bind the VAO
     glBindVertexArray(gpu->VAO);
-
-    for (GLuint i = 0; i < gpu->batch_cnt; i++) {
+    int i;
+    for (i = 0; i < gpu->batch_cnt; i++) {
       struct ds_gpu_batch *batch = &gpu->batches[i];
+      glUniform1i(loc_uFlags, batch->flags);
       glDrawElements(GL_TRIANGLES, batch->count, GL_UNSIGNED_INT, (void *)(batch->offset * sizeof(GLuint)));
     }
+    glUniform1i(loc_uFlags, 0);
   }
 }
 

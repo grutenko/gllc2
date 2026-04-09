@@ -7,34 +7,27 @@
 
 struct gllc_block_entity;
 
-#define GLLC_SG_CELL 128
-#define GLLC_SG_CELL_SHIFT 7
-#define GLLC_SG_HASH(X_, Y_) (uint64_t)((X_) << 24 | (Y_))
+#define SG_CELL 128
+#define SG_CELL_SHIFT 7
+#define SG_HASH(X_, Y_) sg_hash(X_, Y_)
 
-struct gllc_SG_cell {
+struct sg_cell {
   int height;
   uint64_t hash;
   struct gllc_entity **ent;
   size_t ent_cap;
   size_t ent_size;
-  struct gllc_SG_cell *p;
-  struct gllc_SG_cell *left;
-  struct gllc_SG_cell *right;
+  struct sg_cell *p;
+  struct sg_cell *left;
+  struct sg_cell *right;
 };
 
-int gllc_SG_push(struct gllc_SG_cell **grid, struct gllc_entity *ent,
-                 double bbox_x0, double bbox_y0, double bbox_x1,
-                 double bbox_y1);
-
-void gllc_SG_remove(struct gllc_SG_cell **grid, struct gllc_entity *ent);
-
-void gllc_SG_cleanup(struct gllc_SG_cell **grid);
-
-struct gllc_SG_cell *gllc_SG_pick_cell(struct gllc_SG_cell **grid, double x,
-                                       double y);
-
-struct gllc_SG_cell *gllc_SG_cell_at(struct gllc_SG_cell **grid, int x, int y);
-
-void gllc_SG_remove_all(struct gllc_SG_cell **grid);
+uint64_t sg_hash(int x, int y);
+int sg_push(struct sg_cell **grid, struct gllc_entity *ent, double bbox_x0, double bbox_y0, double bbox_x1, double bbox_y1);
+void sg_remove(struct sg_cell **grid, struct gllc_entity *ent);
+void sg_cleanup(struct sg_cell **grid);
+struct sg_cell *sg_pick_cell(struct sg_cell **grid, double x, double y);
+struct sg_cell *sg_cell_at(struct sg_cell **grid, int x, int y);
+void sg_remove_all(struct sg_cell **grid);
 
 #endif

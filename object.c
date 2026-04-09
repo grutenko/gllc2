@@ -37,7 +37,7 @@ double gllc_prop_get_float(struct gllc_object *obj, int prop) {
   return 0;
 }
 
-const char *gllc_prop_get_string(struct gllc_object *obj, int prop) {
+char *gllc_prop_get_string(struct gllc_object *obj, int prop) {
   struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_STRING);
   if (p) {
     return p->getter(obj, prop, T_PROP_STRING).string_;
