@@ -6,14 +6,13 @@
 
 struct gllc_polyline {
   struct gllc_entity _ent;
-  int fill_vcnt;
   int cnt;
   int cap;
-  struct ds_unit *unit;
+  uint64_t unit_ID;
   struct ev *pts;
 };
 
-struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, int closed, int filled);
+struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, struct ds_draw *draw, int closed, int filled);
 void gllc_pline_add_ver(struct gllc_polyline *pline, double x, double y);
 void gllc_pline_end(struct gllc_polyline *pline);
 #endif

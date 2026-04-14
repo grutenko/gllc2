@@ -12,13 +12,119 @@ static struct coloritab {
   int index;
   const char *name;
   int color;
-} _coloritab[] = {{-1, NULL, 0}};
+} _coloritab[] = {
+    {0, "Black", 0x000000},
+    {1, "90% Black", 0x191919},
+    {2, "80% Black", 0x333333},
+    {3, "70% Black", 0x4D4D4D},
+    {4, "60% Black", 0x666666},
+    {5, "50% Black", 0x808080},
+    {6, "40% Black", 0x999999},
+    {7, "30% Black", 0xB3B3B3},
+    {8, "20% Black", 0xCCCCCC},
+    {9, "10% Black", 0xE6E6E6},
+    {10, "White", 0xFFFFFF},
+    {11, "Blue", 0x0000FF},
+    {12, "Cyan", 0x00FFFF},
+    {13, "Green", 0x00FF00},
+    {14, "Yellow", 0xFFFF00},
+    {15, "Red", 0xFF0000},
+    {16, "Magenta", 0xFF00FF},
+    {17, "Purple", 0x9900CC},
+    {18, "Orange", 0xFF6600},
+    {19, "Pink", 0xFF99CC},
+    {20, "Dark Brown", 0x663333},
+    {21, "Powder Blue", 0xCCCCFF},
+    {22, "Pastel Blue", 0x9999FF},
+    {23, "Baby Blue", 0x6699FF},
+    {24, "Electric Blue", 0x6666FF},
+    {25, "Twilight Blue", 0x6666CC},
+    {26, "Navy Blue", 0x003399},
+    {27, "Deep Navy Blue", 0x000066},
+    {28, "Desert Blue", 0x336699},
+    {29, "Dodger Blue", 0x1389FF},
+    {30, "Sky Blue", 0x00CCFF},
+    {31, "Ice Blue", 0x99FFFF},
+    {32, "Smalt Blue", 0x0068D0},
+    {33, "Light BlueGreen", 0x99CCCC},
+    {34, "Ocean Green", 0x669999},
+    {35, "Moss Green", 0x336666},
+    {36, "Dark Green", 0x003333},
+    {37, "Forest Green", 0x006633},
+    {38, "Grass Green", 0x009933},
+    {39, "Wild Willow", 0xB5CC61},
+    {40, "Kentucky Green", 0x339966},
+    {41, "Light Green", 0x33CC66},
+    {42, "Spring Green", 0x33CC33},
+    {43, "Turquoise", 0x66FFCC},
+    {44, "Sea Green", 0x33CC99},
+    {45, "Faded Green", 0x99CC99},
+    {46, "Ghost Green", 0xCCFFCC},
+    {47, "Mint Green", 0x99FF99},
+    {48, "Army Green", 0x669966},
+    {49, "Avocado Green", 0x669933},
+    {50, "Martian Green", 0x99CC33},
+    {51, "Dull Green", 0x99CC66},
+    {52, "Chartreuse", 0x99FF00},
+    {53, "Moon Green", 0xCCFF66},
+    {54, "Murky Green", 0x333300},
+    {55, "Olive Drab", 0x666633},
+    {56, "Khaki", 0x999966},
+    {57, "Olive", 0x999933},
+    {58, "Banana Yellow", 0xCCCC33},
+    {59, "Light Yellow", 0xFFFF66},
+    {60, "Chalk", 0xFFFF99},
+    {61, "Pale Yellow", 0xFFFFCC},
+    {62, "Brown", 0x996633},
+    {63, "Red Brown", 0xCC6633},
+    {64, "Gold", 0xCC9933},
+    {65, "Autumn Orange", 0xFF6633},
+    {66, "Light Orange", 0xFF9933},
+    {67, "Peach", 0xFF9966},
+    {68, "Deep Yellow", 0xFFCC00},
+    {69, "Sand", 0xFFCC99},
+    {70, "Walnut", 0x663300},
+    {71, "Ruby Red", 0x990000},
+    {72, "Brick Red", 0xCC3300},
+    {73, "Tropical Pink", 0xFF6666},
+    {74, "Soft Pink", 0xFF9999},
+    {75, "Faded Pink", 0xFFCCCC},
+    {76, "Dark Red", 0x800000},
+    {77, "Crimson", 0x993366},
+    {78, "Regal Red", 0xCC3366},
+    {79, "Deep Rose", 0xCC3399},
+    {80, "Neon Red", 0xFF0066},
+    {81, "Deep Pink", 0xFF6699},
+    {82, "Hot Pink", 0xFF3399},
+    {83, "Dusty Rose", 0xCC6699},
+    {84, "Plum", 0x660066},
+    {85, "Deep Violet", 0x990099},
+    {86, "Light Violet", 0xFF99FF},
+    {87, "Violet", 0xCC66CC},
+    {88, "Dusty Plum", 0x996699},
+    {89, "Pale Purple", 0xCC99CC},
+    {90, "Majestic Purple", 0x9933CC},
+    {91, "Neon Purple", 0xCC33FF},
+    {92, "Light Purple", 0xCC66FF},
+    {93, "Twilight Violet", 0x9966CC},
+    {94, "Easter Purple", 0xCC99FF},
+    {95, "Deep Purple", 0x330066},
+    {96, "Grape", 0x663399},
+    {97, "Blue Violet", 0x9966FF},
+    {98, "Blue Purple", 0x9900FF},
+    {99, "Deep River", 0x6600CC},
+    {100, "Deep Azure", 0x6633FF},
+    {101, "Storm Blue", 0x330099},
+    {102, "Deep Blue", 0x3300CC},
+    {103, "Dark Blue", 0x000080},
+    {-1, NULL, 0}};
 
 static struct coloritab *find_color_by_name(const char *name) {
   int i = 0;
   while (_coloritab[i].index == -1) {
     if (strcmp(_coloritab[i].name, name) == 0)
       return &_coloritab[i];
+    i++;
   }
   return NULL;
 }
@@ -28,6 +134,7 @@ static struct coloritab *find_color_by_color(int color) {
   while (_coloritab[i].index == -1) {
     if (_coloritab[i].color == color)
       return &_coloritab[i];
+    i++;
   }
   return NULL;
 }
@@ -37,6 +144,7 @@ static struct coloritab *find_color_by_index(int index) {
   while (_coloritab[i].index == -1) {
     if (_coloritab[i].index == index)
       return &_coloritab[i];
+    i++;
   }
   return NULL;
 }
@@ -370,11 +478,19 @@ static union gllc_variant _ent_ycen_GET(struct gllc_object *obj, int prop, int t
 }
 
 static union gllc_variant _ent_dx_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double xmin, xmax;
+  ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, &xmin, NULL, &xmax, NULL);
+  v.float_ = fabs(xmax - xmin);
+  return v;
 }
 
 static union gllc_variant _ent_dy_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double ymin, ymax;
+  ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, NULL, &ymin, NULL, &ymax);
+  v.float_ = fabs(ymax - ymin);
+  return v;
 }
 
 static union gllc_variant _ent_len_GET(struct gllc_object *obj, int prop, int type) {
@@ -474,7 +590,7 @@ void gllc_entity_destroy(struct gllc_entity *ent) {
 int gllc_entity_set_color(struct gllc_entity *ent, int color) {
   if (ent) {
     ent->props.color = color;
-    ent->flags |= GLLC_ENT_MODIFIED;
+    gllc_entity_set_modified(ent, 0);
     return 1;
   }
   return 0;
@@ -483,7 +599,7 @@ int gllc_entity_set_color(struct gllc_entity *ent, int color) {
 int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor) {
   if (ent) {
     ent->props.fcolor = fcolor;
-    ent->flags |= GLLC_ENT_MODIFIED;
+    gllc_entity_set_modified(ent, 0);
     return 1;
   }
   return 0;
@@ -503,7 +619,7 @@ void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct
 
 int gllc_entity_set_falpha(struct gllc_entity *ent, float falpha) {
   ent->falpha = falpha;
-  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_entity_set_modified(ent, 0);
   return 1;
 }
 
@@ -513,7 +629,7 @@ float gllc_entity_falpha(struct gllc_entity *ent) {
 
 int gllc_entity_set_ltscale(struct gllc_entity *ent, float ltscale) {
   ent->props.ltscale = ltscale;
-  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_entity_set_modified(ent, 0);
   return 1;
 }
 
@@ -528,13 +644,13 @@ int gllc_entity_set_lwidth_mode(struct gllc_entity *ent, int mode) {
   } else {
     return 0;
   }
-  ent->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED;
+  gllc_entity_set_modified(ent, 1);
   return 1;
 }
 
 int gllc_entity_set_lwidth(struct gllc_entity *ent, float lwidth) {
   ent->lwidth = lwidth;
-  ent->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED;
+  gllc_entity_set_modified(ent, 1);
   return 1;
 }
 
@@ -566,7 +682,7 @@ float gllc_entity_lwidth(struct gllc_entity *ent) {
 
 int gllc_entity_set_linetype(struct gllc_entity *ent, struct gllc_linetype *linetype) {
   ent->props.linetype = linetype;
-  ent->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED;
+  gllc_entity_set_modified(ent, 1);
   return 1;
 }
 
@@ -602,7 +718,7 @@ int gllc_entity_set_color_by_layer(struct gllc_entity *ent, int enable) {
   if (enable) {
     ent->flags |= GLLC_ENT_COLOR_BY_LAYER;
   }
-  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_entity_set_modified(ent, 0);
   return 1;
 }
 
@@ -611,7 +727,7 @@ int gllc_entity_set_color_by_block(struct gllc_entity *ent, int enable) {
   if (enable) {
     ent->flags |= GLLC_ENT_COLOR_BY_BLOCK;
   }
-  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_entity_set_modified(ent, 0);
   return 1;
 }
 
@@ -620,7 +736,7 @@ int gllc_entity_set_fcolor_by_layer(struct gllc_entity *ent, int enable) {
   if (enable) {
     ent->flags |= GLLC_ENT_FCOLOR_BY_LAYER;
   }
-  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_entity_set_modified(ent, 0);
   return 1;
 }
 
@@ -629,7 +745,7 @@ int gllc_entity_set_fcolor_by_block(struct gllc_entity *ent, int enable) {
   if (enable) {
     ent->flags |= GLLC_ENT_FCOLOR_BY_BLOCK;
   }
-  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_entity_set_modified(ent, 0);
   return 1;
 }
 
@@ -643,7 +759,7 @@ int gllc_entity_set_filled(struct gllc_entity *ent, int filled) {
   } else {
     ent->flags &= ~GLLC_ENT_FILLED;
   }
-  ent->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED;
+  gllc_entity_set_modified(ent, 1);
   return 1;
 }
 
@@ -737,10 +853,44 @@ int gllc_entity_set_hidden(struct gllc_entity *ent, int enable) {
   } else {
     ent->flags &= ~GLLC_ENT_HIDDEN;
   }
-  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_entity_set_modified(ent, 0);
   return 1;
 }
 
 int gllc_entity_selected(struct gllc_entity *ent) {
   return (ent->flags & GLLC_ENT_SELECTED) > 0;
+}
+
+int gllc_entity_hover(struct gllc_entity *ent) {
+  return (ent->flags & GLLC_ENT_HOVER) > 0;
+}
+
+int gllc_entity_set_hover(struct gllc_entity *ent, int enable) {
+  if (enable) {
+    ent->flags |= GLLC_ENT_HOVER;
+  } else {
+    ent->flags &= ~GLLC_ENT_HOVER;
+  }
+  gllc_entity_set_modified(ent, 0);
+  return 1;
+}
+
+int gllc_entity_modified(struct gllc_entity *ent) {
+  return (ent->flags & GLLC_ENT_MODIFIED) > 0;
+}
+
+int gllc_entity_geometry_modified(struct gllc_entity *ent) {
+  return (ent->flags & GLLC_ENT_GEOMETRY_MODIFIED) > 0;
+}
+
+int gllc_entity_set_modified(struct gllc_entity *ent, int geometry) {
+  int flags = ent->flags;
+  flags |= GLLC_ENT_MODIFIED;
+  if (geometry) {
+    flags |= GLLC_ENT_GEOMETRY_MODIFIED;
+  }
+  if (flags != ent->flags) {
+    gllc_block_put_bq(ent->block, ent);
+  }
+  return 1;
 }

@@ -308,11 +308,8 @@ static void draw(struct gllc_window *wnd) {
   if (wnd->UI.grid_enable) {
     ui_grid_draw(&(wnd->UI.grid), wnd->cam.scale, x0, y0, x1, y1);
   }
-
   if (wnd->block) {
-    if (ds_draw_dirty(&wnd->block->cmn_batch.draw)) {
-      ds_sync(&wnd->block->cmn_batch.draw, &wnd->GPU.cmn);
-    }
+    gllc_block_sync_gpu(wnd->block, &wnd->GPU.cmn);
     ds_draw(&wnd->GPU.cmn, wnd->GPU.loc_uFlags);
   }
 
@@ -322,7 +319,6 @@ static void draw(struct gllc_window *wnd) {
     ui_selection_draw(&(wnd->UI.sel), wnd->UI.sel_x0, wnd->UI.sel_y0, sx1, sy1);
   }
 
-  // Screen view
   glUniformMatrix4fv(wnd->GPU.loc_uMVP, 1, GL_FALSE, (const float *)wnd->cam.mScreenMVP);
 
   if (wnd->UI.menter) {
@@ -374,21 +370,9 @@ static void on_mouse_move(struct _gllc_NW *w, int x, int y, void *data) {
     wnd->cam.dx += ((double)x - wnd->UI.mx) * wnd->cam.scale;
     wnd->cam.dy -= ((double)y - wnd->UI.my) * wnd->cam.scale;
     update_camera(wnd);
-  } else {
-    if (wnd->block) {
-      if (!wnd->UI.mpressed) {
-        struct gllc_entity *ent = gllc_block_pick_ent(wnd->block, wx, wy);
-        gllc_block_hover(wnd->block, ent);
-      } else {
-        gllc_block_hover_multi_by_bbox(wnd->block, wnd->UI.sel_x0, wnd->UI.sel_y0, wx, wy);
-      }
-      gllc_block_update(wnd->block);
-    }
   }
 
-  printf("%lf, %lf\n", wx, wy);
-
-      wnd->UI.mx = x;
+  wnd->UI.mx = x;
   wnd->UI.my = y;
   wnd->UI.menter = 1;
   _gllc_NW_dirty(w);
@@ -404,7 +388,6 @@ static void on_mouse_click(struct _gllc_NW *wn, int x, int y, int mode, int acti
     wnd->UI.mdowny = y;
     screen_to_world(wnd, (double)x, (double)y, &wnd->UI.sel_x0, &wnd->UI.sel_y0);
   } else {
-    gllc_block_unhover_all(wnd->block);
     gllc_block_update(wnd->block);
   }
   _gllc_NW_dirty(wn);

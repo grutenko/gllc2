@@ -13,14 +13,15 @@ set(SOURCES
   draw.c
   drawing.c
   entity.c
-  line_build.c
+  lb.c
   object.c
   platform_windows.c
   point.c
   polyline.c
   rect.c
-  sparse_grid.c
+  sg.c
   stb_truetype.c
+  tess.c
   ui_cursor.c
   ui_grid.c
   ui_selection.c

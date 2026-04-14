@@ -16,6 +16,7 @@ struct ds_gpu;
 struct ds_unit;
 
 struct ds_unit *ds_gen_unit(struct ds_draw *draw);
+uint64_t ds_unit_id(struct ds_unit *unit);
 int ds_unit_reserve(struct ds_unit *u, GLuint vcap, GLuint icap);
 int ds_unit_flags(struct ds_unit *u);
 int ds_unit_modified(struct ds_unit *u);
@@ -23,6 +24,8 @@ void ds_unit_set_modified_flags(struct ds_unit *u, int modflags);
 void ds_unit_set_flags(struct ds_unit *u, int flags);
 struct ds_vertex *ds_unit_vertices(struct ds_unit *u);
 GLuint *ds_unit_indices(struct ds_unit *u);
+void ds_unit_set_order(struct ds_unit *u, int order);
+int ds_unit_order(struct ds_unit *u);
 int ds_unit_set_cnt(struct ds_unit *u, GLuint vcnt, GLuint icnt);
 void ds_unit_get_cnt(struct ds_unit *u, GLuint *vcnt, GLuint *icnt);
 void ds_unit_get_capacity(struct ds_unit *u, GLuint *vcap, GLuint *icap);

@@ -65,8 +65,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   struct gllc_drawing *drw = gllc_drw_create();
   struct gllc_block *block = gllc_drw_add_block(drw, "block1", 0, 0);
 
-  int N = 100;
-  int M = 100;
+  int N = 600;
+  int M = 600;
   double min = -1000.0;
   double max = 1000.0;
   double step = (max - min) / (double)N;
@@ -77,8 +77,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   for (i = 0; i < N; i++) {
     for (j = 0; j < M; j++) {
       int i0 = (i * M + j) * 2;
-      tab[i0] = min + i * step + frand(-2, 2);
-      tab[i0 + 1] = min + j * step + frand(-2, 2);
+      tab[i0] = min + i * step;
+      tab[i0 + 1] = min + j * step;
     }
   }
 

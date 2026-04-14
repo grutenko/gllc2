@@ -1,6 +1,7 @@
 #ifndef entity_h
 #define entity_h
 
+#include "entity_vertex.h"
 #include "glad.h"
 #include "object.h"
 
@@ -36,13 +37,14 @@ struct gllc_entity;
 
 struct gllc_entity_vtable {
   int type;
-  void (*build)(struct gllc_entity *, struct ds_draw *, GLfloat scale);
+  void (*build)(struct gllc_entity *, struct ds_draw *, double scale);
   void (*destroy)(struct gllc_entity *);
-  int (*vertices)(struct gllc_entity *, double, double *);
-  int (*selected)(struct gllc_entity *, double, double, double, double, double);
+  int (*vertices)(struct gllc_entity *, double, struct ev *);
+  int (*selected)(struct gllc_entity *, int, double, double, double, double, double);
   int (*picked)(struct gllc_entity *, double, double, double);
   int (*bbox)(struct gllc_entity *, double, double *, double *, double *, double *);
   int (*len)(struct gllc_entity *, double *);
+  int (*clone)(struct gllc_entity *, struct gllc_entity **);
 };
 
 struct gllc_entity_props {
@@ -119,6 +121,11 @@ int gllc_entity_visible(struct gllc_entity *ent);
 int gllc_entity_hidden(struct gllc_entity *ent);
 int gllc_entity_set_hidden(struct gllc_entity *ent, int enable);
 int gllc_entity_selected(struct gllc_entity *ent);
+int gllc_entity_hover(struct gllc_entity *ent);
+int gllc_entity_set_hover(struct gllc_entity *ent, int enable);
+int gllc_entity_modified(struct gllc_entity *ent);
+int gllc_entity_geometry_modified(struct gllc_entity *ent);
+int gllc_entity_set_modified(struct gllc_entity *ent, int geometry);
 void gllc_entity_destroy(struct gllc_entity *ent);
 
 #endif
