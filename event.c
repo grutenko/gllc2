@@ -237,11 +237,8 @@ static struct gllc_prop _props[] = {
     P_STRING(LC_PROP_EVENT_STR2, _event_str2_GET, _event_str2_SET),
     P_STRING(LC_PROP_EVENT_STR3, _event_str3_GET, _event_str3_SET),
     P_END};
-
 static struct gllc_prop *_all_props[] = {_props, NULL};
-
 static void _destroy(struct gllc_object *obj) {}
-
 static struct gllc_object_vtable _vtable = {
     .destroy = _destroy};
 

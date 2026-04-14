@@ -10,7 +10,7 @@ struct gllc_object_vtable {
 
 union gllc_variant {
   int bool_;
-  uint64_t int_;
+  int64_t int_;
   double float_;
   char *string_;
   void *handle_;
@@ -58,14 +58,14 @@ struct gllc_object {
 void gllc_object_destroy(struct gllc_object *obj);
 
 int gllc_prop_get_bool(struct gllc_object *obj, int prop);
-int gllc_prop_get_int(struct gllc_object *obj, int prop);
+int64_t gllc_prop_get_int(struct gllc_object *obj, int prop);
 double gllc_prop_get_float(struct gllc_object *obj, int prop);
 char *gllc_prop_get_string(struct gllc_object *obj, int prop);
 void *gllc_prop_get_handle(struct gllc_object *obj, int prop);
 int gllc_prop_put_bool(struct gllc_object *obj, int prop, int value);
-int gllc_prop_put_int(struct gllc_object *obj, int prop, int value);
+int gllc_prop_put_int(struct gllc_object *obj, int prop, int64_t value);
 int gllc_prop_put_float(struct gllc_object *obj, int prop, double value);
-int gllc_prop_put_string(struct gllc_object *obj, int prop, const char *value);
+int gllc_prop_put_string(struct gllc_object *obj, int prop, char *value);
 int gllc_prop_put_handle(struct gllc_object *obj, int prop, void *value);
 
 #endif

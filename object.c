@@ -1,6 +1,22 @@
 #include "object.h"
 #include "block.h"
 
+static void destroy(struct gllc_object *obj) {}
+static struct gllc_prop props[] = {P_END};
+static struct gllc_prop *all_props[] = {props, NULL};
+static struct gllc_object_vtable vtable = {
+    .destroy = destroy};
+static struct g_props_obj {
+  struct gllc_object _obj;
+} global_props_obj = {
+    ._obj = {.props = all_props,
+             .vtable = &vtable}};
+
+void gllc_object_init(struct gllc_object *obj, struct gllc_prop **props, struct gllc_object_vtable *vtable) {
+  obj->props = props;
+  obj->vtable = vtable;
+}
+
 static struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ) {
   int i, j;
   for (i = 0; props[i]; i++) {
@@ -13,97 +29,41 @@ static struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ) 
   return NULL;
 }
 
-void gllc_object_init(struct gllc_object *obj, struct gllc_prop **props, struct gllc_object_vtable *vtable) {
-  obj->props = props;
-  obj->vtable = vtable;
-}
-
-int gllc_prop_get_bool(struct gllc_object *obj, int prop) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_BOOL);
-  if (p) {
-    return p->getter(obj, prop, T_PROP_BOOL).bool_;
+#define GET(T0, T1, T2)                                                        \
+  T2 gllc_prop_get_##T1(struct gllc_object *obj, int prop) {                   \
+    struct gllc_prop **props = obj ? obj->props : global_props_obj._obj.props; \
+    struct gllc_prop *p = find_prop(props, prop, T0);                          \
+    if (p) {                                                                   \
+      return p->getter(obj, prop, T0).T1##_;                                   \
+    }                                                                          \
+    return 0;                                                                  \
   }
-  return 0;
-}
 
-int gllc_prop_get_int(struct gllc_object *obj, int prop) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_INT);
-  if (p) {
-    return p->getter(obj, prop, T_PROP_INT).int_;
-  }
-  return 0;
-}
+GET(T_PROP_BOOL, bool, int)
+GET(T_PROP_INT, int, int64_t)
+GET(T_PROP_FLOAT, float, double)
+GET(T_PROP_STRING, string, char *)
+GET(T_PROP_HANDLE, handle, void *)
 
-double gllc_prop_get_float(struct gllc_object *obj, int prop) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_FLOAT);
-  if (p) {
-    return p->getter(obj, prop, T_PROP_FLOAT).float_;
+#define PUT(T0, T1, T2)                                                        \
+  int gllc_prop_put_##T1(struct gllc_object *obj, int prop, T2 value) {        \
+    struct gllc_prop **props = obj ? obj->props : global_props_obj._obj.props; \
+    struct gllc_prop *p = find_prop(props, prop, T0);                          \
+    if (p && !p->readonly) {                                                   \
+      union gllc_variant v;                                                    \
+      v.T1##_ = value;                                                         \
+      return p->setter(obj, prop, T0, v);                                      \
+    }                                                                          \
+    return 0;                                                                  \
   }
-  return 0;
-}
 
-char *gllc_prop_get_string(struct gllc_object *obj, int prop) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_STRING);
-  if (p) {
-    return p->getter(obj, prop, T_PROP_STRING).string_;
-  }
-  return 0;
-}
+PUT(T_PROP_BOOL, bool, int)
+PUT(T_PROP_INT, int, int64_t)
+PUT(T_PROP_FLOAT, float, double)
+PUT(T_PROP_STRING, string, char *)
+PUT(T_PROP_HANDLE, handle, void *)
 
-void *gllc_prop_get_handle(struct gllc_object *obj, int prop) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_HANDLE);
-  if (p) {
-    return p->getter(obj, prop, T_PROP_HANDLE).handle_;
-  }
-  return 0;
-}
-
-int gllc_prop_put_bool(struct gllc_object *obj, int prop, int value) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_BOOL);
-  if (p && !p->readonly) {
-    union gllc_variant v;
-    v.bool_ = value;
-    return p->setter(obj, prop, T_PROP_BOOL, v);
-  }
-  return 0;
-}
-
-int gllc_prop_put_int(struct gllc_object *obj, int prop, int value) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_INT);
-  if (p && !p->readonly) {
-    union gllc_variant v;
-    v.int_ = value;
-    return p->setter(obj, prop, T_PROP_INT, v);
-  }
-  return 0;
-}
-
-int gllc_prop_put_float(struct gllc_object *obj, int prop, double value) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_FLOAT);
-  if (p && !p->readonly) {
-    union gllc_variant v;
-    v.float_ = value;
-    return p->setter(obj, prop, T_PROP_FLOAT, v);
-  }
-  return 0;
-}
-
-int gllc_prop_put_string(struct gllc_object *obj, int prop, const char *value) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_STRING);
-  if (p && !p->readonly) {
-    union gllc_variant v;
-    v.string_ = (char *)value;
-    return p->setter(obj, prop, T_PROP_STRING, v);
-  }
-  return 0;
-}
-
-int gllc_prop_put_handle(struct gllc_object *obj, int prop, void *value) {
-  struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_HANDLE);
-  if (p && !p->readonly) {
-    union gllc_variant v;
-    v.handle_ = value;
-    return p->setter(obj, prop, T_PROP_HANDLE, v);
-  }
-  return 0;
+void gllc_object_destroy(struct gllc_object *obj) {
+  if (obj->vtable->destroy)
+    obj->vtable->destroy(obj);
 }

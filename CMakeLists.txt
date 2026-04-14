@@ -15,6 +15,7 @@ set(SOURCES
   entity.c
   lb.c
   object.c
+  named_object.c
   platform_windows.c
   point.c
   polyline.c

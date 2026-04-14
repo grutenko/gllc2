@@ -29,10 +29,10 @@ struct gllc_nobject {
   int nrefs;
   void *xdata;
   int xdata_size;
-  uint64_t int0;
-  uint64_t int1;
-  uint64_t int2;
-  uint64_t int3;
+  int64_t int0;
+  int64_t int1;
+  int64_t int2;
+  int64_t int3;
   double float0;
   double float1;
   double float2;
