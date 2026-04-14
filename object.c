@@ -13,6 +13,11 @@ static struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ) 
   return NULL;
 }
 
+void gllc_object_init(struct gllc_object *obj, struct gllc_prop **props, struct gllc_object_vtable *vtable) {
+  obj->props = props;
+  obj->vtable = vtable;
+}
+
 int gllc_prop_get_bool(struct gllc_object *obj, int prop) {
   struct gllc_prop *p = find_prop(obj->props, prop, T_PROP_BOOL);
   if (p) {

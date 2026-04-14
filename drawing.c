@@ -1,5 +1,6 @@
 #include "drawing.h"
 #include "block.h"
+#include "named_object.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -12,32 +13,32 @@ struct gllc_drawing *gllc_drw_create() {
   return d;
 }
 
-static void push_block(struct gllc_drawing *drawing, struct gllc_block *block) {
-  block->prev = drawing->block_tail;
-  block->next = NULL;
-  if (drawing->block_tail)
-    drawing->block_tail->next = block;
+static void push_obj(struct gllc_drawing *drawing, struct gllc_nobject *obj) {
+  obj->prev = drawing->ot;
+  obj->next = NULL;
+  if (drawing->ot)
+    drawing->ot->next = obj;
   else
-    drawing->block_head = block;
-  drawing->block_tail = block;
-  drawing->block_cnt++;
+    drawing->oh = obj;
+  drawing->ot = obj;
+  drawing->ocnt++;
 }
 
 struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing,
                                       const char *name, double dx, double dy) {
   struct gllc_block *block = gllc_block_create(drawing, name, dx, dy);
   if (block) {
-    push_block(drawing, block);
+    push_obj(drawing, (struct gllc_nobject *)block);
   }
   return block;
 }
 
 void gllc_drawing_destroy(struct gllc_drawing *drawing) {
-  struct gllc_block *block = drawing->block_head;
-  while (block) {
-    struct gllc_block *next = block->next;
-    gllc_block_destroy(block);
-    block = next;
+  struct gllc_nobject *nobj = drawing->oh;
+  while (nobj) {
+    struct gllc_nobject *next = nobj->next;
+    gllc_nobject_destroy(nobj);
+    nobj = next;
   }
   free(drawing);
 }

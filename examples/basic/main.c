@@ -121,6 +121,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     }
   }
 
+  gllc_block_destroy(block);
   gllc_window_destroy(w);
 
   return 0;

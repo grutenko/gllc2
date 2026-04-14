@@ -60,6 +60,10 @@ struct gllc_entity {
   float falpha;
   float lwidth;
   int order;
+  uint64_t ID;
+  uint64_t key;
+  char ID_hex[16];
+  uint64_t unit_ID;
   struct gllc_entity_props props;
   struct gllc_entity_vtable *vtable;
   struct gllc_block *block;
@@ -79,6 +83,10 @@ void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct
 #define GLLC_COLOR_GREEN(C) (((C) >> 8) & 0xFF)
 #define GLLC_COLOR_BLUE(C) ((C) & 0xFF)
 
+uint64_t gllc_entity_get_id(struct gllc_entity *ent);
+char *gllc_entity_get_id_string(struct gllc_entity *ent);
+uint64_t gllc_entity_get_key(struct gllc_entity *ent);
+int gllc_entity_set_key(struct gllc_entity *ent, uint64_t key);
 int gllc_entity_color(struct gllc_entity *ent);
 int gllc_entity_fcolor(struct gllc_entity *ent);
 char *gllc_entity_color_string(struct gllc_entity *ent);

@@ -68,4 +68,13 @@ void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *x
 int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block);
 int gllc_window_destroy(struct gllc_window *wnd);
 int gllc_window_redraw(struct gllc_window *wnd);
+int gllc_window_zoom_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1);
+int gllc_window_zoom_scale(struct gllc_window *wnd, double scale);
+int gllc_window_zoom_move(struct gllc_window *wnd, double dx, double dy);
+int gllc_window_zoom_pos(struct gllc_window *wnd, double x, double y, double scale);
+int gllc_window_get_cursor_coord(struct gllc_window *wnd, int *x, int *y, double *wx, double *wy);
+int gllc_window_coord_to_drw(struct gllc_window *wnd, int x, int y, double *wx, double *wy);
+int gllc_window_coord_to_wnd(struct gllc_window *wnd, double wx, double wy, int *x, int *y);
+struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *wnd, int x, int y);
+
 #endif

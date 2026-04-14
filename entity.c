@@ -5,6 +5,7 @@
 #include "object.h"
 
 #include <math.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -156,15 +157,23 @@ static union gllc_variant _ent_type_GET(struct gllc_object *obj, int prop, int t
 }
 
 static union gllc_variant _ent_id_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  if (type == T_PROP_INT) {
+    v.int_ = gllc_entity_get_id((struct gllc_entity *)obj);
+  } else if (type == T_PROP_STRING) {
+    v.string_ = gllc_entity_get_id_string((struct gllc_entity *)obj);
+  }
+  return v;
 }
 
 static union gllc_variant _ent_key_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  v.int_ = gllc_entity_get_id((struct gllc_entity *)obj);
+  return v;
 }
 
 static int _ent_key_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value) {
-  return 0;
+  return gllc_entity_set_key((struct gllc_entity *)obj, value.int_);
 }
 
 static union gllc_variant _ent_block_GET(struct gllc_object *obj, int prop, int type) {
@@ -560,6 +569,23 @@ static void obj_entity_destroy(struct gllc_object *obj) {
 struct gllc_object_vtable G_entity_obj_vtable = {
     .destroy = obj_entity_destroy};
 
+uint64_t gllc_entity_get_id(struct gllc_entity *ent) {
+  return ent->ID;
+}
+
+char *gllc_entity_get_id_string(struct gllc_entity *ent) {
+  return ent->ID_hex;
+}
+
+uint64_t gllc_entity_get_key(struct gllc_entity *ent) {
+  return ent->key;
+}
+
+int gllc_entity_set_key(struct gllc_entity *ent, uint64_t key) {
+  ent->key = key;
+  return 1;
+}
+
 int gllc_entity_color(struct gllc_entity *ent) {
   if (ent->layer && ent->flags & GLLC_ENT_COLOR_BY_LAYER) {
     return ent->layer->props.color;
@@ -605,12 +631,37 @@ int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor) {
   return 0;
 }
 
+static uint64_t last_ID = 0ULL;
+
+static char ID_hex_tab[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+static inline void ID_hexify(uint64_t ID, char *ID_hex) {
+  ID_hex[0] = ID_hex_tab[(ID >> 60) & 0xF];
+  ID_hex[1] = ID_hex_tab[(ID >> 56) & 0xF];
+  ID_hex[2] = ID_hex_tab[(ID >> 52) & 0xF];
+  ID_hex[3] = ID_hex_tab[(ID >> 48) & 0xF];
+  ID_hex[4] = ID_hex_tab[(ID >> 44) & 0xF];
+  ID_hex[5] = ID_hex_tab[(ID >> 40) & 0xF];
+  ID_hex[6] = ID_hex_tab[(ID >> 36) & 0xF];
+  ID_hex[7] = ID_hex_tab[(ID >> 32) & 0xF];
+  ID_hex[8] = ID_hex_tab[(ID >> 28) & 0xF];
+  ID_hex[9] = ID_hex_tab[(ID >> 24) & 0xF];
+  ID_hex[10] = ID_hex_tab[(ID >> 20) & 0xF];
+  ID_hex[11] = ID_hex_tab[(ID >> 16) & 0xF];
+  ID_hex[12] = ID_hex_tab[(ID >> 12) & 0xF];
+  ID_hex[13] = ID_hex_tab[(ID >> 8) & 0xF];
+  ID_hex[14] = ID_hex_tab[(ID >> 4) & 0xF];
+  ID_hex[15] = ID_hex_tab[ID & 0xF];
+}
+
 void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props, struct gllc_entity_vtable *vtable) {
   memset(ent, 0, sizeof(struct gllc_entity));
   ent->block = block;
   GLLC_OBJECT_INIT(&ent->_obj, props, &G_entity_obj_vtable);
   ent->vtable = vtable;
   ent->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED | GLLC_ENT_LW_THIN | GLLC_ENT_INITIAL;
+  ent->ID = last_ID++;
+  ID_hexify(ent->ID, ent->ID_hex);
   ent->props.ltscale = 1.0f;
   ent->props.color = 0;
   ent->props.fcolor = 0;

@@ -1,6 +1,7 @@
 #ifndef object_h
 #define object_h
 
+#include <stdint.h>
 struct gllc_object;
 
 struct gllc_object_vtable {
@@ -9,7 +10,7 @@ struct gllc_object_vtable {
 
 union gllc_variant {
   int bool_;
-  int int_;
+  uint64_t int_;
   double float_;
   char *string_;
   void *handle_;

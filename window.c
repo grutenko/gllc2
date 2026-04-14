@@ -365,13 +365,17 @@ static void on_mouse_move(struct _gllc_NW *w, int x, int y, void *data) {
   struct gllc_window *wnd = (struct gllc_window *)data;
   double wx, wy;
   screen_to_world(wnd, (double)x, (double)y, &wx, &wy);
-
-  if (wnd->UI.mpressed && wnd->UI.mbtn == 3) {
-    wnd->cam.dx += ((double)x - wnd->UI.mx) * wnd->cam.scale;
-    wnd->cam.dy -= ((double)y - wnd->UI.my) * wnd->cam.scale;
-    update_camera(wnd);
+  if (wnd->UI.mpressed) {
+    if (wnd->UI.mbtn == 3) {
+      wnd->cam.dx += ((double)x - wnd->UI.mx) * wnd->cam.scale;
+      wnd->cam.dy -= ((double)y - wnd->UI.my) * wnd->cam.scale;
+      update_camera(wnd);
+    }
+  } else {
+    if (wnd->block) {
+      struct gllc_entity *ent = gllc_block_pick_ent(wnd->block, wx, wy);
+    }
   }
-
   wnd->UI.mx = x;
   wnd->UI.my = y;
   wnd->UI.menter = 1;
@@ -387,8 +391,6 @@ static void on_mouse_click(struct _gllc_NW *wn, int x, int y, int mode, int acti
     wnd->UI.mdownx = x;
     wnd->UI.mdowny = y;
     screen_to_world(wnd, (double)x, (double)y, &wnd->UI.sel_x0, &wnd->UI.sel_y0);
-  } else {
-    gllc_block_update(wnd->block);
   }
   _gllc_NW_dirty(wn);
 }
@@ -397,9 +399,9 @@ static void on_mouse_scroll(struct _gllc_NW *wn, int dx, int dy, void *data) {
   struct gllc_window *w = (struct gllc_window *)data;
 
   if (dy >= 10)
-    dy = 2;
+    dy = 10;
   if (dy <= -10)
-    dy = -2;
+    dy = -10;
 
   if ((w->cam.scale > 300.0f && dy < 0) || (w->cam.scale < 0.005f && dy > 0))
     return;

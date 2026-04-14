@@ -1,26 +1,37 @@
 #include "block.h"
 #include "draw.h"
 #include "entity.h"
+#include "named_object.h"
+#include "object.h"
 #include "polyline.h"
 #include "sg.h"
 
 #include <math.h>
+#include <profileapi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <winnt.h>
+
+static struct gllc_prop props[] = {P_END};
+static struct gllc_prop *all_props[] = {G_nobject_props, props, NULL};
+
+static void destroy(struct gllc_object *obj) {
+  gllc_block_destroy((struct gllc_block *)obj);
+}
+
+static struct gllc_object_vtable vtable = {
+    .destroy = destroy};
 
 struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *name, double dx, double dy) {
   struct gllc_block *block = malloc(sizeof(struct gllc_block));
   if (block) {
     memset(block, 0, sizeof(struct gllc_block));
-    block->drawing = drawing;
+    gllc_nobject_init((struct gllc_nobject *)block, drawing, all_props, &vtable, GLLC_OBJ_BLOCK, name);
     block->dx = dx;
     block->dy = dy;
-    block->batch.cnt = 0;
     block->props.color = -1;
     block->props.fcolor = -1;
-    strncpy(block->name, name, sizeof(block->name) - 1);
-    block->name[sizeof(block->name) - 1] = '\0';
     block->batch.sg = sg_create(6);
     if (!block->batch.sg) {
       free(block);
