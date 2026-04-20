@@ -1,4 +1,4 @@
-#include "draw.h"
+#include "draw__.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -22,22 +22,21 @@ struct ds_unit {
 #define HASH(ID) (ID & (HASHTAB_CAP - 1))
 
 struct ds_draw {
-  struct ds_unit *unit_tab[HASHTAB_CAP];
-  int unit_tab_cnt[HASHTAB_CAP];
-  int unit_tab_cap[HASHTAB_CAP];
-  int unit_last_id;
-  int cnt;
-  int dirty;
+  struct ds_unit *t[HASHTAB_CAP];
+  int cnt[HASHTAB_CAP];
+  int cap[HASHTAB_CAP];
+  int last_ID;
+  int total;
+  int dirty_cnt;
 };
 
-struct ds_gpu_batch {
-  uint64_t unit_id;
-  GLuint flags;
+struct ds_gpu_unit {
+  uint64_t ID;
   GLuint offset;
   GLuint count;
 };
 
-struct ds_gpu {
+struct ds_gpu_batch {
   GLuint vao;
   GLuint vbo;
   GLuint ebo;
@@ -45,6 +44,14 @@ struct ds_gpu {
   GLuint ebo_cnt;
   GLuint vbo_cap;
   GLuint ebo_cap;
+  GLuint flags;
+  GLuint count;
+  GLuint cnt;
+  GLuint cap;
+  struct ds_gpu_unit *units;
+};
+
+struct ds_gpu {
   GLuint vbo_cache_cap;
   GLuint ebo_cache_cap;
   GLuint batch_cnt;
@@ -52,6 +59,10 @@ struct ds_gpu {
   struct ds_vertex *vbo_cache;
   GLuint *ebo_cache;
 };
+
+uint64_t ds_unit_id(struct ds_unit *unit) {
+  return unit->ID;
+}
 
 struct ds_draw *ds_draw_create() {
   struct ds_draw *draw = malloc(sizeof(struct ds_draw));
@@ -61,12 +72,21 @@ struct ds_draw *ds_draw_create() {
   return draw;
 }
 
+static inline uint64_t scramble_id64(uint64_t x) {
+  x ^= x >> 30;
+  x *= 0xbf58476d1ce4e5b9ULL;
+  x ^= x >> 27;
+  x *= 0x94d049bb133111ebULL;
+  x ^= x >> 31;
+  return x;
+}
+
 struct ds_unit *ds_gen_unit(struct ds_draw *draw) {
-  int ID = draw->unit_last_id++;
+  int ID = scramble_id64(draw->last_ID++);
   int H = HASH(ID);
-  int *cap = &draw->unit_tab_cap[H];
-  int *cnt = &draw->unit_tab_cnt[H];
-  struct ds_unit **tab = &draw->unit_tab[H];
+  int *cap = &draw->cap[H];
+  int *cnt = &draw->cnt[H];
+  struct ds_unit **tab = &draw->t[H];
 
   if (*cap <= *cnt + 1) {
     size_t s = *cap ? *cap * 2 : 8;
@@ -159,6 +179,47 @@ void ds_unit_get_capacity(struct ds_unit *u, GLuint *vcap, GLuint *icap) {
   *icap = u->ind_cap;
 }
 
-void ds_delete_unit(struct ds_unit *u) {
-   
+static inline struct ds_unit *unit_at(struct ds_draw *draw, uint64_t ID) {
+  int H = HASH(ID);
+  struct ds_unit **tab = &draw->t[H];
+  int cnt = draw->cnt[H];
+  for (int i = 0; i < cnt; i++) {
+    if (tab[i]->ID == ID) {
+      return tab[i];
+    }
+  }
+  return NULL;
+}
+
+struct ds_unit *ds_lookup_unit(struct ds_draw *draw, uint64_t ID) {
+  return unit_at(draw, ID);
+}
+
+void ds_delete_unit(struct ds_draw *draw, uint64_t ID) {
+  int H = HASH(ID);
+  struct ds_unit **tab = &draw->t[H];
+  int *cnt = &draw->cnt[H];
+  for (int i = 0; i < *cnt; i++) {
+    if (tab[i]->ID == ID) {
+      free(tab[i]->ver);
+      free(tab[i]->ind);
+      memmove(&tab[i], &tab[i + 1], (*cnt - i - 1) * sizeof(struct ds_unit *));
+      (*cnt)--;
+      return;
+    }
+  }
+}
+
+void ds_draw_destroy(struct ds_draw *draw) {
+  int i, j;
+  for (i = 0; i < HASHTAB_CAP; i++) {
+    for (j = 0; j < draw->cnt[i]; j++) {
+      free(draw->t[i][j].ver);
+      free(draw->t[i][j].ind);
+    }
+    free(draw->t[i]);
+    draw->cnt[i] = 0;
+    draw->cap[i] = 0;
+  }
+  free(draw);
 }

@@ -56,7 +56,7 @@ struct gllc_window {
   int id;
   struct gllc_block *block;
   struct gllc_drawing *drawing;
-  struct _gllc_NW nw;
+  struct nw nw;
   struct gllc_window_cam cam;
   struct gllc_window_UI UI;
   struct gllc_window_GPU GPU;

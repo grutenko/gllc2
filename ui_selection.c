@@ -53,6 +53,7 @@ void ui_selection_draw(struct ui_selection *sel, double x0, double y0, double x1
     v[(I)].n[1] = 127;                   \
     v[(I)].uv[0] = 0;                    \
     v[(I)].uv[1] = 0;                    \
+    v[(I)].th = 0;                       \
   } while (0)
 
   SET_VER(0, x0, y0, r, g, b, a);

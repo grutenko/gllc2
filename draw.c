@@ -137,7 +137,7 @@ void ds_attrib_ptr() {
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
   glEnableVertexAttribArray(3);
-  glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, thickness));
+  glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, th));
   glEnableVertexAttribArray(4);
 }
 
@@ -270,6 +270,7 @@ void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags) {
       struct ds_gpu_batch *batch = &gpu->batches[i];
       glUniform1i(loc_uFlags, batch->flags);
       glDrawElements(GL_TRIANGLES, batch->count, GL_UNSIGNED_INT, (void *)(batch->offset * sizeof(GLuint)));
+      GL_CHECK();
     }
     glUniform1i(loc_uFlags, 0);
   }

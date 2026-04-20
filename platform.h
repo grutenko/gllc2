@@ -5,37 +5,37 @@
 #include <windows.h>
 #endif
 
-struct _gllc_NW;
+struct nw;
 
-struct _gllc_NW_vtable {
-  void (*paint)(struct _gllc_NW *w, void *data);
-  void (*size)(struct _gllc_NW *w, int width, int height, void *data);
-  void (*mouse_move)(struct _gllc_NW *w, int x, int y, void *data);
-  void (*mouse_click)(struct _gllc_NW *wn, int x, int y, int mode, int action, void *data);
-  void (*mouse_scroll)(struct _gllc_NW *wn, int dx, int dy, void *data);
-  void (*mouse_leave)(struct _gllc_NW *wn, void *data);
+struct nw_vtable {
+  void (*paint)(struct nw *w, void *data);
+  void (*size)(struct nw *w, int width, int height, void *data);
+  void (*mouse_move)(struct nw *w, int x, int y, void *data);
+  void (*mouse_click)(struct nw *wn, int x, int y, int mode, int action, void *data);
+  void (*mouse_scroll)(struct nw *wn, int dx, int dy, void *data);
+  void (*mouse_leave)(struct nw *wn, void *data);
 };
 
-struct _gllc_NW {
+struct nw {
 #if defined(_WIN32)
   HWND w;
   HDC dc;
   HGLRC glrc;
 #endif
   void *data;
-  struct _gllc_NW_vtable *vtable;
-  struct _gllc_NW *next;
-  struct _gllc_NW *prev;
+  struct nw_vtable *vtable;
+  struct nw *next;
+  struct nw *prev;
 };
 
-int _gllc_NW_create(struct _gllc_NW *NW, void *parent, struct _gllc_NW_vtable *vtable, void *data);
-void _gllc_NW_destroy(struct _gllc_NW *NW);
-void _gllc_NW_get_cursor(struct _gllc_NW *w, int *x, int *y);
-void _gllc_NW_make_context_current(struct _gllc_NW *w);
-void _gllc_NW_get_size(struct _gllc_NW *w, int *width, int *height);
-void _gllc_NW_set_size(struct _gllc_NW *w, int x, int y, int width, int height);
-void _gllc_NW_swap_buffers(struct _gllc_NW *w);
-void _gllc_NW_dirty(struct _gllc_NW *w);
-void _gllc_NW_show_cursor(int show);
+int nw_create(struct nw *NW, void *parent, struct nw_vtable *vtable, void *data);
+void nw_destroy(struct nw *NW);
+void nw_get_cursor(struct nw *w, int *x, int *y);
+void nw_make_context_current(struct nw *w);
+void nw_get_size(struct nw *w, int *width, int *height);
+void nw_set_size(struct nw *w, int x, int y, int width, int height);
+void nw_swap_buffers(struct nw *w);
+void nw_dirty(struct nw *w);
+void nw_show_cursor(int show);
 
 #endif

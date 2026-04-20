@@ -167,10 +167,10 @@ static HGLRC init_opengl(HDC real_dc) {
   return gl33_context;
 }
 
-static struct _gllc_NW *G_window_head = NULL;
-static struct _gllc_NW *G_window_tail = NULL;
+static struct nw *G_window_head = NULL;
+static struct nw *G_window_tail = NULL;
 
-static void push_NW(struct _gllc_NW *wn) {
+static void push_NW(struct nw *wn) {
   if (!G_window_head)
     G_window_head = wn;
 
@@ -178,7 +178,7 @@ static void push_NW(struct _gllc_NW *wn) {
   G_window_tail = wn;
 }
 
-static void remove_NW(struct _gllc_NW *wn) {
+static void remove_NW(struct nw *wn) {
   if (wn->prev)
     wn->prev->next = wn->next;
   if (wn->next)
@@ -194,7 +194,7 @@ static LRESULT CALLBACK wndproc(HWND window, UINT msg, WPARAM wparam, LPARAM lpa
   PAINTSTRUCT ps;
   static TRACKMOUSEEVENT tme;
 
-  struct _gllc_NW *w = G_window_head;
+  struct nw *w = G_window_head;
   while (w) {
     if (w->w == window)
       break;
@@ -269,8 +269,8 @@ static LRESULT CALLBACK wndproc(HWND window, UINT msg, WPARAM wparam, LPARAM lpa
 
 ATOM wndClass = 0;
 
-int _gllc_NW_create(struct _gllc_NW *nw, void *parent, struct _gllc_NW_vtable *vtable, void *data) {
-  memset(nw, 0, sizeof(struct _gllc_NW));
+int nw_create(struct nw *nw, void *parent, struct nw_vtable *vtable, void *data) {
+  memset(nw, 0, sizeof(struct nw));
 
   if (!wndClass) {
     WNDCLASSEX wc = {};
@@ -336,11 +336,11 @@ _error:
   return 0;
 }
 
-void _gllc_NW_show_cursor(int show) {
+void nw_show_cursor(int show) {
   ShowCursor(show);
 }
 
-void _gllc_NW_destroy(struct _gllc_NW *w) {
+void nw_destroy(struct nw *w) {
   if (!w)
     return;
   if (w->dc)
@@ -353,19 +353,19 @@ void _gllc_NW_destroy(struct _gllc_NW *w) {
   remove_NW(w);
 }
 
-void _gllc_NW_dirty(struct _gllc_NW *w) {
+void nw_dirty(struct nw *w) {
   InvalidateRect(w->w, NULL, TRUE);
 }
 
-void _gllc_NW_set_size(struct _gllc_NW *w, int x, int y, int width, int height) {
+void nw_set_size(struct nw *w, int x, int y, int width, int height) {
   SetWindowPos(w->w, NULL, x, y, width, height, SWP_NOZORDER);
 }
 
-void _gllc_NW_swap_buffers(struct _gllc_NW *w) {
+void nw_swap_buffers(struct nw *w) {
   SwapBuffers(w->dc);
 }
 
-void _gllc_NW_make_context_current(struct _gllc_NW *w) {
+void nw_make_context_current(struct nw *w) {
   if (w) {
     wglMakeCurrent(w->dc, w->glrc);
   } else {
@@ -373,7 +373,7 @@ void _gllc_NW_make_context_current(struct _gllc_NW *w) {
   }
 }
 
-void _gllc_NW_get_size(struct _gllc_NW *w, int *width, int *height) {
+void nw_get_size(struct nw *w, int *width, int *height) {
   *width = 0;
   *height = 0;
 
@@ -384,7 +384,7 @@ void _gllc_NW_get_size(struct _gllc_NW *w, int *width, int *height) {
   }
 }
 
-void _gllc_NW_get_cursor(struct _gllc_NW *w, int *x, int *y) {
+void nw_get_cursor(struct nw *w, int *x, int *y) {
   POINT p;
 
   GetCursorPos(&p);

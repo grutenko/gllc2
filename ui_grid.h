@@ -25,7 +25,7 @@ struct ui_grid {
 };
 
 void ui_grid_init(struct ui_grid *grid);
-void ui_grid_draw(struct ui_grid *grid, double scale, double x0, double y0, double x1, double y1);
+void ui_grid_draw(struct ui_grid *grid, GLuint loc_uFlags, double scale, double x0, double y0, double x1, double y1);
 void ui_grid_cleanup(struct ui_grid *grid);
 
 #endif

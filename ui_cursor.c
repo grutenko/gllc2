@@ -44,6 +44,7 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) 
     V[(I)].c[1] = g;            \
     V[(I)].c[2] = b;            \
     V[(I)].c[3] = a;            \
+    V[(I)].th = 0.0f;           \
   } while (0)
 
   SET_VER(0, mx, (double)my - 99.5f);

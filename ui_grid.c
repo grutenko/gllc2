@@ -13,9 +13,9 @@ void ui_grid_init(struct ui_grid *grid) {
   grid->offset_y = 0.0f;
   grid->v_cache = NULL;
   grid->v_cache_cap = 0;
-  grid->color[0] = 0.8f;
-  grid->color[1] = 0.8f;
-  grid->color[2] = 0.8f;
+  grid->color[0] = 0.7f;
+  grid->color[1] = 0.7f;
+  grid->color[2] = 0.7f;
   grid->color[3] = 1.0f;
 }
 
@@ -108,7 +108,7 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
     v0->n[1] = 127;                             \
     v0->uv[0] = 0;                              \
     v0->uv[1] = 0;                              \
-    v0->thickness = 0;                          \
+    v0->th = 0;                                 \
   } while (0)
 
   for (i = 0; X < x1; X += gap_x, i += 2) {
@@ -168,7 +168,7 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
   grid->last_vcnt = i;
 }
 
-void ui_grid_draw(struct ui_grid *grid, double scale, double x0, double y0, double x1, double y1) {
+void ui_grid_draw(struct ui_grid *grid, GLuint loc_uFlags, double scale, double x0, double y0, double x1, double y1) {
   if (grid->last_scale != scale || grid->last_x0 != x0 || grid->last_y0 != y0 || grid->last_x1 != x1 || grid->last_y1 != y1) {
     // перестраиваем сетку только при изменении параметров, которые на нее влияют.
     render(grid, scale, x0, y0, x1, y1);
@@ -176,6 +176,7 @@ void ui_grid_draw(struct ui_grid *grid, double scale, double x0, double y0, doub
     // Иначе просто чисуем готовый VBO
     glBindVertexArray(grid->VAO);
   }
+  glUniform1i(loc_uFlags, 0x1);
   glDrawArrays(GL_LINES, 0, grid->last_vcnt);
 
   grid->last_scale = scale;

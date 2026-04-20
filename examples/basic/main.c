@@ -65,41 +65,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   struct gllc_drawing *drw = gllc_drw_create();
   struct gllc_block *block = gllc_drw_add_block(drw, "block1", 0, 0);
 
-  int N = 600;
-  int M = 600;
-  double min = -1000.0;
-  double max = 1000.0;
-  double step = (max - min) / (double)N;
-  double *tab = malloc(sizeof(double) * 2 * N * M);
-
-  int i;
-  int j;
-  for (i = 0; i < N; i++) {
-    for (j = 0; j < M; j++) {
-      int i0 = (i * M + j) * 2;
-      tab[i0] = min + i * step;
-      tab[i0 + 1] = min + j * step;
-    }
-  }
-
-  for (i = 0; i < N - 1; i++) {
-    for (j = 0; j < M - 1; j++) {
-      int i0 = (i * M + j) * 2;
-      int i1 = ((i + 1) * M + j) * 2;
-      int i2 = ((i + 1) * M + (j + 1)) * 2;
-      int i3 = (i * M + (j + 1)) * 2;
-      struct gllc_polyline *pline = gllc_block_add_polyline(block, 1, rand() % 2);
-      gllc_pline_add_ver(pline, tab[i0], tab[i0 + 1]);
-      gllc_pline_add_ver(pline, tab[i1], tab[i1 + 1]);
-      gllc_pline_add_ver(pline, tab[i2], tab[i2 + 1]);
-      gllc_pline_add_ver(pline, tab[i3], tab[i3 + 1]);
-      struct gllc_object *o = (struct gllc_object *)pline;
-      gllc_prop_put_int(o, LC_PROP_ENT_COLOR, 0x0);
-      gllc_prop_put_int(o, LC_PROP_ENT_FCOLOR, rand() % 0xffffff);
-      gllc_prop_put_int(o, LC_PROP_ENT_FALPHA, 75);
-      gllc_prop_put_int(o, LC_PROP_ENT_LWIDTH, LC_LW_PIXEL);
-      gllc_prop_put_float(o, LC_PROP_ENT_LWIDTH, 2.0f);
-    }
+  double n[2] = {1.0f, 0.0f};
+  double a_step = M_PI / 1280.0f;
+  for (int i = 0; i < 1280; i++) {
+    n[0] = sin(i * a_step);
+    n[1] = cos(i * a_step);
+    double p0[2];
+    double p1[2];
+    struct gllc_polyline *pl = gllc_block_add_polyline(block, 0, 0);
+    p0[0] = n[0] * 1000.0f;
+    p0[1] = n[1] * 1000.0f;
+    p1[0] = -n[0] * 1000.0f;
+    p1[1] = -n[1] * 1000.0f;
+    gllc_pline_add_ver(pl, p0[0], p0[1]);
+    gllc_pline_add_ver(pl, p1[0], p1[1]);
+    struct gllc_object *o = (struct gllc_object *)pl;
+    gllc_prop_put_int(o, LC_PROP_ENT_COLOR, rand_color());
   }
   gllc_block_update(block);
   gllc_window_set_block(w, block);

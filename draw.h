@@ -4,7 +4,7 @@
 #include "glad.h"
 
 struct ds_vertex {
-  GLfloat thickness;
+  GLfloat th;
   GLbyte n[2];
   GLubyte uv[2];
   GLubyte c[4];

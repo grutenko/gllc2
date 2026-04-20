@@ -91,6 +91,14 @@ add_custom_target(Fonts ALL DEPENDS ${GENERATED_FONT_HEADERS})
 
 add_library(gllc SHARED ${SOURCES})
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(gllc PRIVATE DEBUG)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_definitions(gllc PRIVATE NDEBUG)
+endif()
+
 target_compile_options(gllc PRIVATE
     $<$<CONFIG:Release>:-O2 -DNDEBUG>
 )

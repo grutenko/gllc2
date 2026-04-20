@@ -1062,7 +1062,7 @@
 #define LC_PROP_G_STR 51      // RW string|int; g_PropStr | mode for g_StrList
 #define LC_PROP_G_INT 52      // R  int;    g_PropInt
 #define LC_PROP_G_FLOAT 53    // R  float;  g_PropFloat
-#define LC_PROP_G_void *54    // R  void *; g_Propvoid *
+#define LC_PROP_G_HANDLE 54    // R  void *; g_Propvoid *
 #define LC_PROP_G_DELKEYERASE \
   55 // RW bool; using <Delete> key for "Erase" command (LC_CMD_ERASE)
 
@@ -3183,7 +3183,7 @@
 //
 // *****************************************************************************
 // *****************************************************************************
-#define LCAPI _stdcall
+#define LCAPI __cdecl
 typedef void (*F_LCEVENT)(void *hEvent);
 typedef void (*F_WAITPOINT)(int FuncPrm, void *hLcWnd);
 typedef void (*F_REDRAW)(void *hLcWnd, int Elapsed);

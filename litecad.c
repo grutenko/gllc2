@@ -2,6 +2,8 @@
 #include "block.h"
 #include "event.h"
 #include "object.h"
+#include "polyline.h"
+#include "drawing.h"
 #include "window.h"
 
 void LCAPI lcEventSetProc(int EventType, F_LCEVENT pFunc, int Prm1, void *Prm2) {
@@ -15,6 +17,13 @@ int LCAPI lcEventsEnable(int b) { return 0; }
 
 // Initialization
 int LCAPI lcInitialize() {
+#ifdef DEBUG
+  printf("DEBUG build\n");
+#endif
+
+#ifdef NDEBUG
+  printf("RELEASE build\n");
+#endif
   return 0;
 }
 
@@ -332,7 +341,9 @@ int LCAPI lcCameraShot() { return 0; }
 //-----------------------------------------------------------------------------
 // Drawing
 //-----------------------------------------------------------------------------
-void *LCAPI lcCreateDrawing() { return NULL; }
+void *LCAPI lcCreateDrawing() {
+  return gllc_drw_create();
+}
 int LCAPI lcDeleteDrawing(void *hDrw) { return 0; }
 int LCAPI lcDrwNew(void *hDrw, char *szFileName, void *hLcWnd) { return 0; }
 int LCAPI lcDrwLoad(void *hDrw, char *szFileName, void *hLcWnd) { return 0; }
@@ -372,7 +383,9 @@ void *LCAPI lcDrwAddImage2(void *hDrw, char *szName, int Width, int Height,
 }
 void *LCAPI lcDrwAddImage3(void *hDrw, char *szName, void *hMem) { return NULL; }
 void *LCAPI lcDrwAddImageCam(void *hDrw, char *szName) { return NULL; }
-void *LCAPI lcDrwAddBlock(void *hDrw, char *szName, double X, double Y) { return NULL; }
+void *LCAPI lcDrwAddBlock(void *hDrw, char *szName, double X, double Y) {
+  return gllc_drw_add_block(hDrw, szName, X, Y);
+}
 void *LCAPI lcDrwAddBlockFromFile(void *hDrw, char *szName, char *szFileName,
                                   int Overwrite, void *hwParent) {
 }
@@ -449,7 +462,10 @@ int LCAPI lcBlockRasterizeMem(void *hBlock, void *hMem, double Xmin,
                               double Ymin, double Xmax, double Ymax, int ImgW,
                               int ImgH) {
 }
-int LCAPI lcBlockUpdate(void *hBlock, int bUpdEnts, void *hNewEnt) { return 0; }
+int LCAPI lcBlockUpdate(void *hBlock, int bUpdEnts, void *hNewEnt) {
+  gllc_block_update(hBlock);
+  return 1;
+}
 int LCAPI lcBlockMove(void *hBlock, double dX, double dY, int bUpdate) { return 0; }
 int LCAPI lcBlockScale(void *hBlock, double X, double Y, double Scal,
                        int bUpdate) {
@@ -489,6 +505,7 @@ void *LCAPI lcBlockAddLineDir(void *hBlock, double X, double Y, double Angle,
 void *LCAPI lcBlockAddLineTan(void *hBlock, void *hEnt1, void *hEnt2, int Mode) { return NULL; }
 void *LCAPI lcBlockAddPolyline(void *hBlock, int FitType, int bClosed,
                                int bFilled) {
+  return gllc_block_add_polyline(hBlock, bClosed, bFilled);
 }
 void *LCAPI lcBlockAddRPolygon(void *hBlock, int nVers, double Xc, double Yc,
                                double R, double Ang0, int bInscribed,
@@ -760,7 +777,10 @@ int LCAPI lcLineGetPoint(void *hLine, int Mode, double Dist, double *pX,
 }
 
 // Polyline Vertices
-void *LCAPI lcPlineAddVer(void *hPline, void *hVer, double X, double Y) { return NULL; }
+void *LCAPI lcPlineAddVer(void *hPline, void *hVer, double X, double Y) {
+  gllc_pline_add_ver(hPline, X, Y);
+  return NULL;
+}
 void *LCAPI lcPlineAddVer2(void *hPline, void *hVer, double X, double Y,
                            double Param, double W0, double W1) {
 }

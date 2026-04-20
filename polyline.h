@@ -1,6 +1,7 @@
 #ifndef polyline_h
 #define polyline_h
 
+#include "draw.h"
 #include "entity.h"
 #include "entity_vertex.h"
 
@@ -8,7 +9,7 @@ struct gllc_polyline {
   struct gllc_entity _ent;
   int cnt;
   int cap;
-  uint64_t unit_ID;
+  struct ds_unit *unit;
   struct ev *pts;
 };
 
