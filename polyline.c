@@ -50,11 +50,26 @@ static void destroy(struct gllc_entity *ent) {
 }
 
 static int vertices(struct gllc_entity *ent, double scale, struct ev *ver) {
-  return 0;
+  struct gllc_polyline *pl = (struct gllc_polyline *)ent;
+  if (ver) {
+    memmove(ver, pl->pts, sizeof(struct ev) * pl->cnt);
+  }
+  return pl->cnt;
 }
 
-static int selected(struct gllc_entity *ent, int mode, double scale, double x1, double y1, double x2, double y2) {
-  return 0;
+static int selected(struct gllc_entity *ent, int mode, double scale, double x0, double y0, double x1, double y1) {
+  struct gllc_polyline *pl = (struct gllc_polyline *)ent;
+  if (mode == 0) {
+    int i;
+    for (i = 0; i < pl->cnt; i++) {
+      double x = pl->pts[i].p[0];
+      double y = pl->pts[i].p[1];
+      if (x < x0 || x > x1 || y < y0 || y > y1)
+        return 0;
+    }
+    return 1;
+  }
+  return 1;
 }
 
 static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
@@ -133,15 +148,16 @@ static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymi
 
 static int len(struct gllc_entity *ent, double *len) {
   struct gllc_polyline *pline = (struct gllc_polyline *)ent;
-  double dx, dy;
   double l = 0;
   int i;
   for (i = 0; i < pline->cnt - 1; i++) {
+    double dx, dy;
     dx = pline->pts[i + 1].p[0] - pline->pts[i].p[0];
     dy = pline->pts[i + 1].p[1] - pline->pts[i].p[1];
     l += sqrt(dx * dx + dy * dy);
   }
   if (ent->flags & GLLC_ENT_CLOSED) {
+    double dx, dy;
     dx = pline->pts[0].p[0] - pline->pts[pline->cnt - 1].p[0];
     dy = pline->pts[0].p[1] - pline->pts[pline->cnt - 1].p[1];
     l += sqrt(dx * dx + dy * dy);
@@ -161,7 +177,10 @@ static struct gllc_entity_vtable vtable = {
     .len = len,
     .clone = clone};
 
-static struct gllc_prop pline_props[] = {P_END};
+static struct gllc_prop pline_props[] = {
+    
+  P_END
+};
 
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 

@@ -3,7 +3,7 @@
 
 #include "draw.h"
 #include "entity.h"
-#include "object.h"
+#include "named_object.h"
 
 #include <stddef.h>
 
@@ -23,16 +23,12 @@ struct gllc_block_batch {
 };
 
 struct gllc_block {
-  struct gllc_object _obj;
-  char name[64];
+  struct gllc_nobject _nobj;
   double dx;
   double dy;
   struct gllc_block_batch batch;
-  struct gllc_drawing *drawing;
   struct gllc_entity_props props;
   double scale;
-  struct gllc_block *next;
-  struct gllc_block *prev;
 };
 
 struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *name, double dx, double dy);

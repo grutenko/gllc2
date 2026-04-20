@@ -1,15 +1,17 @@
 #ifndef drawing_h
 #define drawing_h
 
+#include "named_object.h"
 #include "object.h"
+
 
 struct gllc_block;
 
 struct gllc_drawing {
   struct gllc_object _obj;
-  struct gllc_block *block_head;
-  struct gllc_block *block_tail;
-  int block_cnt;
+  struct gllc_nobject *oh;
+  struct gllc_nobject *ot;
+  int ocnt;
 };
 
 struct gllc_drawing *gllc_drw_create();
