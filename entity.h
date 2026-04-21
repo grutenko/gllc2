@@ -42,7 +42,7 @@ struct gllc_entity_vtable {
   void (*destroy)(struct gllc_entity *);
   int (*vertices)(struct gllc_entity *, double, struct ev *);
   int (*selected)(struct gllc_entity *, int, double, double, double, double, double);
-  int (*picked)(struct gllc_entity *, double, double, double);
+  int (*picked)(struct gllc_entity *, double, double, double, double *);
   int (*bbox)(struct gllc_entity *, double, double *, double *, double *, double *);
   int (*len)(struct gllc_entity *, double *);
   int (*clone)(struct gllc_entity *, struct gllc_entity **);

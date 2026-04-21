@@ -36,6 +36,28 @@ struct ds_unit *ds_unit_create(struct ds_draw *draw) {
   return unit;
 }
 
+struct ds_unit *ds_unit_clone(struct ds_unit *u) {
+  struct ds_unit *nu = ds_unit_create(u->draw);
+  if (!nu)
+    goto _error;
+  struct ds_vertex *v = ds_unit_reserve_vertex(nu, u->V_cnt);
+  if (!v)
+    goto _error;
+  GLuint *i = ds_unit_reserve_index(nu, u->I_cnt);
+  if (!i)
+    goto _error;
+  memcpy(v, u->V, u->V_cnt * sizeof(struct ds_vertex));
+  memcpy(i, u->I, u->I_cnt * sizeof(GLuint));
+  nu->dirty = u->dirty;
+  nu->geometry_dirty = u->geometry_dirty;
+  nu->order = u->order;
+  nu->flags = u->flags;
+  return nu;
+_error:
+  ds_unit_destroy(nu);
+  return NULL;
+}
+
 struct ds_vertex *ds_unit_reserve_vertex(struct ds_unit *unit, GLuint cnt) {
   if (unit->V_cap < cnt) {
     size_t new_size = cnt;

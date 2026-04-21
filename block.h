@@ -20,6 +20,12 @@ struct gllc_block_batch {
   int cnt;
   int bqcnt;
   int bqcap;
+  struct gllc_entity **sel;
+  struct gllc_entity **hov;
+  int selcnt;
+  int selcap;
+  int hovcnt;
+  int hovcap;
 };
 
 struct gllc_block {
@@ -37,7 +43,10 @@ void gllc_block_destroy(struct gllc_block *block);
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y);
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled);
 struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2]);
+struct gllc_circle *gllc_block_add_circle(struct gllc_block *block, double x, double y, double r, int filled);
 void gllc_block_sync_gpu(struct gllc_block *block, struct ds_gpu *gpu);
 void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent);
+void gllc_block_set_scale(struct gllc_block *block, double scale);
+void gllc_block_ent_hover(struct gllc_block *block, struct gllc_entity *ent, int exclusive);
 
 #endif

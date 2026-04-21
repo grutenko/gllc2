@@ -292,7 +292,7 @@ static void gl_check_error(const char *file, int line) {
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
 static void draw(struct gllc_window *wnd) {
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   double x0, y0, x1, y1;
   screen_to_world(wnd, 0.0f, wnd->UI.height, &x0, &y0);
@@ -374,9 +374,11 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
     }
   } else {
     if (wnd->block) {
-      struct gllc_entity *ent = gllc_block_pick_ent(wnd->block, wx, wy);
+      gllc_block_ent_hover(wnd->block, gllc_block_pick_ent(wnd->block, wx, wy), 1);
+      gllc_block_update(wnd->block);
     }
   }
+
   wnd->UI.mx = x;
   wnd->UI.my = y;
   wnd->UI.menter = 1;
@@ -414,7 +416,7 @@ static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data) {
   w->cam.dy += ((w->UI.height - w->UI.my) - (int)(w->UI.height / 2)) * (w->cam.scale - old_scale);
 
   update_camera(w);
-
+  gllc_block_set_scale(w->block, w->cam.scale);
   nw_dirty(wn);
 }
 

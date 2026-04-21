@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -27,8 +28,9 @@ struct sg {
 };
 
 uint64_t sg_hash(int x, int y) {
-  uint32_t h = x * 0x9e3779b1;
-  h ^= y + 0x85ebca6b + (h << 6) + (h >> 2);
+  uint64_t h = (uint64_t)x * 0x9e3779b1ULL;
+  uint64_t yy = (uint64_t)y + 0x85ebca6bULL;
+  h ^= yy + (h << 6) + (h >> 2);
   return h;
 }
 
@@ -207,4 +209,15 @@ struct gllc_entity **sg_cell_ents(struct sg_cell *cell) {
 
 int sg_cell_ents_cnt(struct sg_cell *cell) {
   return cell->ent_size;
+}
+
+void sg_bbox(struct sg *sg, double *x0, double *y0, double *x1, double *y1) {
+  if(x0)
+    *x0 = sg->x0;
+  if(y0)
+    *y0 = sg->y0;
+  if(x1)
+    *x1 = sg->x1;
+  if(y1)
+    *y1 = sg->y1;
 }

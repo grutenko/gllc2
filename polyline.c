@@ -30,7 +30,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   lb_build(&lb_conf, NULL, NULL, &vcnt, &icnt);
   struct ds_vertex *V = ds_unit_reserve_vertex(pl->unit, vcnt);
   GLuint *I = ds_unit_reserve_index(pl->unit, icnt);
-  if (pl->_ent.flags & GLLC_ENT_SELECTED) {
+  if  (pl->_ent.flags & GLLC_ENT_HOVER) {
     pl->unit->flags = DS_UNIT_CHESS;
   } else {
     pl->unit->flags = 0;
@@ -68,50 +68,115 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
         return 0;
     }
     return 1;
+  } else {
   }
   return 1;
 }
 
 static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
-  struct gllc_polyline *pl = (struct gllc_polyline *)ent;
-
   if (ent->vtable->type != GLLC_ENT_POLYLINE)
     return 0;
-
-  struct gllc_polyline *_cl = malloc(sizeof(struct gllc_polyline));
-  if (!_cl)
+  struct gllc_polyline *pl = (struct gllc_polyline *)ent;
+  struct gllc_polyline *npl = malloc(sizeof(struct gllc_polyline));
+  if (!npl)
     return 0;
-
-  memcpy(_cl, pl, sizeof(struct gllc_polyline));
-  _cl->pts = malloc(pl->cap * sizeof(struct ev));
-  if (!_cl->pts) {
-    free(pl);
+  npl->unit = ds_unit_clone(pl->unit);
+  memcpy(npl, pl, sizeof(struct gllc_polyline));
+  npl->pts = malloc(pl->cap * sizeof(struct ev));
+  if (!npl->pts) {
+    free(npl);
     return 0;
   }
-  _cl->unit = ds_unit_clone(pl->unit);
-  memcpy(_cl->pts, pl->pts, pl->cnt * sizeof(struct ev));
-
-  *clone = (struct gllc_entity *)_cl;
+  memcpy(npl->pts, pl->pts, pl->cnt * sizeof(struct ev));
+  *clone = (struct gllc_entity *)npl;
   return 1;
 }
 
-static int picked(struct gllc_entity *ent, double scale, double x, double y) {
+static inline double LEN(const double v[2]) {
+  return sqrt(v[0] * v[0] + v[1] * v[1]);
+}
+
+static inline void NORM(double v[2]) {
+  double l = LEN(v);
+  if (l > 0.0) {
+    v[0] /= l;
+    v[1] /= l;
+  }
+}
+
+static inline void PERP(double v[2]) {
+  double t = v[0];
+  v[0] = -v[1];
+  v[1] = t;
+}
+
+static int picked(struct gllc_entity *ent, double scale, double x, double y, double *dis) {
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
+  if (pl->cnt < 2) {
+    return 0;
+  }
   int cnt = 0;
   int i;
-  for (i = 0; i < pl->cnt; i++) {
-    int ni = i < pl->cnt - 1 ? i + 1 : 0;
-    double x1 = pl->pts[i].p[0];
-    double y1 = pl->pts[i].p[1];
-    double x2 = pl->pts[ni].p[0];
-    double y2 = pl->pts[ni].p[1];
-    if ((y1 > y) != (y2 > y)) {
-      double xint = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
-      if (xint > x)
-        cnt++;
+  if (ent->flags & GLLC_ENT_CLOSED && pl->cnt > 2) {
+    for (i = 0; i < pl->cnt; i++) {
+      int ni = i < pl->cnt - 1 ? i + 1 : 0;
+      double x1 = pl->pts[i].p[0];
+      double y1 = pl->pts[i].p[1];
+      double x2 = pl->pts[ni].p[0];
+      double y2 = pl->pts[ni].p[1];
+      if ((y1 > y) != (y2 > y)) {
+        double xint = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
+        if (xint > x)
+          cnt++;
+      }
+    }
+    if (dis)
+      *dis = 0.0f;
+    return (cnt & 1) == 1;
+  } else {
+    double w;
+    if (ent->flags & GLLC_ENT_LW_THIN)
+      w = 10.0f * scale;
+    else if (ent->flags & GLLC_ENT_LW_SCREEN)
+      w = (ent->lwidth + 10.0f) * scale;
+    else
+      w = ent->lwidth + (10.0f * scale);
+    double p0[2], p1[2];
+    double v0[2];
+    double n0[2], n1[2], d[2];
+    double D, Dt, Ds, T, S;
+    for (i = 0; i < pl->cnt - 1; i++) {
+      p0[0] = pl->pts[i].p[0];
+      p0[1] = pl->pts[i].p[1];
+      p1[0] = pl->pts[i + 1].p[0];
+      p1[1] = pl->pts[i + 1].p[1];
+      n0[0] = p1[0] - p0[0];
+      n0[1] = p1[1] - p0[1];
+      v0[0] = n0[0];
+      v0[1] = n0[1];
+      NORM(n0);
+      n1[0] = n0[0];
+      n1[1] = n0[1];
+      PERP(n1);
+      // Решаем уравнение прямых для каждого сегмена: Прямая 1 задана сегментом.
+      // Прямая 2 задана точкой клика и перпендикуляром прямой 1
+      // Параметр T - позиция на сегменте, Параметр S - расстояние до точки пересечения
+      // n0, n1 нормализованые векторы, задающие прямые
+      d[0] = x - p0[0];
+      d[1] = y - p0[1];
+      D = -n0[0] * n1[1] + n0[1] * n1[0];
+      Dt = -n1[1] * d[0] + n1[0] * d[1];
+      Ds = n0[0] * d[1] - n0[1] * d[0];
+      T = Dt / D;
+      S = Ds / D;
+      if (T >= 0.0f && T <= LEN(v0) && fabs(S) <= w / 2) {
+        if (dis)
+          *dis = fabs(S);
+        return 1;
+      }
     }
   }
-  return (cnt & 1) == 1;
+  return 0;
 }
 
 static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymin, double *xmax, double *ymax) {
@@ -178,7 +243,6 @@ static struct gllc_entity_vtable vtable = {
     .clone = clone};
 
 static struct gllc_prop pline_props[] = {
-
     P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
