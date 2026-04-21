@@ -80,7 +80,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     gllc_pline_add_ver(pl, p0[0], p0[1]);
     gllc_pline_add_ver(pl, p1[0], p1[1]);
     struct gllc_object *o = (struct gllc_object *)pl;
-    gllc_prop_put_int(o, LC_PROP_ENT_COLOR, rand_color());
+    gllc_prop_put_int(o, LC_PROP_ENT_COLOR, 0);
+    //gllc_prop_put_int(o, LC_PROP_ENT_LWIDTH, LC_LW_REAL);
+    //gllc_prop_put_float(o, LC_PROP_ENT_LWIDTH, 5.0f);
   }
   gllc_block_update(block);
   gllc_window_set_block(w, block);
