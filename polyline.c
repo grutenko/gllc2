@@ -30,7 +30,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   lb_build(&lb_conf, NULL, NULL, &vcnt, &icnt);
   struct ds_vertex *V = ds_unit_reserve_vertex(pl->unit, vcnt);
   GLuint *I = ds_unit_reserve_index(pl->unit, icnt);
-  if(pl->_ent.flags & GLLC_ENT_SELECTED) {
+  if (pl->_ent.flags & GLLC_ENT_SELECTED) {
     pl->unit->flags = DS_UNIT_CHESS;
   } else {
     pl->unit->flags = 0;
@@ -88,7 +88,7 @@ static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
     free(pl);
     return 0;
   }
-
+  _cl->unit = ds_unit_clone(pl->unit);
   memcpy(_cl->pts, pl->pts, pl->cnt * sizeof(struct ev));
 
   *clone = (struct gllc_entity *)_cl;
@@ -178,9 +178,8 @@ static struct gllc_entity_vtable vtable = {
     .clone = clone};
 
 static struct gllc_prop pline_props[] = {
-    
-  P_END
-};
+
+    P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 

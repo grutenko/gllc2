@@ -76,7 +76,7 @@ static inline void ROUND(int cnt, double *p0, double *n, double R, double A, uns
   n0[0] = n[0] * cos_a - n[1] * sin_a;
   n0[1] = n[0] * sin_a + n[1] * cos_a;
   if (V) {
-    VER(&V[0], p0, (double[]){0.0f, 0.0f}, c, th, 0.0f);
+    VER(&V[0], p0, (double[]){0.0f, 0.0f}, c, th / 2.0f, 0.0f);
   }
   int vi0 = *vi, ii0 = *ii;
   (*vi)++;
@@ -85,7 +85,7 @@ static inline void ROUND(int cnt, double *p0, double *n, double R, double A, uns
     double y = p0[1] + n0[1] * R;
     if (V) {
       double p[2] = {x, y};
-      VER(&V[(*vi) - vi0], p, n0, c, th, 0.0f);
+      VER(&V[(*vi) - vi0], p, n0, c, th / 2.0f, 0.0f);
     }
     if (i < cnt) {
       if (I) {

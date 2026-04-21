@@ -36,6 +36,7 @@ void gllc_block_update(struct gllc_block *block);
 void gllc_block_destroy(struct gllc_block *block);
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y);
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled);
+struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2]);
 void gllc_block_sync_gpu(struct gllc_block *block, struct ds_gpu *gpu);
 void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent);
 

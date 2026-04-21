@@ -75,5 +75,6 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu);
 void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags);
 void ds_draw_clear(struct ds_draw *draw);
 void ds_gpu_clear(struct ds_gpu *gpu);
+struct ds_unit *ds_unit_clone(struct ds_unit *unit);
 
 #endif

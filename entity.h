@@ -15,6 +15,7 @@ struct gllc_linetype;
 #define GLLC_ENT_POINT 0x3
 #define GLLC_ENT_RECT 0x4
 #define GLLC_ENT_CIRCLE 0x5
+#define GLLC_ENT_LINE 0x6
 
 struct gllc_entity;
 

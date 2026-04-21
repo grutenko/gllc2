@@ -1,6 +1,7 @@
 #include "block.h"
 #include "draw.h"
 #include "entity.h"
+#include "line.h"
 #include "named_object.h"
 #include "object.h"
 #include "polyline.h"
@@ -132,4 +133,13 @@ void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent) {
   }
   block->batch.bq[block->batch.bqcnt] = ent;
   block->batch.bqcnt++;
+}
+
+struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2]) {
+  struct gllc_line *line = gllc_line_create(block, &block->batch.draw, p0, p1);
+  if (line) {
+    push_ent(block, (struct gllc_entity *)line);
+    gllc_block_put_bq(block, (struct gllc_entity *)line);
+  }
+  return line;
 }
