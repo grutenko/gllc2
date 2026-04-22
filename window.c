@@ -3,7 +3,6 @@
 #include "block.h"
 #include "draw.h"
 #include "frag.h"
-#include "litecad.h"
 #include "object.h"
 #include "platform.h"
 #include "ui_cursor.h"
@@ -362,6 +361,12 @@ static void on_size(struct nw *w, int width, int height, void *data) {
   nw_dirty(w);
 }
 
+static inline void _fswap(double *x, double *y) {
+  double t = *x;
+  *x = *y;
+  *y = t;
+}
+
 static void on_mouse_move(struct nw *w, int x, int y, void *data) {
   struct gllc_window *wnd = (struct gllc_window *)data;
   double wx, wy;
@@ -371,6 +376,25 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
       wnd->cam.dx += ((double)x - wnd->UI.mx) * wnd->cam.scale;
       wnd->cam.dy -= ((double)y - wnd->UI.my) * wnd->cam.scale;
       update_camera(wnd);
+    } else if (wnd->UI.mbtn == 1) {
+      double x0, y0, x1, y1;
+      x0 = wnd->UI.sel_x0;
+      y0 = wnd->UI.sel_y0;
+      x1 = wx;
+      y1 = wy;
+      int invert = 0;
+      if (x0 > x1) {
+        invert = 1;
+      }
+      if (wnd->block) {
+        gllc_block_ent_filter_rect(wnd->block, invert, x0, y0, x1, y1);
+        gllc_block_ent_hover(wnd->block, NULL, 1);
+        int filcnt = gllc_block_ent_get_filter_cnt(wnd->block);
+        for (int i = 0; i < filcnt; i++) {
+          gllc_block_ent_hover(wnd->block, gllc_block_ent_get_filter_at(wnd->block, i), 0);
+        }
+        gllc_block_update(wnd->block);
+      }
     }
   } else {
     if (wnd->block) {
@@ -378,7 +402,6 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
       gllc_block_update(wnd->block);
     }
   }
-
   wnd->UI.mx = x;
   wnd->UI.my = y;
   wnd->UI.menter = 1;
@@ -394,6 +417,11 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
     wnd->UI.mdownx = x;
     wnd->UI.mdowny = y;
     screen_to_world(wnd, (double)x, (double)y, &wnd->UI.sel_x0, &wnd->UI.sel_y0);
+  } else {
+    if(wnd->block) {
+      gllc_block_ent_hover(wnd->block, NULL, 1);
+      gllc_block_update(wnd->block);
+    }
   }
   nw_dirty(wn);
 }

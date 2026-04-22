@@ -10,8 +10,8 @@ hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcDrwAddBlock(hDrw, "Main", 0, 0)
 
-N = 600
-M = 600
+N = 300
+M = 300
 min_v = -1000.0
 max_v = 1000.0
 
@@ -43,8 +43,6 @@ for i in range(N - 1):
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x0)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FCOLOR, random.randint(0, 0xFFFFFF))
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_PIXEL)
-        lc.lcPropPutFloat(pline, lc.LC_PROP_ENT_LWIDTH, 2.0)
 
 lc.lcWndSetBlock(hWnd, hBlock)
 lc.lcBlockUpdate(hBlock, 0, 0)

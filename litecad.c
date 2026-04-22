@@ -498,6 +498,9 @@ void *LCAPI lcBlockAddXline2P(void *hBlock, double X, double Y, double X2,
 }
 void *LCAPI lcBlockAddLine(void *hBlock, double X1, double Y1, double X2,
                            double Y2) {
+                            double p0[2] = {X1, Y1};
+                            double p1[2] = {X2, Y2};
+  return gllc_block_add_line((struct gllc_block *)hBlock, p0, p1);
 }
 void *LCAPI lcBlockAddLineDir(void *hBlock, double X, double Y, double Angle,
                               double Dist) {

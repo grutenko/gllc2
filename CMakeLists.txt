@@ -28,6 +28,7 @@ set(SOURCES
   ui_selection.c
   ui_vertex.c
   window.c
+  line.c
   tess2/bucketalloc.c
   tess2/dict.c
   tess2/geom.c

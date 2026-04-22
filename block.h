@@ -3,6 +3,7 @@
 
 #include "draw.h"
 #include "entity.h"
+#include "line.h"
 #include "named_object.h"
 
 #include <stddef.h>
@@ -26,6 +27,9 @@ struct gllc_block_batch {
   int selcap;
   int hovcnt;
   int hovcap;
+  struct gllc_entity **fil;
+  int filcnt;
+  int filcap;
 };
 
 struct gllc_block {
@@ -47,5 +51,9 @@ void gllc_block_sync_gpu(struct gllc_block *block, struct ds_gpu *gpu);
 void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent);
 void gllc_block_set_scale(struct gllc_block *block, double scale);
 void gllc_block_ent_hover(struct gllc_block *block, struct gllc_entity *ent, int exclusive);
+struct gllc_entity *gllc_block_ent_get_filter_at(struct gllc_block *block, int index);
+int gllc_block_ent_get_filter_cnt(struct gllc_block *block);
+int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, double y0, double x1, double y1);
+struct gllc_line *gllc_block_add_line(struct gllc_block *block, double *p0, double *p1);
 
 #endif
