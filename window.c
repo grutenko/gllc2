@@ -291,7 +291,7 @@ static void gl_check_error(const char *file, int line) {
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
 static void draw(struct gllc_window *wnd) {
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   double x0, y0, x1, y1;
   screen_to_world(wnd, 0.0f, wnd->UI.height, &x0, &y0);
@@ -402,6 +402,7 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
       gllc_block_update(wnd->block);
     }
   }
+  printf("x=%lf, y=%lf\n", wx ,wy);
   wnd->UI.mx = x;
   wnd->UI.my = y;
   wnd->UI.menter = 1;

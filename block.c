@@ -5,6 +5,7 @@
 #include "named_object.h"
 #include "object.h"
 #include "polyline.h"
+#include "rect.h"
 #include "sg.h"
 
 #include <math.h>
@@ -182,8 +183,12 @@ static void push_hover(struct gllc_block *block, struct gllc_entity *ent) {
 }
 
 void gllc_block_ent_hover(struct gllc_block *block, struct gllc_entity *ent, int exclusive) {
-  if (exclusive)
+  if (exclusive) {
+    if (block->batch.hovcnt == 1 && block->batch.hov[0] == ent) {
+      return;
+    }
     clear_hover(block);
+  }
   if (!ent)
     return;
   if (ent->flags & GLLC_ENT_HOVER)
@@ -268,4 +273,62 @@ struct gllc_line *gllc_block_add_line(struct gllc_block *block, double *p0, doub
     gllc_block_put_bq(block, (struct gllc_entity *)l);
   }
   return l;
+}
+
+struct gllc_rect *gllc_block_add_rect(struct gllc_block *block, double *p, double w, double h, double angle) {
+  struct gllc_rect *r = gllc_rect_create(block, &block->batch.draw, p, w, h, angle);
+  if (r) {
+    push_ent(block, (struct gllc_entity *)r);
+    gllc_block_put_bq(block, (struct gllc_entity *)r);
+  }
+  return r;
+}
+
+static void push_select(struct gllc_block *block, struct gllc_entity *ent) {
+  if (block->batch.selcap <= block->batch.selcnt) {
+    size_t sz = block->batch.selcap ? block->batch.selcap * 2 : 64;
+    struct gllc_entity **sel = realloc(block->batch.sel, sz * sizeof(struct gllc_entity *));
+    if (!sel) {
+      return;
+    }
+    block->batch.sel = sel;
+    block->batch.filcap = sz;
+  }
+  block->batch.sel[block->batch.selcnt] = ent;
+  block->batch.selcnt++;
+}
+
+static void clear_select(struct gllc_block *block) {
+  int i;
+  struct gllc_entity *ent;
+  for (i = 0; i < block->batch.selcnt; i++) {
+    ent = block->batch.sel[i];
+    ent->flags &= ~GLLC_ENT_SELECTED;
+    ent->flags |= GLLC_ENT_MODIFIED;
+    gllc_block_put_bq(block, ent);
+  }
+  block->batch.selcnt = 0;
+}
+
+void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int exclusive) {
+  if (exclusive)
+    clear_select(block);
+  if (!ent)
+    return;
+  if (ent->flags & GLLC_ENT_SELECTED)
+    return;
+  ent->flags |= GLLC_ENT_SELECTED;
+  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_block_put_bq(block, ent);
+  push_select(block, ent);
+}
+
+int gllc_block_get_select_cnt(struct gllc_block *block) {
+  return block->batch.selcnt;
+}
+
+struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index) {
+  if (index < 0 || block->batch.selcnt <= index)
+    return NULL;
+  return block->batch.sel[index];
 }

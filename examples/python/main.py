@@ -2,6 +2,8 @@ import wx
 import litecad as lc
 import ctypes as ct
 import random
+from os.path import dirname
+import ezdxf
 
 app = wx.App(0)
 f = wx.Frame(None)
@@ -10,10 +12,10 @@ hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcDrwAddBlock(hDrw, "Main", 0, 0)
 
-N = 300
+N = 600
 M = 300
-min_v = -1000.0
-max_v = 1000.0
+min_v = -20000.0
+max_v = 60000.0
 
 step = (max_v - min_v) / float(N)
 
@@ -22,10 +24,50 @@ tab = (ct.c_double * (2 * N * M))()
 
 # заполнение координат
 for i in range(N):
+    k = random.uniform(2, 4)
     for j in range(M):
         i0 = (i * M + j) * 2
         tab[i0] = min_v + i * step
-        tab[i0 + 1] = min_v + j * step
+        tab[i0 + 1] = min_v + j * step * 2
+
+dxf = ezdxf.readfile(dirname(__file__) + "\Отметка -250 каркасы.dxf")
+msp = dxf.modelspace()
+
+# ---------- ENTITIES ----------
+for entity in msp:
+    color = entity.dxf.color or 256  # BYLAYER
+    linetype_name = entity.dxf.linetype or "BYLAYER"
+
+    # ---------- POLYLINE / LWPOLYLINE ----------
+    if entity.dxftype() == "LINE":
+      start = entity.dxf.start
+      end = entity.dxf.end
+
+      h = lc.lcBlockAddLine(
+          hBlock,
+          start.x, start.y,
+          end.x, end.y
+      )
+
+      lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLORI, color)
+
+            # ---------- POLYLINE / LWPOLYLINE ----------
+    elif entity.dxftype() in ("LWPOLYLINE", "POLYLINE"):
+        if entity.dxftype() == "LWPOLYLINE":
+            points = entity.get_points("xy")
+            closed = entity.closed
+        else:
+            points = [(p.x, p.y) for p in entity.points()]
+            closed = bool(entity.dxf.flags & 1)
+
+        h = lc.lcBlockAddPolyline(hBlock, 0, closed, 0)
+
+        for x, y in points:
+            lc.lcPlineAddVer(h, 0, x, y)
+
+        lc.lcPlineEnd(h)
+
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLORI, color)
 
 # генерация полилиний
 for i in range(N - 1):
@@ -40,8 +82,7 @@ for i in range(N - 1):
         lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
         lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
         lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x0)
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FCOLOR, random.randint(0, 0xFFFFFF))
+        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x999999)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
 
 lc.lcWndSetBlock(hWnd, hBlock)

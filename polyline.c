@@ -17,7 +17,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   unsigned char color[4] = {RED(colorint), GREEN(colorint), BLUE(colorint), 255};
   struct lb_config lb_conf = {
       .v = pl->pts,
-      .vcnt = 2,
+      .vcnt = pl->cnt,
       .nroundsegs = 8,
       .closed = (ent->flags & GLLC_ENT_CLOSED) != 0,
       .c = color,
@@ -40,12 +40,12 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   int vcnt, icnt;
   // первый вызов для получения количества вершин и индексов
   lb_build(&lb_conf, NULL, NULL, &vcnt, &icnt);
-  struct ds_vertex *V = ds_unit_reserve_vertex(pl->unit, vcnt);
-  GLuint *I = ds_unit_reserve_index(pl->unit, icnt);
+  struct ds_vertex *V = ds_unit_reserve_vertex(pl->u, vcnt);
+  GLuint *I = ds_unit_reserve_index(pl->u, icnt);
   if (pl->_ent.flags & GLLC_ENT_HOVER) {
-    pl->unit->flags = DS_UNIT_CHESS;
+    pl->u->flags = DS_UNIT_CHESS;
   } else {
-    pl->unit->flags = 0;
+    pl->u->flags = 0;
   }
   if (V && I) {
     lb_build(&lb_conf, V, I, &vcnt, &icnt);
@@ -55,7 +55,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
 static void destroy(struct gllc_entity *ent) {
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
   if (pl) {
-    ds_unit_destroy(pl->unit);
+    ds_unit_destroy(pl->u);
     free(pl->pts);
     free(pl);
   }
@@ -93,7 +93,7 @@ static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
   if (!npl)
     return 0;
   memcpy(npl, pl, sizeof(struct gllc_polyline));
-  npl->unit = ds_unit_clone(pl->unit);
+  npl->u = ds_unit_clone(pl->u);
   npl->pts = malloc(pl->cap * sizeof(struct ev));
   if (!npl->pts) {
     free(npl);
@@ -264,7 +264,7 @@ struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, struct ds_d
   if (pl) {
     GLLC_ENTITY_INIT(&pl->_ent, block, all_props, &vtable);
     pl->_ent.flags |= (closed ? GLLC_ENT_CLOSED : 0) | (filled ? GLLC_ENT_FILLED : 0);
-    pl->unit = ds_unit_create(draw);
+    pl->u = ds_unit_create(draw);
     pl->pts = NULL;
     pl->cnt = 0;
     pl->cap = 0;

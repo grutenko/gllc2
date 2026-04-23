@@ -55,5 +55,8 @@ struct gllc_entity *gllc_block_ent_get_filter_at(struct gllc_block *block, int i
 int gllc_block_ent_get_filter_cnt(struct gllc_block *block);
 int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, double y0, double x1, double y1);
 struct gllc_line *gllc_block_add_line(struct gllc_block *block, double *p0, double *p1);
+void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int exclusive);
+int gllc_block_get_select_cnt(struct gllc_block *block);
+struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index);
 
 #endif
