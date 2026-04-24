@@ -276,15 +276,6 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, do
   return 1;
 }
 
-struct gllc_line *gllc_block_add_line(struct gllc_block *block, double *p0, double *p1) {
-  struct gllc_line *l = gllc_line_create(block, &block->batch.draw, p0, p1);
-  if (l) {
-    push_ent(block, (struct gllc_entity *)l);
-    gllc_block_put_bq(block, (struct gllc_entity *)l);
-  }
-  return l;
-}
-
 struct gllc_rect *gllc_block_add_rect(struct gllc_block *block, double *p, double w, double h, double angle) {
   struct gllc_rect *r = gllc_rect_create(block, &block->batch.draw, p, w, h, angle);
   if (r) {

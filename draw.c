@@ -342,31 +342,3 @@ void ds_gpu_clear(struct ds_gpu *gpu) {
   }
 }
 
-struct ds_unit *ds_unit_clone(struct ds_unit *unit) {
-  if (!unit) return NULL;
-  struct ds_unit *new_unit = ds_unit_create(unit->draw);
-  if (!new_unit) return NULL;
-  new_unit->flags = unit->flags;
-  if (unit->V_cnt > 0) {
-    new_unit->V = malloc(unit->V_cnt * sizeof(struct ds_vertex));
-    if (!new_unit->V) {
-      free(new_unit);
-      return NULL;
-    }
-    memcpy(new_unit->V, unit->V, unit->V_cnt * sizeof(struct ds_vertex));
-    new_unit->V_cnt = unit->V_cnt;
-    new_unit->V_cap = unit->V_cnt;
-  }
-  if (unit->I_cnt > 0) {
-    new_unit->I = malloc(unit->I_cnt * sizeof(GLuint));
-    if (!new_unit->I) {
-      free(new_unit->V);
-      free(new_unit);
-      return NULL;
-    }
-    memcpy(new_unit->I, unit->I, unit->I_cnt * sizeof(GLuint));
-    new_unit->I_cnt = unit->I_cnt;
-    new_unit->I_cap = unit->I_cnt;
-  }
-  return new_unit;
-}
