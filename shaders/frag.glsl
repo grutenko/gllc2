@@ -10,7 +10,7 @@ void main() {
   if ((uFlags & 1) != 0) {
     ivec2 p = ivec2(gl_FragCoord.xy);
     if (((p.x + p.y) & 1) == 0) {
-      c.rgb = 1.0 - c.rgb;
+      discard;
     }
   }
   FragColor = c;

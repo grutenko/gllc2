@@ -13,27 +13,39 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   if (!pl || !draw)
     return;
 
-  unsigned char color[4] = {GLLC_COLOR_RED(ent->props.color), GLLC_COLOR_GREEN(ent->props.color), GLLC_COLOR_BLUE(ent->props.color), 255};
+  int colorint = gllc_entity_color(ent);
+  unsigned char color[4] = {RED(colorint), GREEN(colorint), BLUE(colorint), 255};
   struct lb_config lb_conf = {
       .v = pl->pts,
       .vcnt = pl->cnt,
-      .lw = ent->flags & GLLC_ENT_LW_SCREEN ? ent->lwidth : 1.0f,
-      .lrealw = ent->flags & GLLC_ENT_LW_REAL ? ent->lwidth : 0.0001f,
       .nroundsegs = 8,
       .closed = (ent->flags & GLLC_ENT_CLOSED) != 0,
       .c = color,
       .mode = LB_MODE_COMPLEX,
       .off = 0,
   };
+  if (ent->flags & GLLC_ENT_LW_REAL) {
+    lb_conf.lw = 1.0f;
+    lb_conf.lrealw = gllc_entity_lwidth(ent);
+  } else if (ent->flags & GLLC_ENT_LW_SCREEN) {
+    lb_conf.lw = gllc_entity_lwidth(ent);
+    lb_conf.lrealw = 0.0001f;
+  } else {
+    lb_conf.lw = 1.0f;
+    lb_conf.lrealw = 0.0001f;
+  }
+  if (pl->_ent.flags & GLLC_ENT_HOVER) {
+    lb_conf.lw += 3.0f;
+  }
   int vcnt, icnt;
   // первый вызов для получения количества вершин и индексов
   lb_build(&lb_conf, NULL, NULL, &vcnt, &icnt);
-  struct ds_vertex *V = ds_unit_reserve_vertex(pl->unit, vcnt);
-  GLuint *I = ds_unit_reserve_index(pl->unit, icnt);
-  if  (pl->_ent.flags & GLLC_ENT_HOVER) {
-    pl->unit->flags = DS_UNIT_CHESS;
+  struct ds_vertex *V = ds_unit_reserve_vertex(pl->u, vcnt);
+  GLuint *I = ds_unit_reserve_index(pl->u, icnt);
+  if (pl->_ent.flags & GLLC_ENT_HOVER) {
+    pl->u->flags = DS_UNIT_CHESS;
   } else {
-    pl->unit->flags = 0;
+    pl->u->flags = 0;
   }
   if (V && I) {
     lb_build(&lb_conf, V, I, &vcnt, &icnt);
@@ -43,7 +55,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
 static void destroy(struct gllc_entity *ent) {
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
   if (pl) {
-    ds_unit_destroy(pl->unit);
+    ds_unit_destroy(pl->u);
     free(pl->pts);
     free(pl);
   }
@@ -80,8 +92,8 @@ static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
   struct gllc_polyline *npl = malloc(sizeof(struct gllc_polyline));
   if (!npl)
     return 0;
-  npl->unit = ds_unit_clone(pl->unit);
   memcpy(npl, pl, sizeof(struct gllc_polyline));
+  npl->u = ds_unit_clone(pl->u);
   npl->pts = malloc(pl->cap * sizeof(struct ev));
   if (!npl->pts) {
     free(npl);
@@ -252,7 +264,7 @@ struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, struct ds_d
   if (pl) {
     GLLC_ENTITY_INIT(&pl->_ent, block, all_props, &vtable);
     pl->_ent.flags |= (closed ? GLLC_ENT_CLOSED : 0) | (filled ? GLLC_ENT_FILLED : 0);
-    pl->unit = ds_unit_create(draw);
+    pl->u = ds_unit_create(draw);
     pl->pts = NULL;
     pl->cnt = 0;
     pl->cap = 0;

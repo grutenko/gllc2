@@ -18,7 +18,7 @@ struct gllc_polyline {
   int fit;
   int cnt;
   int cap;
-  struct ds_unit *unit;
+  struct ds_unit *u;
   struct ev *pts;
 };
 

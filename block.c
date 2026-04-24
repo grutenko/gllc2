@@ -6,6 +6,7 @@
 #include "named_object.h"
 #include "object.h"
 #include "polyline.h"
+#include "rect.h"
 #include "sg.h"
 
 #include <math.h>
@@ -80,6 +81,7 @@ void gllc_block_destroy(struct gllc_block *block) {
   free(block->batch.bq);
   free(block->batch.hov);
   free(block->batch.sel);
+  free(block->batch.fil);
   free(block);
 }
 
@@ -121,19 +123,12 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
   int i;
   struct gllc_entity **ents = sg_cell_ents(cell);
   int cnt = sg_cell_ents_cnt(cell);
-  struct gllc_entity *min_ent = NULL;
-  double min_dis = 0.0;
-  printf("%d\n", cnt);
   for (i = 0; i < cnt; i++) {
-    double dis = 0.0;
-    if (ents[i]->vtable->picked(ents[i], block->scale, x, y, &dis)) {
-      if (!min_ent || min_dis > dis) {
-        min_ent = ents[i];
-        min_dis = dis;
-      }
+    if (ents[i]->vtable->picked(ents[i], block->scale, x, y, NULL)) {
+      return ents[i];
     }
   }
-  return min_ent;
+  return NULL;
 }
 
 void gllc_block_sync_gpu(struct gllc_block *block, struct ds_gpu *gpu) {
@@ -185,7 +180,7 @@ static void clear_hover(struct gllc_block *block) {
 
 static void push_hover(struct gllc_block *block, struct gllc_entity *ent) {
   if (block->batch.hovcap <= block->batch.hovcnt) {
-    size_t sz = block->batch.bqcap ? block->batch.bqcap * 2 : 64;
+    size_t sz = block->batch.hovcap ? block->batch.hovcap * 2 : 64;
     struct gllc_entity **hov = realloc(block->batch.hov, sz * sizeof(struct gllc_entity *));
     if (!hov) {
       return;
@@ -198,8 +193,12 @@ static void push_hover(struct gllc_block *block, struct gllc_entity *ent) {
 }
 
 void gllc_block_ent_hover(struct gllc_block *block, struct gllc_entity *ent, int exclusive) {
-  if (exclusive)
+  if (exclusive) {
+    if (block->batch.hovcnt == 1 && block->batch.hov[0] == ent) {
+      return;
+    }
     clear_hover(block);
+  }
   if (!ent)
     return;
   if (ent->flags & GLLC_ENT_HOVER)
@@ -208,4 +207,138 @@ void gllc_block_ent_hover(struct gllc_block *block, struct gllc_entity *ent, int
   ent->flags |= GLLC_ENT_MODIFIED;
   gllc_block_put_bq(block, ent);
   push_hover(block, ent);
+}
+
+struct gllc_entity *gllc_block_ent_get_filter_at(struct gllc_block *block, int index) {
+  if (index < 0 || index >= block->batch.filcnt)
+    return NULL;
+  return block->batch.fil[index];
+}
+
+int gllc_block_ent_get_filter_cnt(struct gllc_block *block) {
+  return block->batch.filcnt;
+}
+
+static inline void push_filter_ent(struct gllc_block *block, struct gllc_entity *ent) {
+  if (block->batch.filcap <= block->batch.filcnt) {
+    size_t sz = block->batch.filcap ? block->batch.filcap * 2 : 64;
+    struct gllc_entity **fil = realloc(block->batch.fil, sz * sizeof(struct gllc_entity *));
+    if (!fil) {
+      return;
+    }
+    block->batch.fil = fil;
+    block->batch.filcap = sz;
+  }
+  block->batch.fil[block->batch.filcnt] = ent;
+  block->batch.filcnt++;
+}
+
+static inline void _swapf(double *a, double *b) {
+  double t = *a;
+  *a = *b;
+  *b = t;
+}
+
+int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, double y0, double x1, double y1) {
+  for (int i = 0; i < block->batch.filcnt; i++)
+    block->batch.fil[i]->flags &= ~GLLC_ENT_FILTER;
+  block->batch.filcnt = 0;
+  int x, y, i;
+  int shift = sg_shift(block->batch.sg);
+
+  if (x0 > x1)
+    _swapf(&x0, &x1);
+  if (y0 > y1)
+    _swapf(&y0, &y1);
+
+  int cx0 = ((int)floor(x0)) >> shift;
+  int cy0 = ((int)floor(y0)) >> shift;
+  int cx1 = ((int)floor(x1)) >> shift;
+  int cy1 = ((int)floor(y1)) >> shift;
+
+  for (x = cx0; x <= cx1; x++) {
+    for (y = cy0; y <= cy1; y++) {
+      struct sg_cell *cell = sg_cell_at(block->batch.sg, x, y);
+      if (!cell)
+        continue;
+      struct gllc_entity **ents = sg_cell_ents(cell);
+      int entcnt = sg_cell_ents_cnt(cell);
+      for (i = 0; i < entcnt; i++) {
+        if (ents[i]->flags & GLLC_ENT_FILTER)
+          continue;
+        if (ents[i]->vtable->selected(ents[i], mode, block->scale, x0, y0, x1, y1)) {
+          ents[i]->flags |= GLLC_ENT_FILTER;
+          push_filter_ent(block, ents[i]);
+        }
+      }
+    }
+  }
+  return 1;
+}
+
+struct gllc_line *gllc_block_add_line(struct gllc_block *block, double *p0, double *p1) {
+  struct gllc_line *l = gllc_line_create(block, &block->batch.draw, p0, p1);
+  if (l) {
+    push_ent(block, (struct gllc_entity *)l);
+    gllc_block_put_bq(block, (struct gllc_entity *)l);
+  }
+  return l;
+}
+
+struct gllc_rect *gllc_block_add_rect(struct gllc_block *block, double *p, double w, double h, double angle) {
+  struct gllc_rect *r = gllc_rect_create(block, &block->batch.draw, p, w, h, angle);
+  if (r) {
+    push_ent(block, (struct gllc_entity *)r);
+    gllc_block_put_bq(block, (struct gllc_entity *)r);
+  }
+  return r;
+}
+
+static void push_select(struct gllc_block *block, struct gllc_entity *ent) {
+  if (block->batch.selcap <= block->batch.selcnt) {
+    size_t sz = block->batch.selcap ? block->batch.selcap * 2 : 64;
+    struct gllc_entity **sel = realloc(block->batch.sel, sz * sizeof(struct gllc_entity *));
+    if (!sel) {
+      return;
+    }
+    block->batch.sel = sel;
+    block->batch.filcap = sz;
+  }
+  block->batch.sel[block->batch.selcnt] = ent;
+  block->batch.selcnt++;
+}
+
+static void clear_select(struct gllc_block *block) {
+  int i;
+  struct gllc_entity *ent;
+  for (i = 0; i < block->batch.selcnt; i++) {
+    ent = block->batch.sel[i];
+    ent->flags &= ~GLLC_ENT_SELECTED;
+    ent->flags |= GLLC_ENT_MODIFIED;
+    gllc_block_put_bq(block, ent);
+  }
+  block->batch.selcnt = 0;
+}
+
+void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int exclusive) {
+  if (exclusive)
+    clear_select(block);
+  if (!ent)
+    return;
+  if (ent->flags & GLLC_ENT_SELECTED)
+    return;
+  ent->flags |= GLLC_ENT_SELECTED;
+  ent->flags |= GLLC_ENT_MODIFIED;
+  gllc_block_put_bq(block, ent);
+  push_select(block, ent);
+}
+
+int gllc_block_get_select_cnt(struct gllc_block *block) {
+  return block->batch.selcnt;
+}
+
+struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index) {
+  if (index < 0 || block->batch.selcnt <= index)
+    return NULL;
+  return block->batch.sel[index];
 }

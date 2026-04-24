@@ -2,6 +2,7 @@
 #include "entity.h"
 
 #include <math.h>
+#include <profileapi.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,11 +28,15 @@ struct sg {
   int total;
 };
 
-uint64_t sg_hash(int x, int y) {
+static inline uint64_t sg_hash_in(int x, int y) {
   uint64_t h = (uint64_t)x * 0x9e3779b1ULL;
   uint64_t yy = (uint64_t)y + 0x85ebca6bULL;
   h ^= yy + (h << 6) + (h >> 2);
   return h;
+}
+
+uint64_t sg_hash(int x, int y) {
+  return sg_hash_in(x, y);
 }
 
 struct sg *sg_create(int shift) {
@@ -55,9 +60,13 @@ static inline void _swapf(double *a, double *b) {
   *b = t;
 }
 
+int sg_shift(struct sg *sg) {
+  return sg->shift;
+}
+
 static struct sg_cell *push_cell(struct sg *sg, int x, int y) {
   int i;
-  uint64_t H = sg_hash(x, y);
+  uint64_t H = sg_hash_in(x, y);
   int batch = H & (SG_HASHTAB_CAP - 1);
   int cnt = sg->cnt[batch];
   int cap = sg->cap[batch];
@@ -97,16 +106,17 @@ static int cmp(const void *a, const void *b) {
 }
 
 static inline struct sg_cell *cell_at(struct sg *sg, int x, int y) {
-  if (sg->total == 0)
+  if (sg->total == 0 || sg->x0 > x || sg->x1 < x || sg->y0 > y || sg->y1 < y)
     return NULL;
-  if (sg->x0 > x || sg->x1 < x || sg->y0 > y || sg->y1 < y)
-    return NULL;
-  uint64_t H = sg_hash(x, y);
+  uint64_t H = sg_hash_in(x, y);
   int batch = H & (SG_HASHTAB_CAP - 1);
-  struct sg_cell t;
   struct sg_cell *base = sg->b[batch];
-  t.hash = H;
-  return bsearch(&t, base, sg->cnt[batch], sizeof(struct sg_cell), cmp);
+  for(int i = 0; i < sg->cnt[batch]; i++) {
+    if(base[i].hash == H) {
+      return &base[i];
+    }
+  }
+  return NULL;
 }
 
 static int cell_push_ent(struct sg_cell *cell, struct gllc_entity *ent) {
@@ -212,12 +222,16 @@ int sg_cell_ents_cnt(struct sg_cell *cell) {
 }
 
 void sg_bbox(struct sg *sg, double *x0, double *y0, double *x1, double *y1) {
-  if(x0)
+  if (x0)
     *x0 = sg->x0;
-  if(y0)
+  if (y0)
     *y0 = sg->y0;
-  if(x1)
+  if (x1)
     *x1 = sg->x1;
-  if(y1)
+  if (y1)
     *y1 = sg->y1;
+}
+
+struct sg_cell *sg_cell_at(struct sg *sg, int x, int y) {
+  return cell_at(sg, x, y);
 }

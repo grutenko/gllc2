@@ -35,6 +35,7 @@ struct gllc_entity;
 #define GLLC_ENT_FCOLOR_BY_LAYER 0x2000
 #define GLLC_ENT_FCOLOR_BY_BLOCK 0x4000
 #define GLLC_ENT_HOVER 0x8000
+#define GLLC_ENT_FILTER 0x10000
 
 struct gllc_entity_vtable {
   int type;
@@ -80,9 +81,9 @@ void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct
 
 #define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE) _gllc_entity_init((struct gllc_entity *)(E), (BLOCK), (PROPS), (VTABLE))
 
-#define GLLC_COLOR_RED(C) (((C) >> 16) & 0xFF)
-#define GLLC_COLOR_GREEN(C) (((C) >> 8) & 0xFF)
-#define GLLC_COLOR_BLUE(C) ((C) & 0xFF)
+#define RED(C) (((C) >> 16) & 0xFF)
+#define GREEN(C) (((C) >> 8) & 0xFF)
+#define BLUE(C) ((C) & 0xFF)
 
 uint64_t gllc_entity_get_id(struct gllc_entity *ent);
 char *gllc_entity_get_id_string(struct gllc_entity *ent);

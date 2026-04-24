@@ -224,7 +224,6 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
     unit = draw->head;
     GLuint offset = 0;
     GLuint i_offset = 0;
-    int bi = 0;
     if (gpu->batch_cap < draw->unit_cnt) {
       struct ds_gpu_batch *new_batches = realloc(gpu->batches, draw->unit_cnt * sizeof(struct ds_gpu_batch));
       if (!new_batches) {
@@ -235,23 +234,34 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
       gpu->batch_cap = draw->unit_cnt;
     }
     t0 = now_sec();
-    for (unit = draw->head, bi = 0; unit; unit = unit->next, bi++) {
+    if (!draw->head) {
+      gpu->batch_cnt = 0;
+      draw->dirty = 0;
+      return;
+    }
+    int flags = ~0;
+    int bi = -1;
+    for (unit = draw->head; unit; unit = unit->next) {
       memmove(&gpu->V_data[offset], unit->V, unit->V_cnt * sizeof(struct ds_vertex));
       for (GLuint j = 0; j < unit->I_cnt; j++) {
         gpu->I_data[i_offset + j] = unit->I[j] + offset;
       }
-      struct ds_gpu_batch *b = &gpu->batches[bi];
-      b->flags = unit->flags;
-      b->tex_id = 0;
-      b->count = unit->I_cnt;
-      b->offset = i_offset;
+      if (unit->flags != flags) {
+        bi++;
+        gpu->batches[bi].flags = unit->flags;
+        gpu->batches[bi].count = unit->I_cnt;
+        gpu->batches[bi].offset = i_offset;
+        flags = unit->flags;
+      } else {
+        gpu->batches[bi].count += unit->I_cnt;
+      }
       offset += unit->V_cnt;
       i_offset += unit->I_cnt;
       unit->dirty = 0;
     }
+    bi++;
     gpu->V_data_size = offset;
     gpu->I_data_size = i_offset;
-
     t1 = now_sec();
     if (!gpu->VAO) {
       glGenVertexArrays(1, &gpu->VAO);

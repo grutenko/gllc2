@@ -9,6 +9,7 @@ struct sg_cell;
 
 uint64_t sg_hash(int x, int y);
 struct sg *sg_create(int shift);
+int sg_shift(struct sg *sg);
 int sg_push(struct sg *sg, struct gllc_entity *ent, double bbox_x0, double bbox_y0, double bbox_x1, double bbox_y1);
 void sg_remove(struct sg *sg, struct gllc_entity *ent);
 void sg_remove_all(struct sg *sg);
@@ -17,5 +18,6 @@ struct gllc_entity **sg_cell_ents(struct sg_cell *cell);
 int sg_cell_ents_cnt(struct sg_cell *cell);
 void sg_destroy(struct sg *sg);
 void sg_bbox(struct sg *sg, double *x0, double *y0, double *x1, double *y1);
+struct sg_cell *sg_cell_at(struct sg *sg, int x, int y);
 
 #endif
