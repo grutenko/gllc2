@@ -161,6 +161,8 @@ void ds_attrib_ptr() {
   glEnableVertexAttribArray(3);
   glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, th));
   glEnableVertexAttribArray(4);
+  glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, l));
+  glEnableVertexAttribArray(5);
 }
 
 #ifdef _WIN32

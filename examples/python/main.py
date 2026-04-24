@@ -5,6 +5,7 @@ import random
 from os.path import dirname
 import ezdxf
 from ezdxf.colors import aci2rgb
+import time
 
 app = wx.App(0)
 f = wx.Frame(None)
@@ -12,6 +13,16 @@ lc.lcInitialize()
 hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcDrwAddBlock(hDrw, "Main", 0, 0)
+lc.lcWndSetBlock(hWnd, hBlock)
+
+
+def on_size(event):
+    w, h = f.GetClientSize().GetWidth(), f.GetClientSize().GetHeight()
+    lc.lcWndResize(hWnd, 0, 0, w, h)
+
+
+f.Bind(wx.EVT_SIZE, on_size)
+f.Show()
 
 N = 600
 M = 300
@@ -34,6 +45,7 @@ for i in range(N):
 dxf = ezdxf.readfile(dirname(__file__) + "\\floorplan.dxf")
 msp = dxf.modelspace()
 
+
 def get_color_int(e, doc):
     # True Color (уже RGB, упакован в int)
     if e.dxf.hasattr("true_color"):
@@ -53,6 +65,9 @@ def get_color_int(e, doc):
 
     return (r << 16) | (g << 8) | b
 
+
+
+total_points = 0
 # ---------- ENTITIES ----------
 for entity in msp:
     color = get_color_int(entity, dxf)
@@ -60,34 +75,34 @@ for entity in msp:
 
     # ---------- POLYLINE / LWPOLYLINE ----------
     if entity.dxftype() == "LINE":
-      start = entity.dxf.start
-      end = entity.dxf.end
+        start = entity.dxf.start
+        end = entity.dxf.end
 
-      h = lc.lcBlockAddLine(
-          hBlock,
-          start.x, start.y,
-          end.x, end.y
-      )
+        h = lc.lcBlockAddLine(hBlock, start.x, start.y, end.x, end.y)
+        total_points += 2
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
 
-      lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
-
-            # ---------- POLYLINE / LWPOLYLINE ----------
+        # ---------- POLYLINE / LWPOLYLINE ----------
     elif entity.dxftype() in ("LWPOLYLINE", "POLYLINE"):
         if entity.dxftype() == "LWPOLYLINE":
             points = entity.get_points("xy")
             closed = entity.closed
+            total_points += len(points)
         elif entity.dxftype() == "POLYLINE":
             points = [(p.x, p.y) for p in entity.points()]
             closed = entity.is_closed
+            total_points += len(points)
 
-        print(closed)
         h = lc.lcBlockAddPolyline(hBlock, 0, closed, 0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_KEY, int(entity.dxf.handle, 16))
 
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
 
         lc.lcPlineEnd(h)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLORI, color)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+
+print("TOTAL POINTS:", total_points)
 
 # генерация полилиний
 #for i in range(N - 1):
@@ -96,21 +111,16 @@ for entity in msp:
 #        i1 = ((i + 1) * M + j) * 2
 #        i2 = ((i + 1) * M + (j + 1)) * 2
 #        i3 = (i * M + (j + 1)) * 2
-#
+
 #        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
 #        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
 #        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
-##        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
+#        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
 #        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x999999)
+#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0xffffff)
 #        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
 
-lc.lcWndSetBlock(hWnd, hBlock)
 lc.lcBlockUpdate(hBlock, 0, 0)
 
-def on_size(event):
-    w, h = f.GetClientSize().GetWidth(), f.GetClientSize().GetHeight()
-    lc.lcWndResize(hWnd, 0, 0, w, h)
-f.Bind(wx.EVT_SIZE, on_size)
-f.Show()
+
 app.MainLoop()

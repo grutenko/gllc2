@@ -139,7 +139,7 @@ void gllc_block_sync_gpu(struct gllc_block *block, struct ds_gpu *gpu) {
 
 void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent) {
   if (block->batch.bqcap <= block->batch.bqcnt) {
-    size_t sz = block->batch.bqcap ? block->batch.bqcap * 2 : 1024;
+    size_t sz = block->batch.bqcap ? block->batch.bqcap * 2 : 64;
     struct gllc_entity **bq = realloc(block->batch.bq, sz * sizeof(struct gllc_entity *));
     if (!bq) {
       return;
@@ -293,7 +293,7 @@ static void push_select(struct gllc_block *block, struct gllc_entity *ent) {
       return;
     }
     block->batch.sel = sel;
-    block->batch.filcap = sz;
+    block->batch.selcap = sz;
   }
   block->batch.sel[block->batch.selcnt] = ent;
   block->batch.selcnt++;

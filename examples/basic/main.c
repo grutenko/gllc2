@@ -65,8 +65,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   struct gllc_block *block = gllc_drw_add_block(drw, "block1", 0, 0);
 
   double n[2] = {1.0f, 0.0f};
-  double a_step = M_PI / 128.0f;
-  for (int i = 0; i < 128; i++) {
+  double a_step = M_PI / 1280.0f;
+  for (int i = 0; i < 1280; i++) {
     n[0] = sin(i * a_step);
     n[1] = cos(i * a_step);
     double p0[2];
@@ -77,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     p1[1] = -n[1] * 1000.0f;
     struct gllc_line *pl = gllc_block_add_line(block, p0, p1);
     struct gllc_object *o = (struct gllc_object *)pl;
-    gllc_prop_put_int(o, LC_PROP_ENT_COLOR, 0);
+    gllc_prop_put_int(o, LC_PROP_ENT_COLOR, 0xffffff);
     gllc_prop_put_int(o, LC_PROP_ENT_LWIDTH, LC_LW_REAL);
     gllc_prop_put_float(o, LC_PROP_ENT_LWIDTH, 5.0f);
   }

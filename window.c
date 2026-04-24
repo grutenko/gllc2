@@ -291,7 +291,7 @@ static void gl_check_error(const char *file, int line) {
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
 static void draw(struct gllc_window *wnd) {
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   double x0, y0, x1, y1;
   screen_to_world(wnd, 0.0f, wnd->UI.height, &x0, &y0);
@@ -402,7 +402,6 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
       gllc_block_update(wnd->block);
     }
   }
-  printf("x=%lf, y=%lf\n", wx ,wy);
   wnd->UI.mx = x;
   wnd->UI.my = y;
   wnd->UI.menter = 1;
@@ -414,13 +413,27 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
   struct gllc_window *wnd = (struct gllc_window *)data;
   wnd->UI.mbtn = mode;
   wnd->UI.mpressed = action;
+  double wx, wy;
+  screen_to_world(wnd, (double)x, (double)y, &wx, &wy);
   if (action) {
     wnd->UI.mdownx = x;
     wnd->UI.mdowny = y;
     screen_to_world(wnd, (double)x, (double)y, &wnd->UI.sel_x0, &wnd->UI.sel_y0);
   } else {
-    if(wnd->block) {
+    if (wnd->block) {
       gllc_block_ent_hover(wnd->block, NULL, 1);
+      int fcnt = gllc_block_ent_get_filter_cnt(wnd->block);
+      if (fcnt == 0) {
+        struct gllc_entity *ent = gllc_block_pick_ent(wnd->block, wx, wy);
+        if (ent) {
+          gllc_block_select(wnd->block, ent, 1);
+        }
+      } else {
+        gllc_block_select(wnd->block, NULL, 1);
+        for (int i = 0; i < fcnt; i++) {
+          gllc_block_select(wnd->block, gllc_block_ent_get_filter_at(wnd->block, i), 0);
+        }
+      }
       gllc_block_update(wnd->block);
     }
   }
@@ -562,7 +575,7 @@ struct gllc_window *gllc_window_create(void *p) {
     float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-    memcpy(wnd->UI.back_color, white, sizeof(black));
+    memcpy(wnd->UI.back_color, black, sizeof(black));
 
     wnd->UI.grid_enable = 1;
     ui_grid_init(&wnd->UI.grid);

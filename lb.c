@@ -2,7 +2,6 @@
 #include "draw.h"
 
 #include <math.h>
-#include <stdio.h>
 
 #define M_PI 3.14159265358979323846
 
@@ -42,6 +41,11 @@ static inline void INV(double v[2]) {
   v[1] = -v[1];
 }
 
+static inline void INVTO(double *in, double *out) {
+  out[0] = -in[0];
+  out[1] = -in[1];
+}
+
 static inline double DOT(const double a[2], const double b[2]) {
   return a[0] * b[0] + a[1] * b[1];
 }
@@ -50,7 +54,7 @@ static inline double CROSS(const double a[2], const double b[2]) {
   return a[0] * b[1] - a[1] * b[0];
 }
 
-static inline void VER(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double w) {
+static inline void VER(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double l) {
   v->p[0] = (GLfloat)p[0];
   v->p[1] = (GLfloat)p[1];
   v->n[0] = (GLbyte)(n[0] * 127.0f);
@@ -62,6 +66,7 @@ static inline void VER(struct ds_vertex *v, double *p, double *n, unsigned char 
   v->uv[0] = (GLfloat)0.0f;
   v->uv[1] = (GLfloat)0.0f;
   v->th = (GLfloat)th;
+  v->l = (GLfloat)l;
 }
 
 static inline void ADD(double *p, double *p0, double *p1) {
@@ -128,6 +133,27 @@ static inline int seg_insect(double *p0, double *n0, double *p1, double *n1, dou
   return 1;
 }
 
+static inline void BISEC(double *n, double *p0, double *p1, double *p2) {
+  double v0[2];
+  double v1[2];
+  VEC(v0, p0, p1);
+  VEC(v1, p2, p1);
+  NORM(v0);
+  NORM(v1);
+  ADD(n, v0, v1);
+  NORM(n);
+}
+
+static inline double COSSEG(double *p0, double *p1, double *p2) {
+  double v0[2];
+  double v1[2];
+  VEC(v0, p0, p1);
+  VEC(v1, p2, p1);
+  NORM(v0);
+  NORM(v1);
+  return DOT(v0, v1);
+}
+
 void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt, int *Icnt) {
   struct ev *_v = conf->v;
   int _vcnt = conf->vcnt;
@@ -147,31 +173,31 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
     p0[1] = _v[0].p[1];
     p1[0] = _v[1].p[0];
     p1[1] = _v[1].p[1];
-    v0[0] = p1[0] - p0[0];
-    v0[1] = p1[1] - p0[1];
+    VEC(v0, p0, p1);
     if (LEN(v0) == 0.0f) {
+      *Vcnt = 0;
+      *Icnt = 0;
       return;
     }
-    n0[0] = p1[0] - p0[0];
-    n0[1] = p1[1] - p0[1];
+    VEC(n0, p0, p1);
     NORM(n0);
     PERP(n0);
-    n1[0] = -n0[0];
-    n1[1] = -n0[1];
+    INVTO(n0, n1);
     if (V) {
       double pt[2];
       pt[0] = p0[0] + n0[0] * lw;
       pt[1] = p0[1] + n0[1] * lw;
-      VER(&V[0], pt, n0, conf->c, conf->lw / 2.0f, conf->lrealw);
+      VER(&V[0], pt, n0, conf->c, conf->lw / 2.0f, 0.0f);
       pt[0] = p0[0] + n1[0] * lw;
       pt[1] = p0[1] + n1[1] * lw;
-      VER(&V[1], pt, n1, conf->c, conf->lw / 2.0f, conf->lrealw);
+      VER(&V[1], pt, n1, conf->c, conf->lw / 2.0f, 0.0f);
       pt[0] = p1[0] + n0[0] * lw;
       pt[1] = p1[1] + n0[1] * lw;
-      VER(&V[2], pt, n0, conf->c, conf->lw / 2.0f, conf->lrealw);
+      double len = LEN(v0);
+      VER(&V[2], pt, n0, conf->c, conf->lw / 2.0f, len);
       pt[0] = p1[0] + n1[0] * lw;
       pt[1] = p1[1] + n1[1] * lw;
-      VER(&V[3], pt, n1, conf->c, conf->lw / 2.0f, conf->lrealw);
+      VER(&V[3], pt, n1, conf->c, conf->lw / 2.0f, len);
       I[0] = conf->off + 0;
       I[1] = conf->off + 1;
       I[2] = conf->off + 2;
@@ -184,8 +210,7 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
     if (conf->mode == LB_MODE_ROUND) {
       double w = conf->lrealw / 2.0f;
       double pt[2];
-      n0[0] = p0[0] - p1[0];
-      n0[1] = p0[1] - p1[1];
+      VEC(n0, p1, p0);
       NORM(n0);
       pt[0] = _v[0].p[0];
       pt[1] = _v[0].p[1];
@@ -194,8 +219,7 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
       } else {
         ROUNDSTATS(conf->nroundsegs, &vi, &ii);
       }
-      n0[0] = p1[0] - p0[0];
-      n0[1] = p1[1] - p0[1];
+      VEC(n0, p1, p0);
       NORM(n0);
       pt[0] = _v[1].p[0];
       pt[1] = _v[1].p[1];
@@ -222,45 +246,27 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
         int nni = (i + 2) % _vcnt;
         p3[0] = _v[nni].p[0];
         p3[1] = _v[nni].p[1];
-        v0[0] = p1[0] - p0[0];
-        v0[1] = p1[1] - p0[1];
-        v1[0] = p1[0] - p2[0];
-        v1[1] = p1[1] - p2[1];
+        VEC(v1, p1, p2);
         if (LEN(v1) < 1e-8) {
           p2[0] = p3[0];
           p2[1] = p3[1];
           continue;
         }
-        n0[0] = v0[0];
-        n0[1] = v0[1];
-        n1[0] = -v1[0];
-        n1[1] = -v1[1];
-        NORM(n0);
-        NORM(n1);
-        double dotv0 = DOT(n0, n1);
-        INV(n1);
-        ADD(n0, n0, n1);
-        NORM(n0);
-        v0[0] = p2[0] - p1[0];
-        v0[1] = p2[1] - p1[1];
-        v1[0] = p2[0] - p3[0];
-        v1[1] = p2[1] - p3[1];
-        ADD(n1, v0, v1);
-        NORM(n1);
-        n2[0] = p2[0] - p1[0];
-        n2[1] = p2[0] - p1[0];
+        BISEC(n0, p0, p1, p2);
+        BISEC(n1, p1, p2, p3);
+        VEC(n2, p1, p2);
         NORM(n2);
+        double dotv0 = COSSEG(p0, p1, p2);
         // если сегменты инверированы нужно использовать другой метод индексации
         // чтобы треугольники не были вывернуты
         // Знак CROSS() указывает на сторону поворота относительно сегмента и должен быть одним и тем-же для смежных сегментов
-        int _inv = CROSS(n0, n2) * CROSS(n1, n2) > 1e-8;
+        int _inv = CROSS(n0, n2) * CROSS(n1, n2) < 0.0f;
         if (conf->mode == LB_MODE_COMPLEX) {
-          //if (dotv0 > 0.8660254f) {
-          //  mode = LB_MODE_BEVEL;
-          //} else {
-          //  mode = LB_MODE_MITER;
-          //}
-          mode = LB_MODE_MITER;
+          if (dotv0 > 0.8660254f) {
+            mode = LB_MODE_BEVEL;
+          } else {
+            mode = LB_MODE_MITER;
+          }
         }
         if (mode == LB_MODE_MITER) {
           if (V) {
@@ -268,11 +274,9 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
             double nt[2] = {-n0[0], -n0[1]};
             double nt0[2], nt1[2];
             double miter = 1.0 / (sqrt((1.0f - dotv0) / 2.0f));
-            nt0[0] = p2[0] - p0[0];
-            nt0[1] = p2[1] - p0[1];
+            VEC(nt0, p0, p2);
             NORM(nt0);
-            nt1[0] = -n0[0];
-            nt1[1] = -n0[1];
+            INVTO(n0, nt1);
             double T;
             seg_insect(p0, nt0, p1, nt1, NULL, &T);
             pt[0] = p1[0] + nt[0] * w * miter;

@@ -1,5 +1,6 @@
 #include "line.h"
 #include "block.h"
+#include "draw.h"
 #include "entity.h"
 #include "lb.h"
 
@@ -13,6 +14,12 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
     return;
   int colorint = gllc_entity_color(ent);
   unsigned char color[4] = {RED(colorint), GREEN(colorint), BLUE(colorint), 255};
+  if (ent->flags & GLLC_ENT_SELECTED) {
+    color[0] = 255;
+    color[1] = 0;
+    color[2] = 0;
+    color[3] = 255;
+  }
   struct ev p[2];
   p[0].p[0] = pl->p0[0];
   p[0].p[1] = pl->p0[1];
@@ -25,8 +32,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
       .closed = 0,
       .c = color,
       .off = 0,
-      .mode = LB_MODE_ROUND
-  };
+      .mode = LB_MODE_ROUND};
   if (ent->flags & GLLC_ENT_LW_REAL) {
     lb_conf.lw = 1.0f;
     lb_conf.lrealw = gllc_entity_lwidth(ent);
@@ -47,9 +53,14 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   struct ds_vertex *V = ds_unit_reserve_vertex(pl->u, vcnt);
   GLuint *I = ds_unit_reserve_index(pl->u, icnt);
   if (pl->_ent.flags & GLLC_ENT_HOVER) {
-    pl->u->flags = DS_UNIT_CHESS;
+    pl->u->flags |= DS_UNIT_CHESS;
   } else {
-    pl->u->flags = 0;
+    pl->u->flags &= ~DS_UNIT_CHESS;
+  }
+  if (pl->_ent.flags & GLLC_ENT_SELECTED) {
+    pl->u->flags |= DS_UNIT_DASH_SCREEN;
+  } else {
+    pl->u->flags &= ~DS_UNIT_DASH_SCREEN;
   }
   if (V && I) {
     lb_build(&lb_conf, V, I, &vcnt, &icnt);
@@ -113,15 +124,15 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
     NORM(n0);
     len = LEN(v0);
     // Ищем сторону прямоугольника, которая пересекает линию, если находим - линия частично выделена
-#define TEST(_x0, _y0, _x1, _y1)                            \
+#define TEST(_x0, _y0, _x1, _y1)                        \
   do {                                                  \
-    n1[0] = _x1 - _x0;                                    \
-    n1[1] = _y1 - _y0;                                    \
+    n1[0] = _x1 - _x0;                                  \
+    n1[1] = _y1 - _y0;                                  \
     v1[0] = n1[0];                                      \
     v1[1] = n1[1];                                      \
     NORM(n1);                                           \
-    d[0] = _x0 - l->p0[0];                               \
-    d[1] = _y0 - l->p0[1];                               \
+    d[0] = _x0 - l->p0[0];                              \
+    d[1] = _y0 - l->p0[1];                              \
     D = -n0[0] * n1[1] + n0[1] * n1[0];                 \
     if (D <= 1e-8)                                      \
       continue;                                         \

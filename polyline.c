@@ -8,6 +8,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+static inline void VEC(double out[2], const double a[2], const double b[2]) {
+  out[0] = b[0] - a[0];
+  out[1] = b[1] - a[1];
+}
+
+static inline double LEN(const double v[2]) {
+  return sqrt(v[0] * v[0] + v[1] * v[1]);
+}
+
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
   if (!pl || !draw)
@@ -15,9 +24,18 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
 
   int colorint = gllc_entity_color(ent);
   unsigned char color[4] = {RED(colorint), GREEN(colorint), BLUE(colorint), 255};
+  double p0[2];
+  double p1[2];
+  double v0[2];
+  p0[0] = pl->pts[pl->cnt - 1].p[0];
+  p0[1] = pl->pts[pl->cnt - 1].p[1];
+  p1[0] = pl->pts[0].p[0];
+  p1[1] = pl->pts[0].p[1];
+  VEC(v0, p0, p1);
+  int cnt = LEN(v0) < 1e-8 ? pl->cnt - 1 : pl->cnt;
   struct lb_config lb_conf = {
       .v = pl->pts,
-      .vcnt = pl->cnt,
+      .vcnt = cnt,
       .nroundsegs = 8,
       .closed = (ent->flags & GLLC_ENT_CLOSED) != 0,
       .c = color,
@@ -70,18 +88,55 @@ static int vertices(struct gllc_entity *ent, double scale, struct ev *ver) {
 }
 
 static int selected(struct gllc_entity *ent, int mode, double scale, double x0, double y0, double x1, double y1) {
-  struct gllc_polyline *pl = (struct gllc_polyline *)ent;
+  struct gllc_line *l = (struct gllc_line *)ent;
+  double D, T, S, d[2];
+  double n1[2], v1[2];
+  double n0[2];
+  double v0[2];
+  double len;
+  double bx0, by0, bx1, by1;
+  ent->vtable->bbox(ent, scale, &bx0, &by0, &bx1, &by1);
+  int inside = (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
   if (mode == 0) {
-    int i;
-    for (i = 0; i < pl->cnt; i++) {
-      double x = pl->pts[i].p[0];
-      double y = pl->pts[i].p[1];
-      if (x < x0 || x > x1 || y < y0 || y > y1)
-        return 0;
+    return inside;
+  }/*  else {
+   if (inside)
+      return 1;
+    for(int i = 0; i < cnt; i++) {
+      
     }
-    return 1;
-  } else {
+    n0[0] = l->p1[0] - l->p0[0];
+    n0[1] = l->p1[1] - l->p0[1];
+    v0[0] = n0[0];
+    v0[1] = n0[1];
+    NORM(n0);
+    len = LEN(v0);
+    // Ищем сторону прямоугольника, которая пересекает линию, если находим - линия частично выделена
+#define TEST(_x0, _y0, _x1, _y1)                        \
+  do {                                                  \
+    n1[0] = _x1 - _x0;                                  \
+    n1[1] = _y1 - _y0;                                  \
+    v1[0] = n1[0];                                      \
+    v1[1] = n1[1];                                      \
+    NORM(n1);                                           \
+    d[0] = _x0 - l->p0[0];                              \
+    d[1] = _y0 - l->p0[1];                              \
+    D = -n0[0] * n1[1] + n0[1] * n1[0];                 \
+    if (D <= 1e-8)                                      \
+      continue;                                         \
+    T = (-n1[1] * d[0] + n1[0] * d[1]) / D;             \
+    S = (n0[0] * d[1] - n0[1] * d[0]) / D;              \
+    if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= len) { \
+      return 1;                                         \
+    }                                                   \
+  } while (0)
+
+    TEST(x0, y0, x1, y0);
+    TEST(x1, y0, x1, y1);
+    TEST(x1, y1, x0, y1);
+    TEST(x0, y1, x0, y0);
   }
+*/
   return 1;
 }
 
@@ -104,10 +159,6 @@ static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
   return 1;
 }
 
-static inline double LEN(const double v[2]) {
-  return sqrt(v[0] * v[0] + v[1] * v[1]);
-}
-
 static inline void NORM(double v[2]) {
   double l = LEN(v);
   if (l > 0.0) {
@@ -127,65 +178,50 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
   if (pl->cnt < 2) {
     return 0;
   }
-  int cnt = 0;
   int i;
-  if (ent->flags & GLLC_ENT_CLOSED && pl->cnt > 2) {
-    for (i = 0; i < pl->cnt; i++) {
-      int ni = i < pl->cnt - 1 ? i + 1 : 0;
-      double x1 = pl->pts[i].p[0];
-      double y1 = pl->pts[i].p[1];
-      double x2 = pl->pts[ni].p[0];
-      double y2 = pl->pts[ni].p[1];
-      if ((y1 > y) != (y2 > y)) {
-        double xint = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
-        if (xint > x)
-          cnt++;
-      }
-    }
-    if (dis)
-      *dis = 0.0f;
-    return (cnt & 1) == 1;
-  } else {
-    double w;
-    if (ent->flags & GLLC_ENT_LW_THIN)
-      w = 10.0f * scale;
-    else if (ent->flags & GLLC_ENT_LW_SCREEN)
-      w = (ent->lwidth + 10.0f) * scale;
-    else
-      w = ent->lwidth + (10.0f * scale);
-    double p0[2], p1[2];
-    double v0[2];
-    double n0[2], n1[2], d[2];
-    double D, Dt, Ds, T, S;
-    for (i = 0; i < pl->cnt - 1; i++) {
-      p0[0] = pl->pts[i].p[0];
-      p0[1] = pl->pts[i].p[1];
-      p1[0] = pl->pts[i + 1].p[0];
-      p1[1] = pl->pts[i + 1].p[1];
-      n0[0] = p1[0] - p0[0];
-      n0[1] = p1[1] - p0[1];
-      v0[0] = n0[0];
-      v0[1] = n0[1];
-      NORM(n0);
-      n1[0] = n0[0];
-      n1[1] = n0[1];
-      PERP(n1);
-      // Решаем уравнение прямых для каждого сегмена: Прямая 1 задана сегментом.
-      // Прямая 2 задана точкой клика и перпендикуляром прямой 1
-      // Параметр T - позиция на сегменте, Параметр S - расстояние до точки пересечения
-      // n0, n1 нормализованые векторы, задающие прямые
-      d[0] = x - p0[0];
-      d[1] = y - p0[1];
-      D = -n0[0] * n1[1] + n0[1] * n1[0];
-      Dt = -n1[1] * d[0] + n1[0] * d[1];
-      Ds = n0[0] * d[1] - n0[1] * d[0];
-      T = Dt / D;
-      S = Ds / D;
-      if (T >= 0.0f && T <= LEN(v0) && fabs(S) <= w / 2) {
-        if (dis)
-          *dis = fabs(S);
-        return 1;
-      }
+  double w;
+  if (ent->flags & GLLC_ENT_LW_THIN)
+    w = 10.0f * scale;
+  else if (ent->flags & GLLC_ENT_LW_SCREEN)
+    w = (ent->lwidth + 10.0f) * scale;
+  else
+    w = ent->lwidth + (10.0f * scale);
+  double p0[2], p1[2];
+  double v0[2];
+  double n0[2], n1[2], d[2];
+  double D, Dt, Ds, T, S;
+  int cnt = pl->cnt;
+  if (!(ent->flags & GLLC_ENT_CLOSED))
+    cnt--;
+  for (i = 0; i < cnt; i++) {
+    int nt = (i >= cnt - 1 && ent->flags & GLLC_ENT_CLOSED) ? 0 : i + 1;
+    p0[0] = pl->pts[i].p[0];
+    p0[1] = pl->pts[i].p[1];
+    p1[0] = pl->pts[nt].p[0];
+    p1[1] = pl->pts[nt].p[1];
+    n0[0] = p1[0] - p0[0];
+    n0[1] = p1[1] - p0[1];
+    v0[0] = n0[0];
+    v0[1] = n0[1];
+    NORM(n0);
+    n1[0] = n0[0];
+    n1[1] = n0[1];
+    PERP(n1);
+    // Решаем уравнение прямых для каждого сегмена: Прямая 1 задана сегментом.
+    // Прямая 2 задана точкой клика и перпендикуляром прямой 1
+    // Параметр T - позиция на сегменте, Параметр S - расстояние до точки пересечения
+    // n0, n1 нормализованые векторы, задающие прямые
+    d[0] = x - p0[0];
+    d[1] = y - p0[1];
+    D = -n0[0] * n1[1] + n0[1] * n1[0];
+    Dt = -n1[1] * d[0] + n1[0] * d[1];
+    Ds = n0[0] * d[1] - n0[1] * d[0];
+    T = Dt / D;
+    S = Ds / D;
+    if (T >= 0.0f && T <= LEN(v0) && fabs(S) <= w / 2) {
+      if (dis)
+        *dis = fabs(S);
+      return 1;
     }
   }
   return 0;

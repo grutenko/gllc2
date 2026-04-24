@@ -9,9 +9,12 @@ struct ds_vertex {
   GLubyte uv[2];
   GLubyte c[4];
   GLfloat p[2];
+  GLfloat l;
 };
 
 #define DS_UNIT_CHESS 0x1
+#define DS_UNIT_DASH_SCREEN 0x2
+#define DS_UNIT_DASH_REAL 0x4
 
 struct ds_unit {
   int flags;
