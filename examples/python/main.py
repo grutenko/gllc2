@@ -4,6 +4,7 @@ import ctypes as ct
 import random
 from os.path import dirname
 import ezdxf
+from ezdxf.colors import aci2rgb
 
 app = wx.App(0)
 f = wx.Frame(None)
@@ -30,12 +31,31 @@ for i in range(N):
         tab[i0] = min_v + i * step
         tab[i0 + 1] = min_v + j * step * 2
 
-dxf = ezdxf.readfile(dirname(__file__) + "\Отметка -250 каркасы.dxf")
+dxf = ezdxf.readfile(dirname(__file__) + "\\floorplan.dxf")
 msp = dxf.modelspace()
+
+def get_color_int(e, doc):
+    # True Color (уже RGB, упакован в int)
+    if e.dxf.hasattr("true_color"):
+        return e.dxf.true_color  # уже 0xRRGGBB
+
+    aci = e.dxf.color
+
+    # BYLAYER
+    if aci == 256:
+        layer = doc.layers.get(e.dxf.layer)
+        r, g, b = aci2rgb(layer.color)
+    # BYBLOCK (без контекста — заглушка)
+    elif aci == 0:
+        return 0x000000
+    else:
+        r, g, b = aci2rgb(aci)
+
+    return (r << 16) | (g << 8) | b
 
 # ---------- ENTITIES ----------
 for entity in msp:
-    color = entity.dxf.color or 256  # BYLAYER
+    color = get_color_int(entity, dxf)
     linetype_name = entity.dxf.linetype or "BYLAYER"
 
     # ---------- POLYLINE / LWPOLYLINE ----------
@@ -49,41 +69,41 @@ for entity in msp:
           end.x, end.y
       )
 
-      lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLORI, color)
+      lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
 
             # ---------- POLYLINE / LWPOLYLINE ----------
     elif entity.dxftype() in ("LWPOLYLINE", "POLYLINE"):
         if entity.dxftype() == "LWPOLYLINE":
             points = entity.get_points("xy")
             closed = entity.closed
-        else:
+        elif entity.dxftype() == "POLYLINE":
             points = [(p.x, p.y) for p in entity.points()]
-            closed = bool(entity.dxf.flags & 1)
+            closed = entity.is_closed
 
+        print(closed)
         h = lc.lcBlockAddPolyline(hBlock, 0, closed, 0)
 
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
 
         lc.lcPlineEnd(h)
-
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLORI, color)
 
 # генерация полилиний
-for i in range(N - 1):
-    for j in range(M - 1):
-        i0 = (i * M + j) * 2
-        i1 = ((i + 1) * M + j) * 2
-        i2 = ((i + 1) * M + (j + 1)) * 2
-        i3 = (i * M + (j + 1)) * 2
-
-        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
-        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x999999)
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
+#for i in range(N - 1):
+#    for j in range(M - 1):
+#        i0 = (i * M + j) * 2
+#        i1 = ((i + 1) * M + j) * 2
+#        i2 = ((i + 1) * M + (j + 1)) * 2
+#        i3 = (i * M + (j + 1)) * 2
+#
+#        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
+#        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
+#        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
+##        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
+#        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
+#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x999999)
+#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
 
 lc.lcWndSetBlock(hWnd, hBlock)
 lc.lcBlockUpdate(hBlock, 0, 0)

@@ -255,10 +255,12 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
         // Знак CROSS() указывает на сторону поворота относительно сегмента и должен быть одним и тем-же для смежных сегментов
         int _inv = CROSS(n0, n2) * CROSS(n1, n2) > 1e-8;
         if (conf->mode == LB_MODE_COMPLEX) {
-          if (dotv0 > 0.8660254f)
-            mode = LB_MODE_BEVEL;
-          else
-            mode = LB_MODE_MITER;
+          //if (dotv0 > 0.8660254f) {
+          //  mode = LB_MODE_BEVEL;
+          //} else {
+          //  mode = LB_MODE_MITER;
+          //}
+          mode = LB_MODE_MITER;
         }
         if (mode == LB_MODE_MITER) {
           if (V) {
