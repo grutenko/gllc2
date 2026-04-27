@@ -5,6 +5,7 @@
 #include "linalg.h"
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -65,33 +66,38 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
       } else {
         break;
       }
-#define TEST(_x0, _y0, _x1, _y1)                            \
-  do {                                                      \
-    double T, S;                                            \
-    double n0[2], n1[2], v0[2], v1[2];                      \
-    double p0[2], p1[2], p2[2], p3[2];                      \
-    p0[0] = _x0;                                            \
-    p0[1] = _y0;                                            \
-    p1[0] = _x1;                                            \
-    p1[1] = _y1;                                            \
-    p2[0] = pl->pts[i].p[0];                                \
-    p2[1] = pl->pts[i].p[0];                                \
-    p3[0] = pl->pts[ni].p[0];                               \
-    p3[1] = pl->pts[ni].p[0];                               \
-    VEC(v0, p0, p1);                                        \
-    NORMTO(v0, n0);                                         \
-    VEC(v1, p2, p3);                                        \
-    NORMTO(v1, n1);                                         \
-    RAYINSECT(p0, n0, p2, n1, &T, &S);                      \
-    if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= LEN(v0)) { \
-      return 1;                                             \
-    }                                                       \
+#define TEST(_x0, _y0, _x1, _y1)                              \
+  do {                                                        \
+    double T, S;                                              \
+    double n0[2], n1[2], v0[2], v1[2];                        \
+    double p0[2], p1[2], p2[2], p3[2];                        \
+    p0[0] = _x0;                                              \
+    p0[1] = _y0;                                              \
+    p1[0] = _x1;                                              \
+    p1[1] = _y1;                                              \
+    p2[0] = pl->pts[i].p[0];                                  \
+    p2[1] = pl->pts[i].p[1];                                  \
+    p3[0] = pl->pts[ni].p[0];                                 \
+    p3[1] = pl->pts[ni].p[1];                                 \
+    VEC(v0, p0, p1);                                          \
+    NORMTO(v0, n0);                                           \
+    VEC(v1, p2, p3);                                          \
+    NORMTO(v1, n1);                                           \
+    if (RAYINSECT(p0, n0, p2, n1, &T, &S)) {                  \
+      if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= LEN(v0)) { \
+        return 1;                                             \
+      }                                                       \
+    }                                                         \
   } while (0)
 
       TEST(x0, y0, x1, y0);
       TEST(x1, y0, x1, y1);
       TEST(x1, y1, x0, y1);
       TEST(x0, y1, x0, y0);
+      TEST(x1, y0, x0, y0);
+      TEST(x1, y1, x1, y0);
+      TEST(x0, y1, x1, y1);
+      TEST(x0, y0, x0, y1);
     }
   }
   return 0;
@@ -134,14 +140,19 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
   double n0[2], n1[2], d[2];
   double D, Dt, Ds, T, S;
   int cnt = pl->cnt;
-  if (!(ent->flags & GLLC_ENT_CLOSED))
-    cnt--;
   for (i = 0; i < cnt; i++) {
-    int nt = (i >= cnt - 1 && ent->flags & GLLC_ENT_CLOSED) ? 0 : i + 1;
+    int ni;
+    if (ent->flags & GLLC_ENT_CLOSED) {
+      ni = (i + 1) % pl->cnt;
+    } else if (i < pl->cnt - 1) {
+      ni = i + 1;
+    } else {
+      break;
+    }
     p0[0] = pl->pts[i].p[0];
     p0[1] = pl->pts[i].p[1];
-    p1[0] = pl->pts[nt].p[0];
-    p1[1] = pl->pts[nt].p[1];
+    p1[0] = pl->pts[ni].p[0];
+    p1[1] = pl->pts[ni].p[1];
     n0[0] = p1[0] - p0[0];
     n0[1] = p1[1] - p0[1];
     v0[0] = n0[0];
@@ -266,6 +277,22 @@ void gllc_pline_add_ver(struct gllc_polyline *pline, double x, double y) {
 }
 
 void gllc_pline_end(struct gllc_polyline *pline) {
+  int i = 0;
+  while (i < pline->cnt - 1) {
+    struct ev *a = &pline->pts[i];
+    struct ev *b = &pline->pts[i + 1];
+    double dx = b->p[0] - a->p[0];
+    double dy = b->p[1] - a->p[1];
+    double len = sqrt(dx * dx + dy * dy);
+    if (len < 1e-8) {
+      for (int j = i + 1; j < pline->cnt - 1; j++) {
+        pline->pts[j] = pline->pts[j + 1];
+      }
+      pline->cnt--;
+    } else {
+      i++;
+    }
+  }
 }
 
 int gllc_pline_fit_type(struct gllc_polyline *pline) {

@@ -13,7 +13,6 @@ struct ds_vertex;
 #define LB_ROUND_SEGMENTS 8
 
 struct lb_config {
-  int mode;
   double lw;
   double lrealw;
   unsigned char *c;

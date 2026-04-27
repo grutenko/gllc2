@@ -1,4 +1,5 @@
 #include "linalg.h"
+#include <stdio.h>
 
 inline double LEN(const double v[static 2]) {
   return sqrt(v[0] * v[0] + v[1] * v[1]);

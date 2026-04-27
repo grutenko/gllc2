@@ -4,13 +4,19 @@
 #include "entbuildutil.h"
 #include "entity.h"
 
-
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
+#define LINE(ent) ((struct gllc_line *)(ent))
+
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
-  struct gllc_line *line = (struct gllc_line *)ent;
+  struct ev pts[] = {
+      {LINE(ent)->p0[0], LINE(ent)->p0[1]},
+      {LINE(ent)->p1[0], LINE(ent)->p1[1]},
+  };
+  ds_unit_reset(LINE(ent)->u);
+  build_contur(ent, LINE(ent)->u, pts, 2);
 }
 
 static void destroy(struct gllc_entity *ent) {
@@ -81,7 +87,7 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
     d[1] = _y0 - l->p0[1];                              \
     D = -n0[0] * n1[1] + n0[1] * n1[0];                 \
     if (D <= 1e-8)                                      \
-      continue;                                         \
+      break;                                            \
     T = (-n1[1] * d[0] + n1[0] * d[1]) / D;             \
     S = (n0[0] * d[1] - n0[1] * d[0]) / D;              \
     if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= len) { \
@@ -93,6 +99,10 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
     TEST(x1, y0, x1, y1);
     TEST(x1, y1, x0, y1);
     TEST(x0, y1, x0, y0);
+    TEST(x1, y0, x0, y0);
+    TEST(x1, y1, x1, y0);
+    TEST(x0, y1, x1, y1);
+    TEST(x0, y0, x0, y1);
   }
   return 0;
 }

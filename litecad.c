@@ -791,7 +791,10 @@ void *LCAPI lcPlineAddVer2(void *hPline, void *hVer, double X, double Y,
 void *LCAPI lcPlineAddVerDir(void *hPline, void *hVer, double Ang,
                              double Length) {
 }
-int LCAPI lcPlineEnd(void *hPline) { return 0; }
+int LCAPI lcPlineEnd(void *hPline) {
+  gllc_pline_end((struct gllc_polyline *)hPline);
+  return 1;
+}
 int LCAPI lcPlineFromPtbuf(void *hPline, void *hPtbuf) { return 0; }
 int LCAPI lcPlineFromMpgon(void *hPline, void *hMpgon) { return 0; }
 int LCAPI lcPlineFromFile(void *hPline, char *szFileName) { return 0; }

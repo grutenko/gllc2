@@ -41,6 +41,8 @@ void ds_unit_reset(struct ds_unit *u) {
   u->geometry_dirty = 1;
   u->I_cnt = 0;
   u->V_cnt = 0;
+  u->draw->dirty = 1;
+  u->draw->geometry_dirty = 1;
 }
 
 int ds_unit_vcnt(struct ds_unit *u) {
@@ -82,8 +84,8 @@ struct ds_vertex *ds_unit_reserve_vertex(struct ds_unit *unit, GLuint cnt) {
     }
     unit->V = new_V;
     unit->V_cap = new_size;
-    unit->V_cnt = new_size;
   }
+  unit->V_cnt = cnt;
   unit->draw->dirty = 1;
   return unit->V;
 }
@@ -97,8 +99,8 @@ GLuint *ds_unit_reserve_index(struct ds_unit *unit, GLuint cnt) {
     }
     unit->I = new_I;
     unit->I_cap = new_size;
-    unit->I_cnt = new_size;
   }
+  unit->I_cnt = cnt;
   unit->draw->dirty = 1;
   return unit->I;
 }

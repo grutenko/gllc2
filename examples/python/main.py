@@ -108,9 +108,8 @@ for entity in msp:
         start_angle = entity.dxf.start_angle * math.pi / 180
         end_angle = entity.dxf.end_angle * math.pi / 180
         arc_angle = math.fabs(start_angle - end_angle)
-        print(start_angle, arc_angle)
-        h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, start_angle, arc_angle)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        #h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, start_angle, arc_angle)
+        #lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
 
 print("TOTAL POINTS:", total_points)
 

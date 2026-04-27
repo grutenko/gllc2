@@ -548,6 +548,10 @@ void gllc_block_update(struct gllc_block *block) {
     if (gllc_entity_geometry_modified(ent)) {
       ent->flags &= ~GLLC_ENT_GEOMETRY_MODIFIED;
       gllc_entity_bbox(ent, wnd_scale(block), &x0, &y0, &x1, &y1);
+      x0 -= 1.0f;
+      y0 -= 1.0f;
+      x1 += 1.0f;
+      y1 += 1.0f;
       if (!(ent->flags & GLLC_ENT_INITIAL)) {
         sg_remove(block->sg, ent);
       }
@@ -737,7 +741,6 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, do
   for (int i = 0; i < block->filcnt; i++)
     block->fil[i]->flags &= ~GLLC_ENT_FILTER;
   block->filcnt = 0;
-  int x, y, i;
   int shift = sg_shift(block->sg);
 
   if (x0 > x1)
@@ -750,14 +753,14 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, do
   int cx1 = ((int)floor(x1)) >> shift;
   int cy1 = ((int)floor(y1)) >> shift;
 
-  for (x = cx0; x <= cx1; x++) {
-    for (y = cy0; y <= cy1; y++) {
+  for (int x = cx0; x <= cx1; x++) {
+    for (int y = cy0; y <= cy1; y++) {
       struct sg_cell *cell = sg_cell_at(block->sg, x, y);
       if (!cell)
         continue;
       struct gllc_entity **ents = sg_cell_ents(cell);
       int entcnt = sg_cell_ents_cnt(cell);
-      for (i = 0; i < entcnt; i++) {
+      for (int i = 0; i < entcnt; i++) {
         if (ents[i]->flags & GLLC_ENT_FILTER)
           continue;
         if (ents[i]->vtable->selected(ents[i], mode, wnd_scale(block), x0, y0, x1, y1)) {
