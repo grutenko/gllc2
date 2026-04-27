@@ -291,7 +291,7 @@ static void gl_check_error(const char *file, int line) {
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
 static void draw(struct gllc_window *wnd) {
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   double x0, y0, x1, y1;
   screen_to_world(wnd, 0.0f, wnd->UI.height, &x0, &y0);
@@ -387,7 +387,7 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
         invert = 1;
       }
       if (wnd->block) {
-        gllc_block_ent_filter_rect(wnd->block, invert, x0, y0, x1, y1);
+        gllc_block_ent_filter_rect(wnd->block, invert, x0, y0, x1, y1, 1, 1);
         gllc_block_ent_hover(wnd->block, NULL, 1);
         int filcnt = gllc_block_ent_get_filter_cnt(wnd->block);
         for (int i = 0; i < filcnt; i++) {
@@ -398,7 +398,7 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
     }
   } else {
     if (wnd->block) {
-      gllc_block_ent_hover(wnd->block, gllc_block_pick_ent(wnd->block, wx, wy), 1);
+      gllc_block_ent_hover(wnd->block, gllc_block_pick_ent(wnd->block, wx, wy, 1, 1), 1);
       gllc_block_update(wnd->block);
     }
   }
@@ -424,7 +424,7 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
       gllc_block_ent_hover(wnd->block, NULL, 1);
       int fcnt = gllc_block_ent_get_filter_cnt(wnd->block);
       if (fcnt == 0) {
-        struct gllc_entity *ent = gllc_block_pick_ent(wnd->block, wx, wy);
+        struct gllc_entity *ent = gllc_block_pick_ent(wnd->block, wx, wy, 1, 1);
         if (ent) {
           gllc_block_select(wnd->block, ent, 1);
         }
@@ -574,7 +574,7 @@ struct gllc_window *gllc_window_create(void *p) {
     float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-    memcpy(wnd->UI.back_color, black, sizeof(black));
+    memcpy(wnd->UI.back_color, white, sizeof(black));
 
     wnd->UI.grid_enable = 1;
     ui_grid_init(&wnd->UI.grid);

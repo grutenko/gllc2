@@ -625,7 +625,7 @@ struct gllc_circle *gllc_block_add_circle(struct gllc_block *block, double x, do
   return circle;
 }
 
-struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y) {
+struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden) {
   struct gllc_entity *ent = NULL;
   struct sg_cell *cell = sg_pick_cell(block->sg, x, y);
   if (!cell)
@@ -634,6 +634,10 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
   struct gllc_entity **ents = sg_cell_ents(cell);
   int cnt = sg_cell_ents_cnt(cell);
   for (i = 0; i < cnt; i++) {
+    if (skiplocked && ents[i]->flags & GLLC_ENT_LOCKED)
+      continue;
+    if (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN)
+      continue;
     if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL)) {
       return ents[i];
     }
@@ -737,7 +741,7 @@ static inline void _swapf(double *a, double *b) {
   *b = t;
 }
 
-int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, double y0, double x1, double y1) {
+int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, double y0, double x1, double y1, int skiplocked, int skiphidden) {
   for (int i = 0; i < block->filcnt; i++)
     block->fil[i]->flags &= ~GLLC_ENT_FILTER;
   block->filcnt = 0;
