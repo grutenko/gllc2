@@ -1,4 +1,4 @@
-#include "sg.h"
+#include "sparsegrid.h"
 #include "entity.h"
 
 #include <math.h>
@@ -111,8 +111,8 @@ static inline struct sg_cell *cell_at(struct sg *sg, int x, int y) {
   uint64_t H = sg_hash_in(x, y);
   int batch = H & (SG_HASHTAB_CAP - 1);
   struct sg_cell *base = sg->b[batch];
-  for(int i = 0; i < sg->cnt[batch]; i++) {
-    if(base[i].hash == H) {
+  for (int i = 0; i < sg->cnt[batch]; i++) {
+    if (base[i].hash == H) {
       return &base[i];
     }
   }
@@ -203,8 +203,6 @@ void sg_destroy(struct sg *sg) {
       free(sg->b[i][j].ent);
     }
     free(sg->b[i]);
-    sg->cnt[i] = 0;
-    sg->cap[i] = 0;
   }
   free(sg);
 }

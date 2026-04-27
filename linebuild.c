@@ -1,13 +1,10 @@
-#include "lb.h"
+#include "linebuild.h"
 #include "draw.h"
+#include "linalg.h"
 
 #include <math.h>
 
 #define M_PI 3.14159265358979323846
-
-static inline double LEN(const double v[2]) {
-  return sqrt(v[0] * v[0] + v[1] * v[1]);
-}
 
 static inline double MIN(double a, double b) {
   return a < b ? a : b;
@@ -15,43 +12,6 @@ static inline double MIN(double a, double b) {
 
 static inline double MAX(double a, double b) {
   return a > b ? a : b;
-}
-
-static inline void VEC(double out[2], const double a[2], const double b[2]) {
-  out[0] = b[0] - a[0];
-  out[1] = b[1] - a[1];
-}
-
-static inline void NORM(double v[2]) {
-  double l = LEN(v);
-  if (l > 0.0) {
-    v[0] /= l;
-    v[1] /= l;
-  }
-}
-
-static inline void PERP(double v[2]) {
-  double t = v[0];
-  v[0] = -v[1];
-  v[1] = t;
-}
-
-static inline void INV(double v[2]) {
-  v[0] = -v[0];
-  v[1] = -v[1];
-}
-
-static inline void INVTO(double *in, double *out) {
-  out[0] = -in[0];
-  out[1] = -in[1];
-}
-
-static inline double DOT(const double a[2], const double b[2]) {
-  return a[0] * b[0] + a[1] * b[1];
-}
-
-static inline double CROSS(const double a[2], const double b[2]) {
-  return a[0] * b[1] - a[1] * b[0];
 }
 
 static inline void VER(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double l) {
@@ -67,11 +27,6 @@ static inline void VER(struct ds_vertex *v, double *p, double *n, unsigned char 
   v->uv[1] = (GLfloat)0.0f;
   v->th = (GLfloat)th;
   v->l = (GLfloat)l;
-}
-
-static inline void ADD(double *p, double *p0, double *p1) {
-  p[0] = p0[0] + p1[0];
-  p[1] = p0[1] + p1[1];
 }
 
 // строит сегмент круга с центром в p0, радиусом R, центральным вектором n, углом A, и добавляет вершины в массив V и индексы в массив I, начиная с vi и ii соответственно
@@ -131,17 +86,6 @@ static inline int seg_insect(double *p0, double *n0, double *p1, double *n1, dou
   *pT = Dt / D;
   *pS = Ds / D;
   return 1;
-}
-
-static inline void BISEC(double *n, double *p0, double *p1, double *p2) {
-  double v0[2];
-  double v1[2];
-  VEC(v0, p0, p1);
-  VEC(v1, p2, p1);
-  NORM(v0);
-  NORM(v1);
-  ADD(n, v0, v1);
-  NORM(n);
 }
 
 static inline double COSSEG(double *p0, double *p1, double *p2) {

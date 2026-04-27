@@ -1,70 +1,16 @@
 #include "line.h"
 #include "block.h"
 #include "draw.h"
+#include "entbuildutil.h"
 #include "entity.h"
-#include "lb.h"
+
 
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
-  struct gllc_line *pl = (struct gllc_line *)ent;
-  if (!pl || !draw)
-    return;
-  int colorint = gllc_entity_color(ent);
-  unsigned char color[4] = {RED(colorint), GREEN(colorint), BLUE(colorint), 255};
-  if (ent->flags & GLLC_ENT_SELECTED) {
-    color[0] = 255;
-    color[1] = 0;
-    color[2] = 0;
-    color[3] = 255;
-  }
-  struct ev p[2];
-  p[0].p[0] = pl->p0[0];
-  p[0].p[1] = pl->p0[1];
-  p[1].p[0] = pl->p1[0];
-  p[1].p[1] = pl->p1[1];
-  struct lb_config lb_conf = {
-      .v = p,
-      .vcnt = 2,
-      .nroundsegs = 8,
-      .closed = 0,
-      .c = color,
-      .off = 0,
-      .mode = LB_MODE_ROUND};
-  if (ent->flags & GLLC_ENT_LW_REAL) {
-    lb_conf.lw = 1.0f;
-    lb_conf.lrealw = gllc_entity_lwidth(ent);
-  } else if (ent->flags & GLLC_ENT_LW_SCREEN) {
-    lb_conf.lw = gllc_entity_lwidth(ent);
-    lb_conf.lrealw = 0.0001f;
-  } else {
-    lb_conf.lw = 1.0f;
-    lb_conf.lrealw = 0.0001f;
-    lb_conf.mode = LB_MODE_MITER;
-  }
-  if (pl->_ent.flags & GLLC_ENT_HOVER) {
-    lb_conf.lw += 2.0f;
-  }
-  int vcnt, icnt;
-  // первый вызов для получения количества вершин и индексов
-  lb_build(&lb_conf, NULL, NULL, &vcnt, &icnt);
-  struct ds_vertex *V = ds_unit_reserve_vertex(pl->u, vcnt);
-  GLuint *I = ds_unit_reserve_index(pl->u, icnt);
-  if (pl->_ent.flags & GLLC_ENT_HOVER) {
-    pl->u->flags |= DS_UNIT_CHESS;
-  } else {
-    pl->u->flags &= ~DS_UNIT_CHESS;
-  }
-  if (pl->_ent.flags & GLLC_ENT_SELECTED) {
-    pl->u->flags |= DS_UNIT_DASH_SCREEN;
-  } else {
-    pl->u->flags &= ~DS_UNIT_DASH_SCREEN;
-  }
-  if (V && I) {
-    lb_build(&lb_conf, V, I, &vcnt, &icnt);
-  }
+  struct gllc_line *line = (struct gllc_line *)ent;
 }
 
 static void destroy(struct gllc_entity *ent) {

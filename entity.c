@@ -652,6 +652,7 @@ static inline void ID_hexify(uint64_t ID, char *ID_hex) {
   ID_hex[13] = ID_hex_tab[(ID >> 8) & 0xF];
   ID_hex[14] = ID_hex_tab[(ID >> 4) & 0xF];
   ID_hex[15] = ID_hex_tab[ID & 0xF];
+  ID_hex[16] = '\0';
 }
 
 void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props, struct gllc_entity_vtable *vtable) {
@@ -944,4 +945,21 @@ int gllc_entity_set_modified(struct gllc_entity *ent, int geometry) {
     gllc_block_put_bq(ent->block, ent);
   }
   return 1;
+}
+
+void gllc_entity_bbox(struct gllc_entity *ent, double scale, double *x0, double *y0, double *x1, double *y1) {
+  if (gllc_entity_geometry_modified(ent)) {
+    ent->vtable->bbox(ent, scale, &ent->bbox[0], &ent->bbox[1], &ent->bbox[2], &ent->bbox[3]);
+  }
+  *x0 = ent->bbox[0];
+  *y0 = ent->bbox[1];
+  *x1 = ent->bbox[2];
+  *y1 = ent->bbox[3];
+}
+
+void gllc_entity_build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
+  if (gllc_entity_geometry_modified(ent)) {
+    ent->vtable->bbox(ent, scale, &ent->bbox[0], &ent->bbox[1], &ent->bbox[2], &ent->bbox[3]);
+  }
+  ent->vtable->build(ent, draw, scale);
 }

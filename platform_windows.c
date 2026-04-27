@@ -124,8 +124,8 @@ static HGLRC init_opengl(HDC real_dc) {
       WGL_DOUBLE_BUFFER_ARB, GL_TRUE, WGL_ACCELERATION_ARB,
       WGL_FULL_ACCELERATION_ARB, WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
       WGL_COLOR_BITS_ARB, 32, WGL_DEPTH_BITS_ARB, 24, WGL_STENCIL_BITS_ARB, 8,
-      // WGL_SAMPLE_BUFFERS_ARB, 1, // включаем MSAA
-      // WGL_SAMPLES_ARB, 2,        // 4x сглаживание
+      WGL_SAMPLE_BUFFERS_ARB, 1, // включаем MSAA
+      WGL_SAMPLES_ARB, 2,        // 4x сглаживание
       0};
 
   int pixel_format;

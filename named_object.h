@@ -21,6 +21,7 @@ enum {
 struct gllc_nobject {
   struct gllc_object _obj;
   uint64_t ID;
+  char ID_hex[17];
   char name[32];
   char descr[64];
   struct gllc_drawing *drawing;
@@ -33,10 +34,12 @@ struct gllc_nobject {
   int64_t int1;
   int64_t int2;
   int64_t int3;
+  int64_t int4;
   double float0;
   double float1;
   double float2;
   double float3;
+  double float4;
   struct gllc_nobject *prev;
   struct gllc_nobject *next;
 };

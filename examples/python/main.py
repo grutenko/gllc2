@@ -6,6 +6,7 @@ from os.path import dirname
 import ezdxf
 from ezdxf.colors import aci2rgb
 import time
+import math
 
 app = wx.App(0)
 f = wx.Frame(None)
@@ -66,7 +67,6 @@ def get_color_int(e, doc):
     return (r << 16) | (g << 8) | b
 
 
-
 total_points = 0
 # ---------- ENTITIES ----------
 for entity in msp:
@@ -102,10 +102,20 @@ for entity in msp:
         lc.lcPlineEnd(h)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
 
+    elif entity.dxftype() == "ARC":
+        center = entity.dxf.center
+        radius = entity.dxf.radius
+        start_angle = entity.dxf.start_angle * math.pi / 180
+        end_angle = entity.dxf.end_angle * math.pi / 180
+        arc_angle = math.fabs(start_angle - end_angle)
+        print(start_angle, arc_angle)
+        h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, start_angle, arc_angle)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+
 print("TOTAL POINTS:", total_points)
 
 # генерация полилиний
-#for i in range(N - 1):
+# for i in range(N - 1):
 #    for j in range(M - 1):
 #        i0 = (i * M + j) * 2
 #        i1 = ((i + 1) * M + j) * 2

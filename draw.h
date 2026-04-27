@@ -70,6 +70,9 @@ struct ds_draw {
 void ds_attrib_ptr();
 struct ds_unit *ds_unit_clone(struct ds_unit *u);
 struct ds_unit *ds_unit_create(struct ds_draw *draw);
+void ds_unit_reset(struct ds_unit *u);
+int ds_unit_vcnt(struct ds_unit *u);
+int ds_unit_icnt(struct ds_unit *u);
 struct ds_vertex *ds_unit_reserve_vertex(struct ds_unit *unit, GLuint cnt);
 GLuint *ds_unit_reserve_index(struct ds_unit *unit, GLuint cnt);
 void ds_unit_destroy(struct ds_unit *unit);

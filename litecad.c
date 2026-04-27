@@ -1,9 +1,9 @@
 #include "litecad.h"
 #include "block.h"
+#include "drawing.h"
 #include "event.h"
 #include "object.h"
 #include "polyline.h"
-#include "drawing.h"
 #include "window.h"
 
 void LCAPI lcEventSetProc(int EventType, F_LCEVENT pFunc, int Prm1, void *Prm2) {
@@ -498,8 +498,8 @@ void *LCAPI lcBlockAddXline2P(void *hBlock, double X, double Y, double X2,
 }
 void *LCAPI lcBlockAddLine(void *hBlock, double X1, double Y1, double X2,
                            double Y2) {
-                            double p0[2] = {X1, Y1};
-                            double p1[2] = {X2, Y2};
+  double p0[2] = {X1, Y1};
+  double p1[2] = {X2, Y2};
   return gllc_block_add_line((struct gllc_block *)hBlock, p0, p1);
 }
 void *LCAPI lcBlockAddLineDir(void *hBlock, double X, double Y, double Angle,
@@ -529,6 +529,7 @@ void *LCAPI lcBlockAddCircle(void *hBlock, double X, double Y, double Radius,
 }
 void *LCAPI lcBlockAddArc(void *hBlock, double X, double Y, double Radius,
                           double StartAngle, double ArcAngle) {
+  return gllc_block_add_arc((struct gllc_block *)hBlock, X, Y, Radius, StartAngle, ArcAngle);
 }
 void *LCAPI lcBlockAddArc3P(void *hBlock, double X1, double Y1, double X2,
                             double Y2, double X3, double Y3) {

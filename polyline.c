@@ -1,73 +1,32 @@
 #include "polyline.h"
 #include "draw.h"
+#include "entbuildutil.h"
 #include "entity.h"
-#include "lb.h"
+#include "linalg.h"
 
 #include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static inline void VEC(double out[2], const double a[2], const double b[2]) {
-  out[0] = b[0] - a[0];
-  out[1] = b[1] - a[1];
-}
-
-static inline double LEN(const double v[2]) {
-  return sqrt(v[0] * v[0] + v[1] * v[1]);
-}
-
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
+  int cnt;
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
-  if (!pl || !draw)
-    return;
-
-  int colorint = gllc_entity_color(ent);
-  unsigned char color[4] = {RED(colorint), GREEN(colorint), BLUE(colorint), 255};
-  double p0[2];
-  double p1[2];
-  double v0[2];
-  p0[0] = pl->pts[pl->cnt - 1].p[0];
-  p0[1] = pl->pts[pl->cnt - 1].p[1];
-  p1[0] = pl->pts[0].p[0];
-  p1[1] = pl->pts[0].p[1];
-  VEC(v0, p0, p1);
-  int cnt = LEN(v0) < 1e-8 ? pl->cnt - 1 : pl->cnt;
-  struct lb_config lb_conf = {
-      .v = pl->pts,
-      .vcnt = cnt,
-      .nroundsegs = 8,
-      .closed = (ent->flags & GLLC_ENT_CLOSED) != 0,
-      .c = color,
-      .mode = LB_MODE_COMPLEX,
-      .off = 0,
-  };
-  if (ent->flags & GLLC_ENT_LW_REAL) {
-    lb_conf.lw = 1.0f;
-    lb_conf.lrealw = gllc_entity_lwidth(ent);
-  } else if (ent->flags & GLLC_ENT_LW_SCREEN) {
-    lb_conf.lw = gllc_entity_lwidth(ent);
-    lb_conf.lrealw = 0.0001f;
+  ds_unit_reset(pl->u);
+  if (ent->flags & GLLC_ENT_CLOSED) {
+    double v0[2];
+    VEC(v0, pl->pts[pl->cnt - 1].p, pl->pts[0].p);
+    if (LEN(v0) < 1e-8) {
+      cnt = pl->cnt - 1;
+    } else {
+      cnt = pl->cnt;
+    }
+    if (ent->flags & GLLC_ENT_FILLED) {
+      build_filltess(ent, pl->u, pl->pts, cnt);
+    }
   } else {
-    lb_conf.lw = 1.0f;
-    lb_conf.lrealw = 0.0001f;
+    cnt = pl->cnt;
   }
-  if (pl->_ent.flags & GLLC_ENT_HOVER) {
-    lb_conf.lw += 3.0f;
-  }
-  int vcnt, icnt;
-  // первый вызов для получения количества вершин и индексов
-  lb_build(&lb_conf, NULL, NULL, &vcnt, &icnt);
-  struct ds_vertex *V = ds_unit_reserve_vertex(pl->u, vcnt);
-  GLuint *I = ds_unit_reserve_index(pl->u, icnt);
-  if (pl->_ent.flags & GLLC_ENT_HOVER) {
-    pl->u->flags = DS_UNIT_CHESS;
-  } else {
-    pl->u->flags = 0;
-  }
-  if (V && I) {
-    lb_build(&lb_conf, V, I, &vcnt, &icnt);
-  }
+  build_contur(ent, pl->u, pl->pts, cnt);
 }
 
 static void destroy(struct gllc_entity *ent) {
@@ -88,56 +47,54 @@ static int vertices(struct gllc_entity *ent, double scale, struct ev *ver) {
 }
 
 static int selected(struct gllc_entity *ent, int mode, double scale, double x0, double y0, double x1, double y1) {
-  struct gllc_line *l = (struct gllc_line *)ent;
-  double D, T, S, d[2];
-  double n1[2], v1[2];
-  double n0[2];
-  double v0[2];
-  double len;
+  struct gllc_polyline *pl = (struct gllc_polyline *)ent;
   double bx0, by0, bx1, by1;
   ent->vtable->bbox(ent, scale, &bx0, &by0, &bx1, &by1);
   int inside = (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
   if (mode == 0) {
     return inside;
-  }/*  else {
-   if (inside)
+  } else {
+    if (inside)
       return 1;
-    for(int i = 0; i < cnt; i++) {
-      
-    }
-    n0[0] = l->p1[0] - l->p0[0];
-    n0[1] = l->p1[1] - l->p0[1];
-    v0[0] = n0[0];
-    v0[1] = n0[1];
-    NORM(n0);
-    len = LEN(v0);
-    // Ищем сторону прямоугольника, которая пересекает линию, если находим - линия частично выделена
-#define TEST(_x0, _y0, _x1, _y1)                        \
-  do {                                                  \
-    n1[0] = _x1 - _x0;                                  \
-    n1[1] = _y1 - _y0;                                  \
-    v1[0] = n1[0];                                      \
-    v1[1] = n1[1];                                      \
-    NORM(n1);                                           \
-    d[0] = _x0 - l->p0[0];                              \
-    d[1] = _y0 - l->p0[1];                              \
-    D = -n0[0] * n1[1] + n0[1] * n1[0];                 \
-    if (D <= 1e-8)                                      \
-      continue;                                         \
-    T = (-n1[1] * d[0] + n1[0] * d[1]) / D;             \
-    S = (n0[0] * d[1] - n0[1] * d[0]) / D;              \
-    if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= len) { \
-      return 1;                                         \
-    }                                                   \
+    for (int i = 0; i < pl->cnt; i++) {
+      int ni;
+      if (ent->flags & GLLC_ENT_CLOSED) {
+        ni = (i + 1) % pl->cnt;
+      } else if (i < pl->cnt - 1) {
+        ni = i + 1;
+      } else {
+        break;
+      }
+#define TEST(_x0, _y0, _x1, _y1)                            \
+  do {                                                      \
+    double T, S;                                            \
+    double n0[2], n1[2], v0[2], v1[2];                      \
+    double p0[2], p1[2], p2[2], p3[2];                      \
+    p0[0] = _x0;                                            \
+    p0[1] = _y0;                                            \
+    p1[0] = _x1;                                            \
+    p1[1] = _y1;                                            \
+    p2[0] = pl->pts[i].p[0];                                \
+    p2[1] = pl->pts[i].p[0];                                \
+    p3[0] = pl->pts[ni].p[0];                               \
+    p3[1] = pl->pts[ni].p[0];                               \
+    VEC(v0, p0, p1);                                        \
+    NORMTO(v0, n0);                                         \
+    VEC(v1, p2, p3);                                        \
+    NORMTO(v1, n1);                                         \
+    RAYINSECT(p0, n0, p2, n1, &T, &S);                      \
+    if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= LEN(v0)) { \
+      return 1;                                             \
+    }                                                       \
   } while (0)
 
-    TEST(x0, y0, x1, y0);
-    TEST(x1, y0, x1, y1);
-    TEST(x1, y1, x0, y1);
-    TEST(x0, y1, x0, y0);
+      TEST(x0, y0, x1, y0);
+      TEST(x1, y0, x1, y1);
+      TEST(x1, y1, x0, y1);
+      TEST(x0, y1, x0, y0);
+    }
   }
-*/
-  return 1;
+  return 0;
 }
 
 static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
@@ -157,20 +114,6 @@ static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
   memcpy(npl->pts, pl->pts, pl->cnt * sizeof(struct ev));
   *clone = (struct gllc_entity *)npl;
   return 1;
-}
-
-static inline void NORM(double v[2]) {
-  double l = LEN(v);
-  if (l > 0.0) {
-    v[0] /= l;
-    v[1] /= l;
-  }
-}
-
-static inline void PERP(double v[2]) {
-  double t = v[0];
-  v[0] = -v[1];
-  v[1] = t;
 }
 
 static int picked(struct gllc_entity *ent, double scale, double x, double y, double *dis) {
@@ -261,19 +204,16 @@ static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymi
 
 static int len(struct gllc_entity *ent, double *len) {
   struct gllc_polyline *pline = (struct gllc_polyline *)ent;
+  double v[2];
   double l = 0;
   int i;
   for (i = 0; i < pline->cnt - 1; i++) {
-    double dx, dy;
-    dx = pline->pts[i + 1].p[0] - pline->pts[i].p[0];
-    dy = pline->pts[i + 1].p[1] - pline->pts[i].p[1];
-    l += sqrt(dx * dx + dy * dy);
+    VEC(v, pline->pts[i].p, pline->pts[i + 1].p);
+    l += LEN(v);
   }
   if (ent->flags & GLLC_ENT_CLOSED) {
-    double dx, dy;
-    dx = pline->pts[0].p[0] - pline->pts[pline->cnt - 1].p[0];
-    dy = pline->pts[0].p[1] - pline->pts[pline->cnt - 1].p[1];
-    l += sqrt(dx * dx + dy * dy);
+    VEC(v, pline->pts[pline->cnt - 1].p, pline->pts[0].p);
+    l += LEN(v);
   }
   *len = l;
   return 1;
@@ -323,4 +263,99 @@ void gllc_pline_add_ver(struct gllc_polyline *pline, double x, double y) {
   pline->pts[pline->cnt].p[1] = y;
   pline->cnt++;
   gllc_entity_set_modified((struct gllc_entity *)pline, 1);
+}
+
+void gllc_pline_end(struct gllc_polyline *pline) {
+}
+
+int gllc_pline_fit_type(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_nvers(struct gllc_polyline *pline) {
+  return pline->cnt;
+}
+
+float gllc_pline_width(struct gllc_polyline *pline) {
+  return 0.0f;
+}
+
+int gllc_pline_width_bool(struct gllc_polyline *pline) {
+  return 0;
+}
+
+float gllc_pline_radius(struct gllc_polyline *pline) {
+  return 0.0f;
+}
+
+int gllc_pline_radius_bool(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_set_width(struct gllc_polyline *pline, float width) {
+  return 1;
+}
+
+int gllc_pline_set_width_bool(struct gllc_polyline *pline, int width) {
+  return 1;
+}
+
+int gllc_pline_set_radius(struct gllc_polyline *pline, float radius) {
+  return 0;
+}
+
+int gllc_pline_set_radius_bool(struct gllc_polyline *pline, int radius) {
+  return 0;
+}
+
+int gllc_pline_chamfer(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_set_chamfer(struct gllc_polyline *pline, int chamfer) {
+  return 0;
+}
+
+double gllc_pline_area(struct gllc_polyline *pline) {
+  return 0.0f;
+}
+
+int gllc_pline_cw(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_ccw(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_hasang0(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_set_hasang0(struct gllc_polyline *pline, int hasang2) {
+  return 0;
+}
+
+int gllc_pline_hasang2(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_set_hasang2(struct gllc_polyline *pline, int hasang2) {
+  return 0;
+}
+
+double gllc_pline_ang0(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_set_ang0(struct gllc_polyline *pline, double ang2) {
+  return 0;
+}
+
+double gllc_pline_ang2(struct gllc_polyline *pline) {
+  return 0;
+}
+
+int gllc_pline_set_ang2(struct gllc_polyline *pline, double ang2) {
+  return 0;
 }

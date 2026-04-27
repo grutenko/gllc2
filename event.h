@@ -37,5 +37,6 @@ typedef void (*gllc_event_proc)(struct gllc_event *evt);
 void gllc_event_init(struct gllc_event *event);
 void gllc_event_set_proc(int event_type, gllc_event_proc proc, int user_1, void *user_2);
 int gllc_event_send(int event_type, struct gllc_event *evt);
+void gllc_events_clear();
 
 #endif

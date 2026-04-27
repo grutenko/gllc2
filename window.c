@@ -458,7 +458,6 @@ static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data) {
   w->cam.dy += ((w->UI.height - w->UI.my) - (int)(w->UI.height / 2)) * (w->cam.scale - old_scale);
 
   update_camera(w);
-  gllc_block_set_scale(w->block, w->cam.scale);
   nw_dirty(wn);
 }
 
@@ -628,6 +627,7 @@ void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *x
 
 int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block) {
   wnd->block = block;
+  gllc_block_set_window(block, wnd);
   nw_dirty(&wnd->nw);
   return 1;
 }
@@ -646,4 +646,13 @@ int gllc_window_destroy(struct gllc_window *w) {
 int gllc_window_redraw(struct gllc_window *wnd) {
   nw_dirty(&wnd->nw);
   return 1;
+}
+
+void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, double *x1, double *y1) {
+  gllc_window_wnd_to_drw(wnd, 0.0f, 0.0f, x0, y0);
+  gllc_window_wnd_to_drw(wnd, wnd->UI.width, wnd->UI.height, x1, y1);
+  if (*x0 > *x1)
+    _fswap(x0, x1);
+  if (*y0 > *y1)
+    _fswap(x0, x1);
 }

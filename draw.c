@@ -36,6 +36,21 @@ struct ds_unit *ds_unit_create(struct ds_draw *draw) {
   return unit;
 }
 
+void ds_unit_reset(struct ds_unit *u) {
+  u->dirty = 1;
+  u->geometry_dirty = 1;
+  u->I_cnt = 0;
+  u->V_cnt = 0;
+}
+
+int ds_unit_vcnt(struct ds_unit *u) {
+  return u->V_cnt;
+}
+
+int ds_unit_icnt(struct ds_unit *u) {
+  return u->I_cnt;
+}
+
 struct ds_unit *ds_unit_clone(struct ds_unit *u) {
   struct ds_unit *nu = ds_unit_create(u->draw);
   if (!nu)
@@ -101,6 +116,7 @@ static void remove_unit(struct ds_draw *draw, struct ds_unit *unit) {
   }
   draw->unit_cnt--;
   draw->dirty = 1;
+  draw->geometry_dirty = 1;
 }
 
 void ds_unit_destroy(struct ds_unit *unit) {
@@ -343,4 +359,3 @@ void ds_gpu_clear(struct ds_gpu *gpu) {
     gpu->I_data_capacity = 0;
   }
 }
-

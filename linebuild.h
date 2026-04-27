@@ -1,5 +1,5 @@
-#ifndef line_tess_h
-#define line_tess_h
+#ifndef linebuild_h
+#define linebuild_h
 
 #include "entity_vertex.h"
 #include "glad.h"

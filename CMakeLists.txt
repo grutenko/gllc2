@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.28)
 
 project(gllc C)
 
+set(CMAKE_DEBUG_POSTFIX d)
+
 set(SOURCES
   glad.c
   alloc.c
@@ -13,16 +15,18 @@ set(SOURCES
   draw.c
   drawing.c
   entity.c
-  lb.c
+  linebuild.c
   object.c
   named_object.c
   platform_windows.c
   point.c
   polyline.c
   rect.c
-  sg.c
+  arc.c
+  linalg.c
+  entbuildutil.c
+  sparsegrid.c
   stb_truetype.c
-  tess.c
   ui_cursor.c
   ui_grid.c
   ui_selection.c

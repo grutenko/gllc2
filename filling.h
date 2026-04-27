@@ -13,6 +13,6 @@ struct gllc_filling {
 };
 
 struct gllc_filling *gllc_filling_create(struct gllc_drawing *drawing);
-int gllc_filline_add_line(struct gllc_filling *filling, int iline, double dist, double angle, double w);
+int gllc_filling_add_line(struct gllc_filling *filling, int iline, double dist, double angle, double w);
 
 #endif

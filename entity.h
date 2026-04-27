@@ -64,8 +64,9 @@ struct gllc_entity {
   int order;
   uint64_t ID;
   uint64_t key;
-  char ID_hex[16];
+  char ID_hex[17];
   uint64_t unit_ID;
+  double bbox[4];
   struct gllc_entity_props props;
   struct gllc_entity_vtable *vtable;
   struct gllc_block *block;
@@ -137,5 +138,7 @@ int gllc_entity_modified(struct gllc_entity *ent);
 int gllc_entity_geometry_modified(struct gllc_entity *ent);
 int gllc_entity_set_modified(struct gllc_entity *ent, int geometry);
 void gllc_entity_destroy(struct gllc_entity *ent);
+void gllc_entity_bbox(struct gllc_entity *ent, double scale, double *x0, double *y0, double *x1, double *y1);
+void gllc_entity_build(struct gllc_entity *ent, struct ds_draw *draw, double scale);
 
 #endif
