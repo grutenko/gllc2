@@ -1,11 +1,27 @@
 #include "arc.h"
+#include "entbuildutil.h"
+#include "linalg.h"
 
 #include <math.h>
 #include <stdlib.h>
 
-#define SEGCNT 32
+#define SEGCNT 64
+
+#define ARC(o) ((struct gllc_arc *)(o))
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
+  int segcnt = SEGCNT + 1 * (int)(ARC(ent)->arc_angle / M_PI);
+  struct ev pts[segcnt];
+  double n0[2] = {1.0f, 0.0f};
+  ROT(n0, ARC(ent)->start_angle);
+  ROT(n0, -ARC(ent)->arc_angle / 2);
+  double step = ARC(ent)->arc_angle / (segcnt - 1);
+  for (int i = 0; i <= segcnt; i++) {
+    ADDSCALETO((double[]){ARC(ent)->x, ARC(ent)->y}, n0, ARC(ent)->radius, pts[i].p);
+    ROT(n0, step);
+  }
+  ds_unit_reset(ARC(ent)->u);
+  build_contur(ent, ARC(ent)->u, pts, segcnt);
 }
 
 static void destroy(struct gllc_entity *ent) {

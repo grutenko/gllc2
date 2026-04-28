@@ -609,12 +609,17 @@ class DarwinLibraryLoader(LibraryLoader):
 
     name_formats = [
         "lib%s.dylib",
+        "lib%sd.dylib",
         "lib%s.so",
+        "lib%sd.so",
         "lib%s.bundle",
         "%s.dylib",
+        "%sd.dylib",
         "%s.so",
+        "%sd.so",
         "%s.bundle",
         "%s",
+        "%sd",
     ]
 
     class Lookup(LibraryLoader.Lookup):
@@ -685,7 +690,7 @@ class PosixLibraryLoader(LibraryLoader):
 
     _include = re.compile(r"^\s*include\s+(?P<pattern>.*)")
 
-    name_formats = ["lib%s.so", "%s.so", "%s"]
+    name_formats = ["lib%s.so", "lib%sd.so", "%s.so", "%sd.so", "%s"]
 
     class _Directories(dict):
         """Deal with directories"""
@@ -824,7 +829,7 @@ class PosixLibraryLoader(LibraryLoader):
 class WindowsLibraryLoader(LibraryLoader):
     """Library loader for Microsoft Windows"""
 
-    name_formats = ["%s.dll", "lib%s.dll", "%slib.dll", "%s"]
+    name_formats = ["%s.dll", "lib%s.dll", "lib%sd.dll", "%slib.dll", "%s"]
 
     class Lookup(LibraryLoader.Lookup):
         """Lookup class for Windows libraries..."""
@@ -867,8 +872,8 @@ del loaderclass
 
 add_library_search_dirs(
     [
-        dirname(__file__),
-        dirname(__file__) + "/../../out/build/debug",
+        #dirname(__file__),
+        #dirname(__file__) + "/../../out/build/debug",
         dirname(__file__) + "/../../out/build/release",
     ]
 )

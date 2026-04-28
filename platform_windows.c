@@ -398,3 +398,7 @@ void nw_get_cursor(struct nw *w, int *x, int *y) {
 
 void nw_focus(struct nw *nw) {
 }
+
+void nw_cursor_set_pos(int x, int y) {
+  SetCursorPos(x, y);
+}

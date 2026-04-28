@@ -37,24 +37,6 @@ static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
   return 1;
 }
 
-static inline double LEN(const double v[2]) {
-  return sqrt(v[0] * v[0] + v[1] * v[1]);
-}
-
-static inline void NORM(double v[2]) {
-  double l = LEN(v);
-  if (l > 0.0) {
-    v[0] /= l;
-    v[1] /= l;
-  }
-}
-
-static inline void PERP(double v[2]) {
-  double t = v[0];
-  v[0] = -v[1];
-  v[1] = t;
-}
-
 static int picked(struct gllc_entity *ent, double scale, double x, double y, double *dis) {
   return 0;
 }

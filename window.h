@@ -30,6 +30,8 @@ struct gllc_window {
   double dx;
   double dy;
   double scale;
+  double mx0;
+  double my0;
   mat4 mview;
   mat4 mproj;
   mat4 mmodel;
@@ -46,7 +48,10 @@ struct gllc_window {
   int menter;
   int griduse;
   int drag;
+  int selectuse;
+  int dtime;
   float clearcolor[4];
+  struct gllc_entity *ent;
   struct ui_grid grid;
   struct ui_cursor cursor;
   struct ui_selection sel;

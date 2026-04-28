@@ -38,5 +38,6 @@ void nw_swap_buffers(struct nw *w);
 void nw_dirty(struct nw *w);
 void nw_show_cursor(int show);
 void nw_focus(struct nw *nw);
+void nw_cursor_set_pos(int x, int y);
 
 #endif

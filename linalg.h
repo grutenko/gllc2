@@ -3,6 +3,8 @@
 
 #include <math.h>
 
+#define M_PI 3.14159265358979323846
+
 double LEN(const double v[static 2]);
 void VEC(double out[static 2], const double a[static 2], const double b[static 2]);
 void NORM(double v[static 2]);

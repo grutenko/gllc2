@@ -526,6 +526,7 @@ void *LCAPI lcBlockAddRect2(void *hBlock, double Left, double Bottom,
 }
 void *LCAPI lcBlockAddCircle(void *hBlock, double X, double Y, double Radius,
                              int bFilled) {
+  return gllc_block_add_circle((struct gllc_block *)hBlock, X, Y, Radius, bFilled);
 }
 void *LCAPI lcBlockAddArc(void *hBlock, double X, double Y, double Radius,
                           double StartAngle, double ArcAngle) {

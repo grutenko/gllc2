@@ -12,10 +12,22 @@
 #include "ui_selection.h"
 #include "vert.h"
 
-#include <stdio.h>
 #include <string.h>
 
 #define WND(obj) ((struct gllc_window *)obj)
+
+#define COLORI2F(C, CP)                 \
+  do {                                  \
+    (CP)[0] = (float)((C) >> 16) / 255; \
+    (CP)[1] = (float)((C) >> 8) / 255;  \
+    (CP)[2] = (float)(C) / 255;         \
+    (CP)[3] = 1.0f;                     \
+  } while (0)
+
+#define COLORF2I(CP, C)                                                                      \
+  do {                                                                                       \
+    (C) = ((int)((CP)[0] * 255) << 16) | ((int)((CP)[1] * 255) << 8) | (int)((CP)[2] * 255); \
+  } while (0)
 
 static void _destroy(struct gllc_object *obj) {}
 
@@ -89,7 +101,7 @@ static union gllc_variant _wnd_hasfocus_GET(struct gllc_object *obj, int prop, i
 static union gllc_variant _wnd_pixelsize_GET(struct gllc_object *obj, int prop, int type) {
   union gllc_variant v;
   v.float_ = WND(obj)->scale;
-  return (union gllc_variant)0;
+  return v;
 }
 
 static inline void update_camera(struct gllc_window *w);
@@ -105,14 +117,19 @@ static int _wnd_pixelsize_SET(struct gllc_object *obj, int prop, int type, union
 }
 
 static union gllc_variant _wnd_select_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.bool_ = WND(obj)->selectuse;
   return (union gllc_variant)0;
 }
 
 static int _wnd_select_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value) {
-  return 0;
+  WND(obj)->selectuse = !!value.bool_;
+  return 1;
 }
 
 static union gllc_variant _wnd_dtime_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.int_ = WND(obj)->dtime;
   return (union gllc_variant)0;
 }
 
@@ -502,86 +519,136 @@ static union gllc_variant _wnd_cury_unit_GET(struct gllc_object *obj, int prop, 
 
 /* VIEW BOUNDS */
 static union gllc_variant _wnd_xmin_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = x0;
+  return v;
 }
 
 static union gllc_variant _wnd_ymin_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = y0;
+  return v;
 }
 
 static union gllc_variant _wnd_xmax_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = x1;
+  return v;
 }
 
 static union gllc_variant _wnd_ymax_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = y1;
+  return v;
 }
 
 /* VIEW CENTER */
 static union gllc_variant _wnd_xcen_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = x0 + (x1 - x0) * 0.5f;
+  return v;
 }
 
 static union gllc_variant _wnd_ycen_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = y0 + (y1 - y0) * 0.5f;
+  return v;
 }
 
 /* VIEW SIZE */
 static union gllc_variant _wnd_dx_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = x1 - x0;
+  return v;
 }
 
 static union gllc_variant _wnd_dy_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  double x0, y0, x1, y1;
+  gllc_window_get_viewport(WND(obj), &x0, &y0, &x1, &y1);
+  v.float_ = y1 - y0;
+  return v;
 }
 
 /* GRID */
 static union gllc_variant _wnd_gridsnap_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  v.bool_ = WND(obj)->grid.snap;
+  return v;
 }
 
 static int _wnd_gridsnap_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.snap = !!v.bool_;
   return 1;
 }
 
 static union gllc_variant _wnd_gridshow_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  v.bool_ = WND(obj)->griduse;
+  return v;
 }
 
 static int _wnd_gridshow_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->griduse = !!v.bool_;
   return 1;
 }
 
 static union gllc_variant _wnd_griddx_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  v.float_ = WND(obj)->grid.gap_x;
+  return v;
 }
 
 static int _wnd_griddx_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.gap_x = v.float_;
   return 1;
 }
 
 static union gllc_variant _wnd_griddy_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  v.float_ = WND(obj)->grid.gap_y;
+  return v;
 }
 
 static int _wnd_griddy_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.gap_x = v.float_;
   return 1;
 }
 
 /* GRID COLORS */
 static union gllc_variant _wnd_gridcolor_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  COLORF2I(WND(obj)->grid.color, v.int_);
+  return v;
 }
 
 static int _wnd_gridcolor_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  COLORI2F(v.int_, WND(obj)->grid.color);
   return 1;
 }
 
 static union gllc_variant _wnd_gridcolor2_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+  union gllc_variant v;
+  COLORF2I(WND(obj)->grid.colorbold, v.int_);
+  return v;
 }
 
 static int _wnd_gridcolor2_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  COLORI2F(v.int_, WND(obj)->grid.colorbold);
   return 1;
 }
 
@@ -591,6 +658,78 @@ static union gllc_variant _wnd_ortho_GET(struct gllc_object *obj, int prop, int 
 }
 
 static int _wnd_ortho_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  return 1;
+}
+
+/* GRIDX0 */
+static union gllc_variant _wnd_gridx0_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.float_ = WND(obj)->grid.offset_x;
+  return v;
+}
+
+static int _wnd_gridx0_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.offset_x = v.float_;
+  return 1;
+}
+
+/* GRIDY0 */
+static union gllc_variant _wnd_gridy0_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.float_ = WND(obj)->grid.offset_x;
+  return v;
+}
+
+static int _wnd_gridy0_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.offset_y = v.float_;
+  return 1;
+}
+
+/* GRIDBOLDX */
+static union gllc_variant _wnd_gridboldx_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.int_ = WND(obj)->grid.boldx;
+  return v;
+}
+
+static int _wnd_gridboldx_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.boldx = v.int_;
+  return 1;
+}
+
+/* GRIDBOLDY */
+static union gllc_variant _wnd_gridboldy_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.int_ = WND(obj)->grid.boldy;
+  return v;
+}
+
+static int _wnd_gridboldy_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.boldy = v.int_;
+  return 1;
+}
+
+/* GRIDDOTTED */
+static union gllc_variant _wnd_griddotted_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.bool_ = WND(obj)->grid.dotted;
+  return v;
+}
+
+static int _wnd_griddotted_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.dotted = !!v.bool_;
+  return 1;
+}
+
+/* GRIDDOTTED2 */
+static union gllc_variant _wnd_griddotted2_GET(struct gllc_object *obj, int prop, int type) {
+  union gllc_variant v;
+  v.bool_ = WND(obj)->grid.dottedbold;
+  return v;
+}
+
+static int _wnd_griddotted2_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
+  WND(obj)->grid.dottedbold = !!v.bool_;
   return 1;
 }
 
@@ -664,6 +803,12 @@ struct gllc_prop _props[] = {
     P_FLOAT(LC_PROP_WND_GRIDDY, _wnd_griddy_GET, _wnd_griddy_SET),
     P_INT(LC_PROP_WND_GRIDCOLOR, _wnd_gridcolor_GET, _wnd_gridcolor_SET),
     P_INT(LC_PROP_WND_GRIDCOLOR2, _wnd_gridcolor2_GET, _wnd_gridcolor2_SET),
+    P_FLOAT(LC_PROP_WND_GRIDX0, _wnd_gridx0_GET, _wnd_gridx0_SET),
+    P_FLOAT(LC_PROP_WND_GRIDY0, _wnd_gridy0_GET, _wnd_gridy0_SET),
+    P_INT(LC_PROP_WND_GRIDBOLDX, _wnd_gridboldx_GET, _wnd_gridboldx_SET),
+    P_INT(LC_PROP_WND_GRIDBOLDY, _wnd_gridboldy_GET, _wnd_gridboldy_SET),
+    P_BOOL(LC_PROP_WND_GRIDDOTTED, _wnd_griddotted_GET, _wnd_griddotted_SET),
+    P_BOOL(LC_PROP_WND_GRIDDOTTED2, _wnd_griddotted2_GET, _wnd_griddotted2_SET),
     P_END};
 static struct gllc_prop *_all_props[] = {_props, NULL};
 static struct gllc_object_vtable _vtable = {
@@ -674,6 +819,17 @@ static inline void screen_to_world(struct gllc_window *w, double x, double y, do
   double _h = (double)w->height;
   *xd = (x - (_w / 2)) * w->scale - w->dx;
   *yd = ((_h - y) - (_h / 2)) * w->scale - w->dy;
+}
+
+static inline void world_to_screen(struct gllc_window *w, double x, double y, int *sx, int *sy) {
+  double _w = (double)w->width;
+  double _h = (double)w->height;
+
+  double xs = ((x + w->dx) / w->scale) + (_w / 2);
+  double ys = _h - (((y + w->dy) / w->scale) + (_h / 2));
+
+  *sx = (int)xs;
+  *sy = (int)ys;
 }
 
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
@@ -702,7 +858,8 @@ static void draw(struct gllc_window *wnd) {
   }
   if (wnd->mpressed && wnd->mbtn == 1) {
     double sx0, sy0, sx1, sy1;
-    screen_to_world(wnd, wnd->mpressx, wnd->mpressy, &sx0, &sy0);
+    sx0 = wnd->mx0;
+    sy0 = wnd->my0;
     screen_to_world(wnd, wnd->curx, wnd->cury, &sx1, &sy1);
     ui_selection_draw(&wnd->sel, sx0, sy0, sx1, sy1);
   }
@@ -770,6 +927,7 @@ static void send_mouse_event(struct gllc_window *w, int x, int y, double wx, dou
 static void on_mouse_move(struct nw *w, int x, int y, void *data) {
   double wx, wy;
   screen_to_world(WND(data), (double)x, (double)y, &wx, &wy);
+
   send_mouse_event(WND(data), x, y, wx, wy, 0, 0);
   if (WND(data)->mpressed) {
     if (WND(data)->drag) {
@@ -779,7 +937,8 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
     }
     if (WND(data)->mbtn == 1) {
       double x0, y0, x1, y1;
-      screen_to_world(WND(data), WND(data)->mpressx, WND(data)->mpressy, &x0, &y0);
+      x0 = WND(data)->mx0;
+      y0 = WND(data)->my0;
       x1 = wx;
       y1 = wy;
       int invert = 0;
@@ -802,6 +961,15 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
       gllc_block_update(WND(data)->block);
     }
   }
+  if (!WND(data)->drag) {
+    double x0, y0, x1, y1;
+    gllc_window_get_viewport(WND(data), &x0, &y0, &x1, &y1);
+    double sx, sy;
+    if (ui_grid_snap(&WND(data)->grid, WND(data)->scale, x0, y0, x1, y1, &sx, &sy)) {
+      world_to_screen(WND(data), sx, sy, &x, &y);
+      nw_cursor_set_pos(x, y);
+    }
+  }
   WND(data)->curx = x;
   WND(data)->cury = y;
   nw_dirty(w);
@@ -820,6 +988,8 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
     } else if (mode == 1) {
       wnd->mpressx = x;
       wnd->mpressy = y;
+      wnd->mx0 = wx;
+      wnd->my0 = wy;
     }
   } else {
     if (mode == 3) {
@@ -829,7 +999,8 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
       if (mode == 1) {
         double x0, y0, x1, y1;
         int invert = 0;
-        screen_to_world(WND(data), WND(data)->mpressx, WND(data)->mpressy, &x0, &y0);
+        x0 = WND(data)->mx0;
+        y0 = WND(data)->my0;
         screen_to_world(WND(data), (double)x, (double)y, &x1, &y1);
         if (x0 > x1) {
           invert = 1;

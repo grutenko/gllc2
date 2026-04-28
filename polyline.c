@@ -47,10 +47,12 @@ static int vertices(struct gllc_entity *ent, double scale, struct ev *ver) {
   return pl->cnt;
 }
 
+static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymin, double *xmax, double *ymax);
+
 static int selected(struct gllc_entity *ent, int mode, double scale, double x0, double y0, double x1, double y1) {
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
   double bx0, by0, bx1, by1;
-  ent->vtable->bbox(ent, scale, &bx0, &by0, &bx1, &by1);
+  bbox(ent, scale, &bx0, &by0, &bx1, &by1);
   int inside = (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
   if (mode == 0) {
     return inside;
@@ -266,6 +268,13 @@ void gllc_pline_end(struct gllc_polyline *pline) {
       pline->cnt--;
     } else {
       i++;
+    }
+  }
+  if (pline->_ent.flags & GLLC_ENT_CLOSED) {
+    double v0[2];
+    VEC(v0, pline->pts[pline->cnt - 1].p, pline->pts[0].p);
+    if (LEN(v0) > 1e-8) {
+      gllc_pline_add_ver(pline, pline->pts[0].p[0], pline->pts[0].p[1]);
     }
   }
 }

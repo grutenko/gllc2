@@ -17,6 +17,15 @@ void ui_grid_init(struct ui_grid *grid) {
   grid->color[1] = 0.3f;
   grid->color[2] = 0.3f;
   grid->color[3] = 1.0f;
+  grid->colorbold[0] = 0.3f;
+  grid->colorbold[1] = 0.3f;
+  grid->colorbold[2] = 0.3f;
+  grid->colorbold[3] = 1.0f;
+  grid->boldx = 10;
+  grid->boldy = 10;
+  grid->dotted = 1;
+  grid->dottedbold = 1;
+  grid->snap = 0;
 }
 
 static void gl_check_error(const char *file, int line) {
@@ -52,13 +61,13 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
   double gap_x = grid->gap_x;
   double gap_y = grid->gap_y;
 
-  while ((gap_x / scale) > (grid->gap_x / 10))
+  while ((gap_x / scale) > (grid->gap_x / grid->boldx))
     gap_x /= 10;
-  while ((gap_x / scale) < (grid->gap_x / 10))
+  while ((gap_x / scale) < (grid->gap_x / grid->boldx))
     gap_x *= 10;
-  while ((gap_y / scale) > (grid->gap_y / 10))
+  while ((gap_y / scale) > (grid->gap_y / grid->boldy))
     gap_y /= 10;
-  while ((gap_y / scale) < (grid->gap_y / 10))
+  while ((gap_y / scale) < (grid->gap_y / grid->boldy))
     gap_y *= 10;
 
   // Определение позиции вхождения первой линии
@@ -201,4 +210,8 @@ void ui_grid_cleanup(struct ui_grid *grid) {
   grid->v_cache_cap = 0;
   grid->v_cache_size = 0;
   grid->VBO_cnt = 0;
+}
+
+int ui_grid_snap(struct ui_grid *grid, double scale, double x0, double y0, double x1, double y1, double *x, double *y) {
+  return 0;
 }

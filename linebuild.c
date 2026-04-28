@@ -5,8 +5,6 @@
 #include <math.h>
 #include <stdio.h>
 
-#define M_PI 3.14159265358979323846
-
 static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double l) {
   v->p[0] = (GLfloat)p[0];
   v->p[1] = (GLfloat)p[1];

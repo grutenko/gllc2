@@ -105,11 +105,17 @@ for entity in msp:
     elif entity.dxftype() == "ARC":
         center = entity.dxf.center
         radius = entity.dxf.radius
-        start_angle = entity.dxf.start_angle * math.pi / 180
-        end_angle = entity.dxf.end_angle * math.pi / 180
+        start_angle = entity.dxf.start_angle * (math.pi / 180)
+        end_angle = entity.dxf.end_angle * (math.pi / 180)
         arc_angle = math.fabs(start_angle - end_angle)
-        #h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, start_angle, arc_angle)
-        #lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        start_angle += arc_angle / 2
+        h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, start_angle, arc_angle)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+    elif entity.dxftype() == "CIRCLE":
+        center = entity.dxf.center
+        radius = entity.dxf.radius
+        h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
 
 print("TOTAL POINTS:", total_points)
 
