@@ -47,9 +47,10 @@ struct gllc_block {
 };
 
 struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *name, double x, double y);
-void gllc_block_set_window(struct gllc_block *block, struct gllc_window *window);
 void gllc_block_update(struct gllc_block *block);
 void gllc_block_destroy(struct gllc_block *block);
+
+void gllc_block_set_window(struct gllc_block *block, struct gllc_window *window);
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden);
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled);
 struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2]);

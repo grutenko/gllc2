@@ -3,6 +3,7 @@
 #include "draw.h"
 #include "entbuildutil.h"
 #include "entity.h"
+#include "linalg.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -38,63 +39,32 @@ static int vertices(struct gllc_entity *ent, double scale, struct ev *ver) {
   return 2;
 }
 
-static inline double LEN(const double v[2]) {
-  return sqrt(v[0] * v[0] + v[1] * v[1]);
-}
-
-static inline void NORM(double v[2]) {
-  double l = LEN(v);
-  if (l > 0.0) {
-    v[0] /= l;
-    v[1] /= l;
-  }
-}
-
-static inline void PERP(double v[2]) {
-  double t = v[0];
-  v[0] = -v[1];
-  v[1] = t;
-}
-
 static int selected(struct gllc_entity *ent, int mode, double scale, double x0, double y0, double x1, double y1) {
   struct gllc_line *l = (struct gllc_line *)ent;
-  double D, T, S, d[2];
-  double n1[2], v1[2];
+  double T, S;
+  double n1[2];
   double n0[2];
-  double v0[2];
   double len;
   int inside = (x0 <= l->p0[0] && x1 >= l->p0[0] && y0 <= l->p0[1] && y1 >= l->p0[1]) && (x0 <= l->p1[0] && x1 >= l->p1[0] && y0 <= l->p1[1] && y1 >= l->p1[1]);
-  if (mode == 0) {
-    return inside;
-  } else {
+  if (mode == 1) {
     if (inside)
       return 1;
-    n0[0] = l->p1[0] - l->p0[0];
-    n0[1] = l->p1[1] - l->p0[1];
-    v0[0] = n0[0];
-    v0[1] = n0[1];
+    VEC(n0, l->p0, l->p1);
+    len = LEN(n0);
     NORM(n0);
-    len = LEN(v0);
     // Ищем сторону прямоугольника, которая пересекает линию, если находим - линия частично выделена
-#define TEST(_x0, _y0, _x1, _y1)                        \
-  do {                                                  \
-    n1[0] = _x1 - _x0;                                  \
-    n1[1] = _y1 - _y0;                                  \
-    v1[0] = n1[0];                                      \
-    v1[1] = n1[1];                                      \
-    NORM(n1);                                           \
-    d[0] = _x0 - l->p0[0];                              \
-    d[1] = _y0 - l->p0[1];                              \
-    D = -n0[0] * n1[1] + n0[1] * n1[0];                 \
-    if (D <= 1e-8)                                      \
-      break;                                            \
-    T = (-n1[1] * d[0] + n1[0] * d[1]) / D;             \
-    S = (n0[0] * d[1] - n0[1] * d[0]) / D;              \
-    if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= len) { \
-      return 1;                                         \
-    }                                                   \
+#define TEST(_x0, _y0, _x1, _y1)                                  \
+  do {                                                            \
+    n1[0] = _x1 - _x0;                                            \
+    n1[1] = _y1 - _y0;                                            \
+    double lenside = LEN(n1);                                     \
+    NORM(n1);                                                     \
+    if (RAYINSECT(l->p0, n0, (double[]){_x0, _y0}, n1, &T, &S)) { \
+      if (S >= 0 && S <= lenside && T >= 0 && T <= len) {         \
+        return 1;                                                 \
+      }                                                           \
+    }                                                             \
   } while (0)
-
     TEST(x0, y0, x1, y0);
     TEST(x1, y0, x1, y1);
     TEST(x1, y1, x0, y1);
@@ -103,6 +73,8 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
     TEST(x1, y1, x1, y0);
     TEST(x0, y1, x1, y1);
     TEST(x0, y0, x0, y1);
+  } else {
+    return inside;
   }
   return 0;
 }
@@ -129,32 +101,20 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
     w = (ent->lwidth + 10.0f) * scale;
   else
     w = ent->lwidth + (10.0f * scale);
-  double v0[2];
-  double n0[2], n1[2], d[2];
-  double D, Dt, Ds, T, S;
-  n0[0] = line->p1[0] - line->p0[0];
-  n0[1] = line->p1[1] - line->p0[1];
-  v0[0] = n0[0];
-  v0[1] = n0[1];
+  double n0[2], n1[2];
+  double T, S, len;
+  VEC(n0, line->p0, line->p1);
+  len = LEN(n0);
   NORM(n0);
-  n1[0] = n0[0];
-  n1[1] = n0[1];
+  COPY(n1, n0);
   PERP(n1);
-  // Решаем уравнение прямых для каждого сегмена: Прямая 1 задана сегментом.
-  // Прямая 2 задана точкой клика и перпендикуляром прямой 1
-  // Параметр T - позиция на сегменте, Параметр S - расстояние до точки пересечения
-  // n0, n1 нормализованые векторы, задающие прямые
-  d[0] = x - line->p0[0];
-  d[1] = y - line->p0[1];
-  D = -n0[0] * n1[1] + n0[1] * n1[0];
-  Dt = -n1[1] * d[0] + n1[0] * d[1];
-  Ds = n0[0] * d[1] - n0[1] * d[0];
-  T = Dt / D;
-  S = Ds / D;
-  if (T >= 0.0f && T <= LEN(v0) && fabs(S) <= w / 2) {
-    if (dis)
-      *dis = fabs(S);
-    return 1;
+  int rc = RAYINSECT(line->p0, n0, (double[]){x, y}, n1, &T, &S);
+  if (rc) {
+    if (T >= 0.0f && T <= len && fabs(S) <= w / 2) {
+      if (dis)
+        *dis = fabs(S);
+      return 1;
+    }
   }
   return 0;
 }

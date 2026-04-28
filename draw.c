@@ -310,6 +310,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
     }
     gpu->batch_cnt = bi;
     draw->dirty = 0;
+    printf("DRAW: BATCH CNT = %d\n", bi);
   }
 }
 

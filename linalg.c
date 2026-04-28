@@ -1,5 +1,4 @@
 #include "linalg.h"
-#include <stdio.h>
 
 inline double LEN(const double v[static 2]) {
   return sqrt(v[0] * v[0] + v[1] * v[1]);
@@ -113,7 +112,7 @@ inline int RAYINSECT(
   double D, Dt, Ds, d[2];
   VEC(d, p0, p1);
   D = -n0[0] * n1[1] + n0[1] * n1[0];
-  if (D < 1e-8)
+  if (fabs(D) < 1e-8)
     return 0;
   Dt = -n1[1] * d[0] + n1[0] * d[1];
   Ds = n0[0] * d[1] - n0[1] * d[0];
@@ -131,7 +130,7 @@ inline void ADDSCALETO(
   p1[1] = p0[1] + n0[1] * l;
 }
 
-inline void SET(const double *v0, double *out) {
+inline void COPY(double *out, const double *v0) {
   out[0] = v0[0];
   out[1] = v0[1];
 }

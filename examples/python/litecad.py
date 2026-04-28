@@ -867,8 +867,8 @@ del loaderclass
 
 add_library_search_dirs(
     [
-        #dirname(__file__),
-        #dirname(__file__) + "/../../out/build/debug",
+        dirname(__file__),
+        dirname(__file__) + "/../../out/build/debug",
         dirname(__file__) + "/../../out/build/release",
     ]
 )

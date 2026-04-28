@@ -13,9 +13,9 @@ void ui_grid_init(struct ui_grid *grid) {
   grid->offset_y = 0.0f;
   grid->v_cache = NULL;
   grid->v_cache_cap = 0;
-  grid->color[0] = 0.7f;
-  grid->color[1] = 0.7f;
-  grid->color[2] = 0.7f;
+  grid->color[0] = 0.3f;
+  grid->color[1] = 0.3f;
+  grid->color[2] = 0.3f;
   grid->color[3] = 1.0f;
 }
 

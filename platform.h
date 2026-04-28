@@ -37,5 +37,6 @@ void nw_set_size(struct nw *w, int x, int y, int width, int height);
 void nw_swap_buffers(struct nw *w);
 void nw_dirty(struct nw *w);
 void nw_show_cursor(int show);
+void nw_focus(struct nw *nw);
 
 #endif

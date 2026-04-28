@@ -23,21 +23,21 @@
 
 static inline double wnd_scale(struct gllc_block *block) {
   if (block->wnd) {
-    return block->wnd->cam.scale;
+    return block->wnd->scale;
   }
   return 1.0f;
 }
 
 static inline double wnd_dx(struct gllc_block *block) {
   if (block->wnd) {
-    return block->wnd->cam.dx;
+    return block->wnd->dx;
   }
   return 0.0f;
 }
 
 static inline double wnd_dy(struct gllc_block *block) {
   if (block->wnd) {
-    return block->wnd->cam.dy;
+    return block->wnd->dy;
   }
   return 0.0f;
 }

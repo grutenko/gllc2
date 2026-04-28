@@ -66,30 +66,22 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
       } else {
         break;
       }
-#define TEST(_x0, _y0, _x1, _y1)                              \
-  do {                                                        \
-    double T, S;                                              \
-    double n0[2], n1[2], v0[2], v1[2];                        \
-    double p0[2], p1[2], p2[2], p3[2];                        \
-    p0[0] = _x0;                                              \
-    p0[1] = _y0;                                              \
-    p1[0] = _x1;                                              \
-    p1[1] = _y1;                                              \
-    p2[0] = pl->pts[i].p[0];                                  \
-    p2[1] = pl->pts[i].p[1];                                  \
-    p3[0] = pl->pts[ni].p[0];                                 \
-    p3[1] = pl->pts[ni].p[1];                                 \
-    VEC(v0, p0, p1);                                          \
-    NORMTO(v0, n0);                                           \
-    VEC(v1, p2, p3);                                          \
-    NORMTO(v1, n1);                                           \
-    if (RAYINSECT(p0, n0, p2, n1, &T, &S)) {                  \
-      if (S >= 0 && S <= LEN(v1) && T >= 0 && T <= LEN(v0)) { \
-        return 1;                                             \
-      }                                                       \
-    }                                                         \
+#define TEST(_x0, _y0, _x1, _y1)                                         \
+  do {                                                                   \
+    double T, S;                                                         \
+    double n0[2], n1[2], len0, len1;                                     \
+    VEC(n0, (double[]){_x0, _y0}, (double[]){_x1, _y1});                 \
+    VEC(n1, pl->pts[i].p, pl->pts[ni].p);                                \
+    len0 = LEN(n0);                                                      \
+    len1 = LEN(n1);                                                      \
+    NORM(n0);                                                            \
+    NORM(n1);                                                            \
+    if (RAYINSECT((double[]){_x0, _y0}, n0, pl->pts[i].p, n1, &T, &S)) { \
+      if (S >= 0 && S <= len1 && T >= 0 && T <= len0) {                  \
+        return 1;                                                        \
+      }                                                                  \
+    }                                                                    \
   } while (0)
-
       TEST(x0, y0, x1, y0);
       TEST(x1, y0, x1, y1);
       TEST(x1, y1, x0, y1);
@@ -135,13 +127,12 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
     w = (ent->lwidth + 10.0f) * scale;
   else
     w = ent->lwidth + (10.0f * scale);
-  double p0[2], p1[2];
-  double v0[2];
-  double n0[2], n1[2], d[2];
-  double D, Dt, Ds, T, S;
+  double n0[2], n1[2];
+  double T, S;
   int cnt = pl->cnt;
   for (i = 0; i < cnt; i++) {
     int ni;
+    double len;
     if (ent->flags & GLLC_ENT_CLOSED) {
       ni = (i + 1) % pl->cnt;
     } else if (i < pl->cnt - 1) {
@@ -149,33 +140,17 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
     } else {
       break;
     }
-    p0[0] = pl->pts[i].p[0];
-    p0[1] = pl->pts[i].p[1];
-    p1[0] = pl->pts[ni].p[0];
-    p1[1] = pl->pts[ni].p[1];
-    n0[0] = p1[0] - p0[0];
-    n0[1] = p1[1] - p0[1];
-    v0[0] = n0[0];
-    v0[1] = n0[1];
+    VEC(n0, pl->pts[i].p, pl->pts[ni].p);
+    len = LEN(n0);
     NORM(n0);
-    n1[0] = n0[0];
-    n1[1] = n0[1];
+    COPY(n1, n0);
     PERP(n1);
-    // Решаем уравнение прямых для каждого сегмена: Прямая 1 задана сегментом.
-    // Прямая 2 задана точкой клика и перпендикуляром прямой 1
-    // Параметр T - позиция на сегменте, Параметр S - расстояние до точки пересечения
-    // n0, n1 нормализованые векторы, задающие прямые
-    d[0] = x - p0[0];
-    d[1] = y - p0[1];
-    D = -n0[0] * n1[1] + n0[1] * n1[0];
-    Dt = -n1[1] * d[0] + n1[0] * d[1];
-    Ds = n0[0] * d[1] - n0[1] * d[0];
-    T = Dt / D;
-    S = Ds / D;
-    if (T >= 0.0f && T <= LEN(v0) && fabs(S) <= w / 2) {
-      if (dis)
-        *dis = fabs(S);
-      return 1;
+    if (RAYINSECT(pl->pts[i].p, n0, (double[]){x, y}, n1, &T, &S)) {
+      if (T >= 0.0f && T <= len && fabs(S) <= w / 2) {
+        if (dis)
+          *dis = fabs(S);
+        return 1;
+      }
     }
   }
   return 0;
