@@ -634,10 +634,13 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
   struct gllc_entity **ents = sg_cell_ents(cell);
   int cnt = sg_cell_ents_cnt(cell);
   for (i = 0; i < cnt; i++) {
-    if (skiplocked && ents[i]->flags & GLLC_ENT_LOCKED)
+    if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
       continue;
-    if (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN)
-      continue;
+    //double x0, y0, x1, y1;
+    //gllc_entity_bbox(ents[i], wnd_scale(block), &x0, &y0, &x1, &y1);
+    //double tol = 10.0f * wnd_scale(block);
+    //if (x + tol < x0 || x - tol > x1 || y + tol < y0 || y - tol > y1)
+    //  continue;
     if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL)) {
       return ents[i];
     }

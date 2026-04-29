@@ -162,8 +162,6 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
           double th = conf->lw / 2.0f * miter;
           double nt[2];
           INVTO(n0, nt);
-          if (n0[0] == 0.0f && n0[1] == 0.0f)
-            printf("x0 = %lf, y0 = %lf, i = %d, p0[0] = %lf, p0[1] = %lf, p1[0] = %lf, p1[1] = %lf\n", n0[0], n0[1], i, vin[i - 1].p[0], vin[i - 1].p[1], vin[i].p[0], vin[i].p[1]);
           ver_extr(&V[vi], vin[i].p, nt, w, conf->c, th, len);
           ver_extr(&V[vi + 1], vin[i].p, n0, w, conf->c, th, len);
           if (i < vcntin - 1) {
@@ -190,14 +188,44 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
         }
       } else {
         if (V) {
-          if (bisec_inv(n0, n1, n2)) {
-
-          } else {
+          int off = conf->off;
+          double w = conf->lrealw / 2.0f;
+          double th = conf->lw / 2.0f;
+          double nt0[2], nt1[2], nt2[2];
+          double acosp1 = acos(cosp1) / 2.0f;
+          double p0[2];
+          ROTTO(n0, -acosp1, nt0);
+          ROTTO(n0, acosp1, nt1);
+          INVTO(n0, nt2);
+          ADDSCALETO(vin[i].p, nt2, w, p0);
+          ver(&V[vi], p0, nt2, conf->c, th, len);
+          ver_extr(&V[vi + 1], p0, nt0, w, conf->c, th, len);
+          ver_extr(&V[vi + 2], p0, nt1, w, conf->c, th, len);
+          I[ii] = off + vi;
+          I[ii + 1] = off + vi + 1;
+          I[ii + 2] = off + vi + 2;
+          if (i < vcntin - 1) {
+            if (bisec_inv(n0, n1, n2)) {
+              I[ii + 3] = off + vi;
+              I[ii + 4] = off + vi + 2;
+              I[ii + 5] = off + vi + 3;
+              I[ii + 6] = off + vi;
+              I[ii + 7] = off + vi + 3;
+              I[ii + 8] = off + vi + 4;
+            } else {
+              I[ii + 3] = off + vi;
+              I[ii + 4] = off + vi + 2;
+              I[ii + 5] = off + vi + 3;
+              I[ii + 6] = off + vi + 2;
+              I[ii + 7] = off + vi + 3;
+              I[ii + 8] = off + vi + 4;
+            }
           }
         }
         vi += 3;
+        ii += 3;
         if (i < vcntin - 1) {
-          ii += 9;
+          ii += 6;
         }
       }
     }

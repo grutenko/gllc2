@@ -10,24 +10,22 @@
 #include <string.h>
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
-  int cnt;
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
   ds_unit_reset(pl->u);
   if (ent->flags & GLLC_ENT_CLOSED) {
-    double v0[2];
-    VEC(v0, pl->pts[pl->cnt - 1].p, pl->pts[0].p);
-    if (LEN(v0) < 1e-8) {
-      cnt = pl->cnt - 1;
-    } else {
-      cnt = pl->cnt;
-    }
     if (ent->flags & GLLC_ENT_FILLED) {
+      int cnt;
+      double v0[2];
+      VEC(v0, pl->pts[pl->cnt - 1].p, pl->pts[0].p);
+      if (LEN(v0) < 1e-8) {
+        cnt = pl->cnt - 1;
+      } else {
+        cnt = pl->cnt;
+      }
       build_filltess(ent, pl->u, pl->pts, cnt);
     }
-  } else {
-    cnt = pl->cnt;
   }
-  build_contur(ent, pl->u, pl->pts, cnt);
+  build_contur(ent, pl->u, pl->pts, pl->cnt);
 }
 
 static void destroy(struct gllc_entity *ent) {

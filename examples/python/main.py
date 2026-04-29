@@ -10,6 +10,7 @@ import math
 
 app = wx.App(0)
 f = wx.Frame(None)
+f.SetSize(wx.Size(800, 600))
 lc.lcInitialize()
 hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
 hDrw = lc.lcCreateDrawing()
@@ -92,24 +93,23 @@ for entity in msp:
             points = [(p.x, p.y) for p in entity.points()]
             closed = entity.is_closed
             total_points += len(points)
-
+        print(closed)
         h = lc.lcBlockAddPolyline(hBlock, 0, closed, 0)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_KEY, int(entity.dxf.handle, 16))
-
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
-
         lc.lcPlineEnd(h)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
 
     elif entity.dxftype() == "ARC":
         center = entity.dxf.center
         radius = entity.dxf.radius
-        start_angle = entity.dxf.start_angle * (math.pi / 180)
-        end_angle = entity.dxf.end_angle * (math.pi / 180)
-        arc_angle = math.fabs(start_angle - end_angle)
-        start_angle += arc_angle / 2
-        h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, start_angle, arc_angle)
+        a = entity.dxf.start_angle
+        b = entity.dxf.end_angle
+        arc_angle = math.fmod(a - b + 180, 360) - 180
+        arc_angle = arc_angle * (math.pi / 180)
+        a *= math.pi / 180
+        a -= arc_angle / 2
+        h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, a, arc_angle)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
     elif entity.dxftype() == "CIRCLE":
         center = entity.dxf.center
@@ -120,7 +120,7 @@ for entity in msp:
 print("TOTAL POINTS:", total_points)
 
 # генерация полилиний
-#for i in range(N - 1):
+# for i in range(N - 1):
 #    for j in range(M - 1):
 #        i0 = (i * M + j) * 2
 #        i1 = ((i + 1) * M + j) * 2
