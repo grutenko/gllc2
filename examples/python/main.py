@@ -43,7 +43,7 @@ for i in range(N):
         tab[i0] = min_v + i * step
         tab[i0 + 1] = min_v + j * step * 2
 
-dxf = ezdxf.readfile(dirname(__file__) + "\\floorplan.dxf")
+dxf = ezdxf.readfile(dirname(__file__) + "\\Отметка -250 каркасы.dxf")
 msp = dxf.modelspace()
 
 
@@ -130,6 +130,7 @@ for i in range(N - 1):
         lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x0)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
+        lc.lcPlineEnd(pline)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
 
