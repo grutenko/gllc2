@@ -1,11 +1,36 @@
 #include "rect.h"
 #include "draw.h"
+#include "entbuildutil.h"
 #include "entity.h"
+#include "linalg.h"
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
+#define RECT(o) ((struct gllc_rect *)(o))
+
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
+  static struct ev pts[5];
+  double n0[2], n1[2];
+  if (RECT(ent)->w < 1e-8 || RECT(ent)->h < 1e-8) {
+    return;
+  }
+  n0[0] = RECT(ent)->w / 2;
+  n0[1] = RECT(ent)->h / 2;
+  double len = LEN(n0);
+  NORM(n0);
+  ROT(n0, RECT(ent)->angle);
+  n1[0] = -n0[0];
+  n1[1] = n0[1];
+  ADDSCALETO(RECT(ent)->p0, n0, len, pts[0].p);
+  ADDSCALETO(RECT(ent)->p0, n1, len, pts[1].p);
+  INV(n0);
+  INV(n1);
+  ADDSCALETO(RECT(ent)->p0, n0, len, pts[2].p);
+  ADDSCALETO(RECT(ent)->p0, n1, len, pts[3].p);
+  COPY(pts[4].p, pts[0].p);
+  ds_unit_reset(RECT(ent)->u);
+  build_contur(ent, RECT(ent)->u, pts, 5);
 }
 
 static void destroy(struct gllc_entity *ent) {
@@ -65,10 +90,11 @@ static struct gllc_prop rect_props[] = {
 
 static struct gllc_prop *all_props[] = {G_entity_props, rect_props, NULL};
 
-struct gllc_rect *gllc_rect_create(struct gllc_block *block, struct ds_draw *draw, double *p, double w, double h, double angle) {
+struct gllc_rect *gllc_rect_create(struct gllc_block *block, struct ds_draw *draw, double *p, double w, double h, double angle, int filled) {
   struct gllc_rect *rect = malloc(sizeof(struct gllc_rect));
   if (rect) {
     GLLC_ENTITY_INIT(rect, block, all_props, &vtable);
+    rect->_ent.flags |= filled ? GLLC_ENT_FILLED : 0;
     rect->p0[0] = p[0];
     rect->p0[1] = p[1];
     rect->w = w;

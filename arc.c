@@ -11,8 +11,8 @@
 #define ARC(o) ((struct gllc_arc *)(o))
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
-  int segcnt = SEGCNT + 1 * (int)(ARC(ent)->arc_angle / M_PI);
-  struct ev pts[segcnt];
+  int segcnt = SEGCNT * (int)(ARC(ent)->arc_angle / M_PI);
+  static struct ev pts[SEGCNT];
   double n0[2] = {1.0f, 0.0f};
   ROT(n0, ARC(ent)->start_angle);
   ROT(n0, -ARC(ent)->arc_angle / 2);

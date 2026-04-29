@@ -532,6 +532,8 @@ struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *n
 }
 
 void gllc_block_set_window(struct gllc_block *block, struct gllc_window *window) {
+  if (!block)
+    return;
   block->wnd = window;
 }
 
@@ -608,6 +610,8 @@ static void remove_ent(struct gllc_block *block, struct gllc_entity *ent) {
 }
 
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled) {
+  if (!block)
+    return NULL;
   struct gllc_polyline *pline = gllc_polyline_create(block, &block->draw, closed, filled);
   if (pline) {
     push_ent(block, (struct gllc_entity *)pline);
@@ -617,6 +621,8 @@ struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int clos
 }
 
 struct gllc_circle *gllc_block_add_circle(struct gllc_block *block, double x, double y, double r, int filled) {
+  if (!block)
+    return NULL;
   struct gllc_circle *circle = gllc_circle_create(block, &block->draw, x, y, r, filled);
   if (circle) {
     push_ent(block, (struct gllc_entity *)circle);
@@ -626,6 +632,8 @@ struct gllc_circle *gllc_block_add_circle(struct gllc_block *block, double x, do
 }
 
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden) {
+  if (!block)
+    return NULL;
   struct gllc_entity *ent = NULL;
   struct sg_cell *cell = sg_pick_cell(block->sg, x, y);
   if (!cell)
@@ -636,11 +644,11 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
   for (i = 0; i < cnt; i++) {
     if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
       continue;
-    //double x0, y0, x1, y1;
-    //gllc_entity_bbox(ents[i], wnd_scale(block), &x0, &y0, &x1, &y1);
-    //double tol = 10.0f * wnd_scale(block);
-    //if (x + tol < x0 || x - tol > x1 || y + tol < y0 || y - tol > y1)
-    //  continue;
+    // double x0, y0, x1, y1;
+    // gllc_entity_bbox(ents[i], wnd_scale(block), &x0, &y0, &x1, &y1);
+    // double tol = 10.0f * wnd_scale(block);
+    // if (x + tol < x0 || x - tol > x1 || y + tol < y0 || y - tol > y1)
+    //   continue;
     if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL)) {
       return ents[i];
     }
@@ -649,12 +657,16 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
 }
 
 void gllc_block_sync_gpu(struct gllc_block *block, struct ds_gpu *gpu) {
+  if (!block)
+    return;
   if (ds_draw_dirty(&block->draw)) {
     ds_sync(&block->draw, gpu);
   }
 }
 
 void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent) {
+  if (!block)
+    return;
   if (block->bqcap <= block->bqcnt) {
     size_t sz = block->bqcap ? block->bqcap * 2 : 64;
     struct gllc_entity **bq = realloc(block->bq, sz * sizeof(struct gllc_entity *));
@@ -669,6 +681,8 @@ void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent) {
 }
 
 struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2]) {
+  if (!block)
+    return NULL;
   struct gllc_line *line = gllc_line_create(block, &block->draw, p0, p1);
   if (line) {
     push_ent(block, (struct gllc_entity *)line);
@@ -708,6 +722,8 @@ static void push_hover(struct gllc_block *block, struct gllc_entity *ent) {
 }
 
 void gllc_block_ent_hover(struct gllc_block *block, struct gllc_entity *ent, int exclusive) {
+  if (!block)
+    return;
   if (exclusive) {
     if (block->hovcnt == 1 && block->hov[0] == ent) {
       return;
@@ -725,12 +741,16 @@ void gllc_block_ent_hover(struct gllc_block *block, struct gllc_entity *ent, int
 }
 
 struct gllc_entity *gllc_block_ent_get_filter_at(struct gllc_block *block, int index) {
+  if (!block)
+    return NULL;
   if (index < 0 || index >= block->filcnt)
     return NULL;
   return block->fil[index];
 }
 
 int gllc_block_ent_get_filter_cnt(struct gllc_block *block) {
+  if (!block)
+    return 0;
   return block->filcnt;
 }
 
@@ -745,6 +765,8 @@ static inline void _swapf(double *a, double *b) {
 }
 
 int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, double y0, double x1, double y1, int skiplocked, int skiphidden) {
+  if (!block)
+    return 0;
   for (int i = 0; i < block->filcnt; i++)
     block->fil[i]->flags &= ~GLLC_ENT_FILTER;
   block->filcnt = 0;
@@ -780,8 +802,10 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, do
   return 1;
 }
 
-struct gllc_rect *gllc_block_add_rect(struct gllc_block *block, double *p, double w, double h, double angle) {
-  struct gllc_rect *r = gllc_rect_create(block, &block->draw, p, w, h, angle);
+struct gllc_rect *gllc_block_add_rect(struct gllc_block *block, double *p, double w, double h, double angle, int filled) {
+  if (!block)
+    return NULL;
+  struct gllc_rect *r = gllc_rect_create(block, &block->draw, p, w, h, angle, filled);
   if (r) {
     push_ent(block, (struct gllc_entity *)r);
     gllc_block_put_bq(block, (struct gllc_entity *)r);
@@ -806,6 +830,8 @@ static void clear_select(struct gllc_block *block) {
 }
 
 void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int exclusive) {
+  if(!block)
+    return;
   if (exclusive)
     clear_select(block);
   if (!ent)
@@ -819,16 +845,22 @@ void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int ex
 }
 
 int gllc_block_get_select_cnt(struct gllc_block *block) {
+  if(!block)
+    return 0;
   return block->selcnt;
 }
 
 struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index) {
+  if(!block)
+    return NULL;
   if (index < 0 || block->selcnt <= index)
     return NULL;
   return block->sel[index];
 }
 
 struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle, double arc_angle) {
+  if(!block)
+    return NULL;
   struct gllc_arc *r = gllc_arc_create(block, &block->draw, x, y, radius, start_angle, arc_angle);
   if (r) {
     push_ent(block, (struct gllc_entity *)r);
@@ -937,6 +969,8 @@ void gllc_block_sel_bbox(struct gllc_block *block, double *x0, double *y0, doubl
 }
 
 void gllc_block_visbox(struct gllc_block *block, double *x0, double *y0, double *x1, double *y1) {
+  if(!block)
+    return;
   if (block->wnd) {
     double xb0, yb0, xb1, yb1, xw0, yw0, xw1, yw1;
     gllc_window_get_viewport(block->wnd, &xw0, &yw0, &xw1, &yw1);

@@ -5,7 +5,6 @@ import random
 from os.path import dirname
 import ezdxf
 from ezdxf.colors import aci2rgb
-import time
 import math
 
 app = wx.App(0)
@@ -93,7 +92,6 @@ for entity in msp:
             points = [(p.x, p.y) for p in entity.points()]
             closed = entity.is_closed
             total_points += len(points)
-        print(closed)
         h = lc.lcBlockAddPolyline(hBlock, 0, closed, 0)
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
@@ -117,23 +115,21 @@ for entity in msp:
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
 
-print("TOTAL POINTS:", total_points)
-
 # генерация полилиний
-# for i in range(N - 1):
-#    for j in range(M - 1):
-#        i0 = (i * M + j) * 2
-#        i1 = ((i + 1) * M + j) * 2
-#        i2 = ((i + 1) * M + (j + 1)) * 2
-#        i3 = (i * M + (j + 1)) * 2
+for i in range(N - 1):
+    for j in range(M - 1):
+        i0 = (i * M + j) * 2
+        i1 = ((i + 1) * M + j) * 2
+        i2 = ((i + 1) * M + (j + 1)) * 2
+        i3 = (i * M + (j + 1)) * 2
 
-#        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
-#        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
-#        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
-#        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
-#        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0xffffff)
-#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
+        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
+        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
+        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
+        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
+        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
+        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
 

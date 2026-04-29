@@ -3,6 +3,8 @@
 #include "litecad.h"
 #include "object.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 static struct _proc {
@@ -20,7 +22,7 @@ void gllc_event_set_proc(int event_type, gllc_event_proc proc, int user_1, void 
       break;
   }
   if (!*p) {
-    *p = XALLOC_OBSERVED(sizeof(struct _proc));
+    *p = malloc(sizeof(struct _proc));
     if (!*p) {
       return;
     }

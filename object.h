@@ -37,6 +37,14 @@ struct gllc_object {
   struct gllc_object_vtable *vtable;
 };
 
+struct g_props_object {
+  struct gllc_object _obj;
+  char *version;
+  char *dirdll;
+};
+
+extern struct g_props_object G_props_object;
+
 #define P_BOOL(P, G, S) {(P), T_PROP_BOOL, (G), (S), 0}
 #define P_INT(P, G, S) {(P), T_PROP_INT, (G), (S), 0}
 #define P_FLOAT(P, G, S) {(P), T_PROP_FLOAT, (G), (S), 0}

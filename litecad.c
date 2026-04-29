@@ -2,6 +2,8 @@
 #include "block.h"
 #include "drawing.h"
 #include "event.h"
+#include "line.h"
+#include "linetype.h"
 #include "object.h"
 #include "polyline.h"
 #include "window.h"
@@ -129,7 +131,7 @@ int LCAPI lcWndRedrawAuto(void *hLcWnd, int Elapse, F_REDRAW pFunc) {
 }
 
 int LCAPI lcWndSetFocus(void *hLcWnd) {
-  return 1;
+  return gllc_window_set_focus((struct gllc_window *)hLcWnd);
 }
 
 int LCAPI lcWndSetExtents(void *hLcWnd, double Xmin, double Ymin, double Xmax, double Ymax) {
@@ -227,11 +229,11 @@ int LCAPI lcCoordDrwToWnd(void *hLcWnd, double Xdrw, double Ydrw, int *pXwnd, in
 }
 
 int LCAPI lcCoordWndToDrw(void *hLcWnd, int Xwnd, int Ywnd, double *pXdrw, double *pYdrw) {
-  return 1;
+  return gllc_window_coord_to_drw((struct gllc_window *)hLcWnd, Xwnd, Ywnd, pXdrw, pYdrw);
 }
 
 int LCAPI lcWndCoordFromDrw(void *hLcWnd, double Xdrw, double Ydrw, int *pXwin, int *pYwin) {
-  return 1;
+  return gllc_window_coord_to_wnd((struct gllc_window *)hLcWnd, Xdrw, Ydrw, pXwin, pYwin);
 }
 
 int LCAPI lcWndCoordToDrw(void *hLcWnd, int Xwin, int Ywin, double *pXdrw, double *pYdrw) {
@@ -240,7 +242,7 @@ int LCAPI lcWndCoordToDrw(void *hLcWnd, int Xwin, int Ywin, double *pXdrw, doubl
 
 // retrieve entities
 void *LCAPI lcWndGetEntByPoint(void *hLcWnd, int Xwin, int Ywin) {
-  return NULL;
+  return gllc_window_get_ent_by_point((struct gllc_window *)hLcWnd, Xwin, Ywin);
 }
 
 void *LCAPI lcWndGetEntByPoint2(void *hLcWnd, double X, double Y, double Delta) { return NULL; }
@@ -361,6 +363,7 @@ int LCAPI lcDrwSaveMem(void *hDrw, void *hMem, int MemSize) { return 0; }
 
 void *LCAPI lcDrwAddLayer(void *hDrw, char *szName, char *szColor, void *hLtype,
                           int Lwidth) {
+  return gllc_drw_add_layer((struct gllc_drawing *)hDrw, szName, szColor, (struct gllc_linetype *)hLtype, Lwidth);
 }
 void *LCAPI lcDrwAddLayer2(void *hDrw, char *szName, void *hFromLayer) { return NULL; }
 void *LCAPI lcDrwAddLinetype(void *hDrw, char *szName, char *szDefinition) { return NULL; }
@@ -519,6 +522,7 @@ void *LCAPI lcBlockAddBezier(void *hBlock) { return NULL; }
 void *LCAPI lcBlockAddMline(void *hBlock, int FitType, int bClosed) { return NULL; }
 void *LCAPI lcBlockAddRect(void *hBlock, double Xc, double Yc, double Width,
                            double Height, double Angle, int bFilled) {
+  return gllc_block_add_rect((struct gllc_block *)hBlock, (double[]){Xc, Yc}, Width, Height, Angle, bFilled);
 }
 void *LCAPI lcBlockAddRect2(void *hBlock, double Left, double Bottom,
                             double Width, double Height, double Rad,

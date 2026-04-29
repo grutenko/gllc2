@@ -13,8 +13,8 @@ void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int 
   int colorint = gllc_entity_color(ent);
   unsigned char color[4];
   if (selected) {
-    color[0] = 255;
-    color[1] = 0;
+    color[0] = 0;
+    color[1] = 255;
     color[2] = 0;
     color[3] = 255;
   } else {

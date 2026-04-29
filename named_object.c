@@ -259,6 +259,7 @@ void gllc_nobject_init(struct gllc_nobject *nobj, struct gllc_drawing *drawing, 
   strncpy(nobj->name, name, strnlen(name, 31));
   nobj->ID = last_ID++;
   ID_hexify(nobj->ID, nobj->ID_hex);
+  nobj->type = type;
 }
 
 void gllc_nobject_destroy(struct gllc_nobject *nobj) {

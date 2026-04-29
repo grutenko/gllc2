@@ -31,6 +31,7 @@ set(SOURCES
   ui_grid.c
   ui_selection.c
   ui_vertex_buffer.c
+  layer.c
   window.c
   line.c
   tess2/bucketalloc.c

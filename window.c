@@ -625,7 +625,7 @@ static union gllc_variant _wnd_griddy_GET(struct gllc_object *obj, int prop, int
 }
 
 static int _wnd_griddy_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  WND(obj)->grid.gap_x = v.float_;
+  WND(obj)->grid.gap_y = v.float_;
   return 1;
 }
 
@@ -934,6 +934,10 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
       WND(data)->dx += ((double)x - WND(data)->curx) * WND(data)->scale;
       WND(data)->dy -= ((double)y - WND(data)->cury) * WND(data)->scale;
       update_camera(WND(data));
+      struct gllc_event e;
+      gllc_event_init(&e);
+      e.window = WND(data);
+      gllc_event_send(LC_EVENT_WNDVIEW, &e);
     }
     if (WND(data)->mbtn == 1) {
       double x0, y0, x1, y1;
@@ -973,7 +977,6 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
   WND(data)->curx = x;
   WND(data)->cury = y;
   nw_dirty(w);
-  nw_show_cursor(0);
 }
 
 static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, void *data) {
@@ -1047,6 +1050,10 @@ static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data) {
   WND(data)->dx += (_curx - (int)(_w / 2)) * (_scale - old_scale);
   WND(data)->dy += ((_h - _cury) - (int)(_h / 2)) * (_scale - old_scale);
   update_camera(WND(data));
+  struct gllc_event e;
+  gllc_event_init(&e);
+  e.window = WND(data);
+  gllc_event_send(LC_EVENT_WNDVIEW, &e);
   nw_dirty(wn);
 }
 
@@ -1154,7 +1161,7 @@ struct gllc_window *gllc_window_create(void *p) {
     float white_03[4] = {1.0f, 1.0f, 1.0f, 0.3f};
     float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-    memcpy(wnd->clearcolor, black, sizeof(black));
+    memcpy(wnd->clearcolor, white, sizeof(black));
     wnd->griduse = 1;
     ui_grid_init(&wnd->grid);
     ui_cursor_init(&wnd->cursor);
@@ -1191,12 +1198,16 @@ struct gllc_window *gllc_window_create(void *p) {
 }
 
 int gllc_window_resize(struct gllc_window *window, int x, int y, int width, int height) {
+  if (!window)
+    return 0;
   nw_set_size(&window->nw, x, y, width, height);
   nw_dirty(&window->nw);
   return 1;
 }
 
 void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *xd, double *yd) {
+  if (!w)
+    return;
   double _w = (double)w->width;
   double _h = (double)w->height;
   *xd = (x - (_w / 2)) * w->scale - w->dx;
@@ -1204,13 +1215,23 @@ void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *x
 }
 
 int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block) {
-  wnd->block = block;
-  gllc_block_set_window(block, wnd);
+  if (!wnd)
+    return 0;
+  if (wnd->block) {
+    gllc_block_set_window(wnd->block, NULL);
+    wnd->block = NULL;
+  }
+  if (block) {
+    wnd->block = block;
+    gllc_block_set_window(wnd->block, wnd);
+  }
   nw_dirty(&wnd->nw);
   return 1;
 }
 
 int gllc_window_destroy(struct gllc_window *w) {
+  if (!w)
+    return 0;
   nw_make_context_current(&w->nw);
   gllc_block_set_window(w->block, NULL);
   ds_gpu_clear(&w->gpucmn);
@@ -1224,11 +1245,15 @@ int gllc_window_destroy(struct gllc_window *w) {
 }
 
 int gllc_window_redraw(struct gllc_window *wnd) {
+  if (!wnd)
+    return 0;
   nw_dirty(&wnd->nw);
   return 1;
 }
 
 void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, double *x1, double *y1) {
+  if (!wnd)
+    return;
   gllc_window_wnd_to_drw(wnd, 0.0f, 0.0f, x0, y0);
   gllc_window_wnd_to_drw(wnd, wnd->width, wnd->height, x1, y1);
   if (*x0 > *x1)
@@ -1238,6 +1263,8 @@ void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, d
 }
 
 int gllc_window_set_focus(struct gllc_window *wnd) {
+  if (!wnd)
+    return 0;
   nw_focus(&wnd->nw);
   return 1;
 }
@@ -1319,10 +1346,16 @@ int gllc_window_get_cursor_coord(struct gllc_window *wnd, int *x, int *y, double
 }
 
 int gllc_window_coord_to_drw(struct gllc_window *wnd, int x, int y, double *wx, double *wy) {
+  if (!wnd)
+    return 0;
+  screen_to_world(wnd, x, y, wx, wy);
   return 1;
 }
 
 int gllc_window_coord_to_wnd(struct gllc_window *wnd, double wx, double wy, int *x, int *y) {
+  if (!wnd)
+    return 0;
+  world_to_screen(wnd, wx, wy, x, y);
   return 1;
 }
 
@@ -1331,7 +1364,9 @@ int gllc_window_get_ents_by_rect(struct gllc_window *wnd, double x0, double y0, 
 }
 
 struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *wnd, int x, int y) {
-  return NULL;
+  double xd, yd;
+  screen_to_world(wnd, x, y, &xd, &yd);
+  return gllc_block_pick_ent(wnd->block, xd, yd, 1, 1);
 }
 
 int gllc_window_get_ents_by_point(struct gllc_window *wnd, int x, int y, int max_ents) {

@@ -12,7 +12,7 @@
 #define CIRCLE(o) ((struct gllc_circle *)(o))
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
-  struct ev pts[SEGCNT + 1];
+  static struct ev pts[SEGCNT + 1];
   double n0[2] = {1.0f, 0.0f};
   double step = (M_PI * 2) / SEGCNT;
   for (int i = 0; i <= SEGCNT; i++) {
