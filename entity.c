@@ -408,6 +408,15 @@ static union gllc_variant _ent_locked_GET(struct gllc_object *obj, int prop, int
   return v;
 }
 
+static int _ent_locked_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value) {
+  if (value.bool_) {
+    ((struct gllc_entity *)obj)->flags |= GLLC_ENT_LOCKED;
+  } else {
+    ((struct gllc_entity *)obj)->flags &= ~GLLC_ENT_LOCKED;
+  }
+  return 1;
+}
+
 static union gllc_variant _ent_visible_GET(struct gllc_object *obj, int prop, int type) {
   union gllc_variant v;
   v.bool_ = gllc_entity_visible((struct gllc_entity *)obj);
@@ -543,7 +552,7 @@ struct gllc_prop G_entity_props[] = {
     P_STRING(LC_PROP_ENT_LINFILL, _ent_linfill_GET, _ent_linfill_SET),
     P_INT_RO(LC_PROP_ENT_LINFILLNL, _ent_linfillnl_GET),
     P_BOOL(LC_PROP_ENT_WIPEOUT, _ent_wipeout_GET, _ent_wipeout_SET),
-    P_BOOL_RO(LC_PROP_ENT_LOCKED, _ent_locked_GET),
+    P_BOOL(LC_PROP_ENT_LOCKED, _ent_locked_GET, _ent_locked_SET),
     P_BOOL_RO(LC_PROP_ENT_VISIBLE, _ent_visible_GET),
     P_BOOL(LC_PROP_ENT_HIDDEN, _ent_hidden_GET, _ent_hidden_SET),
     P_BOOL(LC_PROP_ENT_DELETED, _ent_deleted_GET, _ent_deleted_SET),
@@ -567,6 +576,7 @@ static void obj_entity_destroy(struct gllc_object *obj) {
 }
 
 struct gllc_object_vtable G_entity_obj_vtable = {
+    .type = GLLC_ENTITY,
     .destroy = obj_entity_destroy};
 
 uint64_t gllc_entity_get_id(struct gllc_entity *ent) {

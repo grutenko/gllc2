@@ -7,8 +7,8 @@ static void resolv_color(struct gllc_entity *ent, unsigned char *color) {
   int colorint = gllc_entity_color(ent);
   if (ent->flags & GLLC_ENT_SELECTED) {
     color[0] = 0;
-    color[1] = 255;
-    color[2] = 0;
+    color[1] = 0;
+    color[2] = 255;
     color[3] = 255;
   } else {
     color[0] = RED(colorint);

@@ -1,9 +1,7 @@
 #include "event.h"
-#include "alloc.h"
 #include "litecad.h"
 #include "object.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -242,6 +240,7 @@ static struct gllc_prop _props[] = {
 static struct gllc_prop *_all_props[] = {_props, NULL};
 static void _destroy(struct gllc_object *obj) {}
 static struct gllc_object_vtable _vtable = {
+    .type = GLLC_EVENT,
     .destroy = _destroy};
 
 void gllc_event_init(struct gllc_event *event) {

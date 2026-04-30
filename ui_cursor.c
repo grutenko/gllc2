@@ -1,5 +1,4 @@
 #include "ui_cursor.h"
-#include "alloc.h"
 #include "draw.h"
 
 #define CURSOR_VCOUNT 12

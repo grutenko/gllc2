@@ -1,9 +1,10 @@
 #include "drawing.h"
 #include "block.h"
+#include "debug.h"
 #include "litecad.h"
 #include "named_object.h"
+#include "object.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -747,6 +748,7 @@ static void destroy(struct gllc_object *obj) {
 }
 
 static struct gllc_object_vtable vtable = {
+    .type = GLLC_DRAWING,
     .destroy = destroy};
 
 struct gllc_drawing *gllc_drw_create() {
@@ -770,8 +772,9 @@ static void push_obj(struct gllc_drawing *drawing, struct gllc_nobject *obj) {
   drawing->ocnt++;
 }
 
-struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing,
-                                      const char *name, double dx, double dy) {
+struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing, const char *name, double dx, double dy) {
+  NONULL(drawing, NULL);
+  OBJGUARD(drawing, GLLC_DRAWING, NULL);
   struct gllc_block *block = gllc_block_create(drawing, name, dx, dy);
   if (block) {
     push_obj(drawing, (struct gllc_nobject *)block);
@@ -780,6 +783,8 @@ struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing,
 }
 
 struct gllc_layer *gllc_drw_add_layer(struct gllc_drawing *drw, const char *name, const char *color, struct gllc_linetype *linetype, int linewidth) {
+  NONULL(drw, NULL);
+  OBJGUARD(drw, GLLC_DRAWING, NULL);
   struct gllc_layer *layer = gllc_layer_create(drw, name, color, linetype, linewidth);
   if (layer) {
     push_obj(drw, (struct gllc_nobject *)layer);
@@ -788,6 +793,8 @@ struct gllc_layer *gllc_drw_add_layer(struct gllc_drawing *drw, const char *name
 }
 
 void gllc_drawing_destroy(struct gllc_drawing *drawing) {
+  NONULL(drawing, );
+  OBJGUARD(drawing, GLLC_DRAWING, );
   struct gllc_nobject *nobj = drawing->oh;
   while (nobj) {
     struct gllc_nobject *next = nobj->next;
@@ -798,7 +805,9 @@ void gllc_drawing_destroy(struct gllc_drawing *drawing) {
 }
 
 struct gllc_nobject *gllc_drw_get_first_object(struct gllc_drawing *drawing, int objtype) {
-  for (struct gllc_nobject *item = drawing->ot; item; item = item->next) {
+  NONULL(drawing, NULL);
+  OBJGUARD(drawing, GLLC_DRAWING, NULL);
+  for (struct gllc_nobject *item = drawing->oh; item; item = item->next) {
     if (item->type == objtype) {
       return item;
     }

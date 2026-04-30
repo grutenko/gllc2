@@ -1,5 +1,4 @@
 #include "ui_grid.h"
-#include "alloc.h"
 #include "draw.h"
 
 #include <math.h>
@@ -185,7 +184,7 @@ void ui_grid_draw(struct ui_grid *grid, GLuint loc_uFlags, double scale, double 
     // Иначе просто чисуем готовый VBO
     glBindVertexArray(grid->VAO);
   }
-  glUniform1i(loc_uFlags, 0x1);
+  glUniform1i(loc_uFlags, 0x0);
   glDrawArrays(GL_LINES, 0, grid->last_vcnt);
 
   grid->last_scale = scale;
@@ -206,7 +205,7 @@ void ui_grid_cleanup(struct ui_grid *grid) {
     grid->VAO = 0;
   }
 
-  XFREE(grid->v_cache);
+  free(grid->v_cache);
   grid->v_cache_cap = 0;
   grid->v_cache_size = 0;
   grid->VBO_cnt = 0;

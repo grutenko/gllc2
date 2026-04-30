@@ -219,17 +219,14 @@ static struct gllc_prop *all_props[] = {props, NULL};
 static struct gllc_object_vtable vtable = {
     .destroy = destroy};
 struct g_props_object G_props_object = {
-    ._obj = {.props = all_props,
-             .vtable = &vtable},
+    ._obj = {
+        .magic = GLLC_OBJMAGIC,
+        .props = all_props,
+        .vtable = &vtable},
     .version = "1.0.0",
     .dirdll = "."};
 
-void gllc_object_init(struct gllc_object *obj, struct gllc_prop **props, struct gllc_object_vtable *vtable) {
-  obj->props = props;
-  obj->vtable = vtable;
-}
-
-static struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ) {
+static inline struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ) {
   int i, j;
   for (i = 0; props[i]; i++) {
     for (j = 0; props[i][j].prop != -1; j++) {
@@ -246,6 +243,7 @@ static struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ) 
     if (!obj) {                                              \
       obj = (struct gllc_object *)&G_props_object;           \
     }                                                        \
+    OBJGUARD(obj, 0, 0);                                     \
     struct gllc_prop **props = obj->props;                   \
     struct gllc_prop *p = find_prop(props, prop, T0);        \
     if (p) {                                                 \
@@ -265,6 +263,7 @@ GET(T_PROP_HANDLE, handle, void *)
     if (!obj) {                                                         \
       obj = (struct gllc_object *)&G_props_object;                      \
     }                                                                   \
+    OBJGUARD(obj, 0, 0);                                                \
     struct gllc_prop **props = obj->props;                              \
     struct gllc_prop *p = find_prop(props, prop, T0);                   \
     if (p && !p->readonly) {                                            \

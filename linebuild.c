@@ -3,7 +3,6 @@
 #include "linalg.h"
 
 #include <math.h>
-#include <stdio.h>
 
 static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double thmul, double l) {
   v->p[0] = (GLfloat)p[0];

@@ -82,8 +82,6 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
 }
 
 static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
-  if (ent->vtable->type != GLLC_ENT_CIRCLE)
-    return 0;
   struct gllc_circle *l = (struct gllc_circle *)ent;
   struct gllc_circle *nl = malloc(sizeof(struct gllc_circle));
   if (!nl)
