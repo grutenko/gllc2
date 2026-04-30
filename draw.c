@@ -261,7 +261,11 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
     }
     int flags = ~0;
     int bi = -1;
+    uint64_t vtotal = 0;
+    uint64_t itotal = 0;
     for (unit = draw->head; unit; unit = unit->next) {
+      vtotal += unit->V_cnt;
+      itotal += unit->I_cnt;
       memmove(&gpu->V_data[offset], unit->V, unit->V_cnt * sizeof(struct ds_vertex));
       for (GLuint j = 0; j < unit->I_cnt; j++) {
         gpu->I_data[i_offset + j] = unit->I[j] + offset;
@@ -311,6 +315,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
     gpu->batch_cnt = bi;
     draw->dirty = 0;
     printf("DRAW: BATCH CNT = %d\n", bi);
+    printf("DRAW: MEM = %llubytes\n", vtotal * sizeof(struct ds_vertex) + itotal * sizeof(GLuint));
   }
 }
 

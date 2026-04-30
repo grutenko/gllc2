@@ -1,4 +1,5 @@
 #include "polyline.h"
+#include "debug.h"
 #include "draw.h"
 #include "entbuildutil.h"
 #include "entity.h"
@@ -96,8 +97,6 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
 }
 
 static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
-  if (ent->vtable->type != GLLC_ENT_POLYLINE)
-    return 0;
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
   struct gllc_polyline *npl = malloc(sizeof(struct gllc_polyline));
   if (!npl)
@@ -222,6 +221,8 @@ static struct gllc_prop pline_props[] = {
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 
 struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, struct ds_draw *draw, int closed, int filled) {
+  NONULL(block, NULL);
+  NONULL(draw, NULL);
   struct gllc_polyline *pl = malloc(sizeof(struct gllc_polyline));
   if (pl) {
     GLLC_ENTITY_INIT(&pl->_ent, block, all_props, &vtable);
@@ -235,8 +236,7 @@ struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, struct ds_d
 }
 
 void gllc_pline_add_ver(struct gllc_polyline *pline, double x, double y) {
-  if (!pline)
-    return;
+  NONULL(pline, );
   if (pline->cap - pline->cnt <= 1) {
     size_t sz = pline->cap ? pline->cap * 2 : 8;
     struct ev *pts = realloc(pline->pts, sz * sizeof(struct ev));
@@ -252,6 +252,7 @@ void gllc_pline_add_ver(struct gllc_polyline *pline, double x, double y) {
 }
 
 void gllc_pline_end(struct gllc_polyline *pline) {
+  NONULL(pline, );
   int i = 0;
   while (i < pline->cnt - 1) {
     struct ev *a = &pline->pts[i];
@@ -278,18 +279,22 @@ void gllc_pline_end(struct gllc_polyline *pline) {
 }
 
 int gllc_pline_fit_type(struct gllc_polyline *pline) {
+  NONULL(pline, 0);
   return 0;
 }
 
 int gllc_pline_nvers(struct gllc_polyline *pline) {
+  NONULL(pline, 0);
   return pline->cnt;
 }
 
 float gllc_pline_width(struct gllc_polyline *pline) {
+  NONULL(pline, 0.0f);
   return 0.0f;
 }
 
 int gllc_pline_width_bool(struct gllc_polyline *pline) {
+  NONULL(pline, 0);
   return 0;
 }
 

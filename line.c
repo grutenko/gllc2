@@ -80,8 +80,6 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
 }
 
 static int clone(struct gllc_entity *ent, struct gllc_entity **clone) {
-  if (ent->vtable->type != GLLC_ENT_LINE)
-    return 0;
   struct gllc_line *l = (struct gllc_line *)ent;
   struct gllc_line *nl = malloc(sizeof(struct gllc_line));
   if (!nl)

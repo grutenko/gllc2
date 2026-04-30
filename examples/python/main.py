@@ -12,6 +12,8 @@ f = wx.Frame(None)
 f.SetSize(wx.Size(800, 600))
 lc.lcInitialize()
 hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
+lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
+lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0x0)
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcDrwAddBlock(hDrw, "Main", 0, 0)
 lc.lcWndSetBlock(hWnd, hBlock)
@@ -26,9 +28,9 @@ f.Bind(wx.EVT_SIZE, on_size)
 f.Show()
 
 N = 600
-M = 300
-min_v = -20000.0
-max_v = 60000.0
+M = 600
+min_v = -6000.0
+max_v = 6000.0
 
 step = (max_v - min_v) / float(N)
 
@@ -37,11 +39,10 @@ tab = (ct.c_double * (2 * N * M))()
 
 # заполнение координат
 for i in range(N):
-    k = random.uniform(2, 4)
     for j in range(M):
         i0 = (i * M + j) * 2
-        tab[i0] = min_v + i * step
-        tab[i0 + 1] = min_v + j * step * 2
+        tab[i0] = min_v + i * step + random.uniform(-0.5, 0.5)
+        tab[i0 + 1] = min_v + j * step + random.uniform(-0.5, 0.5)
 
 dxf = ezdxf.readfile(dirname(__file__) + "\\Отметка -250 каркасы.dxf")
 msp = dxf.modelspace()
@@ -80,7 +81,9 @@ for entity in msp:
 
         h = lc.lcBlockAddLine(hBlock, start.x, start.y, end.x, end.y)
         total_points += 2
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_REAL)
+        lc.lcPropPutFloat(h, lc.LC_PROP_ENT_LWIDTH, 2)
 
         # ---------- POLYLINE / LWPOLYLINE ----------
     elif entity.dxftype() in ("LWPOLYLINE", "POLYLINE"):
@@ -96,7 +99,9 @@ for entity in msp:
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
         lc.lcPlineEnd(h)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_REAL)
+        lc.lcPropPutFloat(h, lc.LC_PROP_ENT_LWIDTH, 2)
 
     elif entity.dxftype() == "ARC":
         center = entity.dxf.center
@@ -108,12 +113,12 @@ for entity in msp:
         a *= math.pi / 180
         a -= arc_angle / 2
         h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, a, arc_angle)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
     elif entity.dxftype() == "CIRCLE":
         center = entity.dxf.center
         radius = entity.dxf.radius
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
 
 # генерация полилиний
 for i in range(N - 1):
@@ -128,8 +133,9 @@ for i in range(N - 1):
         lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
         lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
         lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0xffffff)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
+        lc.lcPropPutBool(pline, lc.LC_PROP_ENT_LOCKED, True)
         lc.lcPlineEnd(pline)
 
 lc.lcBlockUpdate(hBlock, 0, 0)

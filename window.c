@@ -1,6 +1,6 @@
 #include "window.h"
-#include "alloc.h"
 #include "block.h"
+#include "debug.h"
 #include "draw.h"
 #include "event.h"
 #include "frag.h"
@@ -107,7 +107,7 @@ static union gllc_variant _wnd_pixelsize_GET(struct gllc_object *obj, int prop, 
 static inline void update_camera(struct gllc_window *w);
 
 static int _wnd_pixelsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value) {
-  if (value.float_ < 300.0f && value.float_ < 0.005f) {
+  if (value.float_ < 1000.0f && value.float_ < 0.0001f) {
     WND(obj)->scale = value.float_;
     update_camera(WND(obj));
     nw_dirty(&WND(obj)->nw);
@@ -812,6 +812,7 @@ struct gllc_prop _props[] = {
     P_END};
 static struct gllc_prop *_all_props[] = {_props, NULL};
 static struct gllc_object_vtable _vtable = {
+    .type = GLLC_WINDOW,
     .destroy = _destroy};
 
 static inline void screen_to_world(struct gllc_window *w, double x, double y, double *xd, double *yd) {
@@ -847,6 +848,7 @@ static void draw(struct gllc_window *wnd) {
   glClear(GL_COLOR_BUFFER_BIT);
   glUseProgram(wnd->program);
   glUniformMatrix4fv(wnd->loc_umvp, 1, GL_FALSE, _mvp);
+  glUniform4fv(wnd->loc_uclearcolor, 1, wnd->clearcolor);
   glUniform2f(wnd->loc_uviewportsize, _w, _h);
   glUniform1f(wnd->loc_uscale, wnd->scale);
   if (wnd->griduse) {
@@ -869,6 +871,7 @@ static void draw(struct gllc_window *wnd) {
 }
 
 static void on_paint(struct nw *w, void *data) {
+  nw_make_context_current(w);
   draw(WND(data));
 }
 
@@ -1035,7 +1038,7 @@ static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data) {
   if (dy <= -10)
     dy = -10;
   double _scale = WND(data)->scale;
-  if ((_scale > 300.0f && dy < 0) || (_scale < 0.005f && dy > 0)) {
+  if ((_scale > 1000.0f && dy < 0) || (_scale < 0.0001f && dy > 0)) {
     return;
   }
   double _w = WND(data)->width;
@@ -1150,18 +1153,19 @@ static void load_GL_uniform_loc(struct gllc_window *w) {
   LOADLOC(w->loc_uscale, "uScale");
   LOADLOC(w->loc_uviewportsize, "uViewportSize");
   LOADLOC(w->loc_uflags, "uFlags");
+  LOADLOC(w->loc_uclearcolor, "uClearColor");
 }
 
 struct gllc_window *gllc_window_create(void *p) {
   int success = 0;
-  struct gllc_window *wnd = XALLOC(sizeof(struct gllc_window));
+  struct gllc_window *wnd = malloc(sizeof(struct gllc_window));
   if (wnd) {
     memset(wnd, 0, sizeof(struct gllc_window));
     GLLC_OBJECT_INIT(wnd, _all_props, &_vtable);
     float white_03[4] = {1.0f, 1.0f, 1.0f, 0.3f};
     float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-    memcpy(wnd->clearcolor, white, sizeof(black));
+    memcpy(wnd->clearcolor, black, sizeof(black));
     wnd->griduse = 1;
     ui_grid_init(&wnd->grid);
     ui_cursor_init(&wnd->cursor);
@@ -1169,9 +1173,15 @@ struct gllc_window *gllc_window_create(void *p) {
     if (nw_create(&wnd->nw, p, &_nw_vtable, wnd)) {
       nw_make_context_current(&wnd->nw);
       if (gladLoadGL()) {
+        glDisable(GL_MULTISAMPLE);
+        glDisable(GL_LINE_SMOOTH);
+        glDisable(GL_POINT_SMOOTH);
+        glDisable(GL_POLYGON_SMOOTH);
+        glDisable(GL_DITHER);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glBlendEquation(GL_FUNC_ADD);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDisable(GL_CULL_FACE);
         glClearColor(wnd->clearcolor[0], wnd->clearcolor[1], wnd->clearcolor[2], wnd->clearcolor[3]);
@@ -1192,22 +1202,20 @@ struct gllc_window *gllc_window_create(void *p) {
   }
   if (wnd) {
     nw_destroy(&wnd->nw);
-    XFREE(wnd);
+    free(wnd);
   }
   return NULL;
 }
 
 int gllc_window_resize(struct gllc_window *window, int x, int y, int width, int height) {
-  if (!window)
-    return 0;
+  NONULL(window, 0);
   nw_set_size(&window->nw, x, y, width, height);
   nw_dirty(&window->nw);
   return 1;
 }
 
 void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *xd, double *yd) {
-  if (!w)
-    return;
+  NONULL(w, );
   double _w = (double)w->width;
   double _h = (double)w->height;
   *xd = (x - (_w / 2)) * w->scale - w->dx;
@@ -1215,8 +1223,7 @@ void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *x
 }
 
 int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block) {
-  if (!wnd)
-    return 0;
+  NONULL(wnd, 0);
   if (wnd->block) {
     gllc_block_set_window(wnd->block, NULL);
     wnd->block = NULL;
@@ -1230,8 +1237,7 @@ int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block) {
 }
 
 int gllc_window_destroy(struct gllc_window *w) {
-  if (!w)
-    return 0;
+  NONULL(w, 0);
   nw_make_context_current(&w->nw);
   gllc_block_set_window(w->block, NULL);
   ds_gpu_clear(&w->gpucmn);
@@ -1245,15 +1251,13 @@ int gllc_window_destroy(struct gllc_window *w) {
 }
 
 int gllc_window_redraw(struct gllc_window *wnd) {
-  if (!wnd)
-    return 0;
+  NONULL(wnd, 0);
   nw_dirty(&wnd->nw);
   return 1;
 }
 
 void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, double *x1, double *y1) {
-  if (!wnd)
-    return;
+  NONULL(wnd, );
   gllc_window_wnd_to_drw(wnd, 0.0f, 0.0f, x0, y0);
   gllc_window_wnd_to_drw(wnd, wnd->width, wnd->height, x1, y1);
   if (*x0 > *x1)
@@ -1263,124 +1267,146 @@ void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, d
 }
 
 int gllc_window_set_focus(struct gllc_window *wnd) {
-  if (!wnd)
-    return 0;
+  NONULL(wnd, 0);
   nw_focus(&wnd->nw);
   return 1;
 }
 
 int gllc_window_set_extents(struct gllc_window *wnd, double Xmin, double Ymin, double Xmax, double Ymax) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_set_props(struct gllc_window *wnd, void *props) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_set_cmdwin(struct gllc_window *wnd, void *cmdwin) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_set_base_point(struct gllc_window *wnd, int bState, double x, double y) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_emulator(struct gllc_window *wnd, int mode) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_hover_text(struct gllc_window *wnd, const char *text, int x, int y, int align) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_message(struct gllc_window *wnd, const char *text, int type) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_magnifier(struct gllc_window *wnd, int bOn, int Width, int Height, int Zoom, int Flags) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_pick_ent(struct gllc_window *wnd, const char *text, const char *cursor_text) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_wait_point(struct gllc_window *wnd, const char *text, double *x, double *y) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_wait_point_2(struct gllc_window *wnd, const char *text, double *x, double *y, F_WAITPOINT pFunc, int FuncPrm) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_update(struct gllc_window *wnd, int mode) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_input_str(struct gllc_window *wnd) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_zoom_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_zoom_scale(struct gllc_window *wnd, double scale) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_zoom_move(struct gllc_window *wnd, double dx, double dy) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_zoom_pos(struct gllc_window *wnd, double x, double y, double scale) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_zoom_ent(struct gllc_window *wnd, struct gllc_entity *ent) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_get_cursor_coord(struct gllc_window *wnd, int *x, int *y, double *wx, double *wy) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 int gllc_window_coord_to_drw(struct gllc_window *wnd, int x, int y, double *wx, double *wy) {
-  if (!wnd)
-    return 0;
+  NONULL(wnd, 0);
   screen_to_world(wnd, x, y, wx, wy);
   return 1;
 }
 
 int gllc_window_coord_to_wnd(struct gllc_window *wnd, double wx, double wy, int *x, int *y) {
-  if (!wnd)
-    return 0;
+  NONULL(wnd, 0);
   world_to_screen(wnd, wx, wy, x, y);
   return 1;
 }
 
 int gllc_window_get_ents_by_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1, int cross, int max_ents) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *wnd, int x, int y) {
+  NONULL(wnd, 0);
   double xd, yd;
   screen_to_world(wnd, x, y, &xd, &yd);
   return gllc_block_pick_ent(wnd->block, xd, yd, 1, 1);
 }
 
 int gllc_window_get_ents_by_point(struct gllc_window *wnd, int x, int y, int max_ents) {
+  NONULL(wnd, 0);
   return 1;
 }
 
 struct gllc_entity *gllc_window_get_ent_by_id(struct gllc_window *wnd, int id) {
+  NONULL(wnd, 0);
   return NULL;
 }
 
 struct gllc_entity *gllc_window_get_ent_by_idh(struct gllc_window *wnd, const char *idh) {
+  NONULL(wnd, 0);
   return NULL;
 }
 
 struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *wnd, const char *key) {
+  NONULL(wnd, 0);
   return NULL;
 }

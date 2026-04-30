@@ -486,6 +486,7 @@ int LCAPI lcBlockPurge(void *hBlock) { return 0; }
 int LCAPI lcBlockSortEnts(void *hBlock, int bByLayers, void *hWnd) { return 0; }
 int LCAPI lcBlockSortEnts2(void *hBlock, void *idEnts,
                            int nEnts) {
+                            
 } // for DWG plugin
 void *LCAPI lcBlockAddPoint(void *hBlock, double X, double Y) { return NULL; }
 void *LCAPI lcBlockAddPoint2(void *hBlock, double X, double Y, int PtMode,
@@ -516,6 +517,7 @@ void *LCAPI lcBlockAddPolyline(void *hBlock, int FitType, int bClosed,
 void *LCAPI lcBlockAddRPolygon(void *hBlock, int nVers, double Xc, double Yc,
                                double R, double Ang0, int bInscribed,
                                int bFilled) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddSpline(void *hBlock, int bClosed, int bFilled) { return NULL; }
 void *LCAPI lcBlockAddBezier(void *hBlock) { return NULL; }
@@ -538,122 +540,154 @@ void *LCAPI lcBlockAddArc(void *hBlock, double X, double Y, double Radius,
 }
 void *LCAPI lcBlockAddArc3P(void *hBlock, double X1, double Y1, double X2,
                             double Y2, double X3, double Y3) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddFillet(void *hBlock, void *hEnt1, void *hEnt2,
                              double Radius) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddEllipse(void *hBlock, double X, double Y, double R1,
                               double R2, double RotAngle, double StartAngle,
                               double ArcAngle) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddText(void *hBlock, char *szText, double X, double Y) { return NULL; }
 void *LCAPI lcBlockAddText2(void *hBlock, char *szText, double X, double Y,
                             int Align, double H, double WScale, double RotAngle,
                             double Oblique) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddText3(void *hBlock, char *szText, double X1, double Y1,
                             double X2, double Y2, int Align, double HW,
                             double Oblique) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddTextWin(void *hBlock, char *szText, double X, double Y) { return NULL; }
 void *LCAPI lcBlockAddTextWin2(void *hBlock, char *szText, double X, double Y,
                                int Align, double H, double WScale,
                                double RotAngle, double Oblique) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddMText(void *hBlock, char *szText, double X, double Y,
                             double WrapWidth, int Align, double RotAngle,
                             double H, double WScale) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddArcText(void *hBlock, char *szText, double X, double Y,
                               double Radius, double StartAngle, int bClockwise,
                               double H, double WScale, int Align) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddBlockRef(void *hBlock, void *hRefBlock, double X,
                                double Y, double Scal, double Angle) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddBlockRefID(void *hBlock, int idRefBlock, double X,
                                  double Y, double Scal, double Angle) {
+                                   return NULL; 
 } // undoc
 void *LCAPI lcBlockAddBlockRefIDH(void *hBlock, char *szIdRefBlock, double X,
                                   double Y, double Scal, double Angle) {
+                                     return NULL; 
 } // undoc
 void *LCAPI lcBlockAddAttDef(void *hBlock, int Mode, char *szTag,
                              char *szPrompt, char *szDefVal, double X, double Y,
                              int Align, double H, double WScale,
                              double RotAngle, double Oblique) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddXref(void *hBlock, char *szFileName, double X, double Y,
                            double ScalX, double ScalY, double Angle) {
+                             return NULL; 
 }
 void *LCAPI lcBlockAddImageRef(void *hBlock, void *hImage, double X, double Y,
                                double Width, double Height, int bBorder) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddImageRefUns(void *hBlock, void *hImage, double X,
                                   double Y, double Scal, int Align,
                                   int bBorder) {
+                                     return NULL; 
 }
 void *LCAPI lcBlockAddImagePlace(void *hBlock, int Id, double X, double Y,
                                  double Width, double Height, int bBorder) {
+                                   return NULL; 
 }
 void *LCAPI lcBlockAddEcw(void *hBlock, char *szFileName) { return NULL; }
 void *LCAPI lcBlockAddBarcode(void *hBlock, int BarType, double Xc, double Yc,
                               double Width, double Height, char *szText) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddHatch(void *hBlock, char *szFileName, char *szPatName,
                             double Scal, double Angle) {
+  return NULL;
 }
 void *LCAPI lcBlockAddViewport(void *hBlock, double Lef, double Bot,
                                double Width, double Height, double DrwPntX,
                                double DrwPntY, double DrwScale,
                                double DrwAngle) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddFace(void *hBlock, int Flags, double x0, double y0,
                            double z0, double x1, double y1, double z1,
                            double x2, double y2, double z2) {
+                             return NULL; 
 }
 void *LCAPI lcBlockAddFace4(void *hBlock, int Flags, double x0, double y0,
                             double z0, double x1, double y1, double z1,
                             double x2, double y2, double z2, double x3,
                             double y3, double z3) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddLeader(void *hBlock, char *szText, double Xt, double Yt,
                              double LandDist, double Xa, double Ya, int Attach,
                              int Align) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimLin(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Xt, double Yt, double Angle,
                              char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimHor(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Yt, char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimVer(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Xt, char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimAli(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Xt, double Yt, char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimAli2(void *hBlock, double X0, double Y0, double X1,
                               double Y1, double Dt, char *szText) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddDimOrd(void *hBlock, double Xd, double Yd, double Xt,
                              double Yt, int bX, char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimRad(void *hBlock, double Xc, double Yc, double Xr,
                              double Yr, double Xt, double Yt, char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimRad2(void *hBlock, double Xc, double Yc, double R,
                               double Angle, double TextOff, char *szText) {
 }
 void *LCAPI lcBlockAddDimDia(void *hBlock, double Xc, double Yc, double Xr,
                              double Yr, double Xt, double Yt, char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimDia2(void *hBlock, double Xc, double Yc, double R,
                               double Angle, double TextOff, char *szText) {
+                                 return NULL; 
 }
 void *LCAPI lcBlockAddDimAng(void *hBlock, double Xc, double Yc, double X1,
                              double Y1, double X2, double Y2, double Xa,
                              double Ya, double TextPos, char *szText) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddDimAng2(void *hBlock, double X1, double Y1, double X2,
                               double Y2, double X3, double Y3, double X4,
@@ -664,12 +698,14 @@ void *LCAPI lcBlockAddRPlan(void *hBlock) { return NULL; }
 void *LCAPI lcBlockAddRPlan2(void *hBlock, void *hStartEnt) { return NULL; }
 void *LCAPI lcBlockAddArrow(void *hBlock, double X1, double Y1, double X2,
                             double Y2) {
+                               return NULL; 
 }
 void *LCAPI lcBlockAddSpiral(void *hBlock, double Xc, double Yc, double R,
                              double Turns, int bDirCW, int bClosed) {
+                               return NULL; 
 }
-void *LCAPI lcBlockAddCamview(void *hBlock, double Lef, double Bot,
-                              double Width, double Height) {
+void *LCAPI lcBlockAddCamview(void *hBlock, double Lef, double Bot, double Width, double Height) {
+   return NULL; 
 }
 void *LCAPI lcBlockAddTIN(void *hBlock, char *szFileName, int FileType) { return NULL; }
 void *LCAPI lcBlockAddClone(void *hBlock, void *hEnt) { return NULL; }

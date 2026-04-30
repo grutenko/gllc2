@@ -6,7 +6,7 @@ set(CMAKE_DEBUG_POSTFIX d)
 
 set(SOURCES
   glad.c
-  alloc.c
+  debug.c
   block.c
   circle.c
   event.c

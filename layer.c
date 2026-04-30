@@ -1,4 +1,5 @@
 #include "layer.h"
+#include "object.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -8,9 +9,12 @@ static struct gllc_prop *all_props[] = {props, G_nobject_props, NULL};
 static void destroy(struct gllc_object *obj) {}
 
 static struct gllc_object_vtable vtable = {
+    .type = GLLC_NAMED_OBJECT,
     .destroy = destroy};
 
 struct gllc_layer *gllc_layer_create(struct gllc_drawing *drw, const char *name, const char *color, struct gllc_linetype *linetype, int linewidth) {
+  NONULL(drw, NULL);
+  OBJGUARD(drw, GLLC_DRAWING, NULL);
   struct gllc_layer *layer = malloc(sizeof(struct gllc_layer));
   if (layer) {
     memset(layer, 0, sizeof(struct gllc_layer));
