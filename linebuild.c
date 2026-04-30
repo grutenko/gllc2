@@ -193,7 +193,6 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
           double th = conf->lw / 2.0f;
           double nt0[2], nt1[2], nt2[2];
           double acosp1 = acos(cosp1) / 2;
-          printf("%lf\n", acosp1);
           double p0[2];
           ROTTO(n0, acosp1, nt0);
           ROTTO(n0, -acosp1, nt1);

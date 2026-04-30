@@ -82,8 +82,7 @@ for entity in msp:
         h = lc.lcBlockAddLine(hBlock, start.x, start.y, end.x, end.y)
         total_points += 2
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_REAL)
-        lc.lcPropPutFloat(h, lc.LC_PROP_ENT_LWIDTH, 2)
+
 
         # ---------- POLYLINE / LWPOLYLINE ----------
     elif entity.dxftype() in ("LWPOLYLINE", "POLYLINE"):
@@ -100,8 +99,6 @@ for entity in msp:
             lc.lcPlineAddVer(h, 0, x, y)
         lc.lcPlineEnd(h)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_REAL)
-        lc.lcPropPutFloat(h, lc.LC_PROP_ENT_LWIDTH, 2)
 
     elif entity.dxftype() == "ARC":
         center = entity.dxf.center
@@ -120,6 +117,9 @@ for entity in msp:
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
 
+lc.lcBlockUpdate(hBlock, 0, 0)
+lc.lcWndRedraw(hWnd)
+
 # генерация полилиний
 for i in range(N - 1):
     for j in range(M - 1):
@@ -137,6 +137,8 @@ for i in range(N - 1):
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
         lc.lcPropPutBool(pline, lc.LC_PROP_ENT_LOCKED, True)
         lc.lcPlineEnd(pline)
+        lc.lcBlockUpdate(hBlock, 0, 0)
+        lc.lcWndRedraw(hWnd)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
 

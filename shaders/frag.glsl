@@ -15,15 +15,7 @@ void main() {
   vec4 c = vColor;
   if ((uFlags & 1) != 0) {
     ivec2 p = ivec2(gl_FragCoord.xy);
-    float size = 5.0;
-    float thickness = 1.0;
-
-    float d1 = mod(p.x + p.y, size);
-    float d2 = mod(p.x - p.y, size);
-
-    if (d1 < thickness || d2 < thickness) {
-      //
-    } else {
+    if (((p.x + p.y) & 1) == 0) {
       c = uClearColor;
     }
   }
