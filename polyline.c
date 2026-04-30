@@ -11,7 +11,9 @@
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   struct gllc_polyline *pl = (struct gllc_polyline *)ent;
-  ds_unit_reset(pl->u);
+  if (gllc_entity_geometry_modified(ent)) {
+    ds_unit_reset(pl->u);
+  }
   if (ent->flags & GLLC_ENT_CLOSED) {
     if (ent->flags & GLLC_ENT_FILLED) {
       int cnt;
@@ -23,9 +25,9 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
         cnt = pl->cnt;
       }
       build_filltess(ent, pl->u, pl->pts, cnt);
-    }
+    } 
   }
-  build_contur(ent, pl->u, pl->pts, pl->cnt);
+  build_contur(ent, pl->u, pl->pts, pl->cnt, 0);
 }
 
 static void destroy(struct gllc_entity *ent) {

@@ -5,7 +5,7 @@
 #include <math.h>
 #include <stdio.h>
 
-static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double l) {
+static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double thmul, double l) {
   v->p[0] = (GLfloat)p[0];
   v->p[1] = (GLfloat)p[1];
   v->n[0] = (GLbyte)(n[0] * 127.0f);
@@ -17,13 +17,14 @@ static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char 
   v->uv[0] = (GLfloat)0.0f;
   v->uv[1] = (GLfloat)0.0f;
   v->th = (GLfloat)th;
+  v->thmul = (GLfloat)thmul;
   v->l = (GLfloat)l;
 }
 
-static inline void ver_extr(struct ds_vertex *v, double *p0, double *n0, double w, unsigned char *c, double th, double l) {
+static inline void ver_extr(struct ds_vertex *v, double *p0, double *n0, double w, unsigned char *c, double th, double thmul, double l) {
   double pt[2];
   ADDSCALETO(p0, n0, w, pt);
-  ver(v, pt, n0, c, th, l);
+  ver(v, pt, n0, c, th, thmul, l);
 }
 
 // строит сегмент круга с центром в p0, радиусом R, центральным вектором n, углом A, и добавляет вершины в массив V и индексы в массив I, начиная с vi и ii соответственно
@@ -37,14 +38,14 @@ static inline void arc(int cnt, double *p0, double *n, double R, double A, unsig
   // выставляем начальный вектор на парралельно стороне дуги
   n0[0] = n[0] * cos_a - n[1] * sin_a;
   n0[1] = n[0] * sin_a + n[1] * cos_a;
-  ver(&V[0], p0, (double[]){0.0f, 0.0f}, c, th, 0.0f);
+  ver(&V[0], p0, (double[]){0.0f, 0.0f}, c, th, 1.0f, 0.0f);
   int vi0 = *vi, ii0 = *ii;
   (*vi)++;
   for (int i = 0; i <= cnt; i++) {
     double x = p0[0] + n0[0] * R;
     double y = p0[1] + n0[1] * R;
     double p[2] = {x, y};
-    ver(&V[(*vi) - vi0], p, n0, c, th, 0.0f);
+    ver(&V[(*vi) - vi0], p, n0, c, th, 1.0f, 0.0f);
     if (i < cnt) {
       I[(*ii) - ii0] = vi0;
       I[(*ii) - ii0 + 1] = *vi;
@@ -154,16 +155,16 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
       } else {
         bisec_seg(n1, vin[i].p, vin[i + 1].p, vin[i + 2].p);
       }
-      if (cosp1 <= 0.866f) {
+      double miter = 1.0 / sqrt((1.0f - cosp1) / 2.0f);
+      if (miter < 4) {
         if (V) {
           int off = conf->off;
-          double miter = 1.0 / sqrt((1.0f - cosp1) / 2.0f);
           double w = conf->lrealw / 2.0f * miter;
           double th = conf->lw / 2.0f * miter;
           double nt[2];
           INVTO(n0, nt);
-          ver_extr(&V[vi], vin[i].p, nt, w, conf->c, th, len);
-          ver_extr(&V[vi + 1], vin[i].p, n0, w, conf->c, th, len);
+          ver_extr(&V[vi], vin[i].p, nt, w, conf->c, th, miter, len);
+          ver_extr(&V[vi + 1], vin[i].p, n0, w, conf->c, th, miter, len);
           if (i < vcntin - 1) {
             if (bisec_inv(n0, n1, n2)) {
               I[ii] = off + vi;
@@ -192,15 +193,16 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
           double w = conf->lrealw / 2.0f;
           double th = conf->lw / 2.0f;
           double nt0[2], nt1[2], nt2[2];
-          double acosp1 = acos(cosp1) / 2.0f;
+          double acosp1 = acos(cosp1) / 2;
+          printf("%lf\n", acosp1);
           double p0[2];
-          ROTTO(n0, -acosp1, nt0);
-          ROTTO(n0, acosp1, nt1);
+          ROTTO(n0, acosp1, nt0);
+          ROTTO(n0, -acosp1, nt1);
           INVTO(n0, nt2);
           ADDSCALETO(vin[i].p, nt2, w, p0);
-          ver(&V[vi], p0, nt2, conf->c, th, len);
-          ver_extr(&V[vi + 1], p0, nt0, w, conf->c, th, len);
-          ver_extr(&V[vi + 2], p0, nt1, w, conf->c, th, len);
+          ver(&V[vi], p0, nt2, conf->c, th, 1.0f, len);
+          ver_extr(&V[vi + 1], p0, nt0, w, conf->c, th, 1.0f, len);
+          ver_extr(&V[vi + 2], p0, nt1, w, conf->c, th, 1.0f, len);
           I[ii] = off + vi;
           I[ii + 1] = off + vi + 1;
           I[ii + 2] = off + vi + 2;

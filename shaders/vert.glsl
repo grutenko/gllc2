@@ -18,7 +18,7 @@ void main() {
   vec4 p = uMVP * vec4(aPos, 0.0, 1.0);
   vec2 pixelToNdc = vec2(2.0) / uViewportSize;
   vec2 n = aNormal;
-  if(aNormal.x != 0.0 && aNormal.y != 0.0) {
+  if (aNormal.x != 0.0 && aNormal.y != 0.0) {
     n = normalize(n);
   }
   vec2 offset = n * aTh * pixelToNdc;

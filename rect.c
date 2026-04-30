@@ -29,8 +29,10 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
   ADDSCALETO(RECT(ent)->p0, n0, len, pts[2].p);
   ADDSCALETO(RECT(ent)->p0, n1, len, pts[3].p);
   COPY(pts[4].p, pts[0].p);
-  ds_unit_reset(RECT(ent)->u);
-  build_contur(ent, RECT(ent)->u, pts, 5);
+  if (gllc_entity_geometry_modified(ent)) {
+    ds_unit_reset(RECT(ent)->u);
+  }
+  build_contur(ent, RECT(ent)->u, pts, 5, 0);
 }
 
 static void destroy(struct gllc_entity *ent) {

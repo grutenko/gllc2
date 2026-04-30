@@ -20,6 +20,7 @@ struct gllc_polyline {
   int cap;
   struct ds_unit *u;
   struct ev *pts;
+  int ufilcnt;
 };
 
 struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, struct ds_draw *draw, int closed, int filled);

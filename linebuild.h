@@ -15,7 +15,7 @@ struct ds_vertex;
 struct lb_config {
   double lw;
   double lrealw;
-  unsigned char *c;
+  unsigned char c[4];
   struct ev *v;
   int vcnt;
   int closed;

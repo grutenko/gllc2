@@ -218,7 +218,7 @@ int sg_cell_ents_cnt(struct sg_cell *cell) {
   return cell->ent_size;
 }
 
-void sg_bbox(struct sg *sg, double *x0, double *y0, double *x1, double *y1) {
+void sg_bbox(struct sg *sg, int *x0, int *y0, int *x1, int *y1) {
   if (x0)
     *x0 = sg->x0;
   if (y0)

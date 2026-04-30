@@ -17,7 +17,7 @@ struct sg_cell *sg_pick_cell(struct sg *sg, double x, double y);
 struct gllc_entity **sg_cell_ents(struct sg_cell *cell);
 int sg_cell_ents_cnt(struct sg_cell *cell);
 void sg_destroy(struct sg *sg);
-void sg_bbox(struct sg *sg, double *x0, double *y0, double *x1, double *y1);
+void sg_bbox(struct sg *sg, int *x0, int *y0, int *x1, int *y1);
 struct sg_cell *sg_cell_at(struct sg *sg, int x, int y);
 
 #endif

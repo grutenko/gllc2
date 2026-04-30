@@ -13,7 +13,7 @@ f.SetSize(wx.Size(800, 600))
 lc.lcInitialize()
 hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
 hDrw = lc.lcCreateDrawing()
-hBlock = lc.lcDrwAddBlock(hDrw, "Main", 0, 0)
+hBlock = lc.lcPropGetHandle(hDrw, lc.LC_PROP_DRW_BLOCK_MODEL)
 lc.lcWndSetBlock(hWnd, hBlock)
 
 
@@ -27,8 +27,8 @@ f.Show()
 
 N = 600
 M = 300
-min_v = -20000.0
-max_v = 60000.0
+min_v = -5000.0
+max_v = 5000.0
 
 step = (max_v - min_v) / float(N)
 

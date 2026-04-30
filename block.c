@@ -771,17 +771,24 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, do
     block->fil[i]->flags &= ~GLLC_ENT_FILTER;
   block->filcnt = 0;
   int shift = sg_shift(block->sg);
-
   if (x0 > x1)
     _swapf(&x0, &x1);
   if (y0 > y1)
     _swapf(&y0, &y1);
-
   int cx0 = ((int)floor(x0)) >> shift;
   int cy0 = ((int)floor(y0)) >> shift;
   int cx1 = ((int)floor(x1)) >> shift;
   int cy1 = ((int)floor(y1)) >> shift;
-
+  int bx0, by0, bx1, by1;
+  sg_bbox(block->sg, &bx0, &by0, &bx1, &by1);
+  if (cx0 < bx0)
+    cx0 = bx0;
+  if (cy0 < by0)
+    cy0 = by0;
+  if (cx1 > bx1)
+    cx1 = bx1;
+  if (cy1 > by1)
+    cy1 = by1;
   for (int x = cx0; x <= cx1; x++) {
     for (int y = cy0; y <= cy1; y++) {
       struct sg_cell *cell = sg_cell_at(block->sg, x, y);
@@ -830,7 +837,7 @@ static void clear_select(struct gllc_block *block) {
 }
 
 void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int exclusive) {
-  if(!block)
+  if (!block)
     return;
   if (exclusive)
     clear_select(block);
@@ -845,13 +852,13 @@ void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int ex
 }
 
 int gllc_block_get_select_cnt(struct gllc_block *block) {
-  if(!block)
+  if (!block)
     return 0;
   return block->selcnt;
 }
 
 struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index) {
-  if(!block)
+  if (!block)
     return NULL;
   if (index < 0 || block->selcnt <= index)
     return NULL;
@@ -859,7 +866,7 @@ struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index
 }
 
 struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle, double arc_angle) {
-  if(!block)
+  if (!block)
     return NULL;
   struct gllc_arc *r = gllc_arc_create(block, &block->draw, x, y, radius, start_angle, arc_angle);
   if (r) {
@@ -969,7 +976,7 @@ void gllc_block_sel_bbox(struct gllc_block *block, double *x0, double *y0, doubl
 }
 
 void gllc_block_visbox(struct gllc_block *block, double *x0, double *y0, double *x1, double *y1) {
-  if(!block)
+  if (!block)
     return;
   if (block->wnd) {
     double xb0, yb0, xb1, yb1, xw0, yw0, xw1, yw1;

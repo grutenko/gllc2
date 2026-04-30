@@ -21,8 +21,10 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale) {
     ADDSCALETO((double[]){ARC(ent)->x, ARC(ent)->y}, n0, ARC(ent)->radius, pts[i].p);
     ROT(n0, step);
   }
-  ds_unit_reset(ARC(ent)->u);
-  build_contur(ent, ARC(ent)->u, pts, segcnt);
+  if (gllc_entity_geometry_modified(ent)) {
+    ds_unit_reset(ARC(ent)->u);
+  }
+  build_contur(ent, ARC(ent)->u, pts, segcnt, 0);
 }
 
 static void destroy(struct gllc_entity *ent) {

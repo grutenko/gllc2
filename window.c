@@ -835,7 +835,7 @@ static inline void world_to_screen(struct gllc_window *w, double x, double y, in
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
 static void draw(struct gllc_window *wnd) {
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   double x0, y0, x1, y1;
   float _w = (float)wnd->width;
   float _h = (float)wnd->height;

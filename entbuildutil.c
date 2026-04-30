@@ -3,16 +3,9 @@
 #include "entity.h"
 #include "linebuild.h"
 
-void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt) {
-  int selected = (ent->flags & GLLC_ENT_SELECTED) != 0;
-  int hovered = (ent->flags & GLLC_ENT_HOVER) != 0;
-  int closed = (ent->flags & GLLC_ENT_CLOSED) != 0;
-  int lwpixel = (ent->flags & GLLC_ENT_LW_SCREEN) != 0;
-  int lwreal = (ent->flags & GLLC_ENT_LW_REAL) != 0;
-  int lwthin = (ent->flags & GLLC_ENT_LW_THIN) != 0;
+static void resolv_color(struct gllc_entity *ent, unsigned char *color) {
   int colorint = gllc_entity_color(ent);
-  unsigned char color[4];
-  if (selected) {
+  if (ent->flags & GLLC_ENT_SELECTED) {
     color[0] = 0;
     color[1] = 255;
     color[2] = 0;
@@ -23,43 +16,75 @@ void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int 
     color[2] = BLUE(colorint);
     color[3] = 255;
   }
-  struct lb_config conf;
-  conf.v = v;
-  conf.vcnt = cnt;
-  conf.c = color;
-  conf.closed = 0;
-  conf.nroundsegs = 8;
-  if (hovered) {
-  }
-  if (lwpixel) {
-    conf.lw = ent->lwidth;
-    conf.lrealw = 0.0001f;
-  } else if (lwreal) {
-    conf.lw = 1.0f;
-    conf.lrealw = ent->lwidth;
+}
+
+static void resolv_flags(struct gllc_entity *ent, int *flags) {
+  if (ent->flags & GLLC_ENT_HOVER) {
+    *flags |= DS_UNIT_CHESS;
   } else {
-    conf.lw = 1.0f;
-    conf.lrealw = 0.0001f;
+    *flags &= ~DS_UNIT_CHESS;
   }
-  if (hovered) {
-    conf.lw += 2.0f;
-    u->flags |= DS_UNIT_CHESS;
+  if (ent->flags & GLLC_ENT_SELECTED) {
+    *flags |= DS_UNIT_DASH_SCREEN;
   } else {
-    u->flags &= ~DS_UNIT_CHESS;
+    *flags &= ~DS_UNIT_DASH_SCREEN;
   }
-  if (selected) {
-    u->flags |= DS_UNIT_DASH_SCREEN;
+}
+
+static double resolv_realwidth(struct gllc_entity *ent) {
+  if (ent->flags & GLLC_ENT_LW_REAL)
+    return ent->lwidth;
+  return 0.0001f;
+}
+
+static double resolv_pixwidth(struct gllc_entity *ent) {
+  int pl = 0;
+  if (ent->flags & GLLC_ENT_HOVER) {
+    pl = 2;
+  }
+  if (ent->flags & GLLC_ENT_LW_SCREEN)
+    return ent->lwidth + pl;
+  return 1.0f + pl;
+}
+
+void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt, int skip) {
+  if (gllc_entity_geometry_modified(ent)) {
+    struct lb_config conf;
+    conf.v = v;
+    conf.vcnt = cnt;
+    resolv_color(ent, conf.c);
+    conf.closed = 0;
+    conf.nroundsegs = 8;
+    conf.lw = resolv_pixwidth(ent);
+    conf.lrealw = resolv_realwidth(ent);
+    resolv_flags(ent, &u->flags);
+    conf.off = ds_unit_vcnt(u);
+    int vcnt, icnt;
+    int oldvcnt = ds_unit_vcnt(u);
+    int oldicnt = ds_unit_icnt(u);
+    lb_build(&conf, NULL, NULL, &vcnt, &icnt);
+    struct ds_vertex *V = ds_unit_reserve_vertex(u, oldvcnt + vcnt);
+    GLuint *I = ds_unit_reserve_index(u, oldicnt + icnt);
+    lb_build(&conf, &V[oldvcnt], &I[oldicnt], &vcnt, &icnt);
+    u->dirty = 1;
+    u->geometry_dirty = 1;
   } else {
-    u->flags &= ~DS_UNIT_DASH_SCREEN;
+    int vcnt = ds_unit_vcnt(u);
+    unsigned char color[4];
+    double th = resolv_pixwidth(ent);
+    resolv_flags(ent, &u->flags);
+    resolv_color(ent, color);
+    for (int i = skip; i < vcnt; i++) {
+      u->V[i].th = th / 2 * u->V[i].thmul;
+      u->V[i].c[0] = color[0];
+      u->V[i].c[1] = color[1];
+      u->V[i].c[2] = color[2];
+      u->V[i].c[3] = color[3];
+    }
+    u->dirty = 1;
   }
-  int vcnt, icnt;
-  int oldvcnt = ds_unit_vcnt(u);
-  int oldicnt = ds_unit_icnt(u);
-  conf.off = oldvcnt;
-  lb_build(&conf, NULL, NULL, &vcnt, &icnt);
-  struct ds_vertex *V = ds_unit_reserve_vertex(u, oldvcnt + vcnt);
-  GLuint *I = ds_unit_reserve_index(u, oldicnt + icnt);
-  lb_build(&conf, &V[oldvcnt], &I[oldicnt], &vcnt, &icnt);
+  u->draw->dirty = 1;
+  u->draw->geometry_dirty = 1;
 }
 
 void build_filltess(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt) {

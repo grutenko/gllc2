@@ -5,6 +5,7 @@
 
 struct ds_vertex {
   GLfloat th;
+  GLfloat thmul;
   GLbyte n[2];
   GLubyte uv[2];
   GLubyte c[4];
