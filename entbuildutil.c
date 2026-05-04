@@ -3,6 +3,8 @@
 #include "entity.h"
 #include "linebuild.h"
 
+#include <stddef.h>
+
 static void resolv_color(struct gllc_entity *ent, unsigned char *color) {
   int colorint = gllc_entity_color(ent);
   if (ent->flags & GLLC_ENT_SELECTED) {

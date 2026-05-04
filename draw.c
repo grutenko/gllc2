@@ -1,6 +1,7 @@
 #include "draw.h"
 
 #include <stdio.h>
+#include <stddef.h> 
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -315,7 +316,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu) {
     gpu->batch_cnt = bi;
     draw->dirty = 0;
     printf("DRAW: BATCH CNT = %d\n", bi);
-    printf("DRAW: MEM = %llubytes\n", vtotal * sizeof(struct ds_vertex) + itotal * sizeof(GLuint));
+    printf("DRAW: MEM = %lubytes\n", vtotal * sizeof(struct ds_vertex) + itotal * sizeof(GLuint));
   }
 }
 

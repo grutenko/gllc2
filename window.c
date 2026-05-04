@@ -4,14 +4,15 @@
 #include "draw.h"
 #include "event.h"
 #include "frag.h"
+#include "vert.h"
 #include "litecad.h"
 #include "object.h"
 #include "platform.h"
 #include "ui_cursor.h"
 #include "ui_grid.h"
 #include "ui_selection.h"
-#include "vert.h"
 
+#include <stdio.h>
 #include <string.h>
 
 #define WND(obj) ((struct gllc_window *)obj)
@@ -836,7 +837,8 @@ static inline void world_to_screen(struct gllc_window *w, double x, double y, in
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
 static void draw(struct gllc_window *wnd) {
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  nw_make_context_current(&wnd->nw);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   double x0, y0, x1, y1;
   float _w = (float)wnd->width;
   float _h = (float)wnd->height;
@@ -844,7 +846,6 @@ static void draw(struct gllc_window *wnd) {
   const float *_screenmvp = (const float *)wnd->mscreenmvp;
   screen_to_world(wnd, 0.0f, _h, &x0, &y0);
   screen_to_world(wnd, _w, 0.0f, &x1, &y1);
-  nw_make_context_current(&wnd->nw);
   glClear(GL_COLOR_BUFFER_BIT);
   glUseProgram(wnd->program);
   glUniformMatrix4fv(wnd->loc_umvp, 1, GL_FALSE, _mvp);
@@ -894,11 +895,14 @@ static inline void update_camera(struct gllc_window *w) {
 }
 
 static void on_size(struct nw *w, int width, int height, void *data) {
+  nw_get_size(w, &width, &height);
   WND(data)->width = width;
   WND(data)->height = height;
   update_camera(WND(data));
-  nw_make_context_current(&WND(data)->nw);
-  glViewport(0, 0, width, height);
+  if (WND(data)->ready) {
+    nw_make_context_current(&WND(data)->nw);
+    glViewport(0, 0, width, height);
+  }
   nw_dirty(w);
 }
 
@@ -1066,14 +1070,6 @@ static void on_mouse_leave(struct nw *wn, void *data) {
   nw_show_cursor(1);
 }
 
-static struct nw_vtable _nw_vtable = {
-    .paint = on_paint,
-    .size = on_size,
-    .mouse_move = on_mouse_move,
-    .mouse_click = on_mouse_click,
-    .mouse_scroll = on_mouse_scroll,
-    .mouse_leave = on_mouse_leave};
-
 static GLuint load_shader(GLuint type, const char *source) {
   GLuint shader = glCreateShader(type);
   if (shader == 0) {
@@ -1129,11 +1125,11 @@ static GLuint load_program(GLuint vert_shader, GLuint frag_shader) {
 }
 
 static void load_GL_program(struct gllc_window *w) {
-  GLuint V_shader = load_shader(GL_VERTEX_SHADER, vert_glsl);
+  GLuint V_shader = load_shader(GL_VERTEX_SHADER, vert_vert);
   if (!V_shader) {
     return;
   }
-  GLuint F_shader = load_shader(GL_FRAGMENT_SHADER, frag_glsl);
+  GLuint F_shader = load_shader(GL_FRAGMENT_SHADER, frag_frag);
   if (!F_shader) {
     glDeleteShader(V_shader);
     return;
@@ -1156,53 +1152,67 @@ static void load_GL_uniform_loc(struct gllc_window *w) {
   LOADLOC(w->loc_uclearcolor, "uClearColor");
 }
 
+void on_ready(struct nw *NW, void *data) {
+  nw_make_context_current(NW);
+#if defined(_WIN32)
+  if (gladLoadGL()) {
+#endif
+    glDisable(GL_MULTISAMPLE);
+    glDisable(GL_LINE_SMOOTH);
+    glDisable(GL_POINT_SMOOTH);
+    glDisable(GL_POLYGON_SMOOTH);
+    glDisable(GL_DITHER);
+    glEnable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_CULL_FACE);
+    float *color = WND(data)->clearcolor;
+    glClearColor(color[0], color[1], color[2], color[3]);
+    load_GL_program(WND(data));
+    glUseProgram(WND(data)->program);
+    load_GL_uniform_loc(WND(data));
+    nw_get_size(&WND(data)->nw, &WND(data)->width, &WND(data)->height);
+    glViewport(0, 0, WND(data)->width, WND(data)->height);
+    WND(data)->ready = 1;
+#if defined(_WIN32)
+  }
+#endif
+}
+
+static struct nw_vtable _nw_vtable = {
+    .ready = on_ready,
+    .paint = on_paint,
+    .size = on_size,
+    .mouse_move = on_mouse_move,
+    .mouse_click = on_mouse_click,
+    .mouse_scroll = on_mouse_scroll,
+    .mouse_leave = on_mouse_leave};
+
 struct gllc_window *gllc_window_create(void *p) {
   int success = 0;
   struct gllc_window *wnd = malloc(sizeof(struct gllc_window));
   if (wnd) {
     memset(wnd, 0, sizeof(struct gllc_window));
     GLLC_OBJECT_INIT(wnd, _all_props, &_vtable);
-    float white_03[4] = {1.0f, 1.0f, 1.0f, 0.3f};
-    float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-    memcpy(wnd->clearcolor, black, sizeof(black));
+    memcpy(wnd->clearcolor, white, sizeof(white));
     wnd->griduse = 1;
+    wnd->scale = 1.0f;
+    glm_mat4_identity(wnd->mmodel);
+    glm_mat4_identity(wnd->mview);
+    glm_mat4_identity(wnd->mproj);
+    update_camera(wnd);
     ui_grid_init(&wnd->grid);
     ui_cursor_init(&wnd->cursor);
     ui_selection_init(&wnd->sel);
-    if (nw_create(&wnd->nw, p, &_nw_vtable, wnd)) {
-      nw_make_context_current(&wnd->nw);
-      if (gladLoadGL()) {
-        glDisable(GL_MULTISAMPLE);
-        glDisable(GL_LINE_SMOOTH);
-        glDisable(GL_POINT_SMOOTH);
-        glDisable(GL_POLYGON_SMOOTH);
-        glDisable(GL_DITHER);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glDisable(GL_CULL_FACE);
-        glClearColor(wnd->clearcolor[0], wnd->clearcolor[1], wnd->clearcolor[2], wnd->clearcolor[3]);
-        load_GL_program(wnd);
-        glUseProgram(wnd->program);
-        load_GL_uniform_loc(wnd);
-        nw_get_size(&wnd->nw, &wnd->width, &wnd->height);
-        wnd->scale = 1.0f;
-        glm_mat4_identity(wnd->mmodel);
-        glm_mat4_identity(wnd->mview);
-        glm_mat4_identity(wnd->mproj);
-        glViewport(0, 0, wnd->width, wnd->height);
-        update_camera(wnd);
-        return wnd;
-      }
-      nw_make_context_current(0);
+    if (nw_create_async(&wnd->nw, p, &_nw_vtable, wnd)) {
+      return wnd;
+    } else {
+      free(wnd);
     }
-  }
-  if (wnd) {
-    nw_destroy(&wnd->nw);
-    free(wnd);
   }
   return NULL;
 }
@@ -1238,13 +1248,15 @@ int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block) {
 
 int gllc_window_destroy(struct gllc_window *w) {
   NONULL(w, 0);
-  nw_make_context_current(&w->nw);
-  gllc_block_set_window(w->block, NULL);
-  ds_gpu_clear(&w->gpucmn);
-  ds_gpu_clear(&w->gpuinter);
-  ui_grid_cleanup(&w->grid);
-  ui_cursor_cleanup(&w->cursor);
-  ui_selection_cleanup(&w->sel);
+  if (w->ready) {
+    nw_make_context_current(&w->nw);
+    gllc_block_set_window(w->block, NULL);
+    ds_gpu_clear(&w->gpucmn);
+    ds_gpu_clear(&w->gpuinter);
+    ui_grid_cleanup(&w->grid);
+    ui_cursor_cleanup(&w->cursor);
+    ui_selection_cleanup(&w->sel);
+  }
   nw_destroy(&w->nw);
   free(w);
   return 1;
@@ -1252,7 +1264,7 @@ int gllc_window_destroy(struct gllc_window *w) {
 
 int gllc_window_redraw(struct gllc_window *wnd) {
   NONULL(wnd, 0);
-  draw(wnd);
+  nw_dirty(&wnd->nw);
   return 1;
 }
 

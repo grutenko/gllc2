@@ -1,3 +1,5 @@
+#if defined(_WIN32)
+
 #include "glad.h"
 #include "platform.h"
 
@@ -321,6 +323,7 @@ int nw_create(struct nw *nw, void *parent, struct nw_vtable *vtable, void *data)
   nw->data = data;
 
   push_NW(nw);
+  vtable->ready(nw, data);
 
   return 1;
 _error:
@@ -402,3 +405,5 @@ void nw_focus(struct nw *nw) {
 void nw_cursor_set_pos(int x, int y) {
   SetCursorPos(x, y);
 }
+
+#endif

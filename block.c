@@ -14,11 +14,9 @@
 #include "window.h"
 
 #include <math.h>
-#include <profileapi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <winnt.h>
 
 #define BLK(obj) ((struct gllc_block *)(obj))
 

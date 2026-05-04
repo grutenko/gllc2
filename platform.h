@@ -3,11 +3,14 @@
 
 #if defined(_WIN32)
 #include <windows.h>
+#elif defined(__linux__)
+#include <gtk/gtk.h>
 #endif
 
 struct nw;
 
 struct nw_vtable {
+  void (*ready)(struct nw *w, void *data);
   void (*paint)(struct nw *w, void *data);
   void (*size)(struct nw *w, int width, int height, void *data);
   void (*mouse_move)(struct nw *w, int x, int y, void *data);
@@ -21,6 +24,8 @@ struct nw {
   HWND w;
   HDC dc;
   HGLRC glrc;
+#elif defined(__linux__)
+  GtkGLArea *area;
 #endif
   void *data;
   struct nw_vtable *vtable;
@@ -28,7 +33,9 @@ struct nw {
   struct nw *prev;
 };
 
-int nw_create(struct nw *NW, void *parent, struct nw_vtable *vtable, void *data);
+typedef void (*nw_ready_fn)(struct nw *, void *);
+
+int nw_create_async(struct nw *NW, void *parent, struct nw_vtable *vtable, void *data);
 void nw_destroy(struct nw *NW);
 void nw_get_cursor(struct nw *w, int *x, int *y);
 void nw_make_context_current(struct nw *w);

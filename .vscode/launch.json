@@ -5,12 +5,33 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch",
+      "name": "Launch Win32",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceRoot}/out/build/release/examples/basic/basic_example.exe",
+      "program": "${workspaceRoot}/out/build/debug/examples/basic/basic_example.exe",
       "args": [],
       "cwd": "${workspaceRoot}"
     },
+    {
+      "name": "Launch GTK",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/out/build/debug-linux/examples/basic_gtk/basic_gtk",
+      "args": [],
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "Launch Python (gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/usr/bin/python3",
+      "args": [
+        "${workspaceFolder}/examples/python/main.py"
+      ],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    }
   ]
 }

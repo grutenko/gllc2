@@ -1,72 +1,71 @@
-cmake_minimum_required(VERSION 3.28)
-
+cmake_minimum_required(VERSION 3.18)
 project(gllc C)
 
-set(CMAKE_DEBUG_POSTFIX d)
+set(CMAKE_C_STANDARD 11)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCES
-  glad.c
-  debug.c
-  block.c
-  circle.c
-  event.c
-  font.c
-  linetype.c
-  draw.c
-  drawing.c
-  entity.c
-  linebuild.c
-  object.c
-  named_object.c
-  platform_windows.c
-  point.c
-  polyline.c
-  rect.c
-  arc.c
-  linalg.c
-  entbuildutil.c
-  sparsegrid.c
-  stb_truetype.c
-  ui_cursor.c
-  ui_grid.c
-  ui_selection.c
-  ui_vertex_buffer.c
-  layer.c
-  window.c
-  line.c
-  tess2/bucketalloc.c
-  tess2/dict.c
-  tess2/geom.c
-  tess2/mesh.c
-  tess2/priorityq.c
-  tess2/sweep.c
-  tess2/tess.c
-  litecad.c)
-
-set(ENV{LIBGL_ALWAYS_SOFTWARE} "1")
-set(ENV{MESA_LOADER_DRIVER_OVERRIDE} "llvmpipe")
-
-include_directories(. ${CMAKE_BINARY_DIR})
+    glad.c
+    debug.c
+    block.c
+    circle.c
+    event.c
+    font.c
+    linetype.c
+    draw.c
+    drawing.c
+    entity.c
+    linebuild.c
+    object.c
+    named_object.c
+    platform_windows.c
+    platform_gtk.c
+    platform_webgl.c
+    point.c
+    polyline.c
+    rect.c
+    arc.c
+    linalg.c
+    entbuildutil.c
+    sparsegrid.c
+    stb_truetype.c
+    ui_cursor.c
+    ui_grid.c
+    ui_selection.c
+    ui_vertex_buffer.c
+    layer.c
+    window.c
+    line.c
+    litecad.c)
+set(TESS2_SOURCES
+    tess2/bucketalloc.c
+    tess2/dict.c
+    tess2/geom.c
+    tess2/mesh.c
+    tess2/priorityq.c
+    tess2/sweep.c
+    tess2/tess.c)
 
 set(CGLM_STATIC ON)
 add_subdirectory(cglm)
 add_subdirectory(tools)
+add_subdirectory(examples)
 
+include_directories(. cglm/include ${CMAKE_BINARY_DIR})
 
 set(SHADERS
-    shaders/vert.glsl
-    shaders/frag.glsl
-)
+    shaders/frag.frag
+    shaders/vert.vert)
 
 set(GENERATED_HEADERS "")
-
 foreach(SHADER ${SHADERS})
     get_filename_component(NAME ${SHADER} NAME_WE)
     set(OUT "${CMAKE_CURRENT_BINARY_DIR}/${NAME}.h")
 
     add_custom_command(
         OUTPUT ${OUT}
-        COMMAND gen_shader_h ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER} ${OUT}
+        COMMAND $<TARGET_FILE:gen_shader_h> ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER} ${OUT}
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER} gen_shader_h
         COMMENT "Generating header for ${SHADER}"
         VERBATIM
@@ -78,15 +77,14 @@ endforeach()
 add_custom_target(Shaders ALL DEPENDS ${GENERATED_HEADERS})
 
 set(FONT_FILES fonts/Simplex.ttf)
-
 foreach(FONT ${FONT_FILES})
     get_filename_component(NAME ${FONT} NAME_WE)
     set(OUT "${CMAKE_CURRENT_BINARY_DIR}/${NAME}.h")
 
     add_custom_command(
         OUTPUT ${OUT}
-        COMMAND gen_font_h ${CMAKE_CURRENT_SOURCE_DIR}/${FONT} ${OUT}
-        DEPENDS ${FONT} gen_font_h
+        COMMAND $<TARGET_FILE:gen_font_h> ${CMAKE_CURRENT_SOURCE_DIR}/${FONT} ${OUT}
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${FONT} gen_font_h
         COMMENT "Generating header ${OUT} from ${FONT}"
         VERBATIM
     )
@@ -96,25 +94,37 @@ endforeach()
 
 add_custom_target(Fonts ALL DEPENDS ${GENERATED_FONT_HEADERS})
 
-add_library(gllc SHARED ${SOURCES})
+add_library(gllc SHARED ${SOURCES} ${TESS2_SOURCES})
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(gllc PRIVATE DEBUG)
-endif()
+target_include_directories(gllc PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    cglm/include
+)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(gllc PRIVATE NDEBUG)
-endif()
+target_compile_definitions(gllc PRIVATE
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<CONFIG:Release>:NDEBUG>
+)
 
 target_compile_options(gllc PRIVATE
-    $<$<CONFIG:Release>:-O2 -DNDEBUG>
+    $<$<CONFIG:Release>:-O2>
 )
 
 target_link_libraries(gllc PRIVATE cglm)
-target_include_directories(gllc PUBLIC cglm/include)
 
 if (WIN32)
-  target_compile_definitions(gllc PRIVATE WIN32 _WIN32 _AMD64_ _CRT_SECURE_NO_WARNINGS)
-  target_link_libraries(gllc PRIVATE opengl32 gdi32 user32 kernel32)
+    target_link_libraries(gllc PRIVATE opengl32 gdi32 user32 kernel32)
+elseif(UNIX)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
+    pkg_check_modules(EPOXY REQUIRED IMPORTED_TARGET epoxy)
+    target_link_libraries(gllc PRIVATE PkgConfig::GTK)
+target_link_libraries(gllc PRIVATE PkgConfig::EPOXY)
+    find_package(OpenGL REQUIRED)
+
+target_link_libraries(gllc PRIVATE OpenGL::GL)
+    target_link_libraries(gllc PRIVATE m dl pthread)
+    target_compile_options(gllc PRIVATE -fvisibility=hidden)
+    target_compile_options(gllc PUBLIC -DGL_GLEXT_PROTOTYPES) 
 endif()
-add_subdirectory(examples)

@@ -2,7 +2,11 @@
 #define entity_h
 
 #include "entity_vertex.h"
+#if defined(WIN32)
 #include "glad.h"
+#elif defined(__linux__)
+#include <epoxy/gl.h>
+#endif
 #include "object.h"
 
 struct gllc_block;

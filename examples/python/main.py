@@ -10,6 +10,9 @@ import math
 app = wx.App(0)
 f = wx.Frame(None)
 f.SetSize(wx.Size(800, 600))
+f.Show()
+f.Raise()
+print(f.GetHandle())
 lc.lcInitialize()
 hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
 lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
@@ -25,7 +28,6 @@ def on_size(event):
 
 
 f.Bind(wx.EVT_SIZE, on_size)
-f.Show()
 
 N = 600
 M = 600
@@ -116,9 +118,6 @@ for entity in msp:
         radius = entity.dxf.radius
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
-
-lc.lcBlockUpdate(hBlock, 0, 0)
-lc.lcWndRedraw(hWnd)
 
 # генерация полилиний
 for i in range(N - 1):

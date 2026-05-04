@@ -1,3 +1,5 @@
+#if defined(_WIN32)
+
 #include "block.h"
 #include "drawing.h"
 #include "entity.h"
@@ -104,3 +106,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   return 0;
 }
+
+#else
+
+int main() {
+  return 0;
+}
+
+#endif

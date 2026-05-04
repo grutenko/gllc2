@@ -2,7 +2,11 @@
 #define ui_grid_h
 
 #include "draw.h"
+#if defined(WIN32)
 #include "glad.h"
+#elif defined(__linux__)
+#include <epoxy/gl.h>
+#endif
 
 struct ui_grid {
   int snap;

@@ -1,1 +1,1 @@
-# GLLC - аналог litecad на opengl
+# GLLC - opengl CAD подобная библиотека

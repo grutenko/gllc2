@@ -1,1 +1,5 @@
-add_subdirectory(basic)
+if(WIN32)
+    add_subdirectory(basic_win32)
+elseif(UNIX AND NOT APPLE)
+    add_subdirectory(basic_gtk)
+endif()

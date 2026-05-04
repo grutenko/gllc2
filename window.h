@@ -3,11 +3,15 @@
 
 #include "draw.h"
 #include "entity.h"
+#if defined(WIN32)
 #include "glad.h"
+#elif defined(__linux__)
+#include <epoxy/gl.h>
+#endif
 #include "litecad.h"
 #include "object.h"
 
-#include "cglm/call.h"
+#include "cglm/include/cglm/call.h"
 #include "platform.h"
 #include "ui_cursor.h"
 #include "ui_grid.h"
@@ -19,6 +23,7 @@ struct gllc_window {
   struct gllc_block *block;
   struct gllc_drawing *drawing;
   struct nw nw;
+  int ready;
   GLuint program;
   GLuint loc_umvp;
   GLuint loc_uscale;

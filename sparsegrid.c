@@ -2,7 +2,6 @@
 #include "entity.h"
 
 #include <math.h>
-#include <profileapi.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

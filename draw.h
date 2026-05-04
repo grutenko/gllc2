@@ -1,7 +1,11 @@
 #ifndef draw_h
 #define draw_h
 
+#if defined(WIN32)
 #include "glad.h"
+#elif defined(__linux__)
+#include <epoxy/gl.h>
+#endif
 
 struct ds_vertex {
   GLfloat th;

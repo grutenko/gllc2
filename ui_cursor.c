@@ -1,6 +1,8 @@
 #include "ui_cursor.h"
 #include "draw.h"
 
+#include <stddef.h>
+
 #define CURSOR_VCOUNT 12
 #define CURSOR_VBO_SIZE (CURSOR_VCOUNT * sizeof(struct ds_vertex))
 

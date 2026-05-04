@@ -38,6 +38,8 @@ int main(int argc, char **argv) {
   while (fgets(line, sizeof(line), fin)) {
     // Убираем \n
     size_t len = strlen(line);
+    if(len > 1 && line[len - 1] == '\n' && line[len - 2] == '\r')
+      line[len - 2] = 0;
     if (len > 0 && line[len - 1] == '\n')
       line[len - 1] = 0;
     fprintf(fout, "\"%s\\n\"\n", line);
