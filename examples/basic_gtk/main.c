@@ -6,7 +6,6 @@
 #include "litecad.h"
 
 int main(int argc, char **argv) {
-  XInitThreads();
   gtk_init(&argc, &argv);
 
   GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -17,7 +16,7 @@ int main(int argc, char **argv) {
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
   gtk_widget_realize(window); 
   GdkWindow *gdk_win = gtk_widget_get_window(window);
-  void *hWnd = XlcCreateWindowX11((void *)GDK_WINDOW_XID(gdk_win), (void *)GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), XLC_WINDOW_X11_BACKEND);
+  void *hWnd = lcCreateWindow(window, XLC_WINDOW_GTK_BACKEND);
   void *hDrw = lcCreateDrawing();
   void *hBlock = lcPropGetHandle(hDrw, LC_PROP_DRW_BLOCK_MODEL);
 

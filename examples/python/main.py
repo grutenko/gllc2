@@ -80,6 +80,8 @@ for entity in msp:
     color = get_color_int(entity, dxf)
     linetype_name = entity.dxf.linetype or "BYLAYER"
 
+    h = None
+
     # ---------- POLYLINE / LWPOLYLINE ----------
     if entity.dxftype() == "LINE":
         start = entity.dxf.start
@@ -122,6 +124,8 @@ for entity in msp:
         radius = entity.dxf.radius
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+    if h is not None:
+        lc.lcPropPutBool(h, lc.LC_PROP_ENT_LOCKED, True)
 
 # генерация полилиний
 for i in range(N - 1):
@@ -138,7 +142,6 @@ for i in range(N - 1):
         lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x000000)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
-        lc.lcPropPutBool(pline, lc.LC_PROP_ENT_LOCKED, True)
         lc.lcPlineEnd(pline)
 
 lc.lcBlockUpdate(hBlock, 0, 0)

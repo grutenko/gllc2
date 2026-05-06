@@ -49,10 +49,10 @@ static gboolean on_scroll(GtkWidget *widget, GdkEventScroll *event, gpointer dat
 
   switch (event->direction) {
   case GDK_SCROLL_UP:
-    dy = -1;
+    dy = 1;
     break;
   case GDK_SCROLL_DOWN:
-    dy = 1;
+    dy = -1;
     break;
   case GDK_SCROLL_LEFT:
     dx = -1;
@@ -213,6 +213,7 @@ int nw_create_gtk(struct nw *nw, struct nw_callback_vtable *vtable, GtkWindow *p
   gtk_gl_area_set_has_depth_buffer(nw->area, FALSE);
   if (GTK_IS_BIN(parent)) {
     GtkWidget *child = gtk_bin_get_child(GTK_BIN(parent));
+    printf("%p\n", child);
     if (GTK_IS_BOX(child)) {
       if (child && GTK_IS_CONTAINER(child)) {
         GList *list = gtk_container_get_children(GTK_CONTAINER(child));
