@@ -11,6 +11,13 @@
 #define LC_FALSE 0
 #define LC_TRUE 1
 
+// For linux only.
+// Select backend for creating window.
+// XLC_WINDOW_GTK_BACKEND | XLC_WINDOW_X11_BACKEND -> error: Multiple backend declare.
+#define XLC_WINDOW_GTK_BACKEND 0x1
+#define XLC_WINDOW_X11_BACKEND 0x2
+#define XLC_WINDOW_WAYLAND_BACKEND 0x4
+
 // LiteCAD window styles ( lcCreateWindow )
 #define LC_WS_HSCROLL 1 // Window has a horizontal scroll bar
 #define LC_WS_VSCROLL 2 // Window has a vertical scroll bar
@@ -424,13 +431,13 @@
 
 // values for lcWndMessage uType parameter
 #define LC_MB_OK \
-  0 // 0x0000L The message box contains one push button: OK. This is the
-    // default.
+  0 // 0x0000L The message box contains one push button: OK. This is the \
+      // default.
 #define LC_MB_OKCANCEL \
   1 // 0x0001L The message box contains two push buttons: OK and Cancel.
 #define LC_MB_ABORTRETRYIGNORE \
-  2 // 0x0002L The message box contains three push buttons: Abort, Retry, and
-    // Ignore.
+  2 // 0x0002L The message box contains three push buttons: Abort, Retry, and \
+      // Ignore.
 #define LC_MB_YESNOCANCEL \
   3 // 0x0003L The message box contains three push buttons: Yes, No, and Cancel.
 #define LC_MB_YESNO \
@@ -438,20 +445,20 @@
 #define LC_MB_RETRYCANCEL \
   5 // 0x0005L The message box contains two push buttons: Retry and Cancel.
 #define LC_MB_CANCELTRYCONTINUE \
-  6 // 0x0006L The message box contains three push buttons: Cancel, Try Again,
-    // Continue. Use this message box type instead of MB_ABORTRETRYIGNORE.
+  6 // 0x0006L The message box contains three push buttons: Cancel, Try Again, \
+      // Continue. Use this message box type instead of MB_ABORTRETRYIGNORE.
 #define LC_MB_HELP \
-  16384 // 0x4000L Adds a Help button to the message box. When the user clicks
-        // the Help button or presses F1, the system sends a WM_HELP message to
+  16384 // 0x4000L Adds a Help button to the message box. When the user clicks  \
+        // the Help button or presses F1, the system sends a WM_HELP message to \
         // the owner.
 #define LC_MB_ICONSTOP \
-  16 // 0x0010L A stop-sign icon appears in the message
-     // box.
+  16 // 0x0010L A stop-sign icon appears in the message \
+      // box.
 #define LC_MB_ICONERROR \
   16 // 0x0010L A stop-sign icon appears in the message box.
 #define LC_MB_ICONHAND \
-  16 // 0x0010L A stop-sign icon appears in the message
-     // box.
+  16 // 0x0010L A stop-sign icon appears in the message \
+      // box.
 #define LC_MB_ICONQUESTION \
   32 // 0x0020L A question-mark icon appears in the message box.
 #define LC_MB_ICONEXCLAMATION \
@@ -459,11 +466,11 @@
 #define LC_MB_ICONWARNING \
   48 // 0x0030L An exclamation-point icon appears in the message box.
 #define LC_MB_ICONINFORMATION \
-  64 // 0x0040L An icon consisting of a lowercase letter i in a circle appears
-     // in the message box.
+  64 // 0x0040L An icon consisting of a lowercase letter i in a circle appears \
+      // in the message box.
 #define LC_MB_ICONASTERISK \
-  64 // 0x0040L An icon consisting of a lowercase letter i in a circle appears
-     // in the message box.
+  64 // 0x0040L An icon consisting of a lowercase letter i in a circle appears \
+      // in the message box.
 
 #define LC_UNDO_BEGIN 0 // begin record
 #define LC_UNDO_END 1   // end record
@@ -542,11 +549,11 @@
 
 // Lineweights
 #define LC_LWEIGHT_DEFAULT \
-  -3 // Default lineweight. Width is controlled by LC_PROP_DRW_LWDEFAULT
-     // property.
+  -3 // Default lineweight. Width is controlled by LC_PROP_DRW_LWDEFAULT \
+      // property.
 #define LC_LWEIGHT_BYBLOCK \
-  -2 // Only for entities contained in block. Universal lineweight specified
-     // within a BlockRef entity.
+  -2 // Only for entities contained in block. Universal lineweight specified \
+      // within a BlockRef entity.
 #define LC_LWEIGHT_BYLAYER \
   -1 // Only for entities. Universal lineweight specified in the entity's layer.
 #define LC_LWIDTH_DEFAULT -3
@@ -600,33 +607,33 @@
 // Snap modes ( LC_PROP_WND_OSNAP )
 #define LC_OSNAP_NULL 0 // 0x00000 no snap at all
 #define LC_OSNAP_NODE \
-  1 // 0x00001 to a Point object, dimension definition point, or dimension text
-    // origin.
+  1 // 0x00001 to a Point object, dimension definition point, or dimension text \
+      // origin.
 #define LC_OSNAP_ENDPOINT \
-  2 // 0x00002 to the closest endpoint of an Arc, Elliptical Arc, Line,
-    // Multiline, Polyline segment, Ray
+  2 // 0x00002 to the closest endpoint of an Arc, Elliptical Arc, Line, \
+      // Multiline, Polyline segment, Ray
 #define LC_OSNAP_MIDPOINT \
-  4 // 0x00004 to the midpoint of an arc, ellipse, elliptical arc, line,
-    // multiline, polyline segment, region, solid, spline, or xline.
+  4 // 0x00004 to the midpoint of an arc, ellipse, elliptical arc, line, \
+      // multiline, polyline segment, region, solid, spline, or xline.
 #define LC_OSNAP_CENTER \
   8 // 0x00008 to the center of an arc, circle, ellipse, or elliptical arc.
 #define LC_OSNAP_NEAREST \
-  16 // 0x00010 to the nearest point on an arc, circle, ellipse, elliptical arc,
-     // line, multiline, point, polyline, ray, spline, or xline.
+  16 // 0x00010 to the nearest point on an arc, circle, ellipse, elliptical arc, \
+      // line, multiline, point, polyline, ray, spline, or xline.
 #define LC_OSNAP_INTER \
-  32 // 0x00020 to the intersection of an arc, circle, ellipse, elliptical arc,
-     // line, multiline, polyline, ray, region, spline, or xline.
+  32 // 0x00020 to the intersection of an arc, circle, ellipse, elliptical arc, \
+      // line, multiline, polyline, ray, region, spline, or xline.
 #define LC_OSNAP_PERPEND \
-  64 // 0x00040 to a point perpendicular to an arc, circle, ellipse, elliptical
-     // arc, line, multiline, polyline, ray, region, solid, spline, or xline
+  64 // 0x00040 to a point perpendicular to an arc, circle, ellipse, elliptical \
+      // arc, line, multiline, polyline, ray, region, solid, spline, or xline
 #define LC_OSNAP_TANGENT \
-  128 // 0x00080 to the tangent of an arc, circle, ellipse, elliptical arc, or
+  128 // 0x00080 to the tangent of an arc, circle, ellipse, elliptical arc, or \
       // spline.
 #define LC_OSNAP_QUADRANT \
-  256 // 0x00100 to a quadrant point of an arc, circle, ellipse, or elliptical
+  256 // 0x00100 to a quadrant point of an arc, circle, ellipse, or elliptical \
       // arc.
 #define LC_OSNAP_INSERT \
-  512                      // 0x00200 to the insertion point of an attribute, a block, a shape, or
+  512                      // 0x00200 to the insertion point of an attribute, a block, a shape, or \
                            // text.
 #define LC_OSNAP_NONE 1024 // 0x00400 temporary disable object snap
 #define LC_OSNAP_ALL 1023  // 0x003FF all modes
@@ -763,7 +770,7 @@
 
 #define LC_CMD_HELP 1001 // Display Context Help
 #define LC_CMD_RESET \
-  1003                          // Cancel currently active command, de-select all entities, redraw
+  1003                          // Cancel currently active command, de-select all entities, redraw \
                                 // drawing
 #define LC_CMD_SW_GRID 1011     // Toggles "Show coordinate grid" mode
 #define LC_CMD_SW_GRIDSNAP 1012 // Toggles "Snap to coordinate grid" mode
@@ -961,7 +968,7 @@
 #define LC_CMD_LAYER 501    // Call dialog "Layers"
 #define LC_CMD_LAYERORD 502 // Call dialog "Layers order"
 #define LC_CMD_COLOR \
-  503                        // Call dialog "Color", CmdPrm: LC_PROP_DRW_COLOR, LC_PROP_DRW_FCOLOR,
+  503                        // Call dialog "Color", CmdPrm: LC_PROP_DRW_COLOR, LC_PROP_DRW_FCOLOR, \
                              // LC_PROP_ENT_COLOR, LC_PROP_ENT_FCOLOR
 #define LC_CMD_FCOLOR 504    // Call dialog "Filling Color"
 #define LC_CMD_LINETYPE 505  // Call dialog "Linetypes"
@@ -1007,16 +1014,16 @@
   10                        // RW string; name of help file ("Litecad.chm" by default)
 #define LC_PROP_G_DIRDLL 11 // R  string; directory of Litecad.dll
 #define LC_PROP_G_DIRFONTS \
-  13 // RW string; directory of font files (*.lcf), by default
-     // <LC_PROP_G_DIRDLL>\Fonts
+  13 // RW string; directory of font files (*.lcf), by default \
+      // <LC_PROP_G_DIRDLL>\Fonts
 #define LC_PROP_G_DIRLNG \
-  14 // RW string; directory of LNG files, by default
-     // <LC_PROP_G_DIRDLL>\Languages
+  14 // RW string; directory of LNG files, by default \
+      // <LC_PROP_G_DIRDLL>\Languages
 #define LC_PROP_G_DIRTPL \
-  16 // RW string; directory of "New File" templates (*.lcd), by default
-     // <LC_PROP_G_DIRDLL>\Templates
+  16 // RW string; directory of "New File" templates (*.lcd), by default \
+      // <LC_PROP_G_DIRDLL>\Templates
 #define LC_PROP_G_DIRCFG \
-  17                            // RW string; directory of config files (the directory must have write
+  17                            // RW string; directory of config files (the directory must have write \
                                 // permit), by default <LC_PROP_G_DIRDLL>\Config
 #define LC_PROP_G_ICON16 20     // RW string|void *|int; replaces icon for dialogs
 #define LC_PROP_G_ICON32 21     // RW string|void *|int; replaces icon for dialogs
@@ -1026,13 +1033,13 @@
 #define LC_PROP_G_PRNBTNRAS \
   27 // RW bool; visibility of button "Raster" in the "Print" dialog
 #define LC_PROP_G_PRNBTNSRIF \
-  28 // RW bool; visibility of button "Save Raster Image to File" in the
-     // "Print/Raster" dialog
+  28 // RW bool; visibility of button "Save Raster Image to File" in the \
+      // "Print/Raster" dialog
 #define LC_PROP_G_PNTPIXSIZE \
-  29 // RW bool; meaning of negative PtSize parameter of lcPaint_DrawPoint
-     // function, if TRUE - size in pixels, FALSE - % of window height  // undoc
+  29 // RW bool; meaning of negative PtSize parameter of lcPaint_DrawPoint \
+      // function, if TRUE - size in pixels, FALSE - % of window height  // undoc
 #define LC_PROP_G_GETDELENT \
-  30                            // RW bool; controls if lcBlockGetEnt... function will retrieve deleted
+  30                            // RW bool; controls if lcBlockGetEnt... function will retrieve deleted \
                                 // entities or not
 #define LC_PROP_G_SBARHEIGHT 32 // R  int; StatusBar default height
 #define LC_PROP_G_FILEPROGRESS \
@@ -1052,8 +1059,8 @@
 #define LC_PROP_G_ENTEXT 43        // RW bool; draw entity's extents rectangle
 #define LC_PROP_G_BLKRELOADMODE 44 //  W int; resets g_BlkReloadMode
 #define LC_PROP_G_TABFILE \
-  45 //  W string; the file to be opened in lcCreateWindow with LC_WS_FILETABS
-     //  style
+  45 //  W string; the file to be opened in lcCreateWindow with LC_WS_FILETABS \
+      //  style
 #define LC_PROP_G_MSGSAVEAS \
   46                          // RW bool; display message "Saved As" in the function _lcDrwSave
 #define LC_PROP_G_JUR 47      // RW bool;   // undoc
@@ -1062,7 +1069,7 @@
 #define LC_PROP_G_STR 51      // RW string|int; g_PropStr | mode for g_StrList
 #define LC_PROP_G_INT 52      // R  int;    g_PropInt
 #define LC_PROP_G_FLOAT 53    // R  float;  g_PropFloat
-#define LC_PROP_G_HANDLE 54    // R  void *; g_Propvoid *
+#define LC_PROP_G_HANDLE 54   // R  void *; g_Propvoid *
 #define LC_PROP_G_DELKEYERASE \
   55 // RW bool; using <Delete> key for "Erase" command (LC_CMD_ERASE)
 
@@ -1072,11 +1079,11 @@
 #define LC_PROP_SEL_PICKBYRECT \
   62 // RW bool; Implied windowing for objects selection (AutoCAD PICKAUTO)
 #define LC_PROP_SEL_PICKDRAG \
-  63 // RW bool; Selection Rect: Press and Drag (same as AutoCAD PICKDRAG system
-     // variable)
+  63 // RW bool; Selection Rect: Press and Drag (same as AutoCAD PICKDRAG system \
+      // variable)
 #define LC_PROP_SEL_PICKADD \
-  64 // RW bool; Controls whether subsequent selections replace the current
-     // selection set or add to
+  64 // RW bool; Controls whether subsequent selections replace the current \
+      // selection set or add to
 #define LC_PROP_SEL_PICKBYLAYER \
   65 // RW bool; Select entities only on active layer
 #define LC_PROP_SEL_PICKINPGON \
@@ -1180,7 +1187,7 @@
 #define LC_PROP_G_OSNAP_MARKSIZE \
   228 // RW int;  half-size of marker indicating snap point, pixels (1-15)
 #define LC_PROP_G_OSNAP_APERSIZE \
-  229 // RW int;  half-size of square around cursor, used for snap, pixels
+  229 // RW int;  half-size of square around cursor, used for snap, pixels \
       // (1-15)
 #define LC_PROP_G_OSNAP_MARKCOLOR \
   230 // RW int;  color of osnap marker (COLORREF)
@@ -1217,11 +1224,11 @@
 #define LC_PROP_WND_PICKBOXSIZE \
   305 // R  float; Half-size of selecting square (drawing's units)
 #define LC_PROP_WND_CURSORX \
-  306                        // R  int|float; Cursor position X (pixels)|Cursor position X (drawing's
+  306                        // R  int|float; Cursor position X (pixels)|Cursor position X (drawing's \
                              // units)
 #define LC_PROP_WND_CURX 306 //    LC_PROP_WND_CURSORX
 #define LC_PROP_WND_CURSORY \
-  307                        // R  int|float; Cursor position Y (pixels)|Cursor position Y (drawing's
+  307                        // R  int|float; Cursor position Y (pixels)|Cursor position Y (drawing's \
                              // units)
 #define LC_PROP_WND_CURY 307 // R  LC_PROP_WND_CURSORY
 #define LC_PROP_WND_CURLEF \
@@ -1270,11 +1277,11 @@
 #define LC_PROP_WND_COLORINFTEXT 347 // RW int; info box text color
 #define LC_PROP_WND_CURSORSYS 348    //    same as LC_PROP_WND_CURSORARROW
 #define LC_PROP_WND_CURSORARROW \
-  348                               // RW bool|int|void *; Enable arrow cursor | set cursor (LC_CURSOR_ARROW
+  348                               // RW bool|int|void *; Enable arrow cursor | set cursor (LC_CURSOR_ARROW \
                                     // or other)
 #define LC_PROP_WND_CURSORCROSS 349 // RW bool; Enable crosshair cursor
 #define LC_PROP_WND_CURSORSIZE \
-  350                              // RW int; Size of crosshair cursor, % of screen, if negative - size in
+  350                              // RW int; Size of crosshair cursor, % of screen, if negative - size in \
                                    // pixels
 #define LC_PROP_WND_CURSORPBOX 351 // RW bool; Enable cursor pickbox rect
 #define LC_PROP_WND_COORDS \
@@ -1295,7 +1302,7 @@
   361                             // RW bool; draw red frame around the window if standard block is active
 #define LC_PROP_WND_BLKBASEPT 362 // RW bool; display block basepoint
 #define LC_PROP_WND_SIZE \
-  363                         // R  string; window size, pixels (format "%d x %d", PSWidth(), PSHeight()
+  363                         // R  string; window size, pixels (format "%d x %d", PSWidth(), PSHeight() \
                               // )
 #define LC_PROP_WND_DTIME 364 // R  int; redraw time, milliseconds
 #define LC_PROP_WND_DRAWPAPER \
@@ -1303,23 +1310,23 @@
 #define LC_PROP_WND_FROZEN 366     // RW bool; "Frozen" mode
 #define LC_PROP_WND_FROZENVIEW 367 // RW bool; if true - can't chnage view rect
 #define LC_PROP_WND_COMMAND \
-  368                       // R  int|void *|bool; Id of active command | void * to active command |
+  368                       // R  int|void *|bool; Id of active command | void * to active command | \
                             // TRUE if has active command
 #define LC_PROP_WND_CMD 368 // same as LC_PROP_WND_COMMAND
 #define LC_PROP_WND_CMDENT1 \
-  369 // RW bool; TRUE - only one entity added by command, FALSE - several
+  369 // RW bool; TRUE - only one entity added by command, FALSE - several \
       // entities
 #define LC_PROP_WND_OSNAP \
   370 // RW int|bool; object snap mode  LC_OSNAP_NODE and others | On/Off
 #define LC_PROP_WND_OSNAPMENU \
-  371                                 // RW bool; display "object snap" menu on <shift>+<RBDown>
+  371                                 // RW bool; display "object snap" menu on <shift>+<RBDown> \
                                       // (CBaseWnd::BaseOnRButtonDown)
 #define LC_PROP_WND_ORTHO 372         // RW bool; ortho mode
 #define LC_PROP_WND_PTRACK 373        // RW bool; polar tracking on/off
 #define LC_PROP_WND_PTRACK_ANGLE 374  // RW float; step angle for polar tracking
 #define LC_PROP_WND_PTRACK_ANGREL 375 // RW bool; relative / absolute angle
 #define LC_PROP_WND_PTRACK_DIST \
-  376                               // RW bool|float; use distance step along polar vector | value of dist.
+  376                               // RW bool|float; use distance step along polar vector | value of dist. \
                                     // step
 #define LC_PROP_WND_BASEPT 377      // R  bool; Has Base point   // undoc
 #define LC_PROP_WND_BASEX 378       // R  float; Base point position X   // undoc
@@ -1639,7 +1646,7 @@
 #define LC_PROP_DRW_PROPLINFILL \
   3024 // RW bool; if TRUE then display LinFill item in Properties window
 #define LC_PROP_DRW_PROPZTH \
-  3025                          // RW bool; if TRUE then display Z and Thickness items in Properties
+  3025                          // RW bool; if TRUE then display Z and Thickness items in Properties \
                                 // window
 #define LC_PROP_DRW_3DVIEW 3026 // R  bool; has 3D view (see LC_CMD_3DVIEW)
 #define LC_PROP_DRW_PBTEXT 3027 // RW string; Text of progress box
@@ -1662,7 +1669,7 @@
 #define LC_PROP_DRW_PDSIZE \
   3039 // RW float; default point size, negative value means percent of a window
 #define LC_PROP_DRW_CMLJUST \
-  3040                            // RW int; Current multiline justification 0 = Top; 1 = Middle; 2 =
+  3040                            // RW int; Current multiline justification 0 = Top; 1 = Middle; 2 = \
                                   // Bottom
 #define LC_PROP_DRW_CMLSCALE 3041 // RW float; Current multiline scale
 
@@ -1701,15 +1708,15 @@
 #define LC_PROP_DRW_DIMSTYLE \
   3085 // RW handle|string; void *to active dim style|Name of active dim style
 #define LC_PROP_DRW_PNTSTYLE \
-  3086 // RW handle|string; void *to active point style|Name of active point
+  3086 // RW handle|string; void *to active point style|Name of active point \
        // style
 #define LC_PROP_DRW_MLSTYLE \
-  3087 // RW handle|string; void *to active mline style|Name of active mline
+  3087 // RW handle|string; void *to active mline style|Name of active mline \
        // style
 #define LC_PROP_DRW_BLOCK \
   3089 // RW handle|string; void *to active block|Name of active block
 #define LC_PROP_DRW_VISBLOCK \
-  3090 // RW handle|string; void *to currently visible block|Name of currently
+  3090 // RW handle|string; void *to currently visible block|Name of currently \
        // visible block
 #define LC_PROP_DRW_LAYOUT \
   3091 // RW handle|string; void *to active layout (Tab)
@@ -1735,7 +1742,7 @@
 #define LC_PROP_DRW_EXPLODEARC \
   3131 // RW bool; enable exploding of arcs, circles, ellipses
 #define LC_PROP_DRW_EXPPLINELA \
-  3132 // RW bool; explode bulge polylines: TRUE-to lines and arcs, FALSE-to
+  3132 // RW bool; explode bulge polylines: TRUE-to lines and arcs, FALSE-to \
        // lines
 #define LC_PROP_DRW_EXPSIMPLINE \
   3133 // RW bool; explode simple polylines to lines
@@ -1887,7 +1894,7 @@
 #define LC_PROP_LINETYPE_BYLAYER 4148    // R  bool; "By Layer" flag
 #define LC_PROP_LINETYPE_BYBLOCK 4149    // R  bool; "By Block" flag
 #define LC_PROP_LINETYPE_STD \
-  4150                               // R  bool; standard linetype ("Continuous" or "By Layer" or "By Block")
+  4150                               // R  bool; standard linetype ("Continuous" or "By Layer" or "By Block") \
                                      // // undoc
 #define LC_PROP_LINETYPE_PATLEN 4151 // R  float; Pattern length
 #define LC_PROP_LINETYPE_NELEM 4153  // R  int; number of elements
@@ -1896,7 +1903,7 @@
 #define LC_PROP_LTELEM_COMPLEX \
   4156 // R  bool; TRUE - element contains shape or text
 #define LC_PROP_LTELEM_SHAPE \
-  4157                           // R  bool; TRUE - text style is used, FALSE - draw only szText[0] and
+  4157                           // R  bool; TRUE - text style is used, FALSE - draw only szText[0] and \
                                  // fontfile is used
 #define LC_PROP_LTELEM_TEXT 4158 // R  string; Text
 #define LC_PROP_LTELEM_STYLE \
@@ -1964,26 +1971,26 @@
 #define LC_PROP_DIMST_BLK1 4215 // RW int|string; arrow1 type
 #define LC_PROP_DIMST_BLK2 4216 // RW int|string; arrow2 type
 #define LC_PROP_DIMST_CEN \
-  4217 // RW float; Determines style of center marks for arcs or circles being
+  4217 // RW float; Determines style of center marks for arcs or circles being \
        // dimensioned
 #define LC_PROP_DIMST_CLRD \
-  4218 // RW int; Sets color for dimension leader lines, arrowheads, dimension
+  4218 // RW int; Sets color for dimension leader lines, arrowheads, dimension \
        // lines and leaders
 #define LC_PROP_DIMST_CLRE \
   4219                          // RW int; Sets color for dimension extension lines
 #define LC_PROP_DIMST_CLRT 4220 // RW int; Sets color for dimension text
 #define LC_PROP_DIMST_DEC \
-  4221 // RW int; Controls the precision for a primary units dimension's
+  4221 // RW int; Controls the precision for a primary units dimension's \
        // tolerance values
 #define LC_PROP_DIMST_DSEP \
-  4222 // RW int; Single-character decimal separator used when creating
+  4222 // RW int; Single-character decimal separator used when creating \
        // dimensions whose unit format is decimal
 #define LC_PROP_DIMST_EXE \
   4223 // RW float; Controls extension of extension line beyond dimension line
 #define LC_PROP_DIMST_EXO \
   4224 // RW float; Offset of extension lines from origin points
 #define LC_PROP_DIMST_GAP \
-  4225                            // RW float; Determines the gap around dimension text when the dimension
+  4225                            // RW float; Determines the gap around dimension text when the dimension \
                                   // line is broken to fit the text
 #define LC_PROP_DIMST_LDRBLK 4226 // RW int|string; leader arrow type
 #define LC_PROP_DIMST_LFAC \
@@ -1995,16 +2002,16 @@
 #define LC_PROP_DIMST_RND \
   4231 // RW float; Sets a rounding value for dimensions.
 #define LC_PROP_DIMST_SCALE \
-  4232 // RW float; Overall scale factor applied to dimension variables for
+  4232 // RW float; Overall scale factor applied to dimension variables for \
        // sizes, distances and offsets
 #define LC_PROP_DIMST_TAD \
-  4233 // RW int; Determines text vertical position relative to the dimension
+  4233 // RW int; Determines text vertical position relative to the dimension \
        // line
 #define LC_PROP_DIMST_TIH \
-  4234 // RW int; If 1, text between extension lines is always drawn
+  4234 // RW int; If 1, text between extension lines is always drawn \
        // horizontally
 #define LC_PROP_DIMST_TXT \
-  4235                            // RW float; Dimension text height if the current dimstyle has no fixed
+  4235                            // RW float; Dimension text height if the current dimstyle has no fixed \
                                   // text height
 #define LC_PROP_DIMST_TXSTY 4236  // RW handle|string; Text style
 #define LC_PROP_DIMST_TSTYLE 4236 //    LC_PROP_DIMST_TXSTY
@@ -2368,7 +2375,7 @@
 #define LC_PROP_PLINE_RESOLA 5312 // RW int; resolution for arc segments
 #define LC_PROP_PLINE_RESOLS 5313 // RW int; resolution for spline segments
 #define LC_PROP_PLINE_RADIUS \
-  5314 // RW float|bool; Constant radius (for rounded polyline) | Has const
+  5314 // RW float|bool; Constant radius (for rounded polyline) | Has const \
        // radius
 #define LC_PROP_PLINE_CHAMFER \
   5315                             // RW bool; Chamfer or arc (for rounded polyline)
@@ -2601,7 +2608,7 @@
 #define LC_PROP_IMGREF_UNSCALABLE 5578 // RW bool; "Unscalable image" flag
 #define LC_PROP_IMGREF_UNSSCALE 5579   // RW float; scale for unscalable image
 #define LC_PROP_IMGREF_UNSALIGN \
-  5580 // RW int; Alignment of unscalable image, relative to LC_PROP_IMGREF_XC,
+  5580 // RW int; Alignment of unscalable image, relative to LC_PROP_IMGREF_XC, \
        // LC_PROP_IMGREF_YC (LC_IMGA_CENTER or other)
 
 // ECW / Jpeg2000 Image
@@ -3194,967 +3201,970 @@ typedef void (*F_REDRAW)(void *hLcWnd, int Elapsed);
 // typedef void (CALLBACK* F_EXP) (int Mode, void *hEntity, int nPaths, int
 // iPath, int nPnts, int iPnt, double X, double Y);
 
-LCAPI  void lcEventSetProc(int EventType, F_LCEVENT pFunc, int Prm1, void *Prm2);
-LCAPI  void lcEventReturnCode(int code);
-LCAPI  int lcEventsEnable(int b);
+LCAPI void lcEventSetProc(int EventType, F_LCEVENT pFunc, int Prm1, void *Prm2);
+LCAPI void lcEventReturnCode(int code);
+LCAPI int lcEventsEnable(int b);
 
 // Initialization
-LCAPI  int lcInitialize();
-LCAPI  int lcUninitialize(int bSaveConfig);
+LCAPI int lcInitialize();
+LCAPI int lcUninitialize(int bSaveConfig);
 
 // GUI strings
-LCAPI  int lcStrAdd(char *szTag, char *szText);
-LCAPI  int lcStrSet(char *szTag, char *szText);
-LCAPI  char * lcStrGet(char *szTag);
-LCAPI  int lcStrFileLoad(char *szFileName);
-LCAPI  int lcStrFileSave(char *szFileName, char *szLanguage);
+LCAPI int lcStrAdd(char *szTag, char *szText);
+LCAPI int lcStrSet(char *szTag, char *szText);
+LCAPI char *lcStrGet(char *szTag);
+LCAPI int lcStrFileLoad(char *szFileName);
+LCAPI int lcStrFileSave(char *szFileName, char *szLanguage);
 
 // Objects properties
-LCAPI  int lcPropGetBool(void *hObject, int idProp);
-LCAPI  int lcPropGetInt(void *hObject, int idProp);
+LCAPI int lcPropGetBool(void *hObject, int idProp);
+LCAPI int lcPropGetInt(void *hObject, int idProp);
 double LCAPI lcPropGetFloat(void *hObject, int idProp);
-LCAPI  char * lcPropGetStr(void *hObject, int idProp);
-LCAPI  int lcPropGetStrA(void *hObject, int idProp, char *szBuf, int BufSize);
-LCAPI  int lcPropGetStr2(void *hObject, int idProp);
-LCAPI  int lcPropGetChar(int iChar);
-LCAPI  void * lcPropGetHandle(void *hObject, int idProp);
-LCAPI  int lcPropPutBool(void *hObject, int idProp, int bValue);
-LCAPI  int lcPropPutInt(void *hObject, int idProp, int Value);
-LCAPI  int lcPropPutFloat(void *hObject, int idProp, double Value);
-LCAPI  int lcPropPutStr(void *hObject, int idProp, char *szValue);
-LCAPI  int lcPropPutHandle(void *hObject, int idProp, void *hValue);
+LCAPI char *lcPropGetStr(void *hObject, int idProp);
+LCAPI int lcPropGetStrA(void *hObject, int idProp, char *szBuf, int BufSize);
+LCAPI int lcPropGetStr2(void *hObject, int idProp);
+LCAPI int lcPropGetChar(int iChar);
+LCAPI void *lcPropGetHandle(void *hObject, int idProp);
+LCAPI int lcPropPutBool(void *hObject, int idProp, int bValue);
+LCAPI int lcPropPutInt(void *hObject, int idProp, int Value);
+LCAPI int lcPropPutFloat(void *hObject, int idProp, double Value);
+LCAPI int lcPropPutStr(void *hObject, int idProp, char *szValue);
+LCAPI int lcPropPutHandle(void *hObject, int idProp, void *hValue);
 
 // Design window
-LCAPI  void * lcCreateWindow(void *hWndParent, int Style);
-LCAPI  int lcDeleteWindow(void *hLcWnd);
-LCAPI  int lcWndOnClose(void *hLcWnd);
-LCAPI  int lcWndExeCommand(void *hLcWnd, int Command, int CmdParam);
-LCAPI  int lcWndExitCommand(void *hLcWnd);
-LCAPI  int lcWndResize(void *hLcWnd, int Left, int Top, int Width, int Height);
-LCAPI  int lcWndRedraw(void *hLcWnd);
-LCAPI  int lcWndRedrawAuto(void *hLcWnd, int Elapse, F_REDRAW pFunc);
-LCAPI  int lcWndSetFocus(void *hLcWnd);
-LCAPI  int lcWndSetExtents(void *hLcWnd, double Xmin, double Ymin, double Xmax,
+LCAPI void *lcCreateWindow(void *hWndParent, int Style);
+LCAPI int lcDeleteWindow(void *hLcWnd);
+LCAPI int lcWndOnClose(void *hLcWnd);
+LCAPI int lcWndExeCommand(void *hLcWnd, int Command, int CmdParam);
+LCAPI int lcWndExitCommand(void *hLcWnd);
+LCAPI int lcWndResize(void *hLcWnd, int Left, int Top, int Width, int Height);
+LCAPI int lcWndRedraw(void *hLcWnd);
+LCAPI int lcWndRedrawAuto(void *hLcWnd, int Elapse, F_REDRAW pFunc);
+LCAPI int lcWndSetFocus(void *hLcWnd);
+LCAPI int lcWndSetExtents(void *hLcWnd, double Xmin, double Ymin, double Xmax,
                           double Ymax);
-LCAPI  int lcWndSetBlock(void *hLcWnd, void *hBlock);
-LCAPI  int lcWndSetProps(void *hLcWnd, void *hPropWnd);
-LCAPI  int lcWndSetCmdwin(void *hLcWnd, void *hCmdLine);
-LCAPI  int lcWndSetBasePoint(void *hLcWnd, int bState, double X, double Y);
-LCAPI  int lcWndEmulator(void *hLcWnd, int Mode);
-LCAPI  int lcWndMagnifier(void *hLcWnd, int bOn, int Width, int Height, int Zoom,
+LCAPI int lcWndSetBlock(void *hLcWnd, void *hBlock);
+LCAPI int lcWndSetProps(void *hLcWnd, void *hPropWnd);
+LCAPI int lcWndSetCmdwin(void *hLcWnd, void *hCmdLine);
+LCAPI int lcWndSetBasePoint(void *hLcWnd, int bState, double X, double Y);
+LCAPI int lcWndEmulator(void *hLcWnd, int Mode);
+LCAPI int lcWndMagnifier(void *hLcWnd, int bOn, int Width, int Height, int Zoom,
                          int Flags);
-LCAPI  int lcWndHoverText(void *hLcWnd, char *szText, int X, int Y, int Align);
-LCAPI  int lcWndMessage(void *hLcWnd, char *szText, int uType);
-LCAPI  int lcWndWaitPoint(void *hLcWnd, char *szText, double *pXdrw,
+LCAPI int lcWndHoverText(void *hLcWnd, char *szText, int X, int Y, int Align);
+LCAPI int lcWndMessage(void *hLcWnd, char *szText, int uType);
+LCAPI int lcWndWaitPoint(void *hLcWnd, char *szText, double *pXdrw,
                          double *pYdrw);
-LCAPI  int lcWndWaitPoint2(void *hLcWnd, char *szText, double *pXdrw,
+LCAPI int lcWndWaitPoint2(void *hLcWnd, char *szText, double *pXdrw,
                           double *pYdrw, F_WAITPOINT pFunc, int FuncPrm);
-LCAPI  int lcWndInputStr(void *hLcWnd);
-LCAPI  int lcWndUpdate(void *hLcWnd, int Mode);
-LCAPI  void * lcWndDrwAdd(void *hLcWnd, char *szFileName);
-LCAPI  int lcWndDrwDelete(void *hLcWnd, void *hLcDrw);
-LCAPI  void * lcWndDrwGet(void *hLcWnd, int Index);
+LCAPI int lcWndInputStr(void *hLcWnd);
+LCAPI int lcWndUpdate(void *hLcWnd, int Mode);
+LCAPI void *lcWndDrwAdd(void *hLcWnd, char *szFileName);
+LCAPI int lcWndDrwDelete(void *hLcWnd, void *hLcDrw);
+LCAPI void *lcWndDrwGet(void *hLcWnd, int Index);
 // zoom
-LCAPI  int lcWndZoomRect(void *hLcWnd, double Left, double Bottom, double Right,
+LCAPI int lcWndZoomRect(void *hLcWnd, double Left, double Bottom, double Right,
                         double Top);
-LCAPI  int lcWndZoomScale(void *hLcWnd, double Scal);
-LCAPI  int lcWndZoomMove(void *hLcWnd, double DX, double DY);
-LCAPI  int lcWndZoomPos(void *hLcWnd, double Xc, double Yc, double PixSize);
-LCAPI  int lcWndZoomEnt(void *hLcWnd, void *hEnt, double Scal);
+LCAPI int lcWndZoomScale(void *hLcWnd, double Scal);
+LCAPI int lcWndZoomMove(void *hLcWnd, double DX, double DY);
+LCAPI int lcWndZoomPos(void *hLcWnd, double Xc, double Yc, double PixSize);
+LCAPI int lcWndZoomEnt(void *hLcWnd, void *hEnt, double Scal);
 // coordinates
-LCAPI  int lcWndGetCursorCoord(void *hLcWnd, int *pXwin, int *pYwin,
+LCAPI int lcWndGetCursorCoord(void *hLcWnd, int *pXwin, int *pYwin,
                               double *pXdrw, double *pYdrw);
-LCAPI  int lcCoordDrwToWnd(void *hLcWnd, double Xdrw, double Ydrw, int *pXwnd,
+LCAPI int lcCoordDrwToWnd(void *hLcWnd, double Xdrw, double Ydrw, int *pXwnd,
                           int *pYwnd);
-LCAPI  int lcCoordWndToDrw(void *hLcWnd, int Xwnd, int Ywnd, double *pXdrw,
+LCAPI int lcCoordWndToDrw(void *hLcWnd, int Xwnd, int Ywnd, double *pXdrw,
                           double *pYdrw);
-LCAPI  int lcWndCoordFromDrw(void *hLcWnd, double Xdrw, double Ydrw, int *pXwin,
+LCAPI int lcWndCoordFromDrw(void *hLcWnd, double Xdrw, double Ydrw, int *pXwin,
                             int *pYwin);
-LCAPI  int lcWndCoordToDrw(void *hLcWnd, int Xwin, int Ywin, double *pXdrw,
+LCAPI int lcWndCoordToDrw(void *hLcWnd, int Xwin, int Ywin, double *pXdrw,
                           double *pYdrw);
 
 // retrieve entities
-LCAPI  void * lcWndGetEntByPoint(void *hLcWnd, int Xwin, int Ywin);
-LCAPI  void * lcWndGetEntByPoint2(void *hLcWnd, double X, double Y, double Delta);
-LCAPI  int lcWndGetEntsByPoint(void *hLcWnd, int Xwin, int Ywin, int nMaxEnts);
-LCAPI  int lcWndGetEntsByRect(void *hLcWnd, double Lef, double Bot, double Rig,
+LCAPI void *lcWndGetEntByPoint(void *hLcWnd, int Xwin, int Ywin);
+LCAPI void *lcWndGetEntByPoint2(void *hLcWnd, double X, double Y, double Delta);
+LCAPI int lcWndGetEntsByPoint(void *hLcWnd, int Xwin, int Ywin, int nMaxEnts);
+LCAPI int lcWndGetEntsByRect(void *hLcWnd, double Lef, double Bot, double Rig,
                              double Top, int bCross, int nMaxEnts);
-LCAPI  void * lcWndGetEntity(int iEnt);
-LCAPI  void * lcWndGetEntByID(void *hLcWnd, int Id);
-LCAPI  void * lcWndGetEntByIDH(void *hLcWnd, char *szId);
-LCAPI  void * lcWndGetEntByKey(void *hLcWnd, int Key);
-LCAPI  int lcWndPickEnt(void *hLcWnd, char *szTitle, char *szCursorText);
+LCAPI void *lcWndGetEntity(int iEnt);
+LCAPI void *lcWndGetEntByID(void *hLcWnd, int Id);
+LCAPI void *lcWndGetEntByIDH(void *hLcWnd, char *szId);
+LCAPI void *lcWndGetEntByKey(void *hLcWnd, int Key);
+LCAPI int lcWndPickEnt(void *hLcWnd, char *szTitle, char *szCursorText);
 
 // Font functions
-LCAPI  void * lcFontGetFirst();
-LCAPI  void * lcFontGetNext(void *hFont);
-LCAPI  void * lcFontAddRes(char *szFontName, void *hModule, int idResource);
-LCAPI  void * lcFontAddFile(char *szFontName, char *szFilename,
+LCAPI void *lcFontGetFirst();
+LCAPI void *lcFontGetNext(void *hFont);
+LCAPI void *lcFontAddRes(char *szFontName, void *hModule, int idResource);
+LCAPI void *lcFontAddFile(char *szFontName, char *szFilename,
                           char *szOutFontName);
-LCAPI  void * lcFontAddBin(char *szFontName, void *hData);
-LCAPI  void * lcFontGetChar(void *hFont, int CharCode);
-LCAPI  char * lcFontGetName(char *szFilename);
+LCAPI void *lcFontAddBin(char *szFontName, void *hData);
+LCAPI void *lcFontGetChar(void *hFont, int CharCode);
+LCAPI char *lcFontGetName(char *szFilename);
 
 // Progress indicator
-LCAPI  int lcProgressCreate(void *hLcWnd, int W, int H, char *szTitle);
-LCAPI  int lcProgressSetText(char *szText);
-LCAPI  int lcProgressStart(int MinVal, int MaxVal);
-LCAPI  int lcProgressSetPos(int Val);
-LCAPI  int lcProgressInc();
-LCAPI  int lcProgressDelete();
+LCAPI int lcProgressCreate(void *hLcWnd, int W, int H, char *szTitle);
+LCAPI int lcProgressSetText(char *szText);
+LCAPI int lcProgressStart(int MinVal, int MaxVal);
+LCAPI int lcProgressSetPos(int Val);
+LCAPI int lcProgressInc();
+LCAPI int lcProgressDelete();
 
 // Quadrangle point coordinates
-LCAPI  void * lcQuadCreate();
-LCAPI  int lcQuadDelete(void *hQuad);
-LCAPI  int lcQuadSet(void *hQuad, double x0, double y0, double x1, double y1,
+LCAPI void *lcQuadCreate();
+LCAPI int lcQuadDelete(void *hQuad);
+LCAPI int lcQuadSet(void *hQuad, double x0, double y0, double x1, double y1,
                     double x2, double y2, double x3, double y3);
-LCAPI  int lcQuadTransXYtoUV(void *hQuad, double X, double Y, double *pU,
+LCAPI int lcQuadTransXYtoUV(void *hQuad, double X, double Y, double *pU,
                             double *pV);
-LCAPI  int lcQuadTransUVtoXY(void *hQuad, double U, double V, double *pX,
+LCAPI int lcQuadTransUVtoXY(void *hQuad, double U, double V, double *pX,
                             double *pY);
-LCAPI  int lcQuadContains(void *hQuad, double X, double Y);
+LCAPI int lcQuadContains(void *hQuad, double X, double Y);
 
 // Array of Quadrangles
-LCAPI  void * lcGridCreate();
-LCAPI  int lcGridDelete(void *hGrid);
-LCAPI  int lcGridSet(void *hGrid, double X0, double Y0, double W, double H,
+LCAPI void *lcGridCreate();
+LCAPI int lcGridDelete(void *hGrid);
+LCAPI int lcGridSet(void *hGrid, double X0, double Y0, double W, double H,
                     int Nx, int Ny);
-LCAPI  int lcGridSetDest(void *hGrid, int Ix, int Iy, double X, double Y);
-LCAPI  int lcGridUpdate(void *hGrid);
-LCAPI  int lcGridTrans(void *hGrid, double X, double Y, double *pXdest,
+LCAPI int lcGridSetDest(void *hGrid, int Ix, int Iy, double X, double Y);
+LCAPI int lcGridUpdate(void *hGrid);
+LCAPI int lcGridTrans(void *hGrid, double X, double Y, double *pXdest,
                       double *pYdest);
-LCAPI  int lcGridGetNode(void *hGrid, int bDest, int Ix, int Iy, double *pX,
+LCAPI int lcGridGetNode(void *hGrid, int bDest, int Ix, int Iy, double *pX,
                         double *pY);
-LCAPI  int lcGridGetCell(void *hGrid, double X, double Y, int *pIx, int *pIy);
-LCAPI  int
+LCAPI int lcGridGetCell(void *hGrid, double X, double Y, int *pIx, int *pIy);
+LCAPI int
 lcGridSetView(void *hGrid, int Mode, void *hLcWnd, int ColLine,
               int ColNode); // Mode: 0-disable, 1-original, 2-destination
 
 // Command Window
-LCAPI  void * lcCreateCmdwin(void *hWndParent, int Left, int Top, int Width,
+LCAPI void *lcCreateCmdwin(void *hWndParent, int Left, int Top, int Width,
                            int Height);
-LCAPI  int lcCmdwinResize(void *hCmdLine, int Left, int Top, int Width,
+LCAPI int lcCmdwinResize(void *hCmdLine, int Left, int Top, int Width,
                          int Height);
-LCAPI  int lcCmdwinUpdate(void *hCmdLine); // undoc
+LCAPI int lcCmdwinUpdate(void *hCmdLine); // undoc
 
 // Properties Window
-LCAPI  void * lcCreateProps(void *hWndParent, int Mode);
-LCAPI  int lcDeleteProps(void *hPropWnd);
-LCAPI  int lcPropsResize(void *hPropWnd, int Left, int Top, int Width,
+LCAPI void *lcCreateProps(void *hWndParent, int Mode);
+LCAPI int lcDeleteProps(void *hPropWnd);
+LCAPI int lcPropsResize(void *hPropWnd, int Left, int Top, int Width,
                         int Height);
-LCAPI  int lcPropsUpdate(void *hPropWnd, int bSelChanged);
+LCAPI int lcPropsUpdate(void *hPropWnd, int bSelChanged);
 
 // Status Bar
-LCAPI  void * lcCreateStatbar(void *hWndParent); // also LC_PROP_SBAR_H and others
-LCAPI  int lcDeleteStatbar(void *hStatbar);
-LCAPI  int lcStatbarResize(void *hStatbar, int Left, int Top, int Width,
+LCAPI void *lcCreateStatbar(void *hWndParent); // also LC_PROP_SBAR_H and others
+LCAPI int lcDeleteStatbar(void *hStatbar);
+LCAPI int lcStatbarResize(void *hStatbar, int Left, int Top, int Width,
                           int Height);
-LCAPI  int lcStatbarCell(void *hStatbar, int Id, int Pos);
-LCAPI  int lcStatbarText(void *hStatbar, int Id, char *szText);
-LCAPI  int lcStatbarRedraw(void *hStatbar);
+LCAPI int lcStatbarCell(void *hStatbar, int Id, int Pos);
+LCAPI int lcStatbarText(void *hStatbar, int Id, char *szText);
+LCAPI int lcStatbarRedraw(void *hStatbar);
 
 // utility functions
-LCAPI  int lcDgGetValue(void *hWnd, int Lef, int Top, char *szTitle,
+LCAPI int lcDgGetValue(void *hWnd, int Lef, int Top, char *szTitle,
                        char *szPrompt);
-LCAPI  int lcHelp(char *szTopic);
-LCAPI  void lcGetPolarPoint(double x0, double y0, double Angle, double Dist,
+LCAPI int lcHelp(char *szTopic);
+LCAPI void lcGetPolarPoint(double x0, double y0, double Angle, double Dist,
                            double *pOutX, double *pOutY);
-LCAPI  void lcGetPolarPrm(double x1, double y1, double x2, double y2,
+LCAPI void lcGetPolarPrm(double x1, double y1, double x2, double y2,
                          double *pAngle, double *pDist);
-LCAPI  int lcGetClientSize(void *hWnd, int *pWidth, int *pHeight);
-LCAPI  int lcGetErrorCode();
-LCAPI  char * lcGetErrorStr();
-LCAPI  int lcGetStr(int Mode);
-LCAPI  int lcGetDrwXData(char *szFileName);
-LCAPI  int lcGetDrwPreview(char *szFileName, unsigned char *pOutDIB);
-LCAPI  int lcFilletSetLines(double L1x0, double L1y0, double L1x1, double L1y1,
+LCAPI int lcGetClientSize(void *hWnd, int *pWidth, int *pHeight);
+LCAPI int lcGetErrorCode();
+LCAPI char *lcGetErrorStr();
+LCAPI int lcGetStr(int Mode);
+LCAPI int lcGetDrwXData(char *szFileName);
+LCAPI int lcGetDrwPreview(char *szFileName, unsigned char *pOutDIB);
+LCAPI int lcFilletSetLines(double L1x0, double L1y0, double L1x1, double L1y1,
                            double L2x0, double L2y0, double L2x1, double L2y1);
-LCAPI  int lcFillet(double Rad, double Bis, double Tang);
-LCAPI  int lcFilletGetPoint(int iPnt, double *pX, double *pY);
-LCAPI  int lcFileToStrA(char *szFileName, char *pBuf);
+LCAPI int lcFillet(double Rad, double Bis, double Tang);
+LCAPI int lcFilletGetPoint(int iPnt, double *pX, double *pY);
+LCAPI int lcFileToStrA(char *szFileName, char *pBuf);
 
 // Custom command interface
-LCAPI  void * lcCreateCommand(void *hLcWnd, int Id, char *szTitle);
-LCAPI  int lcCmdExit(void *hCmd);
-LCAPI  int lcCmdCursorText(void *hCmd, char *szText);
-LCAPI  int lcCmdMessage(void *hCmd, char *szText, int uType);
-LCAPI  int lcCmdResetLastPt(void *hCmd);
+LCAPI void *lcCreateCommand(void *hLcWnd, int Id, char *szTitle);
+LCAPI int lcCmdExit(void *hCmd);
+LCAPI int lcCmdCursorText(void *hCmd, char *szText);
+LCAPI int lcCmdMessage(void *hCmd, char *szText, int uType);
+LCAPI int lcCmdResetLastPt(void *hCmd);
 
-LCAPI  int lcTIS_InitLibrary(char *szLicenseKey, int bErrMsg);
-LCAPI  int lcTIS_CloseLibrary();
-LCAPI  int lcCameraConnect(char *szName); // LC_PROP_G_CAMERA_COUNT
-LCAPI  int lcCameraDisconnect();
-LCAPI  int lcCameraShot();
+LCAPI int lcTIS_InitLibrary(char *szLicenseKey, int bErrMsg);
+LCAPI int lcTIS_CloseLibrary();
+LCAPI int lcCameraConnect(char *szName); // LC_PROP_G_CAMERA_COUNT
+LCAPI int lcCameraDisconnect();
+LCAPI int lcCameraShot();
 
 //-----------------------------------------------------------------------------
 // Drawing
 //-----------------------------------------------------------------------------
-LCAPI  void * lcCreateDrawing();
-LCAPI  int lcDeleteDrawing(void *hDrw);
-LCAPI  int lcDrwNew(void *hDrw, char *szFileName, void *hLcWnd);
-LCAPI  int lcDrwLoad(void *hDrw, char *szFileName, void *hLcWnd);
-LCAPI  int lcDrwLoadMem(void *hDrw, void *hMem, void *hLcWnd);
-LCAPI  int lcDxfLoadMem(void *hDrw, void *hMem, void *hLcWnd);
-LCAPI  void * lcDrwLoadTIN(void *hDrw, char *szFileName, void *hLcWnd);
-LCAPI  int lcDrwSaveTIN(void *hDrw, void *hLcWnd);
-LCAPI  int lcDrwInsert(void *hDrw, char *szFileName, int Overwrite,
+LCAPI void *lcCreateDrawing();
+LCAPI int lcDeleteDrawing(void *hDrw);
+LCAPI int lcDrwNew(void *hDrw, char *szFileName, void *hLcWnd);
+LCAPI int lcDrwLoad(void *hDrw, char *szFileName, void *hLcWnd);
+LCAPI int lcDrwLoadMem(void *hDrw, void *hMem, void *hLcWnd);
+LCAPI int lcDxfLoadMem(void *hDrw, void *hMem, void *hLcWnd);
+LCAPI void *lcDrwLoadTIN(void *hDrw, char *szFileName, void *hLcWnd);
+LCAPI int lcDrwSaveTIN(void *hDrw, void *hLcWnd);
+LCAPI int lcDrwInsert(void *hDrw, char *szFileName, int Overwrite,
                       void *hLcWnd);
-LCAPI  int lcDrwInsertSHP(void *hDrw, void *hLayer, char *szFileName,
+LCAPI int lcDrwInsertSHP(void *hDrw, void *hLayer, char *szFileName,
                          void *hLcWnd);
-LCAPI  int lcDrwCopy(void *hDrw, void *hDrwSrc);
-LCAPI  int lcDrwSave(void *hDrw, char *szFileName, int bBak, void *hLcWnd);
-LCAPI  int lcDrwSaveMem(void *hDrw, void *hMem, int MemSize);
+LCAPI int lcDrwCopy(void *hDrw, void *hDrwSrc);
+LCAPI int lcDrwSave(void *hDrw, char *szFileName, int bBak, void *hLcWnd);
+LCAPI int lcDrwSaveMem(void *hDrw, void *hMem, int MemSize);
 
-LCAPI  void * lcDrwAddLayer(void *hDrw, char *szName, char *szColor, void *hLtype,
+LCAPI void *lcDrwAddLayer(void *hDrw, char *szName, char *szColor, void *hLtype,
                           int Lwidth);
-LCAPI  void * lcDrwAddLayer2(void *hDrw, char *szName, void *hFromLayer);
-LCAPI  void * lcDrwAddLinetype(void *hDrw, char *szName, char *szDefinition);
-LCAPI  void * lcDrwAddLinetypeF(void *hDrw, char *szName, char *szFileName,
+LCAPI void *lcDrwAddLayer2(void *hDrw, char *szName, void *hFromLayer);
+LCAPI void *lcDrwAddLinetype(void *hDrw, char *szName, char *szDefinition);
+LCAPI void *lcDrwAddLinetypeF(void *hDrw, char *szName, char *szFileName,
                               char *szLtypeName);
-LCAPI  void * lcDrwAddTextStyle(void *hDrw, char *szName, char *szFontName,
+LCAPI void *lcDrwAddTextStyle(void *hDrw, char *szName, char *szFontName,
                               int bWinFont);
-LCAPI  void * lcDrwAddDimStyle(void *hDrw, char *szName);
-LCAPI  void * lcDrwAddMlineStyle(void *hDrw, char *szName);
-LCAPI  void * lcDrwAddPntStyle(void *hDrw, char *szName, void *hBlock,
+LCAPI void *lcDrwAddDimStyle(void *hDrw, char *szName);
+LCAPI void *lcDrwAddMlineStyle(void *hDrw, char *szName);
+LCAPI void *lcDrwAddPntStyle(void *hDrw, char *szName, void *hBlock,
                              double BlockScale, void *hTStyle,
                              double TextHeight, double TextWidth);
-LCAPI  void * lcDrwAddFilling(void *hDrw, char *szName);
-LCAPI  void * lcDrwAddImage(void *hDrw, char *szName, char *szFileName);
-LCAPI  void * lcDrwAddImage2(void *hDrw, char *szName, int Width, int Height,
+LCAPI void *lcDrwAddFilling(void *hDrw, char *szName);
+LCAPI void *lcDrwAddImage(void *hDrw, char *szName, char *szFileName);
+LCAPI void *lcDrwAddImage2(void *hDrw, char *szName, int Width, int Height,
                            int nBits, void *hData, int bTopDown);
-LCAPI  void * lcDrwAddImage3(void *hDrw, char *szName, void *hMem);
-LCAPI  void * lcDrwAddImageCam(void *hDrw, char *szName);
-LCAPI  void * lcDrwAddBlock(void *hDrw, char *szName, double X, double Y);
-LCAPI  void * lcDrwAddBlockFromFile(void *hDrw, char *szName, char *szFileName,
+LCAPI void *lcDrwAddImage3(void *hDrw, char *szName, void *hMem);
+LCAPI void *lcDrwAddImageCam(void *hDrw, char *szName);
+LCAPI void *lcDrwAddBlock(void *hDrw, char *szName, double X, double Y);
+LCAPI void *lcDrwAddBlockFromFile(void *hDrw, char *szName, char *szFileName,
                                   int Overwrite, void *hwParent);
-LCAPI  void * lcDrwAddBlockFromDrw(void *hDrw, char *szName, void *hDrw2,
+LCAPI void *lcDrwAddBlockFromDrw(void *hDrw, char *szName, void *hDrw2,
                                  int Overwrite, void *hwParent);
-LCAPI  void * lcDrwAddBlockFile(void *hDrw, char *szName, char *szFileName,
+LCAPI void *lcDrwAddBlockFile(void *hDrw, char *szName, char *szFileName,
                               int Overwrite, void *hwParent);
-LCAPI  void * lcDrwAddBlockPaper(void *hDrw, char *szName, int PaperSize,
+LCAPI void *lcDrwAddBlockPaper(void *hDrw, char *szName, int PaperSize,
                                int Orient, double Width, double Height);
-LCAPI  void * lcDrwAddBlockCopy(void *hDrw, char *szName, void *hSrcBlock);
+LCAPI void *lcDrwAddBlockCopy(void *hDrw, char *szName, void *hSrcBlock);
 
-LCAPI  int lcDrwDeleteObject(void *hDrw, void *hObject);
-LCAPI  int lcDrwDeleteUnused(void *hDrw, int ObjType); // undoc
-LCAPI  int lcDrwCountObjects(void *hDrw, int ObjType);
-LCAPI  int lcDrwSortObjects(void *hDrw, int ObjType);
-LCAPI  int lcDrwUpdateWinFonts(void *hDrw, void *hTStyle);
-LCAPI  int lcDrwUpdateBlkRefs(void *hDrw, void *hBlock);
-LCAPI  int lcDrwUpdateTexts(void *hDrw, void *hTStyle);
+LCAPI int lcDrwDeleteObject(void *hDrw, void *hObject);
+LCAPI int lcDrwDeleteUnused(void *hDrw, int ObjType); // undoc
+LCAPI int lcDrwCountObjects(void *hDrw, int ObjType);
+LCAPI int lcDrwSortObjects(void *hDrw, int ObjType);
+LCAPI int lcDrwUpdateWinFonts(void *hDrw, void *hTStyle);
+LCAPI int lcDrwUpdateBlkRefs(void *hDrw, void *hBlock);
+LCAPI int lcDrwUpdateTexts(void *hDrw, void *hTStyle);
 
-LCAPI  void * lcDrwGetFirstObject(void *hDrw, int ObjType);
-LCAPI  void * lcDrwGetNextObject(void *hDrw, void *hObject);
-LCAPI  void * lcDrwGetObjectByID(void *hDrw, int ObjType, int Id);
-LCAPI  void * lcDrwGetObjectByIDH(void *hDrw, int ObjType, char *szId);
-LCAPI  void * lcDrwGetObjectByName(void *hDrw, int ObjType, char *szName);
-LCAPI  void * lcDrwGetEntByID(void *hDrw, int Id);
-LCAPI  void * lcDrwGetEntByIDH(void *hDrw, char *szId);
-LCAPI  void * lcDrwGetEntByKey(void *hDrw, int Key);
+LCAPI void *lcDrwGetFirstObject(void *hDrw, int ObjType);
+LCAPI void *lcDrwGetNextObject(void *hDrw, void *hObject);
+LCAPI void *lcDrwGetObjectByID(void *hDrw, int ObjType, int Id);
+LCAPI void *lcDrwGetObjectByIDH(void *hDrw, int ObjType, char *szId);
+LCAPI void *lcDrwGetObjectByName(void *hDrw, int ObjType, char *szName);
+LCAPI void *lcDrwGetEntByID(void *hDrw, int Id);
+LCAPI void *lcDrwGetEntByIDH(void *hDrw, char *szId);
+LCAPI void *lcDrwGetEntByKey(void *hDrw, int Key);
 
-LCAPI  int lcDrwClearXData(void *hDrw, int ObjType, int Mode);
-LCAPI  int lcDrwPurge(void *hDrw);
-LCAPI  int lcDrwExplode(void *hDrw, int Mode);
-LCAPI  int lcDrwSetLimits(void *hDrw, double Xmin, double Ymin, double Xmax,
+LCAPI int lcDrwClearXData(void *hDrw, int ObjType, int Mode);
+LCAPI int lcDrwPurge(void *hDrw);
+LCAPI int lcDrwExplode(void *hDrw, int Mode);
+LCAPI int lcDrwSetLimits(void *hDrw, double Xmin, double Ymin, double Xmax,
                          double Ymax);
 
-LCAPI  int lcDrwUndoRecord(void *hDrw, int Mode);
-LCAPI  int lcDrwUndo(void *hDrw, int bRedo);
+LCAPI int lcDrwUndoRecord(void *hDrw, int Mode);
+LCAPI int lcDrwUndo(void *hDrw, int bRedo);
 
 // Clipping rectangles (also LC_PROP_CRECT_ID and others)
-LCAPI  int lcCRectsClear(void *hDrw);
-LCAPI  int lcCRectsAdd(void *hDrw, int ID, double Lef, double Bot, double Width,
+LCAPI int lcCRectsClear(void *hDrw);
+LCAPI int lcCRectsAdd(void *hDrw, int ID, double Lef, double Bot, double Width,
                       double Height);
-LCAPI  int lcCRectsDivide(void *hDrw, int NumX, int NumY, int bClearExist);
-LCAPI  void * lcCRectsGetFirst(void *hDrw);
-LCAPI  void * lcCRectsGetNext(void *hDrw, void *hCRect);
-LCAPI  void * lcCRectsGetWithID(void *hDrw, int Id);
-LCAPI  int lcCRectsActive(void *hDrw, void *hCRect);
-LCAPI  void * lcCRectsGetActive(void *hDrw);
-LCAPI  int lcCRectsDelete(void *hDrw, void *hCRect);
-LCAPI  int lcCRectsSave(void *hDrw, void *hCRect, char *szFileName);
-LCAPI  int lcCRectsBitmap(void *hDrw, void *hCRect, char *szFileName,
+LCAPI int lcCRectsDivide(void *hDrw, int NumX, int NumY, int bClearExist);
+LCAPI void *lcCRectsGetFirst(void *hDrw);
+LCAPI void *lcCRectsGetNext(void *hDrw, void *hCRect);
+LCAPI void *lcCRectsGetWithID(void *hDrw, int Id);
+LCAPI int lcCRectsActive(void *hDrw, void *hCRect);
+LCAPI void *lcCRectsGetActive(void *hDrw);
+LCAPI int lcCRectsDelete(void *hDrw, void *hCRect);
+LCAPI int lcCRectsSave(void *hDrw, void *hCRect, char *szFileName);
+LCAPI int lcCRectsBitmap(void *hDrw, void *hCRect, char *szFileName,
                          double PixelSize);
 
 // Block
-LCAPI  int lcBlockSetViewRect(void *hBlock, double Xcen, double Ycen,
+LCAPI int lcBlockSetViewRect(void *hBlock, double Xcen, double Ycen,
                              double Width, double Height);
-LCAPI  int lcBlockSetViewRect2(void *hBlock, double Lef, double Bot, double Rig,
+LCAPI int lcBlockSetViewRect2(void *hBlock, double Lef, double Bot, double Rig,
                               double Top);
-LCAPI  int lcBlockSetPaperSize(void *hBlock, int PaperSize, int Orient,
+LCAPI int lcBlockSetPaperSize(void *hBlock, int PaperSize, int Orient,
                               double Width, double Height);
-LCAPI  int lcBlockRasterize(void *hBlock, char *szFileName, double Xmin,
+LCAPI int lcBlockRasterize(void *hBlock, char *szFileName, double Xmin,
                            double Ymin, double Xmax, double Ymax, int ImgW,
                            int ImgH);
-LCAPI  int lcBlockRasterizeMem(void *hBlock, void *hMem, double Xmin,
+LCAPI int lcBlockRasterizeMem(void *hBlock, void *hMem, double Xmin,
                               double Ymin, double Xmax, double Ymax, int ImgW,
                               int ImgH);
-LCAPI  int lcBlockUpdate(void *hBlock, int bUpdEnts, void *hNewEnt);
-LCAPI  int lcBlockMove(void *hBlock, double dX, double dY, int bUpdate);
-LCAPI  int lcBlockScale(void *hBlock, double X, double Y, double Scal,
+LCAPI int lcBlockUpdate(void *hBlock, int bUpdEnts, void *hNewEnt);
+LCAPI int lcBlockMove(void *hBlock, double dX, double dY, int bUpdate);
+LCAPI int lcBlockScale(void *hBlock, double X, double Y, double Scal,
                        int bUpdate);
-LCAPI  int lcBlockRotate(void *hBlock, double X, double Y, double Angle,
+LCAPI int lcBlockRotate(void *hBlock, double X, double Y, double Angle,
                         int bUpdate);
-LCAPI  int lcBlockMirror(void *hBlock, double X1, double Y1, double X2,
+LCAPI int lcBlockMirror(void *hBlock, double X1, double Y1, double X2,
                         double Y2, int bUpdate);
 
 // Add graphic objects into a block
-LCAPI  int lcBlockClear(void *hBlock, void *hLayer);
-LCAPI  int lcBlockPurge(void *hBlock);
-LCAPI  int lcBlockSortEnts(void *hBlock, int bByLayers, void *hWnd);
-LCAPI  int lcBlockSortEnts2(void *hBlock, void *idEnts,
+LCAPI int lcBlockClear(void *hBlock, void *hLayer);
+LCAPI int lcBlockPurge(void *hBlock);
+LCAPI int lcBlockSortEnts(void *hBlock, int bByLayers, void *hWnd);
+LCAPI int lcBlockSortEnts2(void *hBlock, void *idEnts,
                            int nEnts); // for DWG plugin
-LCAPI  void * lcBlockAddPoint(void *hBlock, double X, double Y);
-LCAPI  void * lcBlockAddPoint2(void *hBlock, double X, double Y, int PtMode,
+LCAPI void *lcBlockAddPoint(void *hBlock, double X, double Y);
+LCAPI void *lcBlockAddPoint2(void *hBlock, double X, double Y, int PtMode,
                              double PtSize);
-LCAPI  void * lcBlockAddPoint3d(void *hBlock, double X, double Y, double Z);
-LCAPI  int lcBlockAddPointsF(void *hBlock, char *szFileName, void *hWnd);
-LCAPI  void * lcBlockAddXline(void *hBlock, double X, double Y, double Angle,
+LCAPI void *lcBlockAddPoint3d(void *hBlock, double X, double Y, double Z);
+LCAPI int lcBlockAddPointsF(void *hBlock, char *szFileName, void *hWnd);
+LCAPI void *lcBlockAddXline(void *hBlock, double X, double Y, double Angle,
                             int bRay);
-LCAPI  void * lcBlockAddXline2P(void *hBlock, double X, double Y, double X2,
+LCAPI void *lcBlockAddXline2P(void *hBlock, double X, double Y, double X2,
                               double Y2, int bRay);
-LCAPI  void * lcBlockAddLine(void *hBlock, double X1, double Y1, double X2,
+LCAPI void *lcBlockAddLine(void *hBlock, double X1, double Y1, double X2,
                            double Y2);
-LCAPI  void * lcBlockAddLineDir(void *hBlock, double X, double Y, double Angle,
+LCAPI void *lcBlockAddLineDir(void *hBlock, double X, double Y, double Angle,
                               double Dist);
-LCAPI  void * lcBlockAddLineTan(void *hBlock, void *hEnt1, void *hEnt2, int Mode);
-LCAPI  void * lcBlockAddPolyline(void *hBlock, int FitType, int bClosed,
+LCAPI void *lcBlockAddLineTan(void *hBlock, void *hEnt1, void *hEnt2, int Mode);
+LCAPI void *lcBlockAddPolyline(void *hBlock, int FitType, int bClosed,
                                int bFilled);
-LCAPI  void * lcBlockAddRPolygon(void *hBlock, int nVers, double Xc, double Yc,
+LCAPI void *lcBlockAddRPolygon(void *hBlock, int nVers, double Xc, double Yc,
                                double R, double Ang0, int bInscribed,
                                int bFilled);
-LCAPI  void * lcBlockAddSpline(void *hBlock, int bClosed, int bFilled);
-LCAPI  void * lcBlockAddBezier(void *hBlock);
-LCAPI  void * lcBlockAddMline(void *hBlock, int FitType, int bClosed);
-LCAPI  void * lcBlockAddRect(void *hBlock, double Xc, double Yc, double Width,
+LCAPI void *lcBlockAddSpline(void *hBlock, int bClosed, int bFilled);
+LCAPI void *lcBlockAddBezier(void *hBlock);
+LCAPI void *lcBlockAddMline(void *hBlock, int FitType, int bClosed);
+LCAPI void *lcBlockAddRect(void *hBlock, double Xc, double Yc, double Width,
                            double Height, double Angle, int bFilled);
-LCAPI  void * lcBlockAddRect2(void *hBlock, double Left, double Bottom,
+LCAPI void *lcBlockAddRect2(void *hBlock, double Left, double Bottom,
                             double Width, double Height, double Rad,
                             int bFilled);
-LCAPI  void * lcBlockAddCircle(void *hBlock, double X, double Y, double Radius,
+LCAPI void *lcBlockAddCircle(void *hBlock, double X, double Y, double Radius,
                              int bFilled);
-LCAPI  void * lcBlockAddArc(void *hBlock, double X, double Y, double Radius,
+LCAPI void *lcBlockAddArc(void *hBlock, double X, double Y, double Radius,
                           double StartAngle, double ArcAngle);
-LCAPI  void * lcBlockAddArc3P(void *hBlock, double X1, double Y1, double X2,
+LCAPI void *lcBlockAddArc3P(void *hBlock, double X1, double Y1, double X2,
                             double Y2, double X3, double Y3);
-LCAPI  void * lcBlockAddFillet(void *hBlock, void *hEnt1, void *hEnt2,
+LCAPI void *lcBlockAddFillet(void *hBlock, void *hEnt1, void *hEnt2,
                              double Radius);
-LCAPI  void * lcBlockAddEllipse(void *hBlock, double X, double Y, double R1,
+LCAPI void *lcBlockAddEllipse(void *hBlock, double X, double Y, double R1,
                               double R2, double RotAngle, double StartAngle,
                               double ArcAngle);
-LCAPI  void * lcBlockAddText(void *hBlock, char *szText, double X, double Y);
-LCAPI  void * lcBlockAddText2(void *hBlock, char *szText, double X, double Y,
+LCAPI void *lcBlockAddText(void *hBlock, char *szText, double X, double Y);
+LCAPI void *lcBlockAddText2(void *hBlock, char *szText, double X, double Y,
                             int Align, double H, double WScale, double RotAngle,
                             double Oblique);
-LCAPI  void * lcBlockAddText3(void *hBlock, char *szText, double X1, double Y1,
+LCAPI void *lcBlockAddText3(void *hBlock, char *szText, double X1, double Y1,
                             double X2, double Y2, int Align, double HW,
                             double Oblique);
-LCAPI  void * lcBlockAddTextWin(void *hBlock, char *szText, double X, double Y);
-LCAPI  void * lcBlockAddTextWin2(void *hBlock, char *szText, double X, double Y,
+LCAPI void *lcBlockAddTextWin(void *hBlock, char *szText, double X, double Y);
+LCAPI void *lcBlockAddTextWin2(void *hBlock, char *szText, double X, double Y,
                                int Align, double H, double WScale,
                                double RotAngle, double Oblique);
-LCAPI  void * lcBlockAddMText(void *hBlock, char *szText, double X, double Y,
+LCAPI void *lcBlockAddMText(void *hBlock, char *szText, double X, double Y,
                             double WrapWidth, int Align, double RotAngle,
                             double H, double WScale);
-LCAPI  void * lcBlockAddArcText(void *hBlock, char *szText, double X, double Y,
+LCAPI void *lcBlockAddArcText(void *hBlock, char *szText, double X, double Y,
                               double Radius, double StartAngle, int bClockwise,
                               double H, double WScale, int Align);
-LCAPI  void * lcBlockAddBlockRef(void *hBlock, void *hRefBlock, double X,
+LCAPI void *lcBlockAddBlockRef(void *hBlock, void *hRefBlock, double X,
                                double Y, double Scal, double Angle);
-LCAPI  void * lcBlockAddBlockRefID(void *hBlock, int idRefBlock, double X,
+LCAPI void *lcBlockAddBlockRefID(void *hBlock, int idRefBlock, double X,
                                  double Y, double Scal, double Angle); // undoc
-LCAPI  void * lcBlockAddBlockRefIDH(void *hBlock, char *szIdRefBlock, double X,
+LCAPI void *lcBlockAddBlockRefIDH(void *hBlock, char *szIdRefBlock, double X,
                                   double Y, double Scal, double Angle); // undoc
-LCAPI  void * lcBlockAddAttDef(void *hBlock, int Mode, char *szTag,
+LCAPI void *lcBlockAddAttDef(void *hBlock, int Mode, char *szTag,
                              char *szPrompt, char *szDefVal, double X, double Y,
                              int Align, double H, double WScale,
                              double RotAngle, double Oblique);
-LCAPI  void * lcBlockAddXref(void *hBlock, char *szFileName, double X, double Y,
+LCAPI void *lcBlockAddXref(void *hBlock, char *szFileName, double X, double Y,
                            double ScalX, double ScalY, double Angle);
-LCAPI  void * lcBlockAddImageRef(void *hBlock, void *hImage, double X, double Y,
+LCAPI void *lcBlockAddImageRef(void *hBlock, void *hImage, double X, double Y,
                                double Width, double Height, int bBorder);
-LCAPI  void * lcBlockAddImageRefUns(void *hBlock, void *hImage, double X,
+LCAPI void *lcBlockAddImageRefUns(void *hBlock, void *hImage, double X,
                                   double Y, double Scal, int Align,
                                   int bBorder);
-LCAPI  void * lcBlockAddImagePlace(void *hBlock, int Id, double X, double Y,
+LCAPI void *lcBlockAddImagePlace(void *hBlock, int Id, double X, double Y,
                                  double Width, double Height, int bBorder);
-LCAPI  void * lcBlockAddEcw(void *hBlock, char *szFileName);
-LCAPI  void * lcBlockAddBarcode(void *hBlock, int BarType, double Xc, double Yc,
+LCAPI void *lcBlockAddEcw(void *hBlock, char *szFileName);
+LCAPI void *lcBlockAddBarcode(void *hBlock, int BarType, double Xc, double Yc,
                               double Width, double Height, char *szText);
-LCAPI  void * lcBlockAddHatch(void *hBlock, char *szFileName, char *szPatName,
+LCAPI void *lcBlockAddHatch(void *hBlock, char *szFileName, char *szPatName,
                             double Scal, double Angle);
-LCAPI  void * lcBlockAddViewport(void *hBlock, double Lef, double Bot,
+LCAPI void *lcBlockAddViewport(void *hBlock, double Lef, double Bot,
                                double Width, double Height, double DrwPntX,
                                double DrwPntY, double DrwScale,
                                double DrwAngle);
-LCAPI  void * lcBlockAddFace(void *hBlock, int Flags, double x0, double y0,
+LCAPI void *lcBlockAddFace(void *hBlock, int Flags, double x0, double y0,
                            double z0, double x1, double y1, double z1,
                            double x2, double y2, double z2);
-LCAPI  void * lcBlockAddFace4(void *hBlock, int Flags, double x0, double y0,
+LCAPI void *lcBlockAddFace4(void *hBlock, int Flags, double x0, double y0,
                             double z0, double x1, double y1, double z1,
                             double x2, double y2, double z2, double x3,
                             double y3, double z3);
-LCAPI  void * lcBlockAddLeader(void *hBlock, char *szText, double Xt, double Yt,
+LCAPI void *lcBlockAddLeader(void *hBlock, char *szText, double Xt, double Yt,
                              double LandDist, double Xa, double Ya, int Attach,
                              int Align);
-LCAPI  void * lcBlockAddDimLin(void *hBlock, double X0, double Y0, double X1,
+LCAPI void *lcBlockAddDimLin(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Xt, double Yt, double Angle,
                              char *szText);
-LCAPI  void * lcBlockAddDimHor(void *hBlock, double X0, double Y0, double X1,
+LCAPI void *lcBlockAddDimHor(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Yt, char *szText);
-LCAPI  void * lcBlockAddDimVer(void *hBlock, double X0, double Y0, double X1,
+LCAPI void *lcBlockAddDimVer(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Xt, char *szText);
-LCAPI  void * lcBlockAddDimAli(void *hBlock, double X0, double Y0, double X1,
+LCAPI void *lcBlockAddDimAli(void *hBlock, double X0, double Y0, double X1,
                              double Y1, double Xt, double Yt, char *szText);
-LCAPI  void * lcBlockAddDimAli2(void *hBlock, double X0, double Y0, double X1,
+LCAPI void *lcBlockAddDimAli2(void *hBlock, double X0, double Y0, double X1,
                               double Y1, double Dt, char *szText);
-LCAPI  void * lcBlockAddDimOrd(void *hBlock, double Xd, double Yd, double Xt,
+LCAPI void *lcBlockAddDimOrd(void *hBlock, double Xd, double Yd, double Xt,
                              double Yt, int bX, char *szText);
-LCAPI  void * lcBlockAddDimRad(void *hBlock, double Xc, double Yc, double Xr,
+LCAPI void *lcBlockAddDimRad(void *hBlock, double Xc, double Yc, double Xr,
                              double Yr, double Xt, double Yt, char *szText);
-LCAPI  void * lcBlockAddDimRad2(void *hBlock, double Xc, double Yc, double R,
+LCAPI void *lcBlockAddDimRad2(void *hBlock, double Xc, double Yc, double R,
                               double Angle, double TextOff, char *szText);
-LCAPI  void * lcBlockAddDimDia(void *hBlock, double Xc, double Yc, double Xr,
+LCAPI void *lcBlockAddDimDia(void *hBlock, double Xc, double Yc, double Xr,
                              double Yr, double Xt, double Yt, char *szText);
-LCAPI  void * lcBlockAddDimDia2(void *hBlock, double Xc, double Yc, double R,
+LCAPI void *lcBlockAddDimDia2(void *hBlock, double Xc, double Yc, double R,
                               double Angle, double TextOff, char *szText);
-LCAPI  void * lcBlockAddDimAng(void *hBlock, double Xc, double Yc, double X1,
+LCAPI void *lcBlockAddDimAng(void *hBlock, double Xc, double Yc, double X1,
                              double Y1, double X2, double Y2, double Xa,
                              double Ya, double TextPos, char *szText);
-LCAPI  void * lcBlockAddDimAng2(void *hBlock, double X1, double Y1, double X2,
+LCAPI void *lcBlockAddDimAng2(void *hBlock, double X1, double Y1, double X2,
                               double Y2, double X3, double Y3, double X4,
                               double Y4, double Xa, double Ya, double TextPos,
                               char *szText);
-LCAPI  void * lcBlockAddRPlan(void *hBlock);
-LCAPI  void * lcBlockAddRPlan2(void *hBlock, void *hStartEnt);
-LCAPI  void * lcBlockAddArrow(void *hBlock, double X1, double Y1, double X2,
+LCAPI void *lcBlockAddRPlan(void *hBlock);
+LCAPI void *lcBlockAddRPlan2(void *hBlock, void *hStartEnt);
+LCAPI void *lcBlockAddArrow(void *hBlock, double X1, double Y1, double X2,
                             double Y2);
-LCAPI  void * lcBlockAddSpiral(void *hBlock, double Xc, double Yc, double R,
+LCAPI void *lcBlockAddSpiral(void *hBlock, double Xc, double Yc, double R,
                              double Turns, int bDirCW, int bClosed);
-LCAPI  void * lcBlockAddCamview(void *hBlock, double Lef, double Bot,
+LCAPI void *lcBlockAddCamview(void *hBlock, double Lef, double Bot,
                               double Width, double Height);
-LCAPI  void * lcBlockAddTIN(void *hBlock, char *szFileName, int FileType);
-LCAPI  void * lcBlockAddClone(void *hBlock, void *hEnt);
-LCAPI  int lcBlockBeginShape(void *hBlock);
-LCAPI  void * lcBlockAddShape(void *hBlock);
-LCAPI  void * lcBlockAddShapeSel(void *hBlock, int bErase);
-LCAPI  void * lcBlockRepEllipse(void *hBlock, void *hEll, int *pRetType);
-LCAPI  int lcBlockJoinAll(void *hBlock, double Delta);
-LCAPI  int lcBlockCopyLayer(void *hBlock, void *hLayerSrc, void *hLayerDest);
-LCAPI  int lcBlockDeleteEnt(void *hBlock, void *hEnt);
+LCAPI void *lcBlockAddTIN(void *hBlock, char *szFileName, int FileType);
+LCAPI void *lcBlockAddClone(void *hBlock, void *hEnt);
+LCAPI int lcBlockBeginShape(void *hBlock);
+LCAPI void *lcBlockAddShape(void *hBlock);
+LCAPI void *lcBlockAddShapeSel(void *hBlock, int bErase);
+LCAPI void *lcBlockRepEllipse(void *hBlock, void *hEll, int *pRetType);
+LCAPI int lcBlockJoinAll(void *hBlock, double Delta);
+LCAPI int lcBlockCopyLayer(void *hBlock, void *hLayerSrc, void *hLayerDest);
+LCAPI int lcBlockDeleteEnt(void *hBlock, void *hEnt);
 
 // Retrieve graphic objects from a block
-LCAPI  void * lcBlockGetFirstEnt(void *hBlock);
-LCAPI  void * lcBlockGetNextEnt(void *hBlock, void *hEnt);
-LCAPI  void * lcBlockGetLastEnt(void *hBlock);
-LCAPI  void * lcBlockGetPrevEnt(void *hBlock, void *hEnt);
-LCAPI  void * lcBlockGetEntByID(void *hBlock, int Id);
-LCAPI  void * lcBlockGetEntByIDH(void *hBlock, char *szId);
-LCAPI  void * lcBlockGetEntByKey(void *hBlock, int Key);
-LCAPI  void * lcBlockGetBlkRefByTag(void *hBlock, void *hBlockAtt, char *szTag,
+LCAPI void *lcBlockGetFirstEnt(void *hBlock);
+LCAPI void *lcBlockGetNextEnt(void *hBlock, void *hEnt);
+LCAPI void *lcBlockGetLastEnt(void *hBlock);
+LCAPI void *lcBlockGetPrevEnt(void *hBlock, void *hEnt);
+LCAPI void *lcBlockGetEntByID(void *hBlock, int Id);
+LCAPI void *lcBlockGetEntByIDH(void *hBlock, char *szId);
+LCAPI void *lcBlockGetEntByKey(void *hBlock, int Key);
+LCAPI void *lcBlockGetBlkRefByTag(void *hBlock, void *hBlockAtt, char *szTag,
                                   char *szValue, int bSelect);
-LCAPI  void * lcBlockGetTIN(void *hBlock, char *szName);
+LCAPI void *lcBlockGetTIN(void *hBlock, char *szName);
 
 // Selection
-LCAPI  int lcBlockUnselect(void *hBlock);
-LCAPI  int lcBlockSelectEnt(void *hBlock, void *hEntity, int bSelect);
-LCAPI  int lcBlockSelErase(void *hBlock);
-LCAPI  int lcBlockSelMove(void *hBlock, double dX, double dY, int bCopy,
+LCAPI int lcBlockUnselect(void *hBlock);
+LCAPI int lcBlockSelectEnt(void *hBlock, void *hEntity, int bSelect);
+LCAPI int lcBlockSelErase(void *hBlock);
+LCAPI int lcBlockSelMove(void *hBlock, double dX, double dY, int bCopy,
                          int bNewSelect);
-LCAPI  int lcBlockSelScale(void *hBlock, double X0, double Y0, double Scal,
+LCAPI int lcBlockSelScale(void *hBlock, double X0, double Y0, double Scal,
                           int bCopy, int bNewSelect);
-LCAPI  int lcBlockSelRotate(void *hBlock, double X0, double Y0, double Angle,
+LCAPI int lcBlockSelRotate(void *hBlock, double X0, double Y0, double Angle,
                            int bCopy, int bNewSelect);
-LCAPI  int lcBlockSelMirror(void *hBlock, double X1, double Y1, double X2,
+LCAPI int lcBlockSelMirror(void *hBlock, double X1, double Y1, double X2,
                            double Y2, int bCopy, int bNewSelect);
-LCAPI  int lcBlockSelExplode(void *hBlock);
-LCAPI  int lcBlockSelSplit(void *hBlock, int nParts);
-LCAPI  void * lcBlockSelJoin(void *hBlock, double Delta);
-LCAPI  int lcBlockSelAlign(void *hBlock, int Mode, double X, double Y);
-LCAPI  void * lcBlockSelBlock(void *hBlock, char *szName, double X, double Y,
+LCAPI int lcBlockSelExplode(void *hBlock);
+LCAPI int lcBlockSelSplit(void *hBlock, int nParts);
+LCAPI void *lcBlockSelJoin(void *hBlock, double Delta);
+LCAPI int lcBlockSelAlign(void *hBlock, int Mode, double X, double Y);
+LCAPI void *lcBlockSelBlock(void *hBlock, char *szName, double X, double Y,
                             int Mode, int bOverwrite);
-LCAPI  void * lcBlockGetFirstSel(void *hBlock);
-LCAPI  void * lcBlockGetNextSel(void *hBlock);
+LCAPI void *lcBlockGetFirstSel(void *hBlock);
+LCAPI void *lcBlockGetNextSel(void *hBlock);
 
 // change entities order by layer
-LCAPI  int lcBlockOrderByLayers(void *hBlock, void *hWnd);
-LCAPI  int lcBlockSortTSP(void *hBlock, void *hLayer, void *hWnd);
+LCAPI int lcBlockOrderByLayers(void *hBlock, void *hWnd);
+LCAPI int lcBlockSortTSP(void *hBlock, void *hLayer, void *hWnd);
 double LCAPI lcBlockGetJumpsLen(void *hBlock, void *hLayer, void *hWnd);
 
 // remove entities of specified layer from a block (all blocks if hBlock=0)
-LCAPI  int lcLayerClear(void *hLayer, void *hBlock);
-LCAPI  int lcLayerCopyProps(void *hLayer, void *hFromLayer);
+LCAPI int lcLayerClear(void *hLayer, void *hBlock);
+LCAPI int lcLayerCopyProps(void *hLayer, void *hFromLayer);
 
 // add line to a filling (see also lcDrwAddFilling)
-LCAPI  int lcFillSetLine(void *hFill, int iLine, double Dist, double Angle,
+LCAPI int lcFillSetLine(void *hFill, int iLine, double Dist, double Angle,
                         double W);
 
 // Mline style
-LCAPI  int lcMLStyleAddLine(void *hStyle, double Offset, char *szColor,
+LCAPI int lcMLStyleAddLine(void *hStyle, double Offset, char *szColor,
                            void *hLtype);
-LCAPI  int lcMLStyleDelLine(void *hStyle, int iLine);
-LCAPI  int lcMLStyleSortLines(void *hStyle);
+LCAPI int lcMLStyleDelLine(void *hStyle, int iLine);
+LCAPI int lcMLStyleSortLines(void *hStyle);
 
-LCAPI  int lcEntType(void *hEnt, int Typ);
+LCAPI int lcEntType(void *hEnt, int Typ);
 
 // Graphic object modify
-LCAPI  int lcEntErase(void *hEnt, int bErase);
-LCAPI  int lcEntMove(void *hEnt, double dX, double dY);
-LCAPI  int lcEntAlign(void *hEnt, int Alignment, double X, double Y);
-LCAPI  int lcEntScale(void *hEnt, double X0, double Y0, double Scal);
-LCAPI  int lcEntRotate(void *hEnt, double X0, double Y0, double Angle);
-LCAPI  int lcEntMirror(void *hEnt, double X1, double Y1, double X2, double Y2);
-LCAPI  int lcEntExplode(void *hEnt, int bSelect, int bErase);
-LCAPI  void * lcEntSplit(void *hEnt, int nParts, int bSelectNew, int bDeleteEnt);
-LCAPI  void * lcEntBreak(void *hEnt, double X, double Y, double Delta,
+LCAPI int lcEntErase(void *hEnt, int bErase);
+LCAPI int lcEntMove(void *hEnt, double dX, double dY);
+LCAPI int lcEntAlign(void *hEnt, int Alignment, double X, double Y);
+LCAPI int lcEntScale(void *hEnt, double X0, double Y0, double Scal);
+LCAPI int lcEntRotate(void *hEnt, double X0, double Y0, double Angle);
+LCAPI int lcEntMirror(void *hEnt, double X1, double Y1, double X2, double Y2);
+LCAPI int lcEntExplode(void *hEnt, int bSelect, int bErase);
+LCAPI void *lcEntSplit(void *hEnt, int nParts, int bSelectNew, int bDeleteEnt);
+LCAPI void *lcEntBreak(void *hEnt, double X, double Y, double Delta,
                        int bSelectNew, int bDeleteEnt);
-LCAPI  void * lcEntBreak2(void *hEnt, void *hPtbuf, double Delta, int bSelectNew,
+LCAPI void *lcEntBreak2(void *hEnt, void *hPtbuf, double Delta, int bSelectNew,
                         int bDeleteEnt);
-LCAPI  int lcEntOffset(void *hEnt, double Dist);
-LCAPI  int lcEntExtend(void *hEnt, void *hEntEdge, int bApparent);
-LCAPI  int lcEntToTop(void *hEnt);
-LCAPI  int lcEntToBottom(void *hEnt);
-LCAPI  int lcEntToAbove(void *hEnt, void *hEnt2);
-LCAPI  int lcEntToUnder(void *hEnt, void *hEnt2);
-LCAPI  int lcEntGetGrip(void *hEnt, int iGrip, double *pX, double *pY);
-LCAPI  int lcEntPutGrip(void *hEnt, int iGrip, double X, double Y);
-LCAPI  int lcEntUpdate(void *hEnt);
-LCAPI  int lcEntCopyBase(void *hEnt, void *hEntFrom);
-LCAPI  int lcEntXData(void *hEnt, int Id, int Flags, int nBytes);
-LCAPI  int lcEntContainEnt(void *hEnt, void *hEnt2);
-LCAPI  int lcEntCrossEnt(void *hEnt, void *hEnt2);
-LCAPI  int lcEntReverse(void *hEnt);
-LCAPI  int lcEntGetPoint(void *hEnt, double Dist, double *pX, double *pY,
+LCAPI int lcEntOffset(void *hEnt, double Dist);
+LCAPI int lcEntExtend(void *hEnt, void *hEntEdge, int bApparent);
+LCAPI int lcEntToTop(void *hEnt);
+LCAPI int lcEntToBottom(void *hEnt);
+LCAPI int lcEntToAbove(void *hEnt, void *hEnt2);
+LCAPI int lcEntToUnder(void *hEnt, void *hEnt2);
+LCAPI int lcEntGetGrip(void *hEnt, int iGrip, double *pX, double *pY);
+LCAPI int lcEntPutGrip(void *hEnt, int iGrip, double X, double Y);
+LCAPI int lcEntUpdate(void *hEnt);
+LCAPI int lcEntCopyBase(void *hEnt, void *hEntFrom);
+LCAPI int lcEntXData(void *hEnt, int Id, int Flags, int nBytes);
+LCAPI int lcEntContainEnt(void *hEnt, void *hEnt2);
+LCAPI int lcEntCrossEnt(void *hEnt, void *hEnt2);
+LCAPI int lcEntReverse(void *hEnt);
+LCAPI int lcEntGetPoint(void *hEnt, double Dist, double *pX, double *pY,
                         double *pAngle);
 double LCAPI lcEntGetDist(void *hEnt, double X, double Y, double *pX2,
                           double *pY2, double *pDist);
-LCAPI  int lcEntTransform(void *hEnt, void *hTransform);
-LCAPI  int lcIntersection(void *hEnt, void *hEnt2, int Apparent);
-LCAPI  int lcInterGetPoint(int iPoint, double *pX, double *pY);
+LCAPI int lcEntTransform(void *hEnt, void *hTransform);
+LCAPI int lcIntersection(void *hEnt, void *hEnt2, int Apparent);
+LCAPI int lcInterGetPoint(int iPoint, double *pX, double *pY);
 
-LCAPI  int lcLineGetPoint(void *hLine, int Mode, double Dist, double *pX,
+LCAPI int lcLineGetPoint(void *hLine, int Mode, double Dist, double *pX,
                          double *pY);
 
 // Polyline Vertices
-LCAPI  void * lcPlineAddVer(void *hPline, void *hVer, double X, double Y);
-LCAPI  void * lcPlineAddVer2(void *hPline, void *hVer, double X, double Y,
+LCAPI void *lcPlineAddVer(void *hPline, void *hVer, double X, double Y);
+LCAPI void *lcPlineAddVer2(void *hPline, void *hVer, double X, double Y,
                            double Param, double W0, double W1);
-LCAPI  void * lcPlineAddVerDir(void *hPline, void *hVer, double Ang,
+LCAPI void *lcPlineAddVerDir(void *hPline, void *hVer, double Ang,
                              double Length);
-LCAPI  int lcPlineEnd(void *hPline);
-LCAPI  int lcPlineFromPtbuf(void *hPline, void *hPtbuf);
-LCAPI  int lcPlineFromMpgon(void *hPline, void *hMpgon);
-LCAPI  int lcPlineFromFile(void *hPline, char *szFileName);
-LCAPI  int lcPlineDeleteVer(void *hPline, void *hVer);
-LCAPI  int lcPlineDelExVers(void *hPline, double Delta);
-LCAPI  void * lcPlineGetFirstVer(void *hPline);
-LCAPI  void * lcPlineGetNextVer(void *hPline, void *hVer);
-LCAPI  void * lcPlineGetLastVer(void *hPline);
-LCAPI  void * lcPlineGetPrevVer(void *hPline, void *hVer);
-LCAPI  void * lcPlineGetVer(void *hPline, int Index);
-LCAPI  void * lcPlineGetVerPt(void *hPline, double X, double Y, double Delta);
-LCAPI  void * lcPlineGetSeg(void *hPline, double X, double Y, double Delta);
-LCAPI  int lcPlineReverse(void *hPline);
-LCAPI  int lcPlineSetStartVer(void *hPline, void *hVer);
-LCAPI  int lcPlineContainPoint(void *hPline, double X, double Y);
-LCAPI  int lcPlineGetRoundPrm(void *hPline, void *hVer, double *pX0, double *pY0,
+LCAPI int lcPlineEnd(void *hPline);
+LCAPI int lcPlineFromPtbuf(void *hPline, void *hPtbuf);
+LCAPI int lcPlineFromMpgon(void *hPline, void *hMpgon);
+LCAPI int lcPlineFromFile(void *hPline, char *szFileName);
+LCAPI int lcPlineDeleteVer(void *hPline, void *hVer);
+LCAPI int lcPlineDelExVers(void *hPline, double Delta);
+LCAPI void *lcPlineGetFirstVer(void *hPline);
+LCAPI void *lcPlineGetNextVer(void *hPline, void *hVer);
+LCAPI void *lcPlineGetLastVer(void *hPline);
+LCAPI void *lcPlineGetPrevVer(void *hPline, void *hVer);
+LCAPI void *lcPlineGetVer(void *hPline, int Index);
+LCAPI void *lcPlineGetVerPt(void *hPline, double X, double Y, double Delta);
+LCAPI void *lcPlineGetSeg(void *hPline, double X, double Y, double Delta);
+LCAPI int lcPlineReverse(void *hPline);
+LCAPI int lcPlineSetStartVer(void *hPline, void *hVer);
+LCAPI int lcPlineContainPoint(void *hPline, double X, double Y);
+LCAPI int lcPlineGetRoundPrm(void *hPline, void *hVer, double *pX0, double *pY0,
                              double *pBulge, double *pX1,
                              double *pY1); // undoc (dwg plugin)
-LCAPI  int lcPlineGetPoint(void *hPline, double Dist, double *pX, double *pY,
+LCAPI int lcPlineGetPoint(void *hPline, double Dist, double *pX, double *pY,
                           double *pAngle);
-LCAPI  int lcPlineGetPointOpp(void *hPline, double Dist, double *pX, double *pY,
+LCAPI int lcPlineGetPointOpp(void *hPline, double Dist, double *pX, double *pY,
                              double *pAngle, double *pX2, double *pY2);
 double LCAPI lcPlineGetDist(void *hPline, double X, double Y, double *pX2,
                             double *pY2, double *pDist);
-LCAPI  int lcPlineDivide(void *hPline, int nPoints, int bAngle);
-LCAPI  int lcPlineDivide2(void *hPline, double Delta, int bAngle);
-LCAPI  int lcGetDivPt(int iPnt, double *pX, double *pY, double *pAngle);
-LCAPI  int lcPlineMakeArrow(void *hPline, double Hline, double Harr); // undoc
-LCAPI  void * lcPlineSplitBySI(void *hPline, int bSelect, int bErase); // undoc
+LCAPI int lcPlineDivide(void *hPline, int nPoints, int bAngle);
+LCAPI int lcPlineDivide2(void *hPline, double Delta, int bAngle);
+LCAPI int lcGetDivPt(int iPnt, double *pX, double *pY, double *pAngle);
+LCAPI int lcPlineMakeArrow(void *hPline, double Hline, double Harr); // undoc
+LCAPI void *lcPlineSplitBySI(void *hPline, int bSelect, int bErase); // undoc
 
 // Bezier Vertices
-LCAPI  void * lcBezierAddVer(void *hBez, void *hVer, double X, double Y);
-LCAPI  int lcBezierEnd(void *hBez);
-LCAPI  int lcBezierSetVerPrm(void *hBez, void *hVer, int Side, double Leng,
+LCAPI void *lcBezierAddVer(void *hBez, void *hVer, double X, double Y);
+LCAPI int lcBezierEnd(void *hBez);
+LCAPI int lcBezierSetVerPrm(void *hBez, void *hVer, int Side, double Leng,
                             double Ang);
 
 // Mline Vertices
-LCAPI  void * lcMlineAddVer(void *hMline, void *hVer, double X, double Y);
-LCAPI  void * lcMlineAddVerDir(void *hMline, void *hVer, double Ang,
+LCAPI void *lcMlineAddVer(void *hMline, void *hVer, double X, double Y);
+LCAPI void *lcMlineAddVerDir(void *hMline, void *hVer, double Ang,
                              double Length);
-LCAPI  int lcMlineDeleteVer(void *hMline, void *hVer);
-LCAPI  void * lcMlineGetFirstVer(void *hMline);
-LCAPI  void * lcMlineGetNextVer(void *hMline, void *hVer);
-LCAPI  void * lcMlineGetLastVer(void *hMline);
-LCAPI  void * lcMlineGetPrevVer(void *hMline, void *hVer);
-LCAPI  void * lcMlineGetVer(void *hMline, int Index);
-LCAPI  void * lcMlineGetVerPt(void *hMline, double X, double Y, double Delta);
-LCAPI  void * lcMlineGetSeg(void *hMline, double X, double Y,
+LCAPI int lcMlineDeleteVer(void *hMline, void *hVer);
+LCAPI void *lcMlineGetFirstVer(void *hMline);
+LCAPI void *lcMlineGetNextVer(void *hMline, void *hVer);
+LCAPI void *lcMlineGetLastVer(void *hMline);
+LCAPI void *lcMlineGetPrevVer(void *hMline, void *hVer);
+LCAPI void *lcMlineGetVer(void *hMline, int Index);
+LCAPI void *lcMlineGetVerPt(void *hMline, double X, double Y, double Delta);
+LCAPI void *lcMlineGetSeg(void *hMline, double X, double Y,
                           double Delta); // undoc
-LCAPI  int lcMlineReverse(void *hMline);
+LCAPI int lcMlineReverse(void *hMline);
 
 // RPlan functions
-LCAPI  void * lcRPlanAddVer(void *hRPlan, double X, double Y);
-LCAPI  int lcRPlanSetCurve(void *hVer, double Radius, double LenClot1,
+LCAPI void *lcRPlanAddVer(void *hRPlan, double X, double Y);
+LCAPI int lcRPlanSetCurve(void *hVer, double Radius, double LenClot1,
                           double LenClot2);
-LCAPI  int lcRPlanSetPos(void *hVer, double X, double Y);
-LCAPI  int lcRPlanDeleteVer(void *hRPlan, void *hVer);
-LCAPI  void * lcRPlanGetFirstVer(void *hRPlan);
-LCAPI  void * lcRPlanGetNextVer(void *hRPlan, void *hVer);
-LCAPI  void * lcRPlanGetLastVer(void *hRPlan);
-LCAPI  void * lcRPlanGetPrevVer(void *hRPlan, void *hVer);
-LCAPI  void * lcRPlanGetVer(void *hRPlan, int Index);
-LCAPI  int lcRPlanGetPoint(void *hRPlan, double Dist, double *pX, double *pY,
+LCAPI int lcRPlanSetPos(void *hVer, double X, double Y);
+LCAPI int lcRPlanDeleteVer(void *hRPlan, void *hVer);
+LCAPI void *lcRPlanGetFirstVer(void *hRPlan);
+LCAPI void *lcRPlanGetNextVer(void *hRPlan, void *hVer);
+LCAPI void *lcRPlanGetLastVer(void *hRPlan);
+LCAPI void *lcRPlanGetPrevVer(void *hRPlan, void *hVer);
+LCAPI void *lcRPlanGetVer(void *hRPlan, int Index);
+LCAPI int lcRPlanGetPoint(void *hRPlan, double Dist, double *pX, double *pY,
                           double *pAngle, int *pSide);
-LCAPI  int lcRPlanGetDist(void *hRPlan, double X, double Y, double *pX2,
+LCAPI int lcRPlanGetDist(void *hRPlan, double X, double Y, double *pX2,
                          double *pY2, double *pDist, double *pOffset);
-LCAPI  int lcRPlanWriteCSV(void *hRPlan, char *szFileName);
+LCAPI int lcRPlanWriteCSV(void *hRPlan, char *szFileName);
 
 // Construction line
-LCAPI  int lcXlinePutDir(void *hXline, double X, double Y);
+LCAPI int lcXlinePutDir(void *hXline, double X, double Y);
 
 // Rectangle
-LCAPI  int lcRectGetPolyline(void *hRect, double *pX, double *pY,
+LCAPI int lcRectGetPolyline(void *hRect, double *pX, double *pY,
                             double *pBulge);
 
 // Circle
 
 // Image reference
-LCAPI  int lcImgRefGetPixel(void *hImgRef, int iX, int iY, double *pX,
+LCAPI int lcImgRefGetPixel(void *hImgRef, int iX, int iY, double *pX,
                            double *pY, int *pColor);
-LCAPI  int lcImgRefResize(void *hImgRef, int NewWidth, int NewHeight,
+LCAPI int lcImgRefResize(void *hImgRef, int NewWidth, int NewHeight,
                          int Method);
 
 // Hatch
-LCAPI  int lcHatchSetPattern(void *hHatch, char *szFileName, char *szPatName,
+LCAPI int lcHatchSetPattern(void *hHatch, char *szFileName, char *szPatName,
                             double Scal, double Angle);
-LCAPI  int lcHatchBoundStart(void *hHatch);
-LCAPI  int lcHatchBoundPoint(void *hHatch, double X, double Y);
-LCAPI  int lcHatchBoundEntity(void *hHatch, void *hEnt);
-LCAPI  int lcHatchBoundEndLoop(void *hHatch);
-LCAPI  int lcHatchBoundEnd(void *hHatch);
-LCAPI  int lcHatchPatStart(void *hHatch);
-LCAPI  int lcHatchPatLine(void *hHatch, double Angle, double x0, double y0,
+LCAPI int lcHatchBoundStart(void *hHatch);
+LCAPI int lcHatchBoundPoint(void *hHatch, double X, double Y);
+LCAPI int lcHatchBoundEntity(void *hHatch, void *hEnt);
+LCAPI int lcHatchBoundEndLoop(void *hHatch);
+LCAPI int lcHatchBoundEnd(void *hHatch);
+LCAPI int lcHatchPatStart(void *hHatch);
+LCAPI int lcHatchPatLine(void *hHatch, double Angle, double x0, double y0,
                          double dx, double dy, int nDash, double L0, double L1,
                          double L2, double L3, double L4, double L5, double L6,
                          double L7);
-LCAPI  int lcHatchPatEnd(void *hHatch);
-LCAPI  int lcHatchGetLoopSize(void *hHatch, int iLoop);
-LCAPI  int lcHatchGetPoint(void *hHatch, int iPnt, double *pX, double *pY);
-LCAPI  void * lcHatchGetEnt(void *hHatch, int Mode);
+LCAPI int lcHatchPatEnd(void *hHatch);
+LCAPI int lcHatchGetLoopSize(void *hHatch, int iLoop);
+LCAPI int lcHatchGetPoint(void *hHatch, int iPnt, double *pX, double *pY);
+LCAPI void *lcHatchGetEnt(void *hHatch, int Mode);
 
 // Viewport
-LCAPI  int lcVportSetView(void *hVport, double Xcen, double Ycen, double Scal,
+LCAPI int lcVportSetView(void *hVport, double Xcen, double Ycen, double Scal,
                          double Angle);
-LCAPI  int lcVportLayerDlg(void *hVport, void *hLcWnd);
-LCAPI  int lcVportLayerCmd(void *hVport, int Cmd, void *hLayer);
+LCAPI int lcVportLayerDlg(void *hVport, void *hLcWnd);
+LCAPI int lcVportLayerCmd(void *hVport, int Cmd, void *hLayer);
 
 // Block attribute
-LCAPI  void * lcBlkRefAddAtt(void *hBlockRef, char *szTag,
+LCAPI void *lcBlkRefAddAtt(void *hBlockRef, char *szTag,
                            char *szValue); // for using in DWG plugin
-LCAPI  void * lcBlkRefGetFirstAtt(void *hBlockRef);
-LCAPI  void * lcBlkRefGetNextAtt(void *hBlockRef, void *hAttrib);
-LCAPI  void * lcBlkRefGetAtt(void *hBlockRef, char *szTag);
-LCAPI  char * lcBlkRefGetAttVal(void *hBlockRef, char *szTag);
-LCAPI  int lcBlkRefPutAttVal(void *hBlockRef, char *szTag, char *szValue);
+LCAPI void *lcBlkRefGetFirstAtt(void *hBlockRef);
+LCAPI void *lcBlkRefGetNextAtt(void *hBlockRef, void *hAttrib);
+LCAPI void *lcBlkRefGetAtt(void *hBlockRef, char *szTag);
+LCAPI char *lcBlkRefGetAttVal(void *hBlockRef, char *szTag);
+LCAPI int lcBlkRefPutAttVal(void *hBlockRef, char *szTag, char *szValue);
 
 // Shape
-LCAPI  int lcShapeAddEnt(void *hShape, void *hEnt, int bErase);
-LCAPI  int lcShapeEnd(void *hShape);
-LCAPI  void * lcShapeGetFirstEnt(void *hShape);
-LCAPI  void * lcShapeGetNextEnt(void *hShape, void *hEnt);
-LCAPI  void * lcShapeGetLastEnt(void *hShape);
-LCAPI  void * lcShapeGetPrevEnt(void *hShape, void *hEnt);
+LCAPI int lcShapeAddEnt(void *hShape, void *hEnt, int bErase);
+LCAPI int lcShapeEnd(void *hShape);
+LCAPI void *lcShapeGetFirstEnt(void *hShape);
+LCAPI void *lcShapeGetNextEnt(void *hShape, void *hEnt);
+LCAPI void *lcShapeGetLastEnt(void *hShape);
+LCAPI void *lcShapeGetPrevEnt(void *hShape, void *hEnt);
 
 // TIN entity //(also LC_PROP_TIN_FILENAME and others, lcBlockGetTIN )
-LCAPI  void * lcTIN_AddPoint(void *hTIN, char *szNamePtype, double X, double Y,
+LCAPI void *lcTIN_AddPoint(void *hTIN, char *szNamePtype, double X, double Y,
                            double Z);
-LCAPI  void * lcTIN_PtypeGetByName(void *hTIN, char *szName);
-LCAPI  void * lcTIN_PtypeGetFirst(void *hTIN);
-LCAPI  void * lcTIN_PtypeGetNext(void *hTIN, void *hPtype);
-LCAPI  void * lcTIN_PntGetFirst(void *hTIN);
-LCAPI  void * lcTIN_PntGetNext(void *hTIN, void *hPnt);
-LCAPI  void * lcTIN_PntGetNear(void *hTIN, double X, double Y);
-LCAPI  int lcTIN_PntDelDup(void *hTIN, double Delta, void *hLcWnd);
-LCAPI  void * lcTIN_TriGetFirst(void *hTIN);
-LCAPI  void * lcTIN_TriGetNext(void *hTIN, void *hTrian);
-LCAPI  void * lcTIN_TriGetByPos(void *hTIN, double X, double Y);
-LCAPI  int lcTIN_TriGetEdge(void *hTIN, void *hTrian, int iEdge);
-LCAPI  int lcTIN_TriUpdate(void *hTIN, void *hPnt);
-LCAPI  int lcTIN_Bnd(void *hTIN, double MaxDist, void *hLcWnd);
-LCAPI  void * lcTIN_BndGetPoint(void *hTIN, int iPnt);
-LCAPI  int lcTIN_Triangulate(void *hTIN, void *hLcWnd); // LC_CMD_TIN_BNDTRANG
-LCAPI  int lcTIN_Isolines(void *hTIN, double Zstep, int BoldStep, void *hLcWnd);
-LCAPI  void * lcTIN_IsoGetFirst(void *hTIN);
-LCAPI  void * lcTIN_IsoGetNext(void *hTIN, void *hIso);
-LCAPI  int lcTIN_IsoMakeLabels(void *hIso);
-LCAPI  int lcTIN_GetIsoLabel(int iLabel, double *pX, double *pY, double *pAngle,
+LCAPI void *lcTIN_PtypeGetByName(void *hTIN, char *szName);
+LCAPI void *lcTIN_PtypeGetFirst(void *hTIN);
+LCAPI void *lcTIN_PtypeGetNext(void *hTIN, void *hPtype);
+LCAPI void *lcTIN_PntGetFirst(void *hTIN);
+LCAPI void *lcTIN_PntGetNext(void *hTIN, void *hPnt);
+LCAPI void *lcTIN_PntGetNear(void *hTIN, double X, double Y);
+LCAPI int lcTIN_PntDelDup(void *hTIN, double Delta, void *hLcWnd);
+LCAPI void *lcTIN_TriGetFirst(void *hTIN);
+LCAPI void *lcTIN_TriGetNext(void *hTIN, void *hTrian);
+LCAPI void *lcTIN_TriGetByPos(void *hTIN, double X, double Y);
+LCAPI int lcTIN_TriGetEdge(void *hTIN, void *hTrian, int iEdge);
+LCAPI int lcTIN_TriUpdate(void *hTIN, void *hPnt);
+LCAPI int lcTIN_Bnd(void *hTIN, double MaxDist, void *hLcWnd);
+LCAPI void *lcTIN_BndGetPoint(void *hTIN, int iPnt);
+LCAPI int lcTIN_Triangulate(void *hTIN, void *hLcWnd); // LC_CMD_TIN_BNDTRANG
+LCAPI int lcTIN_Isolines(void *hTIN, double Zstep, int BoldStep, void *hLcWnd);
+LCAPI void *lcTIN_IsoGetFirst(void *hTIN);
+LCAPI void *lcTIN_IsoGetNext(void *hTIN, void *hIso);
+LCAPI int lcTIN_IsoMakeLabels(void *hIso);
+LCAPI int lcTIN_GetIsoLabel(int iLabel, double *pX, double *pY, double *pAngle,
                             int *pAlign);
-LCAPI  int lcTIN_GetZ(void *hTIN, double X, double Y, double *pZ);
-LCAPI  int lcTIN_ColorFill(void *hTIN, double Zstep, double PixelSize,
+LCAPI int lcTIN_GetZ(void *hTIN, double X, double Y, double *pZ);
+LCAPI int lcTIN_ColorFill(void *hTIN, double Zstep, double PixelSize,
                           void *hLcWnd);
-LCAPI  int lcTIN_Save(void *hTIN, char *szFileName, int Mode, int bByBndr,
+LCAPI int lcTIN_Save(void *hTIN, char *szFileName, int Mode, int bByBndr,
                      void *hLcWnd);
-LCAPI  int lcTIN_InterLine(void *hTIN, double X0, double Y0, double X1,
+LCAPI int lcTIN_InterLine(void *hTIN, double X0, double Y0, double X1,
                           double Y1);
-LCAPI  int lcTIN_InterGetPoint(void *hTIN, int iPnt, double *pX, double *pY,
+LCAPI int lcTIN_InterGetPoint(void *hTIN, int iPnt, double *pX, double *pY,
                               double *pZ);
-LCAPI  int lcTIN_Clear(void *hTIN);
-LCAPI  void * lcTIN_AddTrian(void *hTIN, int iPnt0, int iPnt1, int iPnt2);
-LCAPI  int lcTIN_BndAddPnt(void *hTIN, int iPnt);
-LCAPI  int lcTIN_Merge(void *hTIN, char *szFileName, void *hLcWnd);
+LCAPI int lcTIN_Clear(void *hTIN);
+LCAPI void *lcTIN_AddTrian(void *hTIN, int iPnt0, int iPnt1, int iPnt2);
+LCAPI int lcTIN_BndAddPnt(void *hTIN, int iPnt);
+LCAPI int lcTIN_Merge(void *hTIN, char *szFileName, void *hLcWnd);
 
-LCAPI  int lcColorRGB(int Red, int Green, int Blue);
+LCAPI int lcColorRGB(int Red, int Green, int Blue);
 // Color from string
-LCAPI  int lcColorIsRGB(char *szColor);
-LCAPI  int lcColorGetRed(char *szColor);
-LCAPI  int lcColorGetGreen(char *szColor);
-LCAPI  int lcColorGetBlue(char *szColor);
-LCAPI  int lcColorGetIndex(char *szColor, int bLogicalEnabled);
-LCAPI  int lcColorToVal(char *szColor, int *pbRGB, int *pIndex, int *pR, int *pG,
+LCAPI int lcColorIsRGB(char *szColor);
+LCAPI int lcColorGetRed(char *szColor);
+LCAPI int lcColorGetGreen(char *szColor);
+LCAPI int lcColorGetBlue(char *szColor);
+LCAPI int lcColorGetIndex(char *szColor, int bLogicalEnabled);
+LCAPI int lcColorToVal(char *szColor, int *pbRGB, int *pIndex, int *pR, int *pG,
                        int *pB);
 // Color palette
-LCAPI  int lcColorSetPalette(int Index, int R, int G, int B);
-LCAPI  int lcColorGetPalette(int Index, int *pR, int *pG, int *pB);
-LCAPI  int lcColorSavePalette(char *szFileName, void *hWnd);
-LCAPI  int lcColorLoadPalette(char *szFileName, void *hWnd);
+LCAPI int lcColorSetPalette(int Index, int R, int G, int B);
+LCAPI int lcColorGetPalette(int Index, int *pR, int *pG, int *pB);
+LCAPI int lcColorSavePalette(char *szFileName, void *hWnd);
+LCAPI int lcColorLoadPalette(char *szFileName, void *hWnd);
 
 // Image
-LCAPI  int lcImageSetPixelRGB(void *hImage, int X, int Y, int Red, int Green,
+LCAPI int lcImageSetPixelRGB(void *hImage, int X, int Y, int Red, int Green,
                              int Blue);
-LCAPI  int lcImageSetPixelI(void *hImage, int X, int Y, int iColor);
-LCAPI  int lcImageGetPixelRGB(void *hImage, int X, int Y, int *pRed, int *pGreen,
+LCAPI int lcImageSetPixelI(void *hImage, int X, int Y, int iColor);
+LCAPI int lcImageGetPixelRGB(void *hImage, int X, int Y, int *pRed, int *pGreen,
                              int *pBlue);
-LCAPI  int lcImageGetPixelI(void *hImage, int X, int Y, int *piColor);
-LCAPI  int lcImageSetPalColor(void *hImage, int iColor, int Red, int Green,
+LCAPI int lcImageGetPixelI(void *hImage, int X, int Y, int *piColor);
+LCAPI int lcImageSetPalColor(void *hImage, int iColor, int Red, int Green,
                              int Blue);
-LCAPI  int lcImageGetPalColor(void *hImage, int iColor, int *pRed, int *pGreen,
+LCAPI int lcImageGetPalColor(void *hImage, int iColor, int *pRed, int *pGreen,
                              int *pBlue);
-LCAPI  int lcImageLoad(void *hImage, char *szFilename, void *hWnd);
-LCAPI  int lcImageLoadDIB(void *hImage, void *hDib2); // undoc
-LCAPI  int lcImageLoadCamera(void *hImage);
-LCAPI  int lcImageCopyQuad(void *hImage, void *hImageSrc, unsigned int W,
+LCAPI int lcImageLoad(void *hImage, char *szFilename, void *hWnd);
+LCAPI int lcImageLoadDIB(void *hImage, void *hDib2); // undoc
+LCAPI int lcImageLoadCamera(void *hImage);
+LCAPI int lcImageCopyQuad(void *hImage, void *hImageSrc, unsigned int W,
                           unsigned int H, double x0, double y0, double x1,
                           double y1, double x2, double y2, double x3,
                           double y3); // undoc
-LCAPI  int lcImageProc(void *hImage, int Mode);
+LCAPI int lcImageProc(void *hImage, int Mode);
 
 // Toolbar Window
 
 // explode entity to polylines, Flags is LC_EXP_ALL or other
-LCAPI  int lcExpEntity(void *hEnt, int iChar, int Flags, int bUnrotate);
-LCAPI  int lcExpGetPline(double Delta);
-LCAPI  int lcExpGetVertex(double *pX, double *pY);
-LCAPI  int lcExpBlock(void *hBlock, F_LCEVENT pFunc, int Prm1, void *Prm2);
+LCAPI int lcExpEntity(void *hEnt, int iChar, int Flags, int bUnrotate);
+LCAPI int lcExpGetPline(double Delta);
+LCAPI int lcExpGetVertex(double *pX, double *pY);
+LCAPI int lcExpBlock(void *hBlock, F_LCEVENT pFunc, int Prm1, void *Prm2);
 
-LCAPI  int lcGbrLoad(void *hLcWnd, char *szFileName0);
-LCAPI  int lcGbrClose(void *hLcWnd);
+LCAPI int lcGbrLoad(void *hLcWnd, char *szFileName0);
+LCAPI int lcGbrClose(void *hLcWnd);
 
-LCAPI  char * lcPlugGetOption(char *szFileName, char *szKey);
-LCAPI  int lcPlugGetOption2(char *szFileName, char *szKey);
-LCAPI  int lcPlugSetOption(char *szFileName, char *szKey, char *szValue,
+LCAPI char *lcPlugGetOption(char *szFileName, char *szKey);
+LCAPI int lcPlugGetOption2(char *szFileName, char *szKey);
+LCAPI int lcPlugSetOption(char *szFileName, char *szKey, char *szValue,
                           int bSave);
 
-LCAPI  int lcPrintSetup(void *hWnd);
-LCAPI  int lcPrintLayout(void *hBlock);
-LCAPI  int lcPrintBlock(void *hBlock, double X, double Y, double W, double H,
+LCAPI int lcPrintSetup(void *hWnd);
+LCAPI int lcPrintLayout(void *hBlock);
+LCAPI int lcPrintBlock(void *hBlock, double X, double Y, double W, double H,
                        double Scal, double PapLef, double PapTop, int Options);
 
-LCAPI  void * lcXDataBegin();
-LCAPI  int lcXDataEnd(void *hData);
-LCAPI  int lcXDataClear(void *hData);
-LCAPI  int lcXDataSet(void *hData);
+LCAPI void *lcXDataBegin();
+LCAPI int lcXDataEnd(void *hData);
+LCAPI int lcXDataClear(void *hData);
+LCAPI int lcXDataSet(void *hData);
 
 // NoDB mode
 // ////////////////////////////////////////////////////////////////////////////////////////
 
 // Window Tabs
-LCAPI  int lcWndTabClear(void *hLcWnd);
-LCAPI  int lcWndTabAdd(void *hLcWnd, int TabID, char *szLabel, char *szTipText,
+LCAPI int lcWndTabClear(void *hLcWnd);
+LCAPI int lcWndTabAdd(void *hLcWnd, int TabID, char *szLabel, char *szTipText,
                       void *hObject);
-LCAPI  int lcWndTabSelect(void *hLcWnd, int TabID);
+LCAPI int lcWndTabSelect(void *hLcWnd, int TabID);
 
 // Paper
-LCAPI  int lcWndPaperEnable(void *hLcWnd, int bEnable);
-LCAPI  int lcWndPaperSetSize(void *hLcWnd, int Size, int Orient);
-LCAPI  int lcWndPaperSetSize2(void *hLcWnd, double Width, double Height);
-LCAPI  int lcWndPaperSetPos(void *hLcWnd, double Left, double Bottom);
+LCAPI int lcWndPaperEnable(void *hLcWnd, int bEnable);
+LCAPI int lcWndPaperSetSize(void *hLcWnd, int Size, int Orient);
+LCAPI int lcWndPaperSetSize2(void *hLcWnd, double Width, double Height);
+LCAPI int lcWndPaperSetPos(void *hLcWnd, double Left, double Bottom);
 
 // Grips
-LCAPI  int lcGripClear(void *hLcWnd);
-LCAPI  int lcGripAdd(void *hLcWnd, void *hObj, int iGrip, int Typ, double X,
+LCAPI int lcGripClear(void *hLcWnd);
+LCAPI int lcGripAdd(void *hLcWnd, void *hObj, int iGrip, int Typ, double X,
                     double Y, double Ang, double X0, double Y0);
-LCAPI  int lcGripSet(void *hLcWnd, void *hObj, int iGrip, double X, double Y,
+LCAPI int lcGripSet(void *hLcWnd, void *hObj, int iGrip, double X, double Y,
                     double Ang, double X0, double Y0);
 
 // to draw inside of Paint event procedure
-LCAPI  void * lcPaint_PenCreate(void *hLcWnd, int Id, int Color, double Width,
+LCAPI void *lcPaint_PenCreate(void *hLcWnd, int Id, int Color, double Width,
                               int PenStyle);
-LCAPI  int lcPaint_PenSelect(void *hLcWnd, void *hPen);
-LCAPI  int lcPaint_PenSelectID(void *hLcWnd, int IdPen);
-LCAPI  void * lcPaint_BrushCreate(void *hLcWnd, int Id, int Color, int Pattern,
+LCAPI int lcPaint_PenSelect(void *hLcWnd, void *hPen);
+LCAPI int lcPaint_PenSelectID(void *hLcWnd, int IdPen);
+LCAPI void *lcPaint_BrushCreate(void *hLcWnd, int Id, int Color, int Pattern,
                                 int Alpha);
-LCAPI  int lcPaint_BrushSelect(void *hLcWnd, void *hBrush);
-LCAPI  int lcPaint_BrushSelectID(void *hLcWnd, int IdBrush);
+LCAPI int lcPaint_BrushSelect(void *hLcWnd, void *hBrush);
+LCAPI int lcPaint_BrushSelectID(void *hLcWnd, int IdBrush);
 
-LCAPI  int lcPaint_DrawPtbuf(void *hLcWnd, void *hPtbuf, int bClosed);
-LCAPI  int lcPaint_DrawMpgon(void *hLcWnd, void *hMpgon, int bFill, int bBorder);
-LCAPI  int lcPaint_DrawImage(void *hLcWnd, void *hImage, double X, double Y,
+LCAPI int lcPaint_DrawPtbuf(void *hLcWnd, void *hPtbuf, int bClosed);
+LCAPI int lcPaint_DrawMpgon(void *hLcWnd, void *hMpgon, int bFill, int bBorder);
+LCAPI int lcPaint_DrawImage(void *hLcWnd, void *hImage, double X, double Y,
                             double PixelSize, int Transp, int TVal,
                             void *hPtbuf);
-LCAPI  int lcPaint_DrawImage2(void *hLcWnd, void *hImage, double X, double Y,
+LCAPI int lcPaint_DrawImage2(void *hLcWnd, void *hImage, double X, double Y,
                              double W, double H, int Transp, int TVal,
                              void *hPtbuf);
-LCAPI  int lcPaint_DrawText(void *hLcWnd, double X, double Y, char *szText);
-LCAPI  int lcPaint_DrawText2(void *hLcWnd, double X1, double Y1, double X2,
+LCAPI int lcPaint_DrawText(void *hLcWnd, double X, double Y, char *szText);
+LCAPI int lcPaint_DrawText2(void *hLcWnd, double X1, double Y1, double X2,
                             double Y2, int Align, char *szText);
-LCAPI  int lcPaint_DrawTextBC(void *hLcWnd, void *hMpgon, double Gap,
+LCAPI int lcPaint_DrawTextBC(void *hLcWnd, void *hMpgon, double Gap,
                              double Height, int Align, char *szText);
-LCAPI  int lcPaint_DrawArcText(void *hLcWnd, char *szText, double X, double Y,
+LCAPI int lcPaint_DrawArcText(void *hLcWnd, char *szText, double X, double Y,
                               double Rad, double Ang0, int bCW, double H,
                               double WScale, int Align);
-LCAPI  int lcPaint_DrawHatch(void *hLcWnd, void *hHatch);
-LCAPI  int lcPaint_DrawPoint(void *hLcWnd, double X, double Y, int PtMode,
+LCAPI int lcPaint_DrawHatch(void *hLcWnd, void *hHatch);
+LCAPI int lcPaint_DrawPoint(void *hLcWnd, double X, double Y, int PtMode,
                             double PtSize);
-LCAPI  int lcPaint_DrawLine(void *hLcWnd, double X1, double Y1, double X2,
+LCAPI int lcPaint_DrawLine(void *hLcWnd, double X1, double Y1, double X2,
                            double Y2);
-LCAPI  int lcPaint_DrawXline(void *hLcWnd, double X, double Y, double Angle,
+LCAPI int lcPaint_DrawXline(void *hLcWnd, double X, double Y, double Angle,
                             int bRay);
-LCAPI  int lcPaint_DrawRect(void *hLcWnd, double Xc, double Yc, double Width,
+LCAPI int lcPaint_DrawRect(void *hLcWnd, double Xc, double Yc, double Width,
                            double Height);
-LCAPI  int lcPaint_DrawRect2(void *hLcWnd, double X1, double Y1, double X2,
+LCAPI int lcPaint_DrawRect2(void *hLcWnd, double X1, double Y1, double X2,
                             double Y2);
-LCAPI  int lcPaint_DrawPickBox(void *hLcWnd);
-LCAPI  int lcPaint_DrawGrid(void *hLcWnd, void *hGrid, int bDest, int ColLine,
+LCAPI int lcPaint_DrawPickBox(void *hLcWnd);
+LCAPI int lcPaint_DrawGrid(void *hLcWnd, void *hGrid, int bDest, int ColLine,
                            int ColNode);
-LCAPI  int lcPaint_DrawCPrompt(void *hLcWnd, int X, int Y, int Align,
+LCAPI int lcPaint_DrawCPrompt(void *hLcWnd, int X, int Y, int Align,
                               char *szText);
-LCAPI  void lcPaint_SetPixel(void *hDC, int X, int Y, int Color);
+LCAPI void lcPaint_SetPixel(void *hDC, int X, int Y, int Color);
 
 // Points buffer
-LCAPI  void * lcPaint_CreatePtbuf();
-LCAPI  int lcPaint_DeletePtbuf(void *hPtbuf);
-LCAPI  int lcPaint_PtbufClear(void *hPtbuf);
-LCAPI  int lcPaint_PtbufAddPoint(void *hPtbuf, double X, double Y, double Prm1,
+LCAPI void *lcPaint_CreatePtbuf();
+LCAPI int lcPaint_DeletePtbuf(void *hPtbuf);
+LCAPI int lcPaint_PtbufClear(void *hPtbuf);
+LCAPI int lcPaint_PtbufAddPoint(void *hPtbuf, double X, double Y, double Prm1,
                                 double Prm2, int IntPrm);
-LCAPI  int lcPaint_PtbufAddPoint2(void *hPtbuf, double X, double Y);
-LCAPI  int lcPaint_PtbufAddPointP(void *hPtbuf, double Angle, double Dist);
-LCAPI  int lcPaint_PtbufAddLine(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufAddPoint2(void *hPtbuf, double X, double Y);
+LCAPI int lcPaint_PtbufAddPointP(void *hPtbuf, double Angle, double Dist);
+LCAPI int lcPaint_PtbufAddLine(void *hPtbuf, double X1, double Y1, double X2,
                                double Y2);
-LCAPI  int lcPaint_PtbufAddLineP(void *hPtbuf, double X, double Y, double Angle,
+LCAPI int lcPaint_PtbufAddLineP(void *hPtbuf, double X, double Y, double Angle,
                                 double Dist);
-LCAPI  int lcPaint_PtbufAddCircle(void *hPtbuf, double Xc, double Yc, double R,
+LCAPI int lcPaint_PtbufAddCircle(void *hPtbuf, double Xc, double Yc, double R,
                                  int Resol);
-LCAPI  int lcPaint_PtbufAddCircle2(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufAddCircle2(void *hPtbuf, double X1, double Y1, double X2,
                                   double Y2, int Resol);
-LCAPI  int lcPaint_PtbufAddCircle3(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufAddCircle3(void *hPtbuf, double X1, double Y1, double X2,
                                   double Y2, double X3, double Y3, int bInside,
                                   int Resol);
-LCAPI  int lcPaint_PtbufAddArc(void *hPtbuf, double Xc, double Yc, double R,
+LCAPI int lcPaint_PtbufAddArc(void *hPtbuf, double Xc, double Yc, double R,
                               double StartAngle, double ArcAngle, int Resol);
-LCAPI  int lcPaint_PtbufAddArc3p(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufAddArc3p(void *hPtbuf, double X1, double Y1, double X2,
                                 double Y2, double X3, double Y3, int Resol);
-LCAPI  int lcPaint_PtbufAddArcSDE(void *hPtbuf, double Xs, double Ys,
+LCAPI int lcPaint_PtbufAddArcSDE(void *hPtbuf, double Xs, double Ys,
                                  double DirAng, double Xe, double Ye,
                                  int Resol);
-LCAPI  int lcPaint_PtbufAddArcSDAR(void *hPtbuf, double Xs, double Ys,
+LCAPI int lcPaint_PtbufAddArcSDAR(void *hPtbuf, double Xs, double Ys,
                                   double DirAng, double AngArc, double R,
                                   int Resol);
-LCAPI  int lcPaint_PtbufAddArcSER(void *hPtbuf, double Xs, double Ys, double Xe,
+LCAPI int lcPaint_PtbufAddArcSER(void *hPtbuf, double Xs, double Ys, double Xe,
                                  double Ye, double Radius, int bClockwise,
                                  int Resol);
-LCAPI  int lcPaint_PtbufAddArcSEL(void *hPtbuf, double Xs, double Ys, double Xe,
+LCAPI int lcPaint_PtbufAddArcSEL(void *hPtbuf, double Xs, double Ys, double Xe,
                                  double Ye, double ArcLen, int bClockwise,
                                  int Resol);
-LCAPI  int lcPaint_PtbufAddArcSEA(void *hPtbuf, double Xs, double Ys, double Xe,
+LCAPI int lcPaint_PtbufAddArcSEA(void *hPtbuf, double Xs, double Ys, double Xe,
                                  double Ye, double AngArc, int Resol);
-LCAPI  int lcPaint_PtbufAddArcSEB(void *hPtbuf, double Xs, double Ys, double Xe,
+LCAPI int lcPaint_PtbufAddArcSEB(void *hPtbuf, double Xs, double Ys, double Xe,
                                  double Ye, double Bulge, int Resol);
-LCAPI  int lcPaint_PtbufAddArcCSE(void *hPtbuf, double Xc, double Yc, double Xs,
+LCAPI int lcPaint_PtbufAddArcCSE(void *hPtbuf, double Xc, double Yc, double Xs,
                                  double Ys, double Xe, double Ye,
                                  int bClockwise, int Resol);
-LCAPI  int lcPaint_PtbufAddArcCSA(void *hPtbuf, double Xc, double Yc, double Xs,
+LCAPI int lcPaint_PtbufAddArcCSA(void *hPtbuf, double Xc, double Yc, double Xs,
                                  double Ys, double AngArc, int Resol);
-LCAPI  int lcPaint_PtbufAddArcCSL(void *hPtbuf, double Xc, double Yc, double Xs,
+LCAPI int lcPaint_PtbufAddArcCSL(void *hPtbuf, double Xc, double Yc, double Xs,
                                  double Ys, double ChordLen, int bClockwise,
                                  int Resol);
-LCAPI  int lcPaint_PtbufAddArcCRAA(void *hPtbuf, double Xc, double Yc, double R,
+LCAPI int lcPaint_PtbufAddArcCRAA(void *hPtbuf, double Xc, double Yc, double R,
                                   double AngStart, double AngEnd,
                                   int bClockwise, int Resol);
-LCAPI  int lcPaint_PtbufAddEllipse(void *hPtbuf, double Xc, double Yc,
+LCAPI int lcPaint_PtbufAddEllipse(void *hPtbuf, double Xc, double Yc,
                                   double Rmaj, double Rmin, double RotAng,
                                   double StartAng, double ArcAng, int Resol);
-LCAPI  int lcPaint_PtbufAddEllipse2(void *hPtbuf, double X1, double Y1,
+LCAPI int lcPaint_PtbufAddEllipse2(void *hPtbuf, double X1, double Y1,
                                    double X2, double Y2, int Resol);
-LCAPI  int lcPaint_PtbufAddRect(void *hPtbuf, double Xc, double Yc, double W,
+LCAPI int lcPaint_PtbufAddRect(void *hPtbuf, double Xc, double Yc, double W,
                                double H, double Angle, double R, int Resol);
-LCAPI  int lcPaint_PtbufAddRect2(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufAddRect2(void *hPtbuf, double X1, double Y1, double X2,
                                 double Y2, double R, int Resol);
-LCAPI  int lcPaint_PtbufAddRect3(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufAddRect3(void *hPtbuf, double X1, double Y1, double X2,
                                 double Y2, double W, int Align, double R,
                                 int Resol);
-LCAPI  int lcPaint_PtbufAddWline(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufAddWline(void *hPtbuf, double X1, double Y1, double X2,
                                 double Y2, double W, int Align, int bArc,
                                 int Resol);
-LCAPI  int lcPaint_PtbufAddPtbuf(void *hPtbuf, void *hPtbuf2);
-LCAPI  int lcPaint_PtbufGetPoint(void *hPtbuf, int Mode, double *pX, double *pY);
-LCAPI  int lcPaint_PtbufGetPoint2(void *hPtbuf, int Mode, double *pX, double *pY,
+LCAPI int lcPaint_PtbufAddPtbuf(void *hPtbuf, void *hPtbuf2);
+LCAPI int lcPaint_PtbufGetPoint(void *hPtbuf, int Mode, double *pX, double *pY);
+LCAPI int lcPaint_PtbufGetPoint2(void *hPtbuf, int Mode, double *pX, double *pY,
                                  double *pPrm1, double *pPrm2, int *pIntPrm);
-LCAPI  int lcPaint_PtbufInterpolate(void *hPtbuf, int bClosed, void *hPtbufDest,
+LCAPI int lcPaint_PtbufInterpolate(void *hPtbuf, int bClosed, void *hPtbufDest,
                                    int Mode, int Resol);
-LCAPI  int lcPaint_PtbufMove(void *hPtbuf, double dx, double dy);
-LCAPI  int lcPaint_PtbufRotate(void *hPtbuf, double Xc, double Yc, double Angle);
-LCAPI  int lcPaint_PtbufScale(void *hPtbuf, double Xc, double Yc, double ScaleX,
+LCAPI int lcPaint_PtbufMove(void *hPtbuf, double dx, double dy);
+LCAPI int lcPaint_PtbufRotate(void *hPtbuf, double Xc, double Yc, double Angle);
+LCAPI int lcPaint_PtbufScale(void *hPtbuf, double Xc, double Yc, double ScaleX,
                              double ScaleY);
-LCAPI  int lcPaint_PtbufMirror(void *hPtbuf, double X1, double Y1, double X2,
+LCAPI int lcPaint_PtbufMirror(void *hPtbuf, double X1, double Y1, double X2,
                               double Y2);
-LCAPI  int lcPaint_PtbufCopy(void *hPtbuf, void *hPtbufDest);
+LCAPI int lcPaint_PtbufCopy(void *hPtbuf, void *hPtbufDest);
 
 // Multipolygon
-LCAPI  void * lcPaint_CreateMpgon();
-LCAPI  int lcPaint_DeleteMpgon(void *hMpgon);
-LCAPI  int lcPaint_MpgonClear(void *hMpgon);
-LCAPI  int lcPaint_MpgonAddPgon(void *hMpgon, void *hPtbuf);
-LCAPI  int lcPaint_MpgonAddText(void *hMpgon, void *hFont, double X, double Y,
+LCAPI void *lcPaint_CreateMpgon();
+LCAPI int lcPaint_DeleteMpgon(void *hMpgon);
+LCAPI int lcPaint_MpgonClear(void *hMpgon);
+LCAPI int lcPaint_MpgonAddPgon(void *hMpgon, void *hPtbuf);
+LCAPI int lcPaint_MpgonAddText(void *hMpgon, void *hFont, double X, double Y,
                                char *szText, int Resol);
-LCAPI  int lcPaint_MpgonAddBarcode(void *hMpgon, int BarType, double Xc,
+LCAPI int lcPaint_MpgonAddBarcode(void *hMpgon, int BarType, double Xc,
                                   double Yc, double Width, double Height,
                                   char *szText);
-LCAPI  int lcPaint_MpgonMove(void *hMpgon, double dx, double dy);
-LCAPI  int lcPaint_MpgonRotate(void *hMpgon, double Xc, double Yc, double Angle);
-LCAPI  int lcPaint_MpgonScale(void *hMpgon, double Xc, double Yc, double ScaleX,
+LCAPI int lcPaint_MpgonMove(void *hMpgon, double dx, double dy);
+LCAPI int lcPaint_MpgonRotate(void *hMpgon, double Xc, double Yc, double Angle);
+LCAPI int lcPaint_MpgonScale(void *hMpgon, double Xc, double Yc, double ScaleX,
                              double ScaleY);
-LCAPI  int lcPaint_MpgonMirror(void *hMpgon, double X1, double Y1, double X2,
+LCAPI int lcPaint_MpgonMirror(void *hMpgon, double X1, double Y1, double X2,
                               double Y2);
-LCAPI  int lcPaint_MpgonCopy(void *hMpgon, void *hMpgonDest);
+LCAPI int lcPaint_MpgonCopy(void *hMpgon, void *hMpgonDest);
 
-LCAPI  int lcPaint_HatchGen(void *hMpgon, void *hHatch, double Dist,
+LCAPI int lcPaint_HatchGen(void *hMpgon, void *hHatch, double Dist,
                            double Angle, double Gap);
 
 // Image
-LCAPI  void * lcPaint_ImageAdd(int Id);
-LCAPI  int lcPaint_ImageDelete(void *hImage);
-LCAPI  void * lcPaint_ImageGetFirst();
-LCAPI  void * lcPaint_ImageGetNext(void *hImage);
-LCAPI  void * lcPaint_ImageGetByID(int Id);
-LCAPI  int lcPaint_ImageLoad(void *hImage, char *szFileName);
-LCAPI  int lcPaint_ImageCopy(void *hImage, void *hImageDest);
-LCAPI  int lcPaint_ImageCreate(void *hImage, int Width, int Height);
-LCAPI  int lcPaint_ImageSetPixel(void *hImage, int X, int Y, int R, int G,
+LCAPI void *lcPaint_ImageAdd(int Id);
+LCAPI int lcPaint_ImageDelete(void *hImage);
+LCAPI void *lcPaint_ImageGetFirst();
+LCAPI void *lcPaint_ImageGetNext(void *hImage);
+LCAPI void *lcPaint_ImageGetByID(int Id);
+LCAPI int lcPaint_ImageLoad(void *hImage, char *szFileName);
+LCAPI int lcPaint_ImageCopy(void *hImage, void *hImageDest);
+LCAPI int lcPaint_ImageCreate(void *hImage, int Width, int Height);
+LCAPI int lcPaint_ImageSetPixel(void *hImage, int X, int Y, int R, int G,
                                 int B);
-LCAPI  int lcPaint_ImageFlip(void *hImage, int bHor, int bVert);
-LCAPI  int lcPaint_ImageRotate(void *hImage, double Angle);
-LCAPI  int lcPaint_ImageGray(void *hImage);
-LCAPI  int lcPaint_ImageResize(void *hImage, int NewWidth, int NewHeight,
+LCAPI int lcPaint_ImageFlip(void *hImage, int bHor, int bVert);
+LCAPI int lcPaint_ImageRotate(void *hImage, double Angle);
+LCAPI int lcPaint_ImageGray(void *hImage);
+LCAPI int lcPaint_ImageResize(void *hImage, int NewWidth, int NewHeight,
                               int ResizeFilter);
-LCAPI  void * lcPaint_ImageGetPtbuf(void *hImage, double RotAngle);
+LCAPI void *lcPaint_ImageGetPtbuf(void *hImage, double RotAngle);
 
-LCAPI  void * lcPaint_FontOpenLC(char *szFontName);
-LCAPI  void * lcPaint_FontOpenTT(char *szFontName, int bBold, int bItalic);
-LCAPI  int lcPaint_FontClose(void *hFont);
-LCAPI  int lcPaint_FontSelect(void *hLcWnd, void *hFont);
+LCAPI void *lcPaint_FontOpenLC(char *szFontName);
+LCAPI void *lcPaint_FontOpenTT(char *szFontName, int bBold, int bItalic);
+LCAPI int lcPaint_FontClose(void *hFont);
+LCAPI int lcPaint_FontSelect(void *hLcWnd, void *hFont);
 
-int lcLoadLib(char *szFileName);
-void lcFreeLib();
+LCAPI int lcLoadLib(char *szFileName);
+LCAPI void lcFreeLib();
+
+LCAPI int XlcWndPollEvents(void *hWnd);
+LCAPI void *XlcCreateWindowX11(void *hWnd, void *hPrm2, int Style);
 
 #endif

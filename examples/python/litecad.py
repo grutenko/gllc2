@@ -22282,3 +22282,8 @@ except NameError:
 # No inserted files
 
 # No prefix-stripping
+
+try:
+    XLC_WINDOW_GTK_BACKEND = 1
+except NameError:
+    pass

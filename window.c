@@ -4,13 +4,13 @@
 #include "draw.h"
 #include "event.h"
 #include "frag.h"
-#include "vert.h"
 #include "litecad.h"
 #include "object.h"
 #include "platform.h"
 #include "ui_cursor.h"
 #include "ui_grid.h"
 #include "ui_selection.h"
+#include "vert.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -816,19 +816,19 @@ static struct gllc_object_vtable _vtable = {
     .type = GLLC_WINDOW,
     .destroy = _destroy};
 
-static inline void screen_to_world(struct gllc_window *w, double x, double y, double *xd, double *yd) {
-  double _w = (double)w->width;
-  double _h = (double)w->height;
-  *xd = (x - (_w / 2)) * w->scale - w->dx;
-  *yd = ((_h - y) - (_h / 2)) * w->scale - w->dy;
+static inline void screen_to_world(struct gllc_window *W, double x, double y, double *xd, double *yd) {
+  double _w = (double)W->width;
+  double _h = (double)W->height;
+  *xd = (x - (_w / 2)) * W->scale - W->dx;
+  *yd = ((_h - y) - (_h / 2)) * W->scale - W->dy;
 }
 
-static inline void world_to_screen(struct gllc_window *w, double x, double y, int *sx, int *sy) {
-  double _w = (double)w->width;
-  double _h = (double)w->height;
+static inline void world_to_screen(struct gllc_window *W, double x, double y, int *sx, int *sy) {
+  double _w = (double)W->width;
+  double _h = (double)W->height;
 
-  double xs = ((x + w->dx) / w->scale) + (_w / 2);
-  double ys = _h - (((y + w->dy) / w->scale) + (_h / 2));
+  double xs = ((x + W->dx) / W->scale) + (_w / 2);
+  double ys = _h - (((y + W->dy) / W->scale) + (_h / 2));
 
   *sx = (int)xs;
   *sy = (int)ys;
@@ -836,66 +836,67 @@ static inline void world_to_screen(struct gllc_window *w, double x, double y, in
 
 #define GL_CHECK() gl_check_error(__FILE__, __LINE__)
 
-static void draw(struct gllc_window *wnd) {
-  nw_make_context_current(&wnd->nw);
+static void draw(struct gllc_window *W) {
+  nw_make_context_current(&W->nw);
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glClearColor(W->clearcolor[0], W->clearcolor[1], W->clearcolor[2], W->clearcolor[3]);
   double x0, y0, x1, y1;
-  float _w = (float)wnd->width;
-  float _h = (float)wnd->height;
-  const float *_mvp = (const float *)wnd->mmvp;
-  const float *_screenmvp = (const float *)wnd->mscreenmvp;
-  screen_to_world(wnd, 0.0f, _h, &x0, &y0);
-  screen_to_world(wnd, _w, 0.0f, &x1, &y1);
+  float _w = (float)W->width;
+  float _h = (float)W->height;
+  const float *_mvp = (const float *)W->mmvp;
+  const float *_screenmvp = (const float *)W->mscreenmvp;
+  screen_to_world(W, 0.0f, _h, &x0, &y0);
+  screen_to_world(W, _w, 0.0f, &x1, &y1);
   glClear(GL_COLOR_BUFFER_BIT);
-  glUseProgram(wnd->program);
-  glUniformMatrix4fv(wnd->loc_umvp, 1, GL_FALSE, _mvp);
-  glUniform4fv(wnd->loc_uclearcolor, 1, wnd->clearcolor);
-  glUniform2f(wnd->loc_uviewportsize, _w, _h);
-  glUniform1f(wnd->loc_uscale, wnd->scale);
-  if (wnd->griduse) {
-    ui_grid_draw(&wnd->grid, wnd->loc_uflags, wnd->scale, x0, y0, x1, y1);
+  glUseProgram(W->program);
+  glUniformMatrix4fv(W->loc_umvp, 1, GL_FALSE, _mvp);
+  glUniform4fv(W->loc_uclearcolor, 1, W->clearcolor);
+  glUniform2f(W->loc_uviewportsize, _w, _h);
+  glUniform1f(W->loc_uscale, W->scale);
+  if (W->griduse) {
+    ui_grid_draw(&W->grid, W->loc_uflags, W->scale, x0, y0, x1, y1);
   }
-  if (wnd->block) {
-    gllc_block_sync_gpu(wnd->block, &wnd->gpucmn);
-    ds_draw(&wnd->gpucmn, wnd->loc_uflags);
+  if (W->block) {
+    gllc_block_sync_gpu(W->block, &W->gpucmn);
+    ds_draw(&W->gpucmn, W->loc_uflags);
   }
-  if (wnd->mpressed && wnd->mbtn == 1) {
+  if (W->mpressed && W->mbtn == 1) {
     double sx0, sy0, sx1, sy1;
-    sx0 = wnd->mx0;
-    sy0 = wnd->my0;
-    screen_to_world(wnd, wnd->curx, wnd->cury, &sx1, &sy1);
-    ui_selection_draw(&wnd->sel, sx0, sy0, sx1, sy1);
+    sx0 = W->mx0;
+    sy0 = W->my0;
+    screen_to_world(W, W->curx, W->cury, &sx1, &sy1);
+    ui_selection_draw(&W->sel, sx0, sy0, sx1, sy1);
   }
-  glUniformMatrix4fv(wnd->loc_umvp, 1, GL_FALSE, _screenmvp);
-  ui_cursor_draw(&wnd->cursor, wnd->curx, wnd->cury, wnd->width, wnd->height);
-  nw_swap_buffers(&wnd->nw);
+  glUniformMatrix4fv(W->loc_umvp, 1, GL_FALSE, _screenmvp);
+  ui_cursor_draw(&W->cursor, W->curx, W->cury, W->width, W->height);
+  nw_swap_buffers(&W->nw);
 }
 
-static void on_paint(struct nw *w, void *data) {
-  nw_make_context_current(w);
+static void on_paint(struct nw *nw, void *data) {
+  nw_make_context_current(nw);
   draw(WND(data));
 }
 
-static inline void update_camera(struct gllc_window *w) {
-  float half_w = (float)w->width / 2.0f * w->scale;
-  float half_h = (float)w->height / 2.0f * w->scale;
-  glm_ortho(-half_w, half_w, -half_h, half_h, -1.0f, 1.0f, w->mproj);
-  glm_mat4_identity(w->mview);
-  vec4 t = {w->dx, w->dy, 0.0f, 1.0f};
-  glm_translate(w->mview, t);
-  glm_mat4_mul(w->mproj, w->mview, w->mmvp);
-  glm_mat4_mul(w->mmvp, w->mmodel, w->mmvp);
-  half_w = (float)w->width;
-  half_h = (float)w->height;
+static inline void update_camera(struct gllc_window *W) {
+  float half_w = (float)W->width / 2.0f * W->scale;
+  float half_h = (float)W->height / 2.0f * W->scale;
+  glm_ortho(-half_w, half_w, -half_h, half_h, -1.0f, 1.0f, W->mproj);
+  glm_mat4_identity(W->mview);
+  vec4 t = {W->dx, W->dy, 0.0f, 1.0f};
+  glm_translate(W->mview, t);
+  glm_mat4_mul(W->mproj, W->mview, W->mmvp);
+  glm_mat4_mul(W->mmvp, W->mmodel, W->mmvp);
+  half_w = (float)W->width;
+  half_h = (float)W->height;
   mat4 screenProj;
   mat4 screenView;
   glm_ortho(0, half_w, half_h, 0, -1.0f, 1.0f, screenProj);
   glm_mat4_identity(screenView);
-  glm_mat4_mul(screenProj, screenView, w->mscreenmvp);
+  glm_mat4_mul(screenProj, screenView, W->mscreenmvp);
 }
 
-static void on_size(struct nw *w, int width, int height, void *data) {
-  nw_get_size(w, &width, &height);
+static void on_size(struct nw *nw, int width, int height, void *data) {
+  nw_get_size(nw, &width, &height);
   WND(data)->width = width;
   WND(data)->height = height;
   update_camera(WND(data));
@@ -903,7 +904,7 @@ static void on_size(struct nw *w, int width, int height, void *data) {
     nw_make_context_current(&WND(data)->nw);
     glViewport(0, 0, width, height);
   }
-  nw_dirty(w);
+  nw_dirty(nw);
 }
 
 static inline void _fswap(double *x, double *y) {
@@ -912,13 +913,13 @@ static inline void _fswap(double *x, double *y) {
   *y = t;
 }
 
-static void send_mouse_event(struct gllc_window *w, int x, int y, double wx, double wy, int shift, int ctrl) {
+static void send_mouse_event(struct gllc_window *W, int x, int y, double wx, double wy, int shift, int ctrl) {
   struct gllc_event e;
   gllc_event_init(&e);
-  e.window = w;
-  e.block = w->block;
-  if (w->block) {
-    e.drawing = w->block->_nobj.drawing;
+  e.window = W;
+  e.block = W->block;
+  if (W->block) {
+    e.drawing = W->block->_nobj.drawing;
   } else {
     e.drawing = NULL;
   }
@@ -978,7 +979,7 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
     double sx, sy;
     if (ui_grid_snap(&WND(data)->grid, WND(data)->scale, x0, y0, x1, y1, &sx, &sy)) {
       world_to_screen(WND(data), sx, sy, &x, &y);
-      nw_cursor_set_pos(x, y);
+      nw_cursor_set_pos(w, x, y);
     }
   }
   WND(data)->curx = x;
@@ -987,25 +988,25 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data) {
 }
 
 static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, void *data) {
-  struct gllc_window *wnd = (struct gllc_window *)data;
-  wnd->mbtn = mode;
-  wnd->mpressed = action;
+  struct gllc_window *W = (struct gllc_window *)data;
+  W->mbtn = mode;
+  W->mpressed = action;
   double wx, wy;
-  screen_to_world(wnd, (double)x, (double)y, &wx, &wy);
+  screen_to_world(W, (double)x, (double)y, &wx, &wy);
   if (action) {
     if (mode == 3) {
-      wnd->drag = 1;
+      W->drag = 1;
     } else if (mode == 1) {
-      wnd->mpressx = x;
-      wnd->mpressy = y;
-      wnd->mx0 = wx;
-      wnd->my0 = wy;
+      W->mpressx = x;
+      W->mpressy = y;
+      W->mx0 = wx;
+      W->my0 = wy;
     }
   } else {
     if (mode == 3) {
-      wnd->drag = 0;
+      W->drag = 0;
     }
-    if (wnd->block) {
+    if (W->block) {
       if (mode == 1) {
         double x0, y0, x1, y1;
         int invert = 0;
@@ -1015,21 +1016,21 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
         if (x0 > x1) {
           invert = 1;
         }
-        gllc_block_ent_hover(wnd->block, NULL, 1);
+        gllc_block_ent_hover(W->block, NULL, 1);
         gllc_block_ent_filter_rect(WND(data)->block, invert, x0, y0, x1, y1, 1, 1);
-        int fcnt = gllc_block_ent_get_filter_cnt(wnd->block);
+        int fcnt = gllc_block_ent_get_filter_cnt(W->block);
         if (fcnt == 0) {
-          struct gllc_entity *ent = gllc_block_pick_ent(wnd->block, wx, wy, 1, 1);
+          struct gllc_entity *ent = gllc_block_pick_ent(W->block, wx, wy, 1, 1);
           if (ent) {
-            gllc_block_select(wnd->block, ent, 1);
+            gllc_block_select(W->block, ent, 1);
           }
         } else {
-          gllc_block_select(wnd->block, NULL, 1);
+          gllc_block_select(W->block, NULL, 1);
           for (int i = 0; i < fcnt; i++) {
-            gllc_block_select(wnd->block, gllc_block_ent_get_filter_at(wnd->block, i), 0);
+            gllc_block_select(W->block, gllc_block_ent_get_filter_at(W->block, i), 0);
           }
         }
-        gllc_block_update(wnd->block);
+        gllc_block_update(W->block);
       }
     }
   }
@@ -1067,7 +1068,7 @@ static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data) {
 static void on_mouse_leave(struct nw *wn, void *data) {
   WND(data)->menter = 0;
   nw_dirty(wn);
-  nw_show_cursor(1);
+  nw_show_cursor(wn, 1);
 }
 
 static GLuint load_shader(GLuint type, const char *source) {
@@ -1124,7 +1125,7 @@ static GLuint load_program(GLuint vert_shader, GLuint frag_shader) {
   return program;
 }
 
-static void load_GL_program(struct gllc_window *w) {
+static void load_GL_program(struct gllc_window *W) {
   GLuint V_shader = load_shader(GL_VERTEX_SHADER, vert_vert);
   if (!V_shader) {
     return;
@@ -1134,7 +1135,7 @@ static void load_GL_program(struct gllc_window *w) {
     glDeleteShader(V_shader);
     return;
   }
-  w->program = load_program(V_shader, F_shader);
+  W->program = load_program(V_shader, F_shader);
   glDeleteShader(V_shader);
   glDeleteShader(F_shader);
 }
@@ -1182,7 +1183,7 @@ void on_ready(struct nw *NW, void *data) {
 #endif
 }
 
-static struct nw_vtable _nw_vtable = {
+static struct nw_callback_vtable nw_callback_vtable = {
     .ready = on_ready,
     .paint = on_paint,
     .size = on_size,
@@ -1191,234 +1192,288 @@ static struct nw_vtable _nw_vtable = {
     .mouse_scroll = on_mouse_scroll,
     .mouse_leave = on_mouse_leave};
 
-struct gllc_window *gllc_window_create(void *p) {
-  int success = 0;
-  struct gllc_window *wnd = malloc(sizeof(struct gllc_window));
-  if (wnd) {
-    memset(wnd, 0, sizeof(struct gllc_window));
-    GLLC_OBJECT_INIT(wnd, _all_props, &_vtable);
+static struct gllc_window *Wnew() {
+  struct gllc_window *W = malloc(sizeof(struct gllc_window));
+  if (W) {
+    memset(W, 0, sizeof(struct gllc_window));
+    GLLC_OBJECT_INIT(W, _all_props, &_vtable);
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-    memcpy(wnd->clearcolor, white, sizeof(white));
-    wnd->griduse = 1;
-    wnd->scale = 1.0f;
-    glm_mat4_identity(wnd->mmodel);
-    glm_mat4_identity(wnd->mview);
-    glm_mat4_identity(wnd->mproj);
-    update_camera(wnd);
-    ui_grid_init(&wnd->grid);
-    ui_cursor_init(&wnd->cursor);
-    ui_selection_init(&wnd->sel);
-    if (nw_create_async(&wnd->nw, p, &_nw_vtable, wnd)) {
-      return wnd;
-    } else {
-      free(wnd);
+    memcpy(W->clearcolor, white, sizeof(white));
+    W->griduse = 1;
+    W->scale = 1.0f;
+    glm_mat4_identity(W->mmodel);
+    glm_mat4_identity(W->mview);
+    glm_mat4_identity(W->mproj);
+    update_camera(W);
+    ui_grid_init(&W->grid);
+    ui_cursor_init(&W->cursor);
+    ui_selection_init(&W->sel);
+  }
+  return W;
+}
+
+#if defined(_WIN32)
+int gllc_window_create_win32(HWND parent, int style) {
+  struct gllc_window *W = Wnew();
+  if (W) {
+    if (nw_create_win32(&W->nw, nw_callback_vtable, parent, W)) {
+      return W;
     }
   }
   return NULL;
 }
 
-int gllc_window_resize(struct gllc_window *window, int x, int y, int width, int height) {
-  NONULL(window, 0);
-  nw_set_size(&window->nw, x, y, width, height);
-  nw_dirty(&window->nw);
+#elif defined(__EMSCRIPTEN__)
+int gllc_window_create_webgl(const char *canvas, int style) {
+  struct gllc_window *W = wndnew();
+  if (W) {
+    if (nw_create_webgl(&W->nw, &nw_callback_vtable, canvas, W)) {
+      return W;
+    }
+  }
+  return NULL;
+}
+
+#elif defined(__linux__)
+struct gllc_window *gllc_window_create_x11(Window parent, Display *x_display, int style) {
+  struct gllc_window *W = Wnew();
+  if (W) {
+    if (nw_create_x11(&W->nw, &nw_callback_vtable, x_display, parent, W)) {
+      return W;
+    }
+  }
+  return NULL;
+}
+
+struct gllc_window *gllc_window_create_gtk(GtkWindow *parent, int style) {
+  struct gllc_window *W = Wnew();
+  if (W) {
+    if (nw_create_gtk(&W->nw, &nw_callback_vtable, parent, W)) {
+      return W;
+    }
+  }
+  return NULL;
+}
+
+struct gllc_window *gllc_window_create_wayland(struct wl_surface *parent, int style) {
+  struct gllc_window *W = Wnew();
+  if (W) {
+    if (nw_create_wayland(&W->nw, &nw_callback_vtable, parent, W)) {
+      return W;
+    }
+  }
+  return NULL;
+}
+
+#endif
+
+int gllc_window_resize(struct gllc_window *W, int x, int y, int width, int height) {
+  NONULL(W, 0);
+  nw_set_size(&W->nw, x, y, width, height);
+  nw_dirty(&W->nw);
   return 1;
 }
 
-void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *xd, double *yd) {
-  NONULL(w, );
-  double _w = (double)w->width;
-  double _h = (double)w->height;
-  *xd = (x - (_w / 2)) * w->scale - w->dx;
-  *yd = (y - (_h / 2)) * w->scale - w->dy;
+void gllc_window_wnd_to_drw(struct gllc_window *W, double x, double y, double *xd, double *yd) {
+  NONULL(W, );
+  double _w = (double)W->width;
+  double _h = (double)W->height;
+  *xd = (x - (_w / 2)) * W->scale - W->dx;
+  *yd = (y - (_h / 2)) * W->scale - W->dy;
 }
 
-int gllc_window_set_block(struct gllc_window *wnd, struct gllc_block *block) {
-  NONULL(wnd, 0);
-  if (wnd->block) {
-    gllc_block_set_window(wnd->block, NULL);
-    wnd->block = NULL;
+int gllc_window_set_block(struct gllc_window *W, struct gllc_block *block) {
+  NONULL(W, 0);
+  if (W->block) {
+    gllc_block_set_window(W->block, NULL);
+    W->block = NULL;
   }
   if (block) {
-    wnd->block = block;
-    gllc_block_set_window(wnd->block, wnd);
+    W->block = block;
+    gllc_block_set_window(W->block, W);
   }
-  nw_dirty(&wnd->nw);
+  nw_dirty(&W->nw);
   return 1;
 }
 
-int gllc_window_destroy(struct gllc_window *w) {
-  NONULL(w, 0);
-  if (w->ready) {
-    nw_make_context_current(&w->nw);
-    gllc_block_set_window(w->block, NULL);
-    ds_gpu_clear(&w->gpucmn);
-    ds_gpu_clear(&w->gpuinter);
-    ui_grid_cleanup(&w->grid);
-    ui_cursor_cleanup(&w->cursor);
-    ui_selection_cleanup(&w->sel);
+int gllc_window_destroy(struct gllc_window *W) {
+  NONULL(W, 0);
+  if (W->ready) {
+    nw_make_context_current(&W->nw);
+    gllc_block_set_window(W->block, NULL);
+    ds_gpu_clear(&W->gpucmn);
+    ds_gpu_clear(&W->gpuinter);
+    ui_grid_cleanup(&W->grid);
+    ui_cursor_cleanup(&W->cursor);
+    ui_selection_cleanup(&W->sel);
   }
-  nw_destroy(&w->nw);
-  free(w);
+  nw_destroy(&W->nw);
+  free(W);
   return 1;
 }
 
-int gllc_window_redraw(struct gllc_window *wnd) {
-  NONULL(wnd, 0);
-  nw_dirty(&wnd->nw);
+int gllc_window_redraw(struct gllc_window *W) {
+  NONULL(W, 0);
+  nw_dirty(&W->nw);
   return 1;
 }
 
-void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, double *x1, double *y1) {
-  NONULL(wnd, );
-  gllc_window_wnd_to_drw(wnd, 0.0f, 0.0f, x0, y0);
-  gllc_window_wnd_to_drw(wnd, wnd->width, wnd->height, x1, y1);
+void gllc_window_get_viewport(struct gllc_window *W, double *x0, double *y0, double *x1, double *y1) {
+  NONULL(W, );
+  gllc_window_wnd_to_drw(W, 0.0f, 0.0f, x0, y0);
+  gllc_window_wnd_to_drw(W, W->width, W->height, x1, y1);
   if (*x0 > *x1)
     _fswap(x0, x1);
   if (*y0 > *y1)
     _fswap(x0, x1);
 }
 
-int gllc_window_set_focus(struct gllc_window *wnd) {
-  NONULL(wnd, 0);
-  nw_focus(&wnd->nw);
+int gllc_window_set_focus(struct gllc_window *W) {
+  NONULL(W, 0);
+  nw_focus(&W->nw);
   return 1;
 }
 
-int gllc_window_set_extents(struct gllc_window *wnd, double Xmin, double Ymin, double Xmax, double Ymax) {
-  NONULL(wnd, 0);
+int gllc_window_set_extents(struct gllc_window *W, double Xmin, double Ymin, double Xmax, double Ymax) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_set_props(struct gllc_window *wnd, void *props) {
-  NONULL(wnd, 0);
+int gllc_window_set_props(struct gllc_window *W, void *props) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_set_cmdwin(struct gllc_window *wnd, void *cmdwin) {
-  NONULL(wnd, 0);
+int gllc_window_set_cmdwin(struct gllc_window *W, void *cmdwin) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_set_base_point(struct gllc_window *wnd, int bState, double x, double y) {
-  NONULL(wnd, 0);
+int gllc_window_set_base_point(struct gllc_window *W, int bState, double x, double y) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_emulator(struct gllc_window *wnd, int mode) {
-  NONULL(wnd, 0);
+int gllc_window_emulator(struct gllc_window *W, int mode) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_hover_text(struct gllc_window *wnd, const char *text, int x, int y, int align) {
-  NONULL(wnd, 0);
+int gllc_window_hover_text(struct gllc_window *W, const char *text, int x, int y, int align) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_message(struct gllc_window *wnd, const char *text, int type) {
-  NONULL(wnd, 0);
+int gllc_window_message(struct gllc_window *W, const char *text, int type) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_magnifier(struct gllc_window *wnd, int bOn, int Width, int Height, int Zoom, int Flags) {
-  NONULL(wnd, 0);
+int gllc_window_magnifier(struct gllc_window *W, int bOn, int Width, int Height, int Zoom, int Flags) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_pick_ent(struct gllc_window *wnd, const char *text, const char *cursor_text) {
-  NONULL(wnd, 0);
+int gllc_window_pick_ent(struct gllc_window *W, const char *text, const char *cursor_text) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_wait_point(struct gllc_window *wnd, const char *text, double *x, double *y) {
-  NONULL(wnd, 0);
+int gllc_window_wait_point(struct gllc_window *W, const char *text, double *x, double *y) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_wait_point_2(struct gllc_window *wnd, const char *text, double *x, double *y, F_WAITPOINT pFunc, int FuncPrm) {
-  NONULL(wnd, 0);
+int gllc_window_wait_point_2(struct gllc_window *W, const char *text, double *x, double *y, F_WAITPOINT pFunc, int FuncPrm) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_update(struct gllc_window *wnd, int mode) {
-  NONULL(wnd, 0);
+int gllc_window_update(struct gllc_window *W, int mode) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_input_str(struct gllc_window *wnd) {
-  NONULL(wnd, 0);
+int gllc_window_input_str(struct gllc_window *W) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_zoom_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1) {
-  NONULL(wnd, 0);
+int gllc_window_zoom_rect(struct gllc_window *W, double x0, double y0, double x1, double y1) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_zoom_scale(struct gllc_window *wnd, double scale) {
-  NONULL(wnd, 0);
+int gllc_window_zoom_scale(struct gllc_window *W, double scale) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_zoom_move(struct gllc_window *wnd, double dx, double dy) {
-  NONULL(wnd, 0);
+int gllc_window_zoom_move(struct gllc_window *W, double dx, double dy) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_zoom_pos(struct gllc_window *wnd, double x, double y, double scale) {
-  NONULL(wnd, 0);
+int gllc_window_zoom_pos(struct gllc_window *W, double x, double y, double scale) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_zoom_ent(struct gllc_window *wnd, struct gllc_entity *ent) {
-  NONULL(wnd, 0);
+int gllc_window_zoom_ent(struct gllc_window *W, struct gllc_entity *ent) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_get_cursor_coord(struct gllc_window *wnd, int *x, int *y, double *wx, double *wy) {
-  NONULL(wnd, 0);
+int gllc_window_get_cursor_coord(struct gllc_window *W, int *x, int *y, double *wx, double *wy) {
+  NONULL(W, 0);
   return 1;
 }
 
-int gllc_window_coord_to_drw(struct gllc_window *wnd, int x, int y, double *wx, double *wy) {
-  NONULL(wnd, 0);
-  screen_to_world(wnd, x, y, wx, wy);
+int gllc_window_coord_to_drw(struct gllc_window *W, int x, int y, double *wx, double *wy) {
+  NONULL(W, 0);
+  screen_to_world(W, x, y, wx, wy);
   return 1;
 }
 
-int gllc_window_coord_to_wnd(struct gllc_window *wnd, double wx, double wy, int *x, int *y) {
-  NONULL(wnd, 0);
-  world_to_screen(wnd, wx, wy, x, y);
+int gllc_window_coord_to_wnd(struct gllc_window *W, double wx, double wy, int *x, int *y) {
+  NONULL(W, 0);
+  world_to_screen(W, wx, wy, x, y);
   return 1;
 }
 
-int gllc_window_get_ents_by_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1, int cross, int max_ents) {
-  NONULL(wnd, 0);
+int gllc_window_get_ents_by_rect(struct gllc_window *W, double x0, double y0, double x1, double y1, int cross, int max_ents) {
+  NONULL(W, 0);
   return 1;
 }
 
-struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *wnd, int x, int y) {
-  NONULL(wnd, 0);
+struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *W, int x, int y) {
+  NONULL(W, 0);
   double xd, yd;
-  screen_to_world(wnd, x, y, &xd, &yd);
-  return gllc_block_pick_ent(wnd->block, xd, yd, 1, 1);
+  screen_to_world(W, x, y, &xd, &yd);
+  return gllc_block_pick_ent(W->block, xd, yd, 1, 1);
 }
 
-int gllc_window_get_ents_by_point(struct gllc_window *wnd, int x, int y, int max_ents) {
-  NONULL(wnd, 0);
+int gllc_window_get_ents_by_point(struct gllc_window *W, int x, int y, int max_ents) {
+  NONULL(W, 0);
   return 1;
 }
 
-struct gllc_entity *gllc_window_get_ent_by_id(struct gllc_window *wnd, int id) {
-  NONULL(wnd, 0);
+struct gllc_entity *gllc_window_get_ent_by_id(struct gllc_window *W, int id) {
+  NONULL(W, 0);
   return NULL;
 }
 
-struct gllc_entity *gllc_window_get_ent_by_idh(struct gllc_window *wnd, const char *idh) {
-  NONULL(wnd, 0);
+struct gllc_entity *gllc_window_get_ent_by_idh(struct gllc_window *W, const char *idh) {
+  NONULL(W, 0);
   return NULL;
 }
 
-struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *wnd, const char *key) {
-  NONULL(wnd, 0);
+struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *W, const char *key) {
+  NONULL(W, 0);
   return NULL;
+}
+
+int gllc_window_poll_events(struct gllc_window *W) {
+  nw_poll_events(&W->nw);
+  return 1;
 }

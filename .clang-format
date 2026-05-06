@@ -1,11 +1,2 @@
 BasedOnStyle: LLVM
-BreakAfterAttributes: Always
 ColumnLimit: 0
-AttributeMacros:
-  - __attribute__
-
-AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: true
-AllowShortLoopsOnASingleLine: true
-
-BreakBeforeBraces: Attach

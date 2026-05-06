@@ -9,9 +9,7 @@
 #include <wingdi.h>
 #include <winuser.h>
 
-typedef HGLRC WINAPI wglCreateContextAttribsARB_type(HDC hdc,
-                                                     HGLRC hShareContext,
-                                                     const int *attribList);
+typedef HGLRC WINAPI wglCreateContextAttribsARB_type(HDC hdc, HGLRC hShareContext, const int *attribList);
 wglCreateContextAttribsARB_type *wglCreateContextAttribsARB;
 
 typedef BOOL WINAPI wglSwapIntervalEXT_type(int interval);
@@ -24,9 +22,7 @@ wglSwapIntervalEXT_type *wglSwapIntervalEXT;
 
 #define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
 
-typedef BOOL WINAPI wglChoosePixelFormatARB_type(
-    HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList,
-    UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
+typedef BOOL WINAPI wglChoosePixelFormatARB_type(HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
 wglChoosePixelFormatARB_type *wglChoosePixelFormatARB;
 
 #define WGL_DRAW_TO_WINDOW_ARB 0x2001
@@ -50,21 +46,16 @@ static int init_opengl_extensions(void) {
       .hInstance = GetModuleHandle(0),
       .lpszClassName = "Dummy_WGL_djuasiodwa",
   };
-
   if (!RegisterClassA(&window_class)) {
     fprintf(stderr, "Failed to register dummy OpenGL window.");
     return 0;
   }
-
   HWND dummy_window = CreateWindowExA(0, window_class.lpszClassName, "Dummy OpenGL Window", 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, window_class.hInstance, 0);
-
   if (!dummy_window) {
     fprintf(stderr, "Failed to create dummy OpenGL window.");
     return 0;
   }
-
   HDC dummy_dc = GetDC(dummy_window);
-
   PIXELFORMATDESCRIPTOR pfd = {
       .nSize = sizeof(pfd),
       .nVersion = 1,
@@ -76,7 +67,6 @@ static int init_opengl_extensions(void) {
       .cDepthBits = 24,
       .cStencilBits = 8,
   };
-
   int pixel_format = ChoosePixelFormat(dummy_dc, &pfd);
   if (!pixel_format) {
     goto _error;
@@ -84,16 +74,13 @@ static int init_opengl_extensions(void) {
   if (!SetPixelFormat(dummy_dc, pixel_format, &pfd)) {
     goto _error;
   }
-
   HGLRC dummy_context = wglCreateContext(dummy_dc);
   if (!dummy_context) {
     goto _error;
   }
-
   if (!wglMakeCurrent(dummy_dc, dummy_context)) {
     goto _error;
   }
-
   wglCreateContextAttribsARB = (wglCreateContextAttribsARB_type *)wglGetProcAddress("wglCreateContextAttribsARB");
   wglChoosePixelFormatARB = (wglChoosePixelFormatARB_type *)wglGetProcAddress("wglChoosePixelFormatARB");
   wglSwapIntervalEXT = (wglSwapIntervalEXT_type *)wglGetProcAddress("wglSwapIntervalEXT");
@@ -103,7 +90,6 @@ static int init_opengl_extensions(void) {
   DestroyWindow(dummy_window);
   UnregisterClassA("Dummy_WGL_djuasiodwa", GetModuleHandle(0));
   return 1;
-
 _error:
   if (!dummy_window)
     return 0;
@@ -270,6 +256,63 @@ static LRESULT CALLBACK wndproc(HWND window, UINT msg, WPARAM wparam, LPARAM lpa
 }
 
 ATOM wndClass = 0;
+
+int nw_create_win32(struct nw *nw, HWND parent, struct nw_callback_vtable *vtable, void *data) {
+  memset(nw, 0, sizeof(struct nw));
+  if (!wndClass) {
+    WNDCLASSEX wc = {};
+    wc.cbSize = sizeof(wc);
+    wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+    wc.lpfnWndProc = wndproc;
+    wc.hInstance = GetModuleHandle(NULL);
+    wc.lpszClassName = "GLLCWindowClass";
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wndClass = RegisterClassEx(&wc);
+    if (!wndClass)
+      goto _error;
+  }
+  RECT rc;
+  if (!GetClientRect((HWND)parent, &rc)) {
+    rc.left = 0;
+    rc.top = 0;
+    rc.right = 800;
+    rc.bottom = 600;
+  }
+  w->w = CreateWindowEx(
+      0,
+      MAKEINTATOM(wndClass),
+      "OpenGL Window",
+      WS_CHILD | WS_VISIBLE,
+      rc.left, rc.top,
+      rc.right - rc.left,
+      rc.bottom - rc.top,
+      (HWND)parent,
+      NULL,
+      GetModuleHandle(NULL),
+      NULL);
+  if (!nw->w)
+    goto _error;
+  nw->dc = GetDC(nw->w);
+  nw->glrc = init_opengl(nw->dc);
+  if (!nw->glrc)
+    goto _error;
+  nw->cb_vtable_p = vtable;
+  nw->data = data;
+  push_NW(nw);
+  vtable->ready(nw, data);
+  return 1;
+_error:
+  if (!nw)
+    return 0;
+  if (nw->dc)
+    ReleaseDC(nw->w, nw->dc);
+  if (nw->glrc)
+    wglDeleteContext(nw->glrc);
+  if (nw->w)
+    DestroyWindow(nw->w);
+
+  return 0;
+}
 
 int nw_create(struct nw *nw, void *parent, struct nw_vtable *vtable, void *data) {
   memset(nw, 0, sizeof(struct nw));

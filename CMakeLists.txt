@@ -8,35 +8,38 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SOURCES
     glad.c
     debug.c
-    block.c
-    circle.c
-    event.c
-    font.c
-    linetype.c
     draw.c
+    object.c
+    event.c
     drawing.c
     entity.c
     linebuild.c
-    object.c
-    named_object.c
-    platform_windows.c
-    platform_gtk.c
-    platform_webgl.c
-    point.c
-    polyline.c
-    rect.c
-    arc.c
     linalg.c
     entbuildutil.c
     sparsegrid.c
     stb_truetype.c
+    named_object.c
+    block.c
+    font.c
+    linetype.c
+    layer.c
+    point.c
+    polyline.c
+    rect.c
+    arc.c
+    line.c
+    circle.c
     ui_cursor.c
     ui_grid.c
     ui_selection.c
     ui_vertex_buffer.c
-    layer.c
     window.c
-    line.c
+    platform.c
+    platform_windows.c
+    platform_gtk.c
+    platform_webgl.c
+    platform_x11.c
+    platform_wayland.c
     litecad.c)
 set(TESS2_SOURCES
     tess2/bucketalloc.c
@@ -120,11 +123,18 @@ elseif(UNIX)
     pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
     pkg_check_modules(EPOXY REQUIRED IMPORTED_TARGET epoxy)
     target_link_libraries(gllc PRIVATE PkgConfig::GTK)
-target_link_libraries(gllc PRIVATE PkgConfig::EPOXY)
-    find_package(OpenGL REQUIRED)
-
-target_link_libraries(gllc PRIVATE OpenGL::GL)
+    target_link_libraries(gllc PRIVATE PkgConfig::EPOXY)
     target_link_libraries(gllc PRIVATE m dl pthread)
     target_compile_options(gllc PRIVATE -fvisibility=hidden)
     target_compile_options(gllc PUBLIC -DGL_GLEXT_PROTOTYPES) 
+endif()
+
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    add_custom_target(copy_compile_commands ALL
+        COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_BINARY_DIR}/compile_commands.json"
+            "${CMAKE_SOURCE_DIR}/compile_commands.json"
+        COMMENT "Copying compile_commands.json to source directory"
+        VERBATIM
+    )
 endif()

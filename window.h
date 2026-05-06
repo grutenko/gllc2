@@ -63,7 +63,15 @@ struct gllc_window {
   struct ui_selection sel;
 };
 
-struct gllc_window *gllc_window_create(void *parent);
+#if defined(_WIN32)
+int gllc_window_create_win32(HWND parent, int style);
+#elif defined(__EMSCRIPTEN__)
+int gllc_window_create_webgl(const char *canvas, int style);
+#elif defined(__linux__)
+struct gllc_window *gllc_window_create_x11(Window parent, Display *x_display, int style);
+struct gllc_window *gllc_window_create_wayland(struct wl_surface *parent, int style);
+struct gllc_window *gllc_window_create_gtk(GtkWindow *parent, int style);
+#endif
 int gllc_window_destroy(struct gllc_window *wnd);
 int gllc_window_resize(struct gllc_window *window, int x, int y, int width, int height);
 int gllc_window_redraw(struct gllc_window *wnd);
@@ -98,5 +106,6 @@ struct gllc_entity *gllc_window_get_ent_by_id(struct gllc_window *wnd, int id);
 struct gllc_entity *gllc_window_get_ent_by_idh(struct gllc_window *wnd, const char *idh);
 struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *wnd, const char *key);
 void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, double *x1, double *y1);
+int gllc_window_poll_events(struct gllc_window *wnd);
 
 #endif

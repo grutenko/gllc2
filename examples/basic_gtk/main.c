@@ -1,10 +1,12 @@
 #include <math.h>
 #if defined(__linux__)
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h> 
 
 #include "litecad.h"
 
 int main(int argc, char **argv) {
+  XInitThreads();
   gtk_init(&argc, &argv);
 
   GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -13,8 +15,9 @@ int main(int argc, char **argv) {
   gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-
-  void *hWnd = lcCreateWindow(window, 0);
+  gtk_widget_realize(window); 
+  GdkWindow *gdk_win = gtk_widget_get_window(window);
+  void *hWnd = XlcCreateWindowX11((void *)GDK_WINDOW_XID(gdk_win), (void *)GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), XLC_WINDOW_X11_BACKEND);
   void *hDrw = lcCreateDrawing();
   void *hBlock = lcPropGetHandle(hDrw, LC_PROP_DRW_BLOCK_MODEL);
 

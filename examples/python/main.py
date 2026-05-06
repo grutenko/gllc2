@@ -1,3 +1,4 @@
+
 import wx
 import litecad as lc
 import ctypes as ct
@@ -10,24 +11,28 @@ import math
 app = wx.App(0)
 f = wx.Frame(None)
 f.SetSize(wx.Size(800, 600))
-f.Show()
-f.Raise()
-print(f.GetHandle())
+sz = wx.BoxSizer(wx.VERTICAL)
+p = wx.Panel(f)
+sz.Add(p, 1, wx.EXPAND)
+f.SetSizer(sz)
 lc.lcInitialize()
-hWnd = lc.lcCreateWindow(f.GetHandle(), 0)
+print(f.GetChildren())
+hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
 lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
 lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0x0)
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcPropGetHandle(hDrw, lc.LC_PROP_DRW_BLOCK_MODEL)
 lc.lcWndSetBlock(hWnd, hBlock)
-
+f.Layout()
+f.Show() # Обязательно показать окно до lcCreateWindow
+wx.YieldIfNeeded() # Дать время GTK обработать создание нативных ресурсов
 
 def on_size(event):
     w, h = f.GetClientSize().GetWidth(), f.GetClientSize().GetHeight()
     lc.lcWndResize(hWnd, 0, 0, w, h)
 
 
-f.Bind(wx.EVT_SIZE, on_size)
+p.Bind(wx.EVT_SIZE, on_size)
 
 N = 600
 M = 600
@@ -46,14 +51,13 @@ for i in range(N):
         tab[i0] = min_v + i * step + random.uniform(-0.5, 0.5)
         tab[i0 + 1] = min_v + j * step + random.uniform(-0.5, 0.5)
 
-dxf = ezdxf.readfile(dirname(__file__) + "\\Отметка -250 каркасы.dxf")
+dxf = ezdxf.readfile(dirname(__file__) + "/Отметка -250 каркасы.dxf")
 msp = dxf.modelspace()
 
 
 def get_color_int(e, doc):
-    # True Color (уже RGB, упакован в int)
     if e.dxf.hasattr("true_color"):
-        return e.dxf.true_color  # уже 0xRRGGBB
+        return e.dxf.true_color
 
     aci = e.dxf.color
 
@@ -83,7 +87,7 @@ for entity in msp:
 
         h = lc.lcBlockAddLine(hBlock, start.x, start.y, end.x, end.y)
         total_points += 2
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
 
 
         # ---------- POLYLINE / LWPOLYLINE ----------
@@ -100,7 +104,7 @@ for entity in msp:
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
         lc.lcPlineEnd(h)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
 
     elif entity.dxftype() == "ARC":
         center = entity.dxf.center
@@ -112,12 +116,12 @@ for entity in msp:
         a *= math.pi / 180
         a -= arc_angle / 2
         h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, a, arc_angle)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
     elif entity.dxftype() == "CIRCLE":
         center = entity.dxf.center
         radius = entity.dxf.radius
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffffff)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
 
 # генерация полилиний
 for i in range(N - 1):
@@ -132,14 +136,13 @@ for i in range(N - 1):
         lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
         lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
         lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0xffffff)
+        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x000000)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
         lc.lcPropPutBool(pline, lc.LC_PROP_ENT_LOCKED, True)
         lc.lcPlineEnd(pline)
-        lc.lcBlockUpdate(hBlock, 0, 0)
-        lc.lcWndRedraw(hWnd)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
 
-
+f.Show()
+f.Raise()
 app.MainLoop()
