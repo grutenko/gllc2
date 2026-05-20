@@ -1,11 +1,6 @@
 #if defined(_WIN32)
 
-#include "block.h"
-#include "drawing.h"
-#include "entity.h"
 #include "litecad.h"
-#include "object.h"
-#include "window.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -19,7 +14,7 @@ struct gllc_window *w;
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
   switch (uMsg) {
   case WM_SIZE:
-    gllc_window_resize(w, 0, 0, LOWORD(lParam), HIWORD(lParam));
+    lcWndResize(w, 0, 0, LOWORD(lParam), HIWORD(lParam));
     return 0;
   case WM_DESTROY:
     PostQuitMessage(0);
@@ -56,15 +51,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                              CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
                              NULL, NULL, hInstance, NULL);
 
-  w = gllc_window_create(hwnd);
+  w = lcCreateWindow(hwnd, 0);
   if (!w) {
     printf("Cannot create window\n");
     return EXIT_FAILURE;
   }
   ShowWindow(hwnd, nCmdShow);
 
-  struct gllc_drawing *drw = gllc_drw_create();
-  struct gllc_block *block = gllc_drw_add_block(drw, "block1", 0, 0);
+  struct gllc_drawing *drw = lcCreateDrawing();
+  struct gllc_block *block = lcDrwAddBlock(drw, "block1", 0, 0);
 
   double n[2] = {1.0f, 0.0f};
   double a_step = M_PI / 1.0f;
@@ -77,12 +72,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     p0[1] = n[1] * 1000.0f;
     p1[0] = -n[0] * 1000.0f;
     p1[1] = -n[1] * 1000.0f;
-    struct gllc_line *pl = gllc_block_add_line(block, p0, p1);
+    struct gllc_line *pl = lcBlockAddLine(block, p0[0], p0[1], p1[0], p1[1]);
     struct gllc_object *o = (struct gllc_object *)pl;
-    gllc_prop_put_int(o, LC_PROP_ENT_COLOR, 0xffffff);
+    lcPropPutInt(o, LC_PROP_ENT_COLOR, 0x0);
   }
-  gllc_block_update(block);
-  gllc_window_set_block(w, block);
+  lcBlockUpdate(block, 0, NULL);
+  lcWndSetBlock(w, block);
 
   MSG msg;
   int running = 1;
@@ -101,9 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     }
   }
 
-  gllc_block_destroy(block);
-  gllc_window_destroy(w);
-
+  lcDeleteWindow(w);
   return 0;
 }
 

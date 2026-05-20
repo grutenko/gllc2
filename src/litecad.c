@@ -7,7 +7,9 @@
 #include "object.h"
 #include "polyline.h"
 #include "window.h"
+#if defined(__linux__)
 #include <X11/Xlib.h>
+#endif
 
 void LCAPI lcEventSetProc(int EventType, F_LCEVENT pFunc, int Prm1, void *Prm2) {
   gllc_event_set_proc(EventType, (void (*)(struct gllc_event *))pFunc, Prm1, Prm2);
@@ -102,7 +104,7 @@ LCAPI int lcPropPutHandle(void *hObject, int idProp, void *hValue) {
 LCAPI void *lcCreateWindow(void *hWndParent, int Style) {
 #if defined(_WIN32) || defined(__EMSCRIPTEN__)
   if (Style & XLC_WINDOW_GTK_BACKEND || Style & XLC_WINDOW_WAYLAND_BACKEND || Style & XLC_WINDOW_X11_BACKEND) {
-    fprintf("Error: Using XLC_WINDOW_*_BACKEND allowed only for linux build.\n");
+    fprintf(stderr, "Error: Using XLC_WINDOW_*_BACKEND allowed only for linux build.\n");
     return NULL;
   }
 #elif defined(__linux__)

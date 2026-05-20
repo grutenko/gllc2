@@ -1,7 +1,7 @@
 #ifndef ui_selection_h
 #define ui_selection_h
 
-#if defined(WIN32)
+#if defined(_WIN32)
 #include "glad.h"
 #elif defined(__linux__)
 #include <epoxy/gl.h>

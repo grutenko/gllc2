@@ -17,7 +17,7 @@ sz.Add(p, 1, wx.EXPAND)
 f.SetSizer(sz)
 lc.lcInitialize()
 print(f.GetChildren())
-hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
+hWnd = lc.lcCreateWindow(int(p.GetHandle()), 0)
 lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
 lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0x0)
 hDrw = lc.lcCreateDrawing()
@@ -48,8 +48,8 @@ tab = (ct.c_double * (2 * N * M))()
 for i in range(N):
     for j in range(M):
         i0 = (i * M + j) * 2
-        tab[i0] = min_v + i * step + random.uniform(-0.5, 0.5)
-        tab[i0 + 1] = min_v + j * step + random.uniform(-0.5, 0.5)
+        tab[i0] = min_v + i * step
+        tab[i0 + 1] = min_v + j * step
 
 dxf = ezdxf.readfile(dirname(__file__) + "/Отметка -250 каркасы.dxf")
 msp = dxf.modelspace()
@@ -124,8 +124,8 @@ for entity in msp:
         radius = entity.dxf.radius
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
-    if h is not None:
-        lc.lcPropPutBool(h, lc.LC_PROP_ENT_LOCKED, True)
+    #if h is not None:
+    #    lc.lcPropPutBool(h, lc.LC_PROP_ENT_LOCKED, True)
 
 # генерация полилиний
 for i in range(N - 1):

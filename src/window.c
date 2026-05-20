@@ -1213,10 +1213,10 @@ static struct gllc_window *Wnew() {
 }
 
 #if defined(_WIN32)
-int gllc_window_create_win32(HWND parent, int style) {
+struct gllc_window *gllc_window_create_win32(HWND parent, int style) {
   struct gllc_window *W = Wnew();
   if (W) {
-    if (nw_create_win32(&W->nw, nw_callback_vtable, parent, W)) {
+    if (nw_create_win32(&W->nw, parent, &nw_callback_vtable, W)) {
       return W;
     }
   }
@@ -1224,7 +1224,7 @@ int gllc_window_create_win32(HWND parent, int style) {
 }
 
 #elif defined(__EMSCRIPTEN__)
-int gllc_window_create_webgl(const char *canvas, int style) {
+struct gllc_window *gllc_window_create_webgl(const char *canvas, int style) {
   struct gllc_window *W = wndnew();
   if (W) {
     if (nw_create_webgl(&W->nw, &nw_callback_vtable, canvas, W)) {

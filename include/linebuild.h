@@ -2,7 +2,7 @@
 #define linebuild_h
 
 #include "entity_vertex.h"
-#if defined(WIN32)
+#if defined(_WIN32)
 #include "glad.h"
 #elif defined(__linux__)
 #include <epoxy/gl.h>
