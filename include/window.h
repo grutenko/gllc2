@@ -3,7 +3,7 @@
 
 #include "draw.h"
 #include "entity.h"
-#if defined(WIN32)
+#if defined(_WIN32)
 #include "glad.h"
 #elif defined(__linux__)
 #include <epoxy/gl.h>
@@ -65,9 +65,9 @@ struct gllc_window
 };
 
 #if defined(_WIN32)
-int gllc_window_create_win32(HWND parent, int style);
+struct gllc_window *gllc_window_create_win32(HWND parent, int style);
 #elif defined(__EMSCRIPTEN__)
-int gllc_window_create_webgl(const char *canvas, int style);
+struct gllc_windw *gllc_window_create_webgl(const char *canvas, int style);
 #elif defined(__linux__)
 struct gllc_window *gllc_window_create_x11(Window parent, Display *x_display, int style);
 struct gllc_window *gllc_window_create_wayland(struct wl_surface *parent, int style);

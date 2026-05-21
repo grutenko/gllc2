@@ -1,9 +1,10 @@
 #ifndef debug_h
 #define debug_h
 
-void warn_impl(const char *file, int line, const char *func, const char *fmt, ...);
+void fmt_impl(const char *level, const char *file, int line, const char *func, const char *fmt, ...);
 
-#define WARN(fmt, ...) warn_impl(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define WARN(fmt, ...) fmt_impl("WARN", __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define ERROR(fmt, ...) fmt_impl("ERROR", __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 
 #define NONULL(ptr, retval)                                \
         do                                                 \

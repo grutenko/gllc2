@@ -7,7 +7,9 @@
 #include "object.h"
 #include "polyline.h"
 #include "window.h"
+#if defined(__linux__)
 #include <X11/Xlib.h>
+#endif
 
 void LCAPI lcEventSetProc(int EventType, F_LCEVENT pFunc, int Prm1, void *Prm2)
 {
@@ -133,18 +135,17 @@ LCAPI int lcPropPutHandle(void *hObject, int idProp, void *hValue)
 LCAPI void *lcCreateWindow(void *hWndParent, int Style)
 {
 #if defined(_WIN32) || defined(__EMSCRIPTEN__)
-        if (Style & XLC_WINDOW_GTK_BACKEND || Style & XLC_WINDOW_WAYLAND_BACKEND || Style & XLC_WINDOW_X11_BACKEND)
-        {
-                fprintf("Error: Using XLC_WINDOW_*_BACKEND allowed only for linux build.\n");
-                return NULL;
-        }
+  if (Style & XLC_WINDOW_GTK_BACKEND || Style & XLC_WINDOW_WAYLAND_BACKEND || Style & XLC_WINDOW_X11_BACKEND) {
+    ERROR("Using XLC_WINDOW_*_BACKEND allowed only for linux build.");
+    return NULL;
+  }
 #elif defined(__linux__)
         int backends = Style & (XLC_WINDOW_GTK_BACKEND |
                                 XLC_WINDOW_WAYLAND_BACKEND |
                                 XLC_WINDOW_X11_BACKEND);
         if (backends && (backends & (backends - 1)))
         {
-                fprintf(stderr, "Error: Multiple backends selected at once.\n");
+                ERROR("Multiple backends selected at once.");
                 return NULL;
         }
 #else
@@ -166,12 +167,12 @@ LCAPI void *lcCreateWindow(void *hWndParent, int Style)
         }
         else if (Style & XLC_WINDOW_X11_BACKEND)
         {
-                fprintf(stderr, "Error: use XlcCreateWindowX11() for X11_backend\n");
+                ERROR("use XlcCreateWindowX11() for X11_backend");
                 return NULL;
         }
         else
         {
-                fprintf(stderr, "Error: Not selected backend. Use XLC_WINDOW_*_BACKEND.\n");
+                ERROR("Not selected backend. Use XLC_WINDOW_*_BACKEND.");
                 return NULL;
         }
 #endif

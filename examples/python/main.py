@@ -7,6 +7,7 @@ from os.path import dirname
 import ezdxf
 from ezdxf.colors import aci2rgb
 import math
+import sys
 
 app = wx.App(0)
 f = wx.Frame(None)
@@ -16,8 +17,12 @@ p = wx.Panel(f)
 sz.Add(p, 1, wx.EXPAND)
 f.SetSizer(sz)
 lc.lcInitialize()
-print(f.GetChildren())
-hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
+if sys.platform == "win32":
+    hWnd  = lc.lcCreateWindow(f.GetHandle(), 0)
+elif sys.platform.startswith("linux"):
+    hWnd  = lc.lcCreateWindow(int(f.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
+else:
+    raise RuntimeError("Unsupported OS")
 lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
 lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0x0)
 hDrw = lc.lcCreateDrawing()
@@ -51,7 +56,7 @@ for i in range(N):
         tab[i0] = min_v + i * step
         tab[i0 + 1] = min_v + j * step * 2
 
-dxf = ezdxf.readfile(dirname(__file__) + "/Отметка -250 каркасы.dxf")
+dxf = ezdxf.readfile(dirname(__file__) + "/floorplan.dxf")
 msp = dxf.modelspace()
 
 
@@ -89,7 +94,7 @@ for entity in msp:
 
         h = lc.lcBlockAddLine(hBlock, start.x, start.y, end.x, end.y)
         total_points += 2
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, get_color_int(entity, dxf))
 
 
         # ---------- POLYLINE / LWPOLYLINE ----------
@@ -106,7 +111,7 @@ for entity in msp:
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
         lc.lcPlineEnd(h)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, get_color_int(entity, dxf))
 
     elif entity.dxftype() == "ARC":
         center = entity.dxf.center
@@ -118,31 +123,32 @@ for entity in msp:
         a *= math.pi / 180
         a -= arc_angle / 2
         h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, a, arc_angle)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, get_color_int(entity, dxf))
     elif entity.dxftype() == "CIRCLE":
         center = entity.dxf.center
         radius = entity.dxf.radius
         h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, get_color_int(entity, dxf))
     #if h is not None:
     #    lc.lcPropPutBool(h, lc.LC_PROP_ENT_LOCKED, True)
 
 # генерация полилиний
-for i in range(N - 1):
-    for j in range(M - 1):
-        i0 = (i * M + j) * 2
-        i1 = ((i + 1) * M + j) * 2
-        i2 = ((i + 1) * M + (j + 1)) * 2
-        i3 = (i * M + (j + 1)) * 2
+#for i in range(N - 1):
+#    for j in range(M - 1):
+#        i0 = (i * M + j) * 2
+#        i1 = ((i + 1) * M + j) * 2
+#        i2 = ((i + 1) * M + (j + 1)) * 2
+#        i3 = (i * M + (j + 1)) * 2
 
-        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
-        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x000000)
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
-        lc.lcPlineEnd(pline)
+#        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
+#        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
+#        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
+#        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
+#        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
+#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0xffffff)
+#        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
+#        lc.lcPlineEnd(pline)
+#        lc.lcPropPutBool(pline, lc.LC_PROP_ENT_LOCKED, True)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
 

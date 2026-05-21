@@ -64,7 +64,6 @@ target_compile_definitions(gllc PRIVATE
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
 )
-
 target_compile_options(gllc PRIVATE
     $<$<CONFIG:Release>:-O2>
 )

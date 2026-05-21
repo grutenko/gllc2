@@ -2,6 +2,7 @@
 #include "block.h"
 #include "debug.h"
 #include "draw.h"
+#include "entity.h"
 #include "event.h"
 #include "frag.h"
 #include "litecad.h"
@@ -883,6 +884,29 @@ static int _wnd_griddotted2_SET(struct gllc_object *obj, int prop, int type, uni
         return 1;
 }
 
+static union gllc_variant _wnd_colorbg_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        float *c = WND(obj)->clearcolor;
+
+        int64_t packed =
+        ((uint32_t)(c[0] * 255.0f) << 16) |
+        ((uint32_t)(c[1] * 255.0f) << 8) |
+        ((uint32_t)(c[2] * 255.0f));
+
+        v.int_ = packed;
+        return v;
+}
+
+static int _wnd_colorbg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        WND(obj)->clearcolor[0] = RED(v.int_) / 255.0f;
+        WND(obj)->clearcolor[1] = GREEN(v.int_) / 255.0f;
+        WND(obj)->clearcolor[2] = BLUE(v.int_) / 255.0f;
+        nw_dirty(&WND(obj)->nw);
+        return 1;
+}
+
 struct gllc_prop _props[] = {
     P_INT(LC_PROP_WND_ID, _wnd_id_GET, _wnd_id_SET),
     P_INT_RO(LC_PROP_WND_WIDTH, _wnd_width_GET),
@@ -891,6 +915,7 @@ struct gllc_prop _props[] = {
     P_INT_RO(LC_PROP_WND_FRAME_TOP, _wnd_frame_top_GET),
     P_INT_RO(LC_PROP_WND_FRAME_WIDTH, _wnd_frame_width_GET),
     P_INT_RO(LC_PROP_WND_FRAME_HEIGHT, _wnd_frame_height_GET),
+    P_INT(LC_PROP_WND_COLORBG, _wnd_colorbg_GET, _wnd_colorbg_SET),
     P_HANDLE_RO(LC_PROP_WND_HWND, _wnd_HWND_GET),
     P_HANDLE_RO(LC_PROP_WND_VIEWBLOCK, _wnd_block_GET),
     P_HANDLE_RO(LC_PROP_WND_DRW, _wnd_drw_GET),
@@ -1425,31 +1450,25 @@ static struct gllc_window *Wnew()
 }
 
 #if defined(_WIN32)
-int gllc_window_create_win32(HWND parent, int style)
-{
-        struct gllc_window *W = Wnew();
-        if (W)
-        {
-                if (nw_create_win32(&W->nw, nw_callback_vtable, parent, W))
-                {
-                        return W;
-                }
-        }
-        return NULL;
+struct gllc_window *gllc_window_create_win32(HWND parent, int style) {
+  struct gllc_window *W = Wnew();
+  if (W) {
+    if (nw_create_win32(&W->nw, parent, &nw_callback_vtable, W)) {
+      return W;
+    }
+  }
+  return NULL;
 }
 
 #elif defined(__EMSCRIPTEN__)
-int gllc_window_create_webgl(const char *canvas, int style)
-{
-        struct gllc_window *W = wndnew();
-        if (W)
-        {
-                if (nw_create_webgl(&W->nw, &nw_callback_vtable, canvas, W))
-                {
-                        return W;
-                }
-        }
-        return NULL;
+struct gllc_window *gllc_window_create_webgl(const char *canvas, int style) {
+  struct gllc_window *W = wndnew();
+  if (W) {
+    if (nw_create_webgl(&W->nw, &nw_callback_vtable, canvas, W)) {
+      return W;
+    }
+  }
+  return NULL;
 }
 
 #elif defined(__linux__)
