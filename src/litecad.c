@@ -379,10 +379,16 @@ LCAPI int lcCameraShot() { return 0; }
 //-----------------------------------------------------------------------------
 // Drawing
 //-----------------------------------------------------------------------------
+
 LCAPI void *lcCreateDrawing() {
   return gllc_drw_create();
 }
-LCAPI int lcDeleteDrawing(void *hDrw) { return 0; }
+
+LCAPI int lcDeleteDrawing(void *hDrw) {
+  gllc_drawing_destroy((struct gllc_drawing *)hDrw);
+  return 1;
+}
+
 LCAPI int lcDrwNew(void *hDrw, char *szFileName, void *hLcWnd) { return 0; }
 LCAPI int lcDrwLoad(void *hDrw, char *szFileName, void *hLcWnd) { return 0; }
 LCAPI int lcDrwLoadMem(void *hDrw, void *hMem, void *hLcWnd) { return 0; }

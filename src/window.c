@@ -1158,7 +1158,7 @@ void on_ready(struct nw *NW, void *data) {
 #if defined(_WIN32)
   if (gladLoadGL()) {
 #endif
-    glDisable(GL_MULTISAMPLE);
+    //glDisable(GL_MULTISAMPLE);
     glDisable(GL_LINE_SMOOTH);
     glDisable(GL_POINT_SMOOTH);
     glDisable(GL_POLYGON_SMOOTH);
