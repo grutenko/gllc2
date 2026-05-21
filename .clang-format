@@ -1,2 +1,7 @@
-BasedOnStyle: LLVM
+BasedOnStyle: Microsoft
+
+IndentWidth: 8
+TabWidth: 8
+UseTab: Never
+
 ColumnLimit: 0

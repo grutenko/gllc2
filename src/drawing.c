@@ -12,180 +12,221 @@
  * General
  * ========================= */
 
-static union gllc_variant _drw_uid_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_uid_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static union gllc_variant _drw_filename_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_filename_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_filename_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_filename_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_descr_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_descr_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_descr_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_descr_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_comment_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_comment_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_comment_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_comment_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_readonly_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_readonly_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_readonly_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_readonly_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_dirty_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_dirty_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_dirty_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_dirty_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_idmax_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_idmax_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_idmax_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_idmax_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_synczoom_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_synczoom_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_synczoom_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_synczoom_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_hasalphablend_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_hasalphablend_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static union gllc_variant _drw_blkrefgrips_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_blkrefgrips_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_blkrefgrips_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_blkrefgrips_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * Jump lines
  * ========================= */
 
-static union gllc_variant _drw_jl_base_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_jl_base_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_jl_base_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_jl_base_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_jl_basex_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_jl_basex_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_jl_basex_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_jl_basex_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_jl_basey_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_jl_basey_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_jl_basey_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_jl_basey_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_jl_layer_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_jl_layer_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_jl_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_jl_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * misc flags
  * ========================= */
 
-static union gllc_variant _drw_extofflayer_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_extofflayer_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_extofflayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_extofflayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_locksel_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_locksel_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_locksel_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_locksel_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_maxhatdash_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_maxhatdash_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_maxhatdash_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_maxhatdash_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_proplinfill_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_proplinfill_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_proplinfill_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_proplinfill_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_propzth_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_propzth_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_propzth_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_propzth_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_3dview_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_3dview_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
 /* =========================
  * SYSTEM VARIABLES
  * ========================= */
 
-static union gllc_variant _drw_lunits_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_lunits_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_lunits_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_lunits_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_luprec_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_luprec_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_luprec_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_luprec_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* (и так далее — все остальные system variables тем же шаблоном) */
@@ -194,467 +235,575 @@ static int _drw_luprec_SET(struct gllc_object *obj, int prop, int type, union gl
  * COLORS (пример)
  * ========================= */
 
-static union gllc_variant _drw_colorbackm_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_colorbackm_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_colorbackm_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_colorbackm_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_colorbackp_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_colorbackp_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_colorbackp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_colorbackp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * ACTIVE OBJECTS
  * ========================= */
 
-static union gllc_variant _drw_layer_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_layer_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * LIMITS
  * ========================= */
 
-static union gllc_variant _drw_lim_maxlef_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_lim_maxlef_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_lim_maxlef_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_lim_maxlef_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * USER DATA
  * ========================= */
 
-static union gllc_variant _drw_int_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_int_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_int_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_int_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_float_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_float_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_float_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_float_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_str_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_str_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_str_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_str_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * XDATA
  * ========================= */
 
-static union gllc_variant _drw_xdatasize_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_xdatasize_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_xdatasize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_xdatasize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_xdata_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_xdata_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static int _drw_xdata_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_xdata_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * ANGLE / UNITS
  * ========================= */
 
-static union gllc_variant _drw_aunits_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_aunits_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_aunits_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_auprec_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_auprec_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_aunits_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_angbase_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_auprec_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_angbase_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_angdir_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_angdir_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_auprec_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_insunits_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_angbase_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_insunits_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_angbase_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_angdir_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_angdir_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_insunits_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_insunits_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * POINT / TEXT
  * ========================= */
 
-static union gllc_variant _drw_pdmode_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_pdmode_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_pdmode_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_pdsize_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_pdsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_pdmode_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_cmljust_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_pdsize_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_cmljust_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_pdsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_cmlscale_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_cmljust_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_cmlscale_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_cmljust_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_cmlscale_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_cmlscale_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * BACKGROUND / COLORS
  * ========================= */
 
-static union gllc_variant _drw_colorforem_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_colorforem_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_colorforem_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_colorforep_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_colorforep_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_colorforem_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_cursorcolorm_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_colorforep_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_cursorcolorm_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_cursorcolorp_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_cursorcolorp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_colorforep_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_colorpaper_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_cursorcolorm_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_colorpaper_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_cursorcolorm_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_cursorcolorp_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_cursorcolorp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_colorpaper_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_colorpaper_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * ACTIVE COLOR
  * ========================= */
 
-static union gllc_variant _drw_color_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_color_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_color_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_colorbylayer_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_colorbylayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_color_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_colorbyblock_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_colorbylayer_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_colorbyblock_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_colorbylayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_colorbyblock_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_colorbyblock_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * COLOR INDEX / TRUECOLOR
  * ========================= */
 
-static union gllc_variant _drw_colori_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_colori_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_colori_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_colori_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_colort_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_colort_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_colort_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_colort_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * FILL COLOR
  * ========================= */
 
-static union gllc_variant _drw_fcolor_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_fcolor_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_fcolor_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_fcolorbylayer_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_fcolorbylayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_fcolor_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_fcolorbyblock_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_fcolorbylayer_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_fcolorbyblock_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_fcolori_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_fcolori_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_fcolorbylayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_fcolort_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_fcolorbyblock_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_fcolort_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_fcolorbyblock_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_fcolori_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_fcolori_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_fcolort_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_fcolort_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * ACTIVE OBJECTS
  * ========================= */
 
-static union gllc_variant _drw_linetype_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_linetype_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_linetype_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_ltscale_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_ltscale_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_linetype_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_textstyle_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_ltscale_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_textstyle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_pntstyle_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_pntstyle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_ltscale_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_dimstyle_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_textstyle_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_dimstyle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_textstyle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_block_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_pntstyle_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_block_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_pntstyle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_dimstyle_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_dimstyle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_block_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_block_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * EXPLODE
  * ========================= */
 
-static union gllc_variant _drw_explodearc_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_explodearc_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_explodearc_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_expplinela_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_expplinela_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_explodearc_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_expsimpleline_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_expplinela_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_expsimpleline_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_expplinela_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_exptextspline_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_expsimpleline_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_exptextspline_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_expsimpleline_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_exptextspline_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_exptextspline_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * RESOLUTION
  * ========================= */
 
-static union gllc_variant _drw_resolarc_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_resolarc_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_resolarc_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_resolspline_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_resolspline_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_resolarc_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_resoltext_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_resolspline_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_resoltext_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_resolspline_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _drw_resoltext_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_resoltext_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
 /* =========================
  * LIMITS
  * ========================= */
 
-static union gllc_variant _drw_lim_maxbot_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_lim_maxbot_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_lim_maxbot_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_lim_maxrig_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_lim_maxrig_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_lim_maxbot_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_lim_maxtop_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
+static union gllc_variant _drw_lim_maxrig_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
-static int _drw_lim_maxtop_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
-}
-
-static union gllc_variant _drw_lim_maxon_GET(struct gllc_object *obj, int prop, int type) {
-  return (union gllc_variant)0;
-}
-static int _drw_lim_maxon_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) {
-  return 0;
+static int _drw_lim_maxrig_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_block_model_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = gllc_drw_get_first_object((struct gllc_drawing *)obj, GLLC_OBJ_BLOCK);
-  return v;
+static union gllc_variant _drw_lim_maxtop_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_lim_maxtop_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_layer_0_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = NULL;
-  return v;
+static union gllc_variant _drw_lim_maxon_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _drw_lim_maxon_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
 }
 
-static union gllc_variant _drw_linetype_cont_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = NULL;
-  return v;
+static union gllc_variant _drw_block_model_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = gllc_drw_get_first_object((struct gllc_drawing *)obj, GLLC_OBJ_BLOCK);
+        return v;
 }
 
-static union gllc_variant _drw_linetype_bylay_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = NULL;
-  return v;
+static union gllc_variant _drw_layer_0_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = NULL;
+        return v;
 }
 
-static union gllc_variant _drw_linetype_byblk_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = NULL;
-  return v;
+static union gllc_variant _drw_linetype_cont_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = NULL;
+        return v;
 }
 
-static union gllc_variant _drw_textstyle_std_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = NULL;
-  return v;
+static union gllc_variant _drw_linetype_bylay_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = NULL;
+        return v;
 }
 
-static union gllc_variant _drw_pntstyle_std_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = NULL;
-  return v;
+static union gllc_variant _drw_linetype_byblk_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = NULL;
+        return v;
 }
 
-static union gllc_variant _drw_dimstyle_std_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.handle_ = NULL;
-  return v;
+static union gllc_variant _drw_textstyle_std_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = NULL;
+        return v;
+}
+
+static union gllc_variant _drw_pntstyle_std_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = NULL;
+        return v;
+}
+
+static union gllc_variant _drw_dimstyle_std_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.handle_ = NULL;
+        return v;
 }
 
 static struct gllc_prop props[] = {
@@ -743,74 +892,87 @@ static struct gllc_prop props[] = {
     P_END};
 static struct gllc_prop *all_props[] = {props, G_nobject_props, NULL};
 
-static void destroy(struct gllc_object *obj) {
-  gllc_block_destroy((struct gllc_block *)obj);
+static void destroy(struct gllc_object *obj)
+{
+        gllc_block_destroy((struct gllc_block *)obj);
 }
 
 static struct gllc_object_vtable vtable = {
     .type = GLLC_DRAWING,
     .destroy = destroy};
 
-struct gllc_drawing *gllc_drw_create() {
-  struct gllc_drawing *d = malloc(sizeof(struct gllc_drawing));
-  if (d) {
-    memset(d, 0, sizeof(struct gllc_drawing));
-    GLLC_OBJECT_INIT(&d->_obj, all_props, &vtable);
-    gllc_drw_add_block(d, "main", 0.0f, 0.0f);
-  }
-  return d;
+struct gllc_drawing *gllc_drw_create()
+{
+        struct gllc_drawing *d = malloc(sizeof(struct gllc_drawing));
+        if (d)
+        {
+                memset(d, 0, sizeof(struct gllc_drawing));
+                GLLC_OBJECT_INIT(&d->_obj, all_props, &vtable);
+                gllc_drw_add_block(d, "main", 0.0f, 0.0f);
+        }
+        return d;
 }
 
-static void push_obj(struct gllc_drawing *drawing, struct gllc_nobject *obj) {
-  obj->prev = drawing->ot;
-  obj->next = NULL;
-  if (drawing->ot)
-    drawing->ot->next = obj;
-  else
-    drawing->oh = obj;
-  drawing->ot = obj;
-  drawing->ocnt++;
+static void push_obj(struct gllc_drawing *drawing, struct gllc_nobject *obj)
+{
+        obj->prev = drawing->ot;
+        obj->next = NULL;
+        if (drawing->ot)
+                drawing->ot->next = obj;
+        else
+                drawing->oh = obj;
+        drawing->ot = obj;
+        drawing->ocnt++;
 }
 
-struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing, const char *name, double dx, double dy) {
-  NONULL(drawing, NULL);
-  OBJGUARD(drawing, GLLC_DRAWING, NULL);
-  struct gllc_block *block = gllc_block_create(drawing, name, dx, dy);
-  if (block) {
-    push_obj(drawing, (struct gllc_nobject *)block);
-  }
-  return block;
+struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing, const char *name, double dx, double dy)
+{
+        NONULL(drawing, NULL);
+        OBJGUARD(drawing, GLLC_DRAWING, NULL);
+        struct gllc_block *block = gllc_block_create(drawing, name, dx, dy);
+        if (block)
+        {
+                push_obj(drawing, (struct gllc_nobject *)block);
+        }
+        return block;
 }
 
-struct gllc_layer *gllc_drw_add_layer(struct gllc_drawing *drw, const char *name, const char *color, struct gllc_linetype *linetype, int linewidth) {
-  NONULL(drw, NULL);
-  OBJGUARD(drw, GLLC_DRAWING, NULL);
-  struct gllc_layer *layer = gllc_layer_create(drw, name, color, linetype, linewidth);
-  if (layer) {
-    push_obj(drw, (struct gllc_nobject *)layer);
-  }
-  return layer;
+struct gllc_layer *gllc_drw_add_layer(struct gllc_drawing *drw, const char *name, const char *color, struct gllc_linetype *linetype, int linewidth)
+{
+        NONULL(drw, NULL);
+        OBJGUARD(drw, GLLC_DRAWING, NULL);
+        struct gllc_layer *layer = gllc_layer_create(drw, name, color, linetype, linewidth);
+        if (layer)
+        {
+                push_obj(drw, (struct gllc_nobject *)layer);
+        }
+        return layer;
 }
 
-void gllc_drawing_destroy(struct gllc_drawing *drawing) {
-  NONULL(drawing, );
-  OBJGUARD(drawing, GLLC_DRAWING, );
-  struct gllc_nobject *nobj = drawing->oh;
-  while (nobj) {
-    struct gllc_nobject *next = nobj->next;
-    gllc_nobject_destroy(nobj);
-    nobj = next;
-  }
-  free(drawing);
+void gllc_drawing_destroy(struct gllc_drawing *drawing)
+{
+        NONULL(drawing, );
+        OBJGUARD(drawing, GLLC_DRAWING, );
+        struct gllc_nobject *nobj = drawing->oh;
+        while (nobj)
+        {
+                struct gllc_nobject *next = nobj->next;
+                gllc_nobject_destroy(nobj);
+                nobj = next;
+        }
+        free(drawing);
 }
 
-struct gllc_nobject *gllc_drw_get_first_object(struct gllc_drawing *drawing, int objtype) {
-  NONULL(drawing, NULL);
-  OBJGUARD(drawing, GLLC_DRAWING, NULL);
-  for (struct gllc_nobject *item = drawing->oh; item; item = item->next) {
-    if (item->type == objtype) {
-      return item;
-    }
-  }
-  return NULL;
+struct gllc_nobject *gllc_drw_get_first_object(struct gllc_drawing *drawing, int objtype)
+{
+        NONULL(drawing, NULL);
+        OBJGUARD(drawing, GLLC_DRAWING, NULL);
+        for (struct gllc_nobject *item = drawing->oh; item; item = item->next)
+        {
+                if (item->type == objtype)
+                {
+                        return item;
+                }
+        }
+        return NULL;
 }

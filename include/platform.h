@@ -23,51 +23,54 @@
 
 struct nw;
 
-struct nw_callback_vtable {
-  void (*ready)(struct nw *w, void *data);
-  void (*paint)(struct nw *w, void *data);
-  void (*size)(struct nw *w, int width, int height, void *data);
-  void (*mouse_move)(struct nw *w, int x, int y, void *data);
-  void (*mouse_click)(struct nw *wn, int x, int y, int mode, int action, void *data);
-  void (*mouse_scroll)(struct nw *wn, int dx, int dy, void *data);
-  void (*mouse_leave)(struct nw *wn, void *data);
+struct nw_callback_vtable
+{
+        void (*ready)(struct nw *w, void *data);
+        void (*paint)(struct nw *w, void *data);
+        void (*size)(struct nw *w, int width, int height, void *data);
+        void (*mouse_move)(struct nw *w, int x, int y, void *data);
+        void (*mouse_click)(struct nw *wn, int x, int y, int mode, int action, void *data);
+        void (*mouse_scroll)(struct nw *wn, int dx, int dy, void *data);
+        void (*mouse_leave)(struct nw *wn, void *data);
 };
 
-struct nw_vtable {
-  void (*destroy)(struct nw *nw);
-  int (*set_cursor_pos)(struct nw *nw, int x, int y);
-  int (*get_cursor_pos)(struct nw *nw, int *x, int *y);
-  int (*make_context_current)(struct nw *nw);
-  int (*get_size)(struct nw *nw, int *width, int *height);
-  int (*set_size)(struct nw *nw, int width, int height);
-  int (*swap_buffers)(struct nw *nw);
-  int (*dirty)(struct nw *nw);
-  int (*show_cursor)(struct nw *nw, int show);
-  int (*focus)(struct nw *nw);
-  int (*poll_events)(struct nw *nw);
+struct nw_vtable
+{
+        void (*destroy)(struct nw *nw);
+        int (*set_cursor_pos)(struct nw *nw, int x, int y);
+        int (*get_cursor_pos)(struct nw *nw, int *x, int *y);
+        int (*make_context_current)(struct nw *nw);
+        int (*get_size)(struct nw *nw, int *width, int *height);
+        int (*set_size)(struct nw *nw, int width, int height);
+        int (*swap_buffers)(struct nw *nw);
+        int (*dirty)(struct nw *nw);
+        int (*show_cursor)(struct nw *nw, int show);
+        int (*focus)(struct nw *nw);
+        int (*poll_events)(struct nw *nw);
 };
 
-struct nw {
-  int type;
-  int ready;
+struct nw
+{
+        int type;
+        int ready;
 #if defined(_WIN32)
-  HWND w;
-  HDC dc;
-  HGLRC glrc;
-  struct nw *next;
-  struct nw *prev;
+        HWND w;
+        HDC dc;
+        HGLRC glrc;
+        struct nw *next;
+        struct nw *prev;
 #elif defined(__linux__)
-  EGLDisplay egl_display;
-  EGLContext egl_context;
-  EGLConfig egl_config;
-  EGLSurface egl_surface;
-  GtkGLArea *area;
-  Window xwindow;
+        EGLDisplay egl_display;
+        EGLContext egl_context;
+        EGLConfig egl_config;
+        EGLSurface egl_surface;
+        GtkGLArea *area;
+        Window xwindow;
 
 #endif
-  void *data;
-  struct nw_callback_vtable *cb_vtable_p;
-  struct nw_vtable vtable;
+        void *data;
+        struct nw_callback_vtable *cb_vtable_p;
+        struct nw_vtable vtable;
 };
 
 #if defined(_WIN32)

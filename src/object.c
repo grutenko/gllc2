@@ -4,161 +4,444 @@
 
 #define G(obj) ((struct g_props_object *)(obj))
 
-static void destroy(struct gllc_object *obj) {}
-
-static union gllc_variant _g_regcode_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-
-static union gllc_variant _g_version_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.string_ = G(obj)->version;
-  return v;
+static void destroy(struct gllc_object *obj)
+{
 }
 
-static union gllc_variant _g_msgtitle_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_msgtitle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
-
-static union gllc_variant _g_helpfile_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_helpfile_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
-
-static union gllc_variant _g_dirdll_GET(struct gllc_object *obj, int prop, int type) {
-  union gllc_variant v;
-  v.string_ = G(obj)->dirdll;
-  return v;
+static union gllc_variant _g_regcode_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
 }
 
-static union gllc_variant _g_dirfonts_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_dirfonts_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_version_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.string_ = G(obj)->version;
+        return v;
+}
 
-static union gllc_variant _g_dirlng_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_dirlng_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_msgtitle_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_msgtitle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_dirtpl_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_dirtpl_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_helpfile_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_helpfile_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_dircfg_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_dircfg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_dirdll_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.string_ = G(obj)->dirdll;
+        return v;
+}
 
-static union gllc_variant _g_savecfg_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_savecfg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_dirfonts_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_dirfonts_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_icon16_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_icon16_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_dirlng_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_dirlng_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_icon32_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_icon32_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_dirtpl_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_dirtpl_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_rulerbmp_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_rulerbmp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_dircfg_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_dircfg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_prnusebmp_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_prnusebmp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_savecfg_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_savecfg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_prnbmpfile_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_prnbmpfile_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_icon16_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_icon16_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_prnbtnras_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_prnbtnras_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_icon32_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_icon32_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_prnbtnsrif_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_prnbtnsrif_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_rulerbmp_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_rulerbmp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_pntpixsize_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_pntpixsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_prnusebmp_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_prnusebmp_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_getdelent_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_getdelent_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_prnbmpfile_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_prnbmpfile_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_fileprogress_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_fileprogress_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_prnbtnras_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_prnbtnras_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_str_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_str_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_prnbtnsrif_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_prnbtnsrif_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_int_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_int_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_pntpixsize_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_pntpixsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_float_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_float_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_getdelent_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_getdelent_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _g_handle_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _g_handle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_fileprogress_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_fileprogress_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickboxsize_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickboxsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_str_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_str_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickbyrect_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickbyrect_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_int_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_int_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickdrag_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickdrag_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_float_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_float_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickadd_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickadd_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _g_handle_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _g_handle_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickbylayer_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickbylayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickboxsize_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickboxsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickinpgon_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickinpgon_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickbyrect_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickbyrect_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickinpgonf_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickinpgonf_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickdrag_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickdrag_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_pickinimg_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_pickinimg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickadd_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickadd_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_colorl1_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_colorl1_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickbylayer_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickbylayer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_colorl2_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_colorl2_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickinpgon_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickinpgon_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _sel_colorf_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _sel_colorf_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickinpgonf_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickinpgonf_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _osnap_mark_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _osnap_mark_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_pickinimg_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_pickinimg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _osnap_aper_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _osnap_aper_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_colorl1_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_colorl1_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _osnap_marksize_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _osnap_marksize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_colorl2_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_colorl2_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _osnap_apersize_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _osnap_apersize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _sel_colorf_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _sel_colorf_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _osnap_markcolor_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _osnap_markcolor_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _osnap_mark_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _osnap_mark_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _cam_count_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _cam_count_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _osnap_aper_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _osnap_aper_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _cam_i_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _cam_i_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _osnap_marksize_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _osnap_marksize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _cam_name_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
+static union gllc_variant _osnap_apersize_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _osnap_apersize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _cam_on_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
+static union gllc_variant _osnap_markcolor_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _osnap_markcolor_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _cam_time_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _cam_time_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _cam_count_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _cam_count_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _cam_width_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static union gllc_variant _cam_height_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
+static union gllc_variant _cam_i_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _cam_i_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _cam_bits_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
+static union gllc_variant _cam_name_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
 
-static union gllc_variant _cam_bprow_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
+static union gllc_variant _cam_on_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
 
-static union gllc_variant _ras_fill_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _ras_fill_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _cam_time_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _cam_time_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
-static union gllc_variant _ras_color_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _ras_color_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _cam_width_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static union gllc_variant _cam_height_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
 
-static union gllc_variant _ras_noprint_GET(struct gllc_object *obj, int prop, int type) { return (union gllc_variant)0; }
-static int _ras_noprint_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v) { return 0; }
+static union gllc_variant _cam_bits_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant _cam_bprow_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant _ras_fill_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _ras_fill_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _ras_color_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _ras_color_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
+
+static union gllc_variant _ras_noprint_GET(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+static int _ras_noprint_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        return 0;
+}
 
 static struct gllc_prop props[] = {
     P_STRING_RO(LC_PROP_G_REGCODE, _g_regcode_GET),
@@ -226,31 +509,38 @@ struct g_props_object G_props_object = {
     .version = "1.0.0",
     .dirdll = "."};
 
-static inline struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ) {
-  int i, j;
-  for (i = 0; props[i]; i++) {
-    for (j = 0; props[i][j].prop != -1; j++) {
-      if (props[i][j].prop == prop && props[i][j].type == typ) {
-        return &props[i][j];
-      }
-    }
-  }
-  return NULL;
+static inline struct gllc_prop *find_prop(struct gllc_prop **props, int prop, int typ)
+{
+        int i, j;
+        for (i = 0; props[i]; i++)
+        {
+                for (j = 0; props[i][j].prop != -1; j++)
+                {
+                        if (props[i][j].prop == prop && props[i][j].type == typ)
+                        {
+                                return &props[i][j];
+                        }
+                }
+        }
+        return NULL;
 }
 
-#define GET(T0, T1, T2)                                      \
-  T2 gllc_prop_get_##T1(struct gllc_object *obj, int prop) { \
-    if (!obj) {                                              \
-      obj = (struct gllc_object *)&G_props_object;           \
-    }                                                        \
-    OBJGUARD(obj, 0, 0);                                     \
-    struct gllc_prop **props = obj->props;                   \
-    struct gllc_prop *p = find_prop(props, prop, T0);        \
-    if (p) {                                                 \
-      return p->getter(obj, prop, T0).T1##_;                 \
-    }                                                        \
-    return 0;                                                \
-  }
+#define GET(T0, T1, T2)                                              \
+        T2 gllc_prop_get_##T1(struct gllc_object *obj, int prop)     \
+        {                                                            \
+                if (!obj)                                            \
+                {                                                    \
+                        obj = (struct gllc_object *)&G_props_object; \
+                }                                                    \
+                OBJGUARD(obj, 0, 0);                                 \
+                struct gllc_prop **props = obj->props;               \
+                struct gllc_prop *p = find_prop(props, prop, T0);    \
+                if (p)                                               \
+                {                                                    \
+                        return p->getter(obj, prop, T0).T1##_;       \
+                }                                                    \
+                return 0;                                            \
+        }
 
 GET(T_PROP_BOOL, bool, int)
 GET(T_PROP_INT, int, int64_t)
@@ -258,21 +548,24 @@ GET(T_PROP_FLOAT, float, double)
 GET(T_PROP_STRING, string, char *)
 GET(T_PROP_HANDLE, handle, void *)
 
-#define PUT(T0, T1, T2)                                                 \
-  int gllc_prop_put_##T1(struct gllc_object *obj, int prop, T2 value) { \
-    if (!obj) {                                                         \
-      obj = (struct gllc_object *)&G_props_object;                      \
-    }                                                                   \
-    OBJGUARD(obj, 0, 0);                                                \
-    struct gllc_prop **props = obj->props;                              \
-    struct gllc_prop *p = find_prop(props, prop, T0);                   \
-    if (p && !p->readonly) {                                            \
-      union gllc_variant v;                                             \
-      v.T1##_ = value;                                                  \
-      return p->setter(obj, prop, T0, v);                               \
-    }                                                                   \
-    return 0;                                                           \
-  }
+#define PUT(T0, T1, T2)                                                     \
+        int gllc_prop_put_##T1(struct gllc_object *obj, int prop, T2 value) \
+        {                                                                   \
+                if (!obj)                                                   \
+                {                                                           \
+                        obj = (struct gllc_object *)&G_props_object;        \
+                }                                                           \
+                OBJGUARD(obj, 0, 0);                                        \
+                struct gllc_prop **props = obj->props;                      \
+                struct gllc_prop *p = find_prop(props, prop, T0);           \
+                if (p && !p->readonly)                                      \
+                {                                                           \
+                        union gllc_variant v;                               \
+                        v.T1##_ = value;                                    \
+                        return p->setter(obj, prop, T0, v);                 \
+                }                                                           \
+                return 0;                                                   \
+        }
 
 PUT(T_PROP_BOOL, bool, int)
 PUT(T_PROP_INT, int, int64_t)
@@ -280,7 +573,8 @@ PUT(T_PROP_FLOAT, float, double)
 PUT(T_PROP_STRING, string, char *)
 PUT(T_PROP_HANDLE, handle, void *)
 
-void gllc_object_destroy(struct gllc_object *obj) {
-  if (obj->vtable->destroy)
-    obj->vtable->destroy(obj);
+void gllc_object_destroy(struct gllc_object *obj)
+{
+        if (obj->vtable->destroy)
+                obj->vtable->destroy(obj);
 }

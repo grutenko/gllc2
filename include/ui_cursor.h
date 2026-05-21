@@ -8,10 +8,11 @@
 #include <epoxy/gl.h>
 #endif
 
-struct ui_cursor {
-  GLfloat color[4];
-  GLuint VAO;
-  GLuint VBO;
+struct ui_cursor
+{
+        GLfloat color[4];
+        GLuint VAO;
+        GLuint VBO;
 };
 
 void ui_cursor_init(struct ui_cursor *cur);

@@ -17,50 +17,51 @@
 #include "ui_grid.h"
 #include "ui_selection.h"
 
-struct gllc_window {
-  struct gllc_object _obj;
-  int id;
-  struct gllc_block *block;
-  struct gllc_drawing *drawing;
-  struct nw nw;
-  int ready;
-  GLuint program;
-  GLuint loc_umvp;
-  GLuint loc_uscale;
-  GLuint loc_uviewportsize;
-  GLuint loc_uflags;
-  GLuint loc_uclearcolor;
-  struct ds_gpu gpucmn;
-  struct ds_gpu gpuinter;
-  struct ds_draw inder;
-  double dx;
-  double dy;
-  double scale;
-  double mx0;
-  double my0;
-  mat4 mview;
-  mat4 mproj;
-  mat4 mmodel;
-  mat4 mmvp;
-  mat4 mscreenmvp;
-  int curx;
-  int cury;
-  int mpressed;
-  int mbtn;
-  int mpressx;
-  int mpressy;
-  int width;
-  int height;
-  int menter;
-  int griduse;
-  int drag;
-  int selectuse;
-  int dtime;
-  float clearcolor[4];
-  struct gllc_entity *ent;
-  struct ui_grid grid;
-  struct ui_cursor cursor;
-  struct ui_selection sel;
+struct gllc_window
+{
+        struct gllc_object _obj;
+        int id;
+        struct gllc_block *block;
+        struct gllc_drawing *drawing;
+        struct nw nw;
+        int ready;
+        GLuint program;
+        GLuint loc_umvp;
+        GLuint loc_uscale;
+        GLuint loc_uviewportsize;
+        GLuint loc_uflags;
+        GLuint loc_uclearcolor;
+        struct ds_gpu gpucmn;
+        struct ds_gpu gpuinter;
+        struct ds_draw inder;
+        double dx;
+        double dy;
+        double scale;
+        double mx0;
+        double my0;
+        mat4 mview;
+        mat4 mproj;
+        mat4 mmodel;
+        mat4 mmvp;
+        mat4 mscreenmvp;
+        int curx;
+        int cury;
+        int mpressed;
+        int mbtn;
+        int mpressx;
+        int mpressy;
+        int width;
+        int height;
+        int menter;
+        int griduse;
+        int drag;
+        int selectuse;
+        int dtime;
+        float clearcolor[4];
+        struct gllc_entity *ent;
+        struct ui_grid grid;
+        struct ui_cursor cursor;
+        struct ui_selection sel;
 };
 
 #if defined(_WIN32)

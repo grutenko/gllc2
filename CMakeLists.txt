@@ -29,7 +29,7 @@ foreach(SHADER ${SHADERS})
 
     add_custom_command(
         OUTPUT ${OUT}
-        COMMAND python ${CMAKE_SOURCE_DIR}/tools/xxdi.py ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER} ${OUT} ${NAME}_${NAME}
+        COMMAND python3.11 ${CMAKE_SOURCE_DIR}/tools/xxdi.py ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER} ${OUT} ${NAME}_${NAME}
         COMMENT "Generating header for ${SHADER}"
         VERBATIM
     )
@@ -46,7 +46,7 @@ foreach(FONT ${FONT_FILES})
 
     add_custom_command(
         OUTPUT ${OUT}
-        COMMAND python ${CMAKE_SOURCE_DIR}/tools/xxdi.py ${CMAKE_CURRENT_SOURCE_DIR}/${FONT} ${OUT} --binary 
+        COMMAND python3.11 ${CMAKE_SOURCE_DIR}/tools/xxdi.py ${CMAKE_CURRENT_SOURCE_DIR}/${FONT} ${OUT} --binary 
         COMMENT "Generating header ${OUT} from ${FONT}"
         VERBATIM
     )
@@ -56,13 +56,16 @@ endforeach()
 add_custom_target(Fonts ALL DEPENDS ${GENERATED_FONT_HEADERS})
 
 if(NOT EMSCRIPTEN)
-add_library(gllc SHARED ${SOURCES} ${TESS2_SOURCES})
+add_library(gllc SHARED ${SOURCES} ${TESS2SOURCES})
 else()
-add_library(gllc STATIC ${SOURCES} ${TESS2_SOURCES})
+add_library(gllc STATIC ${SOURCES} ${TESS2SOURCES})
 endif()
 target_compile_definitions(gllc PRIVATE
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
+)
+
+target_compile_options(gllc PRIVATE
     $<$<CONFIG:Release>:-O2>
 )
 target_link_libraries(gllc PRIVATE cglm)

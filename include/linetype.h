@@ -3,8 +3,9 @@
 
 #include "named_object.h"
 
-struct gllc_linetype {
-  struct gllc_nobject _nobj;
+struct gllc_linetype
+{
+        struct gllc_nobject _nobj;
 };
 
 #endif

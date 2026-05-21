@@ -8,30 +8,31 @@
 #include <epoxy/gl.h>
 #endif
 
-struct ui_grid {
-  int snap;
-  GLfloat color[4];
-  GLfloat colorbold[4];
-  double gap_x;
-  double gap_y;
-  double offset_x;
-  double offset_y;
-  int boldx;
-  int boldy;
-  int dotted;
-  int dottedbold;
-  struct ds_vertex *v_cache;
-  GLuint v_cache_cap;
-  GLuint v_cache_size;
-  GLuint VAO;
-  GLuint VBO;
-  GLuint VBO_cnt;
-  double last_scale;
-  double last_x0;
-  double last_y0;
-  double last_x1;
-  double last_y1;
-  double last_vcnt;
+struct ui_grid
+{
+        int snap;
+        GLfloat color[4];
+        GLfloat colorbold[4];
+        double gap_x;
+        double gap_y;
+        double offset_x;
+        double offset_y;
+        int boldx;
+        int boldy;
+        int dotted;
+        int dottedbold;
+        struct ds_vertex *v_cache;
+        GLuint v_cache_cap;
+        GLuint v_cache_size;
+        GLuint VAO;
+        GLuint VBO;
+        GLuint VBO_cnt;
+        double last_scale;
+        double last_x0;
+        double last_y0;
+        double last_x1;
+        double last_y1;
+        double last_vcnt;
 };
 
 void ui_grid_init(struct ui_grid *grid);

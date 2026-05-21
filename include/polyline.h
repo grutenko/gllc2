@@ -6,21 +6,23 @@
 #include "entity_vertex.h"
 #include "object.h"
 
-struct gllc_pline_ver {
-  struct gllc_object _obj;
-  int i;
-  double x;
-  double y;
+struct gllc_pline_ver
+{
+        struct gllc_object _obj;
+        int i;
+        double x;
+        double y;
 };
 
-struct gllc_polyline {
-  struct gllc_entity _ent;
-  int fit;
-  int cnt;
-  int cap;
-  struct ds_unit *u;
-  struct ev *pts;
-  int ufilcnt;
+struct gllc_polyline
+{
+        struct gllc_entity _ent;
+        int fit;
+        int cnt;
+        int cap;
+        struct ds_unit *u;
+        struct ev *pts;
+        int ufilcnt;
 };
 
 struct gllc_polyline *gllc_polyline_create(struct gllc_block *block, struct ds_draw *draw, int closed, int filled);

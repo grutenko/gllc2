@@ -42,42 +42,45 @@ struct gllc_entity;
 #define GLLC_ENT_HOVER 0x8000
 #define GLLC_ENT_FILTER 0x10000
 
-struct gllc_entity_vtable {
-  int type;
-  void (*build)(struct gllc_entity *, struct ds_draw *, double scale);
-  void (*destroy)(struct gllc_entity *);
-  int (*vertices)(struct gllc_entity *, double, struct ev *);
-  int (*selected)(struct gllc_entity *, int, double, double, double, double, double);
-  int (*picked)(struct gllc_entity *, double, double, double, double *);
-  int (*bbox)(struct gllc_entity *, double, double *, double *, double *, double *);
-  int (*len)(struct gllc_entity *, double *);
-  int (*clone)(struct gllc_entity *, struct gllc_entity **);
+struct gllc_entity_vtable
+{
+        int type;
+        void (*build)(struct gllc_entity *, struct ds_draw *, double scale);
+        void (*destroy)(struct gllc_entity *);
+        int (*vertices)(struct gllc_entity *, double, struct ev *);
+        int (*selected)(struct gllc_entity *, int, double, double, double, double, double);
+        int (*picked)(struct gllc_entity *, double, double, double, double *);
+        int (*bbox)(struct gllc_entity *, double, double *, double *, double *, double *);
+        int (*len)(struct gllc_entity *, double *);
+        int (*clone)(struct gllc_entity *, struct gllc_entity **);
 };
 
-struct gllc_entity_props {
-  int color;
-  int fcolor;
-  float ltscale;
-  struct gllc_linetype *linetype;
+struct gllc_entity_props
+{
+        int color;
+        int fcolor;
+        float ltscale;
+        struct gllc_linetype *linetype;
 };
 
-struct gllc_entity {
-  struct gllc_object _obj;
-  int flags;
-  float falpha;
-  float lwidth;
-  int order;
-  uint64_t ID;
-  uint64_t key;
-  char ID_hex[17];
-  uint64_t unit_ID;
-  double bbox[4];
-  struct gllc_entity_props props;
-  struct gllc_entity_vtable *vtable;
-  struct gllc_block *block;
-  struct gllc_layer *layer;
-  struct gllc_entity *prev;
-  struct gllc_entity *next;
+struct gllc_entity
+{
+        struct gllc_object _obj;
+        int flags;
+        float falpha;
+        float lwidth;
+        int order;
+        uint64_t ID;
+        uint64_t key;
+        char ID_hex[17];
+        uint64_t unit_ID;
+        double bbox[4];
+        struct gllc_entity_props props;
+        struct gllc_entity_vtable *vtable;
+        struct gllc_block *block;
+        struct gllc_layer *layer;
+        struct gllc_entity *prev;
+        struct gllc_entity *next;
 };
 
 extern struct gllc_prop G_entity_props[];
