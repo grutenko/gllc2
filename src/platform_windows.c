@@ -149,7 +149,8 @@ static HGLRC init_opengl(HDC real_dc)
             3,
             WGL_CONTEXT_MINOR_VERSION_ARB,
             3,
-            WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
+            WGL_CONTEXT_PROFILE_MASK_ARB,
+            WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
             0,
         };
 
@@ -462,6 +463,7 @@ int nw_create_win32(struct nw *nw, HWND parent, struct nw_callback_vtable *vtabl
         nw->cb_vtable_p = vtable;
         nw->data = data;
         push_NW(nw);
+        ShowWindow(nw->w, SW_SHOW);
         vtable->ready(nw, data);
         return 1;
 _error:

@@ -6,10 +6,11 @@
 
 struct gllc_filling_line;
 
-struct gllc_filling {
-  struct gllc_nobject _nobj;
-  struct gllc_filling_line *lines;
-  int lines_cnt;
+struct gllc_filling
+{
+        struct gllc_nobject _nobj;
+        struct gllc_filling_line *lines;
+        int lines_cnt;
 };
 
 struct gllc_filling *gllc_filling_create(struct gllc_drawing *drawing);

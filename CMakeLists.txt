@@ -56,9 +56,9 @@ endforeach()
 add_custom_target(Fonts ALL DEPENDS ${GENERATED_FONT_HEADERS})
 
 if(NOT EMSCRIPTEN)
-add_library(gllc SHARED ${SOURCES} ${TESS2_SOURCES})
+add_library(gllc SHARED ${SOURCES} ${TESS2SOURCES})
 else()
-add_library(gllc STATIC ${SOURCES} ${TESS2_SOURCES})
+add_library(gllc STATIC ${SOURCES} ${TESS2SOURCES})
 endif()
 target_compile_definitions(gllc PRIVATE
     $<$<CONFIG:Debug>:DEBUG>

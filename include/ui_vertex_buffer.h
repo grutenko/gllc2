@@ -3,8 +3,9 @@
 
 #include "entity.h"
 
-struct gllc_vertex {
-  struct gllc_entity _ent;
+struct gllc_vertex
+{
+        struct gllc_entity _ent;
 };
 
 #endif

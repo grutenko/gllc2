@@ -1424,6 +1424,7 @@ void on_ready(struct nw *NW, void *data)
                 glUseProgram(WND(data)->program);
                 load_GL_uniform_loc(WND(data));
                 nw_get_size(&WND(data)->nw, &WND(data)->width, &WND(data)->height);
+                update_camera(WND(data));
                 glViewport(0, 0, WND(data)->width, WND(data)->height);
                 gl_dump_startup();
                 WND(data)->ready = 1;

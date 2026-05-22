@@ -16,15 +16,16 @@ struct ds_vertex;
 #define LB_MODE_ROUND 3
 #define LB_ROUND_SEGMENTS 8
 
-struct lb_config {
-  double lw;
-  double lrealw;
-  unsigned char c[4];
-  struct ev *v;
-  int vcnt;
-  int closed;
-  int nroundsegs;
-  int off;
+struct lb_config
+{
+        double lw;
+        double lrealw;
+        unsigned char c[4];
+        struct ev *v;
+        int vcnt;
+        int closed;
+        int nroundsegs;
+        int off;
 };
 
 void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt, int *Icnt);

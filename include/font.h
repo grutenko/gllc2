@@ -3,14 +3,15 @@
 
 #include "object.h"
 
-struct gllc_font {
-  struct gllc_object _obj;
-  int ttf;
-  char *filename;
-  char *name;
-  void *data;
-  int data_size;
-  struct gllc_font *next;
+struct gllc_font
+{
+        struct gllc_object _obj;
+        int ttf;
+        char *filename;
+        char *name;
+        void *data;
+        int data_size;
+        struct gllc_font *next;
 };
 
 void gllc_fonts_scan();

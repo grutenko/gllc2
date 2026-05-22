@@ -7,69 +7,74 @@
 #include <epoxy/gl.h>
 #endif
 
-struct ds_vertex {
-  GLfloat th;
-  GLfloat thmul;
-  GLbyte n[2];
-  GLubyte uv[2];
-  GLubyte c[4];
-  GLfloat p[2];
-  GLfloat l;
+struct ds_vertex
+{
+        GLfloat th;
+        GLfloat thmul;
+        GLbyte n[2];
+        GLubyte uv[2];
+        GLubyte c[4];
+        GLfloat p[2];
+        GLfloat l;
 };
 
 #define DS_UNIT_CHESS 0x1
 #define DS_UNIT_DASH_SCREEN 0x2
 #define DS_UNIT_DASH_REAL 0x4
 
-struct ds_unit {
-  int flags;
-  int id;
-  struct ds_draw *draw;
-  struct ds_vertex *V;
-  GLuint *I;
-  GLuint V_cnt;
-  GLuint I_cnt;
-  GLuint I_cap;
-  GLuint V_cap;
-  struct ds_unit *next;
-  struct ds_unit *prev;
-  int order;
-  int dirty;
-  int geometry_dirty;
+struct ds_unit
+{
+        int flags;
+        int id;
+        struct ds_draw *draw;
+        struct ds_vertex *V;
+        GLuint *I;
+        GLuint V_cnt;
+        GLuint I_cnt;
+        GLuint I_cap;
+        GLuint V_cap;
+        struct ds_unit *next;
+        struct ds_unit *prev;
+        int order;
+        int dirty;
+        int geometry_dirty;
 };
 
-struct ds_gpu_batch {
-  int flags;
-  GLuint tex_id;
-  GLuint offset;
-  GLuint count;
+struct ds_gpu_batch
+{
+        int flags;
+        GLuint tex_id;
+        GLuint offset;
+        GLuint count;
 };
 
-struct ds_gpu {
-  struct ds_gpu_batch *batches;
-  GLuint batch_cnt;
-  GLuint batch_cap;
-  GLuint VAO;
-  GLuint VBO;
-  GLuint EBO;
-  GLuint VBO_size;
-  GLuint EBO_size;
-  GLuint VBO_capacity;
-  GLuint EBO_capacity;
-  struct ds_vertex *V_data;
-  GLuint *I_data;
-  GLuint V_data_size;
-  GLuint I_data_size;
-  GLuint V_data_capacity;
-  GLuint I_data_capacity;
+struct ds_gpu
+{
+        struct ds_gpu_batch *batches;
+        GLuint batch_cnt;
+        GLuint batch_cap;
+        GLuint VAO;
+        GLuint VBO;
+        GLuint EBO;
+        GLuint VBO_size;
+        GLuint EBO_size;
+        GLuint VBO_capacity;
+        GLuint EBO_capacity;
+        struct ds_vertex *V_data;
+        GLuint *I_data;
+        GLuint V_data_size;
+        GLuint I_data_size;
+        GLuint V_data_capacity;
+        GLuint I_data_capacity;
 };
 
-struct ds_draw {
-  int dirty;
-  int geometry_dirty;
-  struct ds_unit *head;
-  struct ds_unit *tail;
-  int unit_cnt;
+struct ds_draw
+{
+        int dirty;
+        int geometry_dirty;
+        struct ds_unit *head;
+        struct ds_unit *tail;
+        int unit_cnt;
 };
 
 void ds_attrib_ptr();

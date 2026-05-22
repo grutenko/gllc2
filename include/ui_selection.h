@@ -7,10 +7,11 @@
 #include <epoxy/gl.h>
 #endif
 
-struct ui_selection {
-  GLfloat color[4];
-  GLuint VAO;
-  GLuint VBO;
+struct ui_selection
+{
+        GLfloat color[4];
+        GLuint VAO;
+        GLuint VBO;
 };
 
 void ui_selection_init(struct ui_selection *sel);

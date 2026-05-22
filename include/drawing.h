@@ -7,11 +7,12 @@
 
 struct gllc_block;
 
-struct gllc_drawing {
-  struct gllc_object _obj;
-  struct gllc_nobject *oh;
-  struct gllc_nobject *ot;
-  int ocnt;
+struct gllc_drawing
+{
+        struct gllc_object _obj;
+        struct gllc_nobject *oh;
+        struct gllc_nobject *ot;
+        int ocnt;
 };
 
 struct gllc_drawing *gllc_drw_create();
