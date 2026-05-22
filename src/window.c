@@ -1022,26 +1022,15 @@ static void draw(struct gllc_window *W)
         }
         glUniformMatrix4fv(W->loc_umvp, 1, GL_FALSE, _screenmvp);
         ui_cursor_draw(&W->cursor, W->curx, W->cury, W->width, W->height);
-        glFinish(); 
+        //glFinish(); 
         nw_swap_buffers(&W->nw);
         nw_release_current_context(&W->nw);
 }
 
-#include <stdatomic.h>
-
-static atomic_uint g_draw_calls = 0;
-static uint64_t last_print = 0;
-
 static void on_paint(struct nw *nw, void *data)
 {
-        atomic_fetch_add(&g_draw_calls, 1);
-        draw(WND(data));
-        uint64_t now = GetTickCount64();
-
-        if (now - last_print > 1000)
-        {
-                printf("draw calls per sec: %u\n", atomic_exchange(&g_draw_calls, 0));
-                last_print = now;
+        if(WND(data)->ready) {
+                draw(WND(data));
         }
 }
 

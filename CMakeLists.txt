@@ -4,6 +4,8 @@ project(gllc C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(Python3)
+
 include_directories(include cglm/include ${CMAKE_BINARY_DIR})
 
 file(GLOB SOURCES
@@ -18,20 +20,36 @@ if(NOT EMSCRIPTEN)
 add_subdirectory(examples)
 endif()
 
+message(STATUS "Python found at: ${Python3_EXECUTABLE}")
+
+function(generate_header INPUT OUTPUT EXTRA_ARGS)
+    add_custom_command(
+        OUTPUT ${OUTPUT}
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_SOURCE_DIR}/tools/xxdi.py
+            ${INPUT}
+            ${OUTPUT}
+            ${EXTRA_ARGS}
+        DEPENDS ${INPUT} ${CMAKE_SOURCE_DIR}/tools/xxdi.py
+        COMMENT "Generating ${OUTPUT}"
+        VERBATIM
+    )
+endfunction()
+
 set(SHADERS
     shaders/frag.frag
     shaders/vert.vert)
 
-set(GENERATED_HEADERS "")
+set(GENERATED_HEADERS)
+
 foreach(SHADER ${SHADERS})
     get_filename_component(NAME ${SHADER} NAME_WE)
     set(OUT "${CMAKE_CURRENT_BINARY_DIR}/${NAME}.h")
 
-    add_custom_command(
-        OUTPUT ${OUT}
-        COMMAND python ${CMAKE_SOURCE_DIR}/tools/xxdi.py ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER} ${OUT} ${NAME}_${NAME}
-        COMMENT "Generating header for ${SHADER}"
-        VERBATIM
+    generate_header(
+        "${CMAKE_CURRENT_SOURCE_DIR}/${SHADER}"
+        "${OUT}"
+        "${NAME}_${NAME}"
     )
 
     list(APPEND GENERATED_HEADERS ${OUT})
@@ -39,20 +57,23 @@ endforeach()
 
 add_custom_target(Shaders ALL DEPENDS ${GENERATED_HEADERS})
 
+set(GENERATED_FONT_HEADERS)
+
 set(FONT_FILES fonts/Simplex.ttf)
+
 foreach(FONT ${FONT_FILES})
     get_filename_component(NAME ${FONT} NAME_WE)
     set(OUT "${CMAKE_CURRENT_BINARY_DIR}/${NAME}.h")
 
-    add_custom_command(
-        OUTPUT ${OUT}
-        COMMAND python ${CMAKE_SOURCE_DIR}/tools/xxdi.py ${CMAKE_CURRENT_SOURCE_DIR}/${FONT} ${OUT} --binary 
-        COMMENT "Generating header ${OUT} from ${FONT}"
-        VERBATIM
+    generate_header(
+        "${CMAKE_CURRENT_SOURCE_DIR}/${FONT}"
+        "${OUT}"
+        "--binary"
     )
 
     list(APPEND GENERATED_FONT_HEADERS ${OUT})
 endforeach()
+
 add_custom_target(Fonts ALL DEPENDS ${GENERATED_FONT_HEADERS})
 
 if(NOT EMSCRIPTEN)
@@ -86,6 +107,14 @@ elseif(UNIX)
       target_compile_options(gllc PUBLIC -DGL_GLEXT_PROTOTYPES) 
     endif()
 endif()
+
+add_custom_target(copy_lib ALL
+    COMMAND ${CMAKE_COMMAND} -E copy
+        "$<TARGET_FILE:gllc>"
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:gllc>"
+    COMMENT "Copying library to python example directory"
+    VERBATIM
+)
 
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
     add_custom_target(copy_compile_commands ALL

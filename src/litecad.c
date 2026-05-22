@@ -145,7 +145,7 @@ LCAPI void *lcCreateWindow(void *hWndParent, int Style)
                                 XLC_WINDOW_X11_BACKEND);
         if (backends && (backends & (backends - 1)))
         {
-                ERROR("Multiple backends selected at once.");
+                FMTERROR("Multiple backends selected at once.");
                 return NULL;
         }
 #else

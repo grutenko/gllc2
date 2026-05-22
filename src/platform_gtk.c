@@ -17,8 +17,10 @@ static gboolean on_render(GtkGLArea *area, GdkGLContext *ctx, gpointer data)
 
 static gboolean on_configure(GtkWidget *widget, GtkAllocation *allocation, gpointer data)
 {
+        if (allocation->width <= 1 || allocation->height <= 1)
+                return TRUE;
+
         struct nw *w = data;
-        printf("%d, %d\n", allocation->width, allocation->height);
         w->cb_vtable_p->size(w, allocation->width, allocation->height, w->data);
         return TRUE;
 }
@@ -153,12 +155,15 @@ static int get_cursor_pos(struct nw *nw, int *x, int *y)
 
 static int make_context_current(struct nw *nw)
 {
-        if (!gtk_widget_get_realized(GTK_WIDGET(nw->area)))
+        if (nw)
         {
-                g_debug("GLArea is not realized");
-                return 0;
+                if (!gtk_widget_get_realized(GTK_WIDGET(nw->area)))
+                {
+                        g_debug("GLArea is not realized");
+                        return 0;
+                }
+                gtk_gl_area_make_current(nw->area);
         }
-        gtk_gl_area_make_current(nw->area);
         return 1;
 }
 
@@ -239,10 +244,19 @@ int nw_create_gtk(struct nw *nw, struct nw_callback_vtable *vtable, GtkWindow *p
         nw->vtable.poll_events = poll_events;
         gtk_gl_area_set_required_version(nw->area, 3, 3);
         gtk_gl_area_set_has_depth_buffer(nw->area, FALSE);
+        GtkWidget *gl = GTK_WIDGET(nw->area);
+        gtk_widget_add_events(gl, GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_SCROLL_MASK);
+        g_signal_connect(gl, "realize", G_CALLBACK(on_ready), nw);
+        g_signal_connect(gl, "render", G_CALLBACK(on_render), nw);
+        g_signal_connect(gl, "size-allocate", G_CALLBACK(on_configure), nw);
+        g_signal_connect(gl, "motion-notify-event", G_CALLBACK(on_motion), nw);
+        g_signal_connect(gl, "button-press-event", G_CALLBACK(on_button), nw);
+        g_signal_connect(gl, "button-release-event", G_CALLBACK(on_button), nw);
+        g_signal_connect(gl, "scroll-event", G_CALLBACK(on_scroll), nw);
+        g_signal_connect(gl, "leave-notify-event", G_CALLBACK(on_leave), nw);
         if (GTK_IS_BIN(parent))
         {
                 GtkWidget *child = gtk_bin_get_child(GTK_BIN(parent));
-                printf("%p\n", child);
                 if (GTK_IS_BOX(child))
                 {
                         if (child && GTK_IS_CONTAINER(child))
@@ -264,24 +278,13 @@ int nw_create_gtk(struct nw *nw, struct nw_callback_vtable *vtable, GtkWindow *p
                 gtk_container_add(GTK_CONTAINER(parent), GTK_WIDGET(nw->area));
         }
         g_assert(gtk_widget_get_parent(GTK_WIDGET(nw->area)) != NULL);
-        GtkWidget *gl = GTK_WIDGET(nw->area);
         gtk_widget_show(gl);
         gtk_widget_set_can_focus(gl, TRUE);
         gtk_widget_set_sensitive(gl, TRUE);
         gtk_widget_set_focus_on_click(gl, TRUE);
-        gtk_widget_add_events(gl, GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_SCROLL_MASK);
-        g_signal_connect(gl, "realize", G_CALLBACK(on_ready), nw);
-        g_signal_connect(gl, "render", G_CALLBACK(on_render), nw);
-        g_signal_connect(gl, "size-allocate", G_CALLBACK(on_configure), nw);
-        g_signal_connect(gl, "motion-notify-event", G_CALLBACK(on_motion), nw);
-        g_signal_connect(gl, "button-press-event", G_CALLBACK(on_button), nw);
-        g_signal_connect(gl, "button-release-event", G_CALLBACK(on_button), nw);
-        g_signal_connect(gl, "scroll-event", G_CALLBACK(on_scroll), nw);
-        g_signal_connect(gl, "leave-notify-event", G_CALLBACK(on_leave), nw);
         GtkAllocation allocation;
-        gtk_widget_get_allocation(GTK_WIDGET(parent), &allocation);
-        gtk_widget_set_size_request(gl, allocation.width, allocation.height);
-        g_idle_add((GSourceFunc)gtk_widget_queue_draw, gl);
+        gtk_widget_set_hexpand(gl, TRUE);
+        gtk_widget_set_vexpand(gl, TRUE);
         return 1;
 }
 

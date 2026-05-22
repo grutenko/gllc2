@@ -872,11 +872,7 @@ del loaderclass
 
 add_library_search_dirs(
     [
-        dirname(__file__),
-        #dirname(__file__) + "/../../out/build/debug-linux",
-        dirname(__file__) + "/../../out/build/release-linux",
-        dirname(__file__) + "/../../out/build/debug-win32",
-        dirname(__file__) + "/../../out/build/release-win32",
+        dirname(__file__)
     ]
 )
 
