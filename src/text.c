@@ -1,4 +1,7 @@
 #include "text.h"
+#include "debug.h"
+#include "utf8tools.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -81,16 +84,28 @@ static struct gllc_prop *all_props[] = {G_entity_props, text_props, NULL};
 
 struct gllc_text *gllc_text_create(struct gllc_block *block, struct ds_draw *draw, char *text, double x, double y)
 {
+        if (!utf8check(text, strlen(text)))
+        {
+                FMTERROR("Invalid utf8 string.");
+                return NULL;
+        }
         struct gllc_text *pl = malloc(sizeof(struct gllc_text));
         if (pl)
         {
                 GLLC_ENTITY_INIT(&pl->_ent, block, all_props, &vtable);
                 pl->_ent.flags |= GLLC_ENT_FILLED;
                 pl->u = ds_unit_create(draw);
-                pl->text = malloc(strlen(text) + 1);
-                if (pl->text)
+                if (text)
                 {
-                        strcpy(pl->text, text);
+                        pl->text = malloc(strlen(text) + 1);
+                        if (pl->text)
+                        {
+                                strcpy(pl->text, text);
+                        }
+                }
+                else
+                {
+                        pl->text = NULL;
                 }
                 pl->x = x;
                 pl->y = y;
