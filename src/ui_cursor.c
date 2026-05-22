@@ -2,6 +2,7 @@
 #include "draw.h"
 
 #include <stddef.h>
+#include <string.h>
 
 #define CURSOR_VCOUNT 12
 #define CURSOR_VBO_SIZE (CURSOR_VCOUNT * sizeof(struct ds_vertex))
@@ -19,7 +20,7 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) 
     glBindVertexArray(c->VAO);
     glGenBuffers(1, &c->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, c->VBO);
-    glBufferData(GL_ARRAY_BUFFER, CURSOR_VBO_SIZE, NULL, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, CURSOR_VBO_SIZE, NULL, GL_DYNAMIC_DRAW);
 
     ds_attrib_ptr();
   } else {
@@ -61,7 +62,14 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) 
   SET_VER(10, (double)mx - 4.5f, (double)my + 4.5f);
   SET_VER(11, (double)mx - 4.0f, (double)my - 4.0f);
 
-  glBufferSubData(GL_ARRAY_BUFFER, 0, CURSOR_VBO_SIZE, V);
+  void *ptr = glMapBufferRange(
+      GL_ARRAY_BUFFER,
+      0,
+      CURSOR_VBO_SIZE,
+      GL_MAP_WRITE_BIT |
+          GL_MAP_INVALIDATE_BUFFER_BIT);
+  memcpy(ptr, V, CURSOR_VBO_SIZE);
+  glUnmapBuffer(GL_ARRAY_BUFFER);
   glDrawArrays(GL_LINES, 0, CURSOR_VCOUNT);
 }
 

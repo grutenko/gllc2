@@ -77,7 +77,7 @@ void ui_selection_draw(struct ui_selection *sel, double x0, double y0, double x1
 
     ds_attrib_ptr();
 
-    glBufferData(GL_ARRAY_BUFFER, VBO_SIZE, NULL, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, VBO_SIZE, NULL, GL_DYNAMIC_DRAW);
   } else {
     glBindVertexArray(sel->VAO);
     glBindBuffer(GL_ARRAY_BUFFER, sel->VBO);

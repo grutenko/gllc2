@@ -12,6 +12,10 @@ void nw_make_context_current(struct nw *nw) {
   nw->vtable.make_context_current(nw);
 }
 
+void nw_release_current_context(struct nw *nw) {
+  nw->vtable.make_context_current(NULL);
+}
+
 void nw_get_size(struct nw *nw, int *width, int *height) {
   nw->vtable.get_size(nw, width, height);
 }

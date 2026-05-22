@@ -34,8 +34,8 @@ def on_size(event):
 
 p.Bind(wx.EVT_SIZE, on_size)
 
-N = 300
-M = 300
+N = 600
+M = 600
 min_v = -6000.0
 max_v = 6000.0
 

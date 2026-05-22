@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void ui_grid_init(struct ui_grid *grid) {
   grid->gap_x = 100.0f;
@@ -81,7 +82,8 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
 
   // определение близости к следующему кратному.
   double coeff = (gap_x / scale) / grid->gap_x;
-  if (coeff > 1.0) coeff = 1.0;
+  if (coeff > 1.0)
+    coeff = 1.0;
 
   GLuint vcap = 2 * (ceil((x1 - x0) / gap_x) + ceil((y1 - y0) / gap_y) + ceil((x1 - x0) / (gap_x * 10)) + ceil((y1 - y0) / (gap_y * 10))) + 4;
 
@@ -167,11 +169,17 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
   }
 
   if (vcap > grid->VBO_cnt) {
-    glBufferData(GL_ARRAY_BUFFER, vcap * sizeof(struct ds_vertex), grid->v_cache, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vcap * sizeof(struct ds_vertex), NULL, GL_DYNAMIC_DRAW);
     grid->VBO_cnt = vcap;
-  } else {
-    glBufferSubData(GL_ARRAY_BUFFER, 0, i * sizeof(struct ds_vertex), grid->v_cache);
   }
+   void *ptr = glMapBufferRange(
+      GL_ARRAY_BUFFER,
+      0,
+      i * sizeof(struct ds_vertex),
+      GL_MAP_WRITE_BIT |
+          GL_MAP_INVALIDATE_BUFFER_BIT);
+  memcpy(ptr, grid->v_cache, i * sizeof(struct ds_vertex));
+  glUnmapBuffer(GL_ARRAY_BUFFER);
 
   grid->last_vcnt = i;
 }

@@ -1,6 +1,7 @@
 #ifndef platform_h
 #define platform_h
 
+#include <stdint.h>
 #if defined(_WIN32)
 
 #include <windows.h>
@@ -54,6 +55,7 @@ struct nw {
   HWND w;
   HDC dc;
   HGLRC glrc;
+  uint64_t last_frame;
   struct nw *next;
   struct nw *prev;
 #elif defined(__linux__)
@@ -89,6 +91,7 @@ int nw_create_wayland(struct nw *nw, struct nw_callback_vtable *vtable, struct w
 void nw_destroy(struct nw *NW);
 void nw_get_cursor(struct nw *w, int *x, int *y);
 void nw_make_context_current(struct nw *w);
+void nw_release_current_context(struct nw *w);
 void nw_get_size(struct nw *w, int *width, int *height);
 void nw_set_size(struct nw *w, int x, int y, int width, int height);
 void nw_swap_buffers(struct nw *w);
