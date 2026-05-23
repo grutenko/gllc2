@@ -14,18 +14,27 @@
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
 {
         static struct ev pts[SEGCNT + 1];
-        double n0[2] = {1.0f, 0.0f};
-        double step = (M_PI * 2) / SEGCNT;
-        for (int i = 0; i <= SEGCNT; i++)
-        {
-                ADDSCALETO(CIRCLE(ent)->p, n0, CIRCLE(ent)->radius, pts[i].p);
-                ROT(n0, step);
-        }
         if (gllc_entity_geometry_modified(ent))
         {
+                double n0[2] = {1.0f, 0.0f};
+                double step = (M_PI * 2) / SEGCNT;
+                for (int i = 0; i <= SEGCNT; i++)
+                {
+                        ADDSCALETO(CIRCLE(ent)->p, n0, CIRCLE(ent)->radius, pts[i].p);
+                        ROT(n0, step);
+                }
+                ent->offset = 0;
                 ds_unit_reset(CIRCLE(ent)->u);
+                if (ent->flags & GLLC_ENT_FILLED)
+                {
+                        build_filltess(ent, CIRCLE(ent)->u, pts, SEGCNT + 1);
+                }
+                build_contur(ent, CIRCLE(ent)->u, pts, SEGCNT + 1);
         }
-        build_contur(ent, CIRCLE(ent)->u, pts, SEGCNT + 1, 0);
+        else
+        {
+                
+        }
 }
 
 static void destroy(struct gllc_entity *ent)

@@ -1010,6 +1010,7 @@ void gllc_block_ent_remove(struct gllc_block *block, struct gllc_entity *ent)
         arr_remove_ent(block->hov, &block->hovcnt, ent);
         arr_remove_ent(block->sel, &block->selcnt, ent);
         remove_ent(block, ent);
+        sg_remove(block->sg, ent);
         ent->vtable->destroy(ent);
         free(ent);
 }
