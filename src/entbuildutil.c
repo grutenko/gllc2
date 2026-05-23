@@ -93,8 +93,23 @@ void build_filltess(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, in
 
 void soft_update_contur(struct gllc_entity *ent, struct ds_unit *u)
 {
+        GLubyte color[4];
+        GLfloat th;
+        resolv_color(ent, color);
+        th = resolv_pixwidth(ent);
+        for (int i = ent->offset; i < ds_unit_vcnt(u); i++)
+        {
+                u->V[i].c[0] = color[0];
+                u->V[i].c[1] = color[1];
+                u->V[i].c[2] = color[2];
+                u->V[i].c[3] = color[3];
+                u->V[i].th = th / 2.0f * u->V[i].thmul;
+        }
 }
 
 void soft_update_filltess(struct gllc_entity *ent, struct ds_unit *u)
 {
+        for (int i = ent->offset; i < ds_unit_vcnt(u); i++)
+        {
+        }
 }

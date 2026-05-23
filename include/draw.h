@@ -38,6 +38,9 @@ struct ds_unit
         int order;
         int dirty;
         int geometry_dirty;
+        uint64_t order0;
+        uint64_t order1;
+        uint64_t order2;
 };
 
 struct ds_gpu_batch

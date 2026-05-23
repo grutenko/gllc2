@@ -30,11 +30,22 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         build_filltess(ent, CIRCLE(ent)->u, pts, SEGCNT + 1);
                 }
                 build_contur(ent, CIRCLE(ent)->u, pts, SEGCNT + 1);
+                CIRCLE(ent)->u->dirty = 1;
+                CIRCLE(ent)->u->geometry_dirty = 1;
+                CIRCLE(ent)->u->draw->dirty = 1;
+                CIRCLE(ent)->u->draw->geometry_dirty = 1;
         }
         else
         {
-                
+                if (ent->flags & GLLC_ENT_CLOSED && ent->flags & GLLC_ENT_FILLED)
+                {
+                        soft_update_filltess(ent, CIRCLE(ent)->u);
+                }
+                soft_update_contur(ent, CIRCLE(ent)->u);
+                CIRCLE(ent)->u->dirty = 1;
+                CIRCLE(ent)->u->draw->dirty = 1;
         }
+        resolv_flags(ent, &CIRCLE(ent)->u->flags);
 }
 
 static void destroy(struct gllc_entity *ent)

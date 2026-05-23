@@ -991,7 +991,7 @@ static void draw(struct gllc_window *W)
 {
         nw_make_context_current(&W->nw);
         glViewport(0, 0, W->width, W->height);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glClearColor(W->clearcolor[0], W->clearcolor[1], W->clearcolor[2], W->clearcolor[3]);
         double x0, y0, x1, y1;
         float _w = (float)W->width;
@@ -1006,30 +1006,34 @@ static void draw(struct gllc_window *W)
         glUniform4fv(W->loc_uclearcolor, 1, W->clearcolor);
         glUniform2f(W->loc_uviewportsize, _w, _h);
         glUniform1f(W->loc_uscale, W->scale);
-        if (W->griduse) {
-          ui_grid_draw(&W->grid, W->loc_uflags, W->scale, x0, y0, x1, y1);
+        if (W->griduse)
+        {
+                ui_grid_draw(&W->grid, W->loc_uflags, W->scale, x0, y0, x1, y1);
         }
-        if (W->block) {
-          gllc_block_sync_gpu(W->block, &W->gpucmn);
-          ds_draw(&W->gpucmn, W->loc_uflags);
+        if (W->block)
+        {
+                gllc_block_sync_gpu(W->block, &W->gpucmn);
+                ds_draw(&W->gpucmn, W->loc_uflags);
         }
-        if (W->mpressed && W->mbtn == 1) {
-          double sx0, sy0, sx1, sy1;
-          sx0 = W->mx0;
-          sy0 = W->my0;
-          screen_to_world(W, W->curx, W->cury, &sx1, &sy1);
-          ui_selection_draw(&W->sel, sx0, sy0, sx1, sy1);
+        if (W->mpressed && W->mbtn == 1)
+        {
+                double sx0, sy0, sx1, sy1;
+                sx0 = W->mx0;
+                sy0 = W->my0;
+                screen_to_world(W, W->curx, W->cury, &sx1, &sy1);
+                ui_selection_draw(&W->sel, sx0, sy0, sx1, sy1);
         }
         glUniformMatrix4fv(W->loc_umvp, 1, GL_FALSE, _screenmvp);
         ui_cursor_draw(&W->cursor, W->curx, W->cury, W->width, W->height);
-        //glFinish(); 
+        // glFinish();
         nw_swap_buffers(&W->nw);
         nw_release_current_context(&W->nw);
 }
 
 static void on_paint(struct nw *nw, void *data)
 {
-        if(WND(data)->ready) {
+        if (WND(data)->ready)
+        {
                 draw(WND(data));
         }
 }
@@ -1464,6 +1468,10 @@ struct gllc_window *gllc_window_create_win32(HWND parent, int style)
                 {
                         return W;
                 }
+                else
+                {
+                        free(W);
+                }
         }
         return NULL;
 }
@@ -1477,6 +1485,10 @@ struct gllc_window *gllc_window_create_webgl(const char *canvas, int style)
                 if (nw_create_webgl(&W->nw, &nw_callback_vtable, canvas, W))
                 {
                         return W;
+                }
+                else
+                {
+                        free(W);
                 }
         }
         return NULL;
@@ -1492,6 +1504,10 @@ struct gllc_window *gllc_window_create_x11(Window parent, Display *x_display, in
                 {
                         return W;
                 }
+                else
+                {
+                        free(W);
+                }
         }
         return NULL;
 }
@@ -1505,6 +1521,10 @@ struct gllc_window *gllc_window_create_gtk(GtkWindow *parent, int style)
                 {
                         return W;
                 }
+                else
+                {
+                        free(W);
+                }
         }
         return NULL;
 }
@@ -1517,6 +1537,10 @@ struct gllc_window *gllc_window_create_wayland(struct wl_surface *parent, int st
                 if (nw_create_wayland(&W->nw, &nw_callback_vtable, parent, W))
                 {
                         return W;
+                }
+                else
+                {
+                        free(W);
                 }
         }
         return NULL;

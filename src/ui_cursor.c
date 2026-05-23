@@ -15,13 +15,15 @@ void ui_cursor_init(struct ui_cursor *cur)
         cur->color[3] = 1.0f;
 }
 
-void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) {
-  if (!c->VAO) {
-    glGenVertexArrays(1, &c->VAO);
-    glBindVertexArray(c->VAO);
-    glGenBuffers(1, &c->VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, c->VBO);
-    glBufferData(GL_ARRAY_BUFFER, CURSOR_VBO_SIZE, NULL, GL_DYNAMIC_DRAW);
+void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height)
+{
+        if (!c->VAO)
+        {
+                glGenVertexArrays(1, &c->VAO);
+                glBindVertexArray(c->VAO);
+                glGenBuffers(1, &c->VBO);
+                glBindBuffer(GL_ARRAY_BUFFER, c->VBO);
+                glBufferData(GL_ARRAY_BUFFER, CURSOR_VBO_SIZE, NULL, GL_DYNAMIC_DRAW);
 
                 ds_attrib_ptr();
         }
@@ -66,15 +68,15 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height) 
         SET_VER(10, (double)mx - 4.5f, (double)my + 4.5f);
         SET_VER(11, (double)mx - 4.0f, (double)my - 4.0f);
 
-  void *ptr = glMapBufferRange(
-      GL_ARRAY_BUFFER,
-      0,
-      CURSOR_VBO_SIZE,
-      GL_MAP_WRITE_BIT |
-          GL_MAP_INVALIDATE_BUFFER_BIT);
-  memcpy(ptr, V, CURSOR_VBO_SIZE);
-  glUnmapBuffer(GL_ARRAY_BUFFER);
-  glDrawArrays(GL_LINES, 0, CURSOR_VCOUNT);
+        void *ptr = glMapBufferRange(
+            GL_ARRAY_BUFFER,
+            0,
+            CURSOR_VBO_SIZE,
+            GL_MAP_WRITE_BIT |
+                GL_MAP_INVALIDATE_BUFFER_BIT);
+        memcpy(ptr, V, CURSOR_VBO_SIZE);
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+        glDrawArrays(GL_LINES, 0, CURSOR_VCOUNT);
 }
 
 void ui_cursor_cleanup(struct ui_cursor *cur)
