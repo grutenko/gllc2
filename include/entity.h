@@ -59,6 +59,7 @@ struct gllc_entity_props
 {
         int color;
         int fcolor;
+        char cstrbuffer[12];
         float ltscale;
         struct gllc_linetype *linetype;
 };
@@ -109,6 +110,8 @@ int gllc_entity_fcolor_by_layer(struct gllc_entity *ent);
 int gllc_entity_fcolor_by_block(struct gllc_entity *ent);
 int gllc_entity_set_fcolor_by_layer(struct gllc_entity *ent, int enable);
 int gllc_entity_set_fcolor_by_block(struct gllc_entity *ent, int enable);
+char *gllc_entity_get_fcolor_string(struct gllc_entity *ent);
+int gllc_entity_set_fcolor_string(struct gllc_entity *ent, char *color);
 int gllc_entity_is_colori(struct gllc_entity *ent);
 int gllc_entity_is_colort(struct gllc_entity *ent);
 int gllc_entity_set_colori(struct gllc_entity *ent, int color);
@@ -148,5 +151,7 @@ int gllc_entity_set_modified(struct gllc_entity *ent, int geometry);
 void gllc_entity_destroy(struct gllc_entity *ent);
 void gllc_entity_bbox(struct gllc_entity *ent, double scale, double *x0, double *y0, double *x1, double *y1);
 void gllc_entity_build(struct gllc_entity *ent, struct ds_draw *draw, double scale);
+int gllc_entity_set_layer(struct gllc_entity *ent, struct gllc_layer *layer);
+struct gllc_layer *gllc_entity_get_layer(struct gllc_entity *ent);
 
 #endif

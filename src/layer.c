@@ -1,4 +1,5 @@
 #include "layer.h"
+#include "named_object.h"
 #include "object.h"
 #include <stdlib.h>
 #include <string.h>
@@ -6,8 +7,16 @@
 static struct gllc_prop props[] = {};
 static struct gllc_prop *all_props[] = {props, G_nobject_props, NULL};
 
+#define LAYER(obj) ((struct gllc_layer *)(obj))
+
 static void destroy(struct gllc_object *obj)
 {
+        if (LAYER(obj)->props.linetype)
+        {
+                gllc_nobject_decref((struct gllc_nobject *)LAYER(obj)->props.linetype);
+        }
+        free(LAYER(obj)->ents);
+        free(obj);
 }
 
 static struct gllc_object_vtable vtable = {
@@ -25,4 +34,12 @@ struct gllc_layer *gllc_layer_create(struct gllc_drawing *drw, const char *name,
                 gllc_nobject_init((struct gllc_nobject *)layer, drw, all_props, &vtable, GLLC_OBJ_LAYER, name);
         }
         return layer;
+}
+
+void gllc_layer_set_entity(struct gllc_layer *layer, struct gllc_entity *ent)
+{
+}
+
+void gllc_layer_unset_entity(struct gllc_layer *layer, struct gllc_entity *ent)
+{
 }

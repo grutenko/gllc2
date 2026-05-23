@@ -24,8 +24,8 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         if (gllc_entity_geometry_modified(ent))
         {
                 ds_unit_reset(CIRCLE(ent)->u);
+                build_contur(ent, CIRCLE(ent)->u, pts, SEGCNT + 1, 0);
         }
-        build_contur(ent, CIRCLE(ent)->u, pts, SEGCNT + 1, 0);
 }
 
 static void destroy(struct gllc_entity *ent)

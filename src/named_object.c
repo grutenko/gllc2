@@ -305,3 +305,16 @@ void gllc_nobject_destroy(struct gllc_nobject *nobj)
 {
         gllc_object_destroy((struct gllc_object *)nobj);
 }
+
+void gllc_nobject_incref(struct gllc_nobject *nobj)
+{
+        nobj->nrefs++;
+}
+
+void gllc_nobject_decref(struct gllc_nobject *nobj)
+{
+        if (nobj->nrefs > 0)
+        {
+                nobj->nrefs--;
+        }
+}
