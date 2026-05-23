@@ -976,3 +976,19 @@ struct gllc_nobject *gllc_drw_get_first_object(struct gllc_drawing *drawing, int
         }
         return NULL;
 }
+
+struct gllc_nobject *gllc_drw_get_next_object(struct gllc_drawing *drawing, struct gllc_nobject *obj)
+{
+        NONULL(drawing, NULL);
+        NONULL(obj, NULL);
+        OBJGUARD(drawing, GLLC_DRAWING, NULL);
+        OBJGUARD(obj, GLLC_NAMED_OBJECT, NULL);
+        for (struct gllc_nobject *item = obj->next; item; item = item->next)
+        {
+                if (item->type == obj->type)
+                {
+                        return item;
+                }
+        }
+        return NULL;
+}

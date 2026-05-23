@@ -2,6 +2,7 @@
 #include "draw.h"
 #include "entity.h"
 #include "linebuild.h"
+#include "object.h"
 
 #include <stddef.h>
 
@@ -24,7 +25,7 @@ static void resolv_color(struct gllc_entity *ent, unsigned char *color)
         }
 }
 
-static void resolv_flags(struct gllc_entity *ent, int *flags)
+void resolv_flags(struct gllc_entity *ent, int *flags)
 {
         if (ent->flags & GLLC_ENT_HOVER)
         {

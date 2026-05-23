@@ -27,7 +27,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         {
                 ds_unit_reset(ARC(ent)->u);
         }
-        build_contur(ent, ARC(ent)->u, pts, segcnt, 0);
+        build_contur(ent, ARC(ent)->u, pts, segcnt);
 }
 
 static void destroy(struct gllc_entity *ent)

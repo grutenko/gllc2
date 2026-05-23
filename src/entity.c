@@ -1,11 +1,14 @@
 #include "entity.h"
 #include "block.h"
+#include "debug.h"
 #include "layer.h"
 #include "litecad.h"
+#include "named_object.h"
 #include "object.h"
 
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -211,14 +214,13 @@ static union gllc_variant _ent_drw_GET(struct gllc_object *obj, int prop, int ty
 static union gllc_variant _ent_layer_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.handle_ = ((struct gllc_entity *)obj)->layer;
+        v.handle_ = gllc_entity_get_layer((struct gllc_entity *)obj);
         return v;
 }
 
 static int _ent_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        ((struct gllc_entity *)obj)->layer = value.handle_;
-        return 1;
+        return gllc_entity_set_layer((struct gllc_entity *)obj, (struct gllc_layer *)value.handle_);
 }
 
 static union gllc_variant _ent_linetype_GET(struct gllc_object *obj, int prop, int type)
@@ -381,13 +383,27 @@ static int _ent_filled_SET(struct gllc_object *obj, int prop, int type, union gl
 static union gllc_variant _ent_fcolor_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = gllc_entity_fcolor((struct gllc_entity *)obj);
+        if (type == T_PROP_INT)
+        {
+                v.int_ = gllc_entity_fcolor((struct gllc_entity *)obj);
+        }
+        else if (type == T_PROP_STRING)
+        {
+                v.string_ = gllc_entity_get_fcolor_string((struct gllc_entity *)obj);
+        }
         return v;
 }
 
 static int _ent_fcolor_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_fcolor((struct gllc_entity *)obj, value.int_);
+        if (type == T_PROP_INT)
+        {
+                return gllc_entity_set_fcolor((struct gllc_entity *)obj, value.int_);
+        }
+        else if (type == T_PROP_STRING)
+        {
+                return gllc_entity_set_fcolor_string((struct gllc_entity *)obj, value.string_);
+        }
 }
 
 static union gllc_variant _ent_fcolori_GET(struct gllc_object *obj, int prop, int type)
@@ -638,6 +654,7 @@ struct gllc_prop G_entity_props[] = {
     P_BOOL(LC_PROP_ENT_SOLIDFILL, _ent_filled_GET, _ent_filled_SET),
     P_BOOL(LC_PROP_ENT_FILLED, _ent_filled_GET, _ent_filled_SET),
     P_INT(LC_PROP_ENT_FCOLOR, _ent_fcolor_GET, _ent_fcolor_SET),
+    P_STRING(LC_PROP_ENT_FCOLOR, _ent_fcolor_GET, _ent_fcolor_SET),
     P_INT(LC_PROP_ENT_FCOLORI, _ent_fcolori_GET, _ent_fcolori_SET),
     P_INT(LC_PROP_ENT_FCOLORT, _ent_fcolort_GET, _ent_fcolort_SET),
     P_BOOL(LC_PROP_ENT_FCOLORBYLAYER, _ent_fcolor_by_layer_GET, _ent_color_by_layer_SET),
@@ -1027,7 +1044,14 @@ int gllc_entity_set_color_by_string(struct gllc_entity *ent, const char *color)
                 gllc_entity_set_color(ent, c->color);
                 return 1;
         }
-        return 0;
+        unsigned char r, g, b;
+        int cnt = sscanf(color, "%hhu,%hhu,%hhu", &r, &g, &b);
+        if (cnt != 3)
+        {
+                return 0;
+        }
+        gllc_entity_set_color(ent, (r << 16) | (g << 8) | b);
+        return 1;
 }
 
 int gllc_entity_colori(struct gllc_entity *ent)
@@ -1042,12 +1066,14 @@ int gllc_entity_colori(struct gllc_entity *ent)
 
 char *gllc_entity_color_string(struct gllc_entity *ent)
 {
-        struct coloritab *c = find_color_by_color(gllc_entity_color(ent));
+        int colorint = gllc_entity_color(ent);
+        struct coloritab *c = find_color_by_color(colorint);
         if (c)
         {
                 return (char *)c->name;
         }
-        return NULL;
+        sprintf(ent->props.cstrbuffer, "%hhu,%hhu,%hhu", RED(colorint), GREEN(colorint), BLUE(colorint));
+        return ent->props.cstrbuffer;
 }
 
 int gllc_entity_fcolori(struct gllc_entity *ent)
@@ -1079,6 +1105,36 @@ int gllc_entity_set_fcolori(struct gllc_entity *ent, int ind)
 int gllc_entity_set_fcolort(struct gllc_entity *ent, int color)
 {
         return gllc_entity_set_fcolor(ent, color);
+}
+
+char *gllc_entity_get_fcolor_string(struct gllc_entity *ent)
+{
+        int colorint = gllc_entity_fcolor(ent);
+        struct coloritab *c = find_color_by_color(colorint);
+        if (c)
+        {
+                return (char *)c->name;
+        }
+        sprintf(ent->props.cstrbuffer, "%hhu,%hhu,%hhu", RED(colorint), GREEN(colorint), BLUE(colorint));
+        return ent->props.cstrbuffer;
+}
+
+int gllc_entity_set_fcolor_string(struct gllc_entity *ent, char *color)
+{
+        struct coloritab *c = find_color_by_name(color);
+        if (c)
+        {
+                gllc_entity_set_fcolor(ent, c->color);
+                return 1;
+        }
+        unsigned char r, g, b;
+        int cnt = sscanf(color, "%hhu,%hhu,%hhu", &r, &g, &b);
+        if (cnt != 3)
+        {
+                return 0;
+        }
+        gllc_entity_set_fcolor(ent, (r << 16) | (g << 8) | b);
+        return 1;
 }
 
 int gllc_entity_locked(struct gllc_entity *ent)
@@ -1178,4 +1234,36 @@ void gllc_entity_build(struct gllc_entity *ent, struct ds_draw *draw, double sca
                 ent->vtable->bbox(ent, scale, &ent->bbox[0], &ent->bbox[1], &ent->bbox[2], &ent->bbox[3]);
         }
         ent->vtable->build(ent, draw, scale);
+}
+
+int gllc_entity_set_layer(struct gllc_entity *ent, struct gllc_layer *layer)
+{
+        NONULL(ent, 0);
+        if (layer)
+        {
+                OBJGUARD(layer, GLLC_NAMED_OBJECT, 0);
+                if (layer->_nobj.type != GLLC_OBJ_LAYER)
+                {
+                        FMTERROR("Argument layer is not valid layer object.");
+                        return 0;
+                }
+        }
+        if (ent->layer)
+        {
+                gllc_layer_unset_entity(ent->layer, ent);
+                gllc_nobject_decref((struct gllc_nobject *)(ent->layer));
+        }
+        if (layer)
+        {
+                gllc_layer_set_entity(layer, ent);
+                gllc_nobject_incref((struct gllc_nobject *)layer);
+        }
+        ent->layer = layer;
+        gllc_entity_set_modified(ent, 0);
+        return 1;
+}
+
+struct gllc_layer *gllc_entity_get_layer(struct gllc_entity *ent)
+{
+        return ent->layer;
 }

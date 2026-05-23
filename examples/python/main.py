@@ -71,7 +71,7 @@ if sys.platform == "win32":
 elif sys.platform == "linux":
     hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
 
-lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, True)
+lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
 lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0x0)
 
 hDrw = lc.lcCreateDrawing()

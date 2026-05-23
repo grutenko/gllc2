@@ -48,6 +48,8 @@ struct gllc_nobject
 
 void gllc_nobject_init(struct gllc_nobject *nobj, struct gllc_drawing *drawing, struct gllc_prop **props, struct gllc_object_vtable *vtable, int type, const char *name);
 void gllc_nobject_destroy(struct gllc_nobject *nobj);
+void gllc_nobject_incref(struct gllc_nobject *nobj);
+void gllc_nobject_decref(struct gllc_nobject *nobj);
 
 extern struct gllc_prop G_nobject_props[];
 

@@ -24,7 +24,20 @@
       "name": "Launch Python (gdb)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/usr/bin/python3",
+      "program": "C:/Program Files/Python312/python.exe",
+      "args": [
+        "${workspaceFolder}/examples/python/main.py"
+      ],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    },
+    {
+      "name": "(Linux) Launch Python (gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/bin/python3",
       "args": [
         "${workspaceFolder}/examples/python/main.py"
       ],

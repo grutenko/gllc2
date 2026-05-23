@@ -20,5 +20,6 @@ struct gllc_block *gllc_drw_add_block(struct gllc_drawing *drawing, const char *
 struct gllc_layer *gllc_drw_add_layer(struct gllc_drawing *drw, const char *name, const char *color, struct gllc_linetype *linetype, int linewidth);
 void gllc_drawing_destroy(struct gllc_drawing *drawing);
 struct gllc_nobject *gllc_drw_get_first_object(struct gllc_drawing *drawing, int objtype);
+struct gllc_nobject *gllc_drw_get_next_object(struct gllc_drawing *drawing, struct gllc_nobject *obj);
 
 #endif

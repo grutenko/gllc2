@@ -16,26 +16,29 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         if (gllc_entity_geometry_modified(ent))
         {
                 ds_unit_reset(pl->u);
-        }
-        if (ent->flags & GLLC_ENT_CLOSED)
-        {
-                if (ent->flags & GLLC_ENT_FILLED)
+                ent->offset = 0;
+                if (ent->flags & GLLC_ENT_CLOSED && ent->flags & GLLC_ENT_FILLED)
                 {
-                        int cnt;
-                        double v0[2];
-                        VEC(v0, pl->pts[pl->cnt - 1].p, pl->pts[0].p);
-                        if (LEN(v0) < 1e-8)
-                        {
-                                cnt = pl->cnt - 1;
-                        }
-                        else
-                        {
-                                cnt = pl->cnt;
-                        }
-                        build_filltess(ent, pl->u, pl->pts, cnt);
+                        build_filltess(ent, pl->u, pl->pts, pl->cnt);
+                        ent->offset = ds_unit_vcnt(pl->u);
                 }
+                build_contur(ent, pl->u, pl->pts, pl->cnt);
+                pl->u->dirty = 1;
+                pl->u->geometry_dirty = 1;
+                pl->u->draw->dirty = 1;
+                pl->u->draw->geometry_dirty = 1;
         }
-        build_contur(ent, pl->u, pl->pts, pl->cnt, 0);
+        else
+        {
+                if (ent->flags & GLLC_ENT_CLOSED && ent->flags & GLLC_ENT_FILLED)
+                {
+                        soft_update_filltess(ent, pl->u);
+                }
+                soft_update_contur(ent, pl->u);
+                pl->u->dirty = 1;
+                pl->u->draw->dirty = 1;
+        }
+        resolv_flags(ent, &pl->u->flags);
 }
 
 static void destroy(struct gllc_entity *ent)

@@ -6,8 +6,8 @@ in vec4 vColor;
 in float vL;
 out vec4 FragColor;
 
-uniform float dashSize = 10.0;
-uniform float gapSize  = 5.0;
+uniform float dashSize = 5.0;
+uniform float gapSize  = 2.0;
 uniform float uScale;
 uniform vec4 uClearColor;
 
@@ -16,7 +16,7 @@ void main() {
   if ((uFlags & 1) != 0) {
     ivec2 p = ivec2(gl_FragCoord.xy);
     if (((p.x + p.y) & 1) == 0) {
-      c = uClearColor;
+      c.w = 0.0;
     }
   }
   if(((uFlags >> 1) & 1) != 0) {
