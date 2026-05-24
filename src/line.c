@@ -13,15 +13,26 @@
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
 {
-        struct ev pts[] = {
-            {LINE(ent)->p0[0], LINE(ent)->p0[1]},
-            {LINE(ent)->p1[0], LINE(ent)->p1[1]},
-        };
         if (gllc_entity_geometry_modified(ent))
         {
                 ds_unit_reset(LINE(ent)->u);
+                struct ev pts[] = {
+                    {LINE(ent)->p0[0], LINE(ent)->p0[1]},
+                    {LINE(ent)->p1[0], LINE(ent)->p1[1]},
+                };
+                build_contur(ent, LINE(ent)->u, pts, 2);
+                LINE(ent)->u->dirty = 1;
+                LINE(ent)->u->geometry_dirty = 1;
+                LINE(ent)->u->draw->dirty = 1;
+                LINE(ent)->u->draw->geometry_dirty = 1;
         }
-        build_contur(ent, LINE(ent)->u, pts, 2);
+        else
+        {
+                soft_update_contur(ent, LINE(ent)->u);
+                LINE(ent)->u->dirty = 1;
+                LINE(ent)->u->draw->dirty = 1;
+        }
+        resolv_flags(ent, &LINE(ent)->u->flags);
 }
 
 static void destroy(struct gllc_entity *ent)

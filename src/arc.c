@@ -12,22 +12,33 @@
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
 {
-        int segcnt = SEGCNT * (int)(ARC(ent)->arc_angle / M_PI);
         static struct ev pts[SEGCNT];
-        double n0[2] = {1.0f, 0.0f};
-        ROT(n0, ARC(ent)->start_angle);
-        ROT(n0, -ARC(ent)->arc_angle / 2);
-        double step = ARC(ent)->arc_angle / (segcnt - 1);
-        for (int i = 0; i <= segcnt; i++)
-        {
-                ADDSCALETO((double[]){ARC(ent)->x, ARC(ent)->y}, n0, ARC(ent)->radius, pts[i].p);
-                ROT(n0, step);
-        }
         if (gllc_entity_geometry_modified(ent))
         {
                 ds_unit_reset(ARC(ent)->u);
+                int segcnt = SEGCNT * (int)(ARC(ent)->arc_angle / M_PI);
+                double n0[2] = {1.0f, 0.0f};
+                ROT(n0, ARC(ent)->start_angle);
+                ROT(n0, -ARC(ent)->arc_angle / 2);
+                double step = ARC(ent)->arc_angle / (segcnt - 1);
+                for (int i = 0; i <= segcnt; i++)
+                {
+                        ADDSCALETO((double[]){ARC(ent)->x, ARC(ent)->y}, n0, ARC(ent)->radius, pts[i].p);
+                        ROT(n0, step);
+                }
+                build_contur(ent, ARC(ent)->u, pts, segcnt);
+                ARC(ent)->u->dirty = 1;
+                ARC(ent)->u->geometry_dirty = 1;
+                ARC(ent)->u->draw->dirty = 1;
+                ARC(ent)->u->draw->geometry_dirty = 1;
         }
-        build_contur(ent, ARC(ent)->u, pts, segcnt);
+        else
+        {
+                soft_update_contur(ent, ARC(ent)->u);
+                ARC(ent)->u->dirty = 1;
+                ARC(ent)->u->draw->dirty = 1;
+        }
+        resolv_flags(ent, &ARC(ent)->u->flags);
 }
 
 static void destroy(struct gllc_entity *ent)

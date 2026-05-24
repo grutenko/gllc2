@@ -1,16 +1,42 @@
 #ifndef font_h
 #define font_h
 
+#include "draw.h"
 #include "object.h"
+
+struct gllc_glyph_geom {
+        struct ds_vertex *V;
+        GLuint *I;
+        GLuint Vcnt;
+        GLuint Icnt;
+};
+
+struct gllc_font_glyph
+{
+        int flags;
+        struct gllc_glyph_geom normal;
+        struct gllc_glyph_geom italic;
+        struct gllc_glyph_geom bold;
+        struct gllc_glyph_geom bold_italic;
+};
+
+struct gllc_font_glyph_cache
+{
+        struct gllc_font_glyph *glyphs;
+        int glyphcnt;
+        int glyphcap;
+};
 
 struct gllc_font
 {
         struct gllc_object _obj;
-        int ttf;
         char *filename;
         char *name;
         void *data;
         int data_size;
+        struct gllc_font_glyph_cache cache;
+        int nrefs;
+        struct gllc_font *prev;
         struct gllc_font *next;
 };
 
