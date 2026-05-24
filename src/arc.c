@@ -3,6 +3,7 @@
 #include "linalg.h"
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -16,7 +17,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         if (gllc_entity_geometry_modified(ent))
         {
                 ds_unit_reset(ARC(ent)->u);
-                int segcnt = SEGCNT * (int)(ARC(ent)->arc_angle / M_PI);
+                int segcnt = SEGCNT * (ARC(ent)->arc_angle / M_PI);
                 double n0[2] = {1.0f, 0.0f};
                 ROT(n0, ARC(ent)->start_angle);
                 ROT(n0, -ARC(ent)->arc_angle / 2);
@@ -142,7 +143,6 @@ struct gllc_arc *gllc_arc_create(struct gllc_block *block, struct ds_draw *draw,
         if (pl)
         {
                 GLLC_ENTITY_INIT(&pl->_ent, block, all_props, &vtable);
-                pl->_ent.flags |= 0;
                 pl->u = ds_unit_create(draw);
                 pl->x = x;
                 pl->y = y;
