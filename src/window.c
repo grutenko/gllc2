@@ -883,6 +883,19 @@ static int _wnd_griddotted2_SET(struct gllc_object *obj, int prop, int type, uni
         return 1;
 }
 
+static union gllc_variant _wnd_colorbg_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        COLORF2I(WND(obj)->clearcolor, v.int_);
+        return v;
+}
+
+static int _wnd_colorbg_SET(struct gllc_object *obj, int prop, int type, union gllc_variant v)
+{
+        COLORI2F(v.int_, WND(obj)->clearcolor);
+        return 1;
+}
+
 struct gllc_prop _props[] = {
     P_INT(LC_PROP_WND_ID, _wnd_id_GET, _wnd_id_SET),
     P_INT_RO(LC_PROP_WND_WIDTH, _wnd_width_GET),
@@ -891,6 +904,7 @@ struct gllc_prop _props[] = {
     P_INT_RO(LC_PROP_WND_FRAME_TOP, _wnd_frame_top_GET),
     P_INT_RO(LC_PROP_WND_FRAME_WIDTH, _wnd_frame_width_GET),
     P_INT_RO(LC_PROP_WND_FRAME_HEIGHT, _wnd_frame_height_GET),
+    P_INT(LC_PROP_WND_COLORBG, _wnd_colorbg_GET, _wnd_colorbg_SET),
     P_HANDLE_RO(LC_PROP_WND_HWND, _wnd_HWND_GET),
     P_HANDLE_RO(LC_PROP_WND_VIEWBLOCK, _wnd_block_GET),
     P_HANDLE_RO(LC_PROP_WND_DRW, _wnd_drw_GET),
