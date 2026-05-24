@@ -2,8 +2,6 @@
 #include "entbuildutil.h"
 #include "linalg.h"
 
-#include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -57,8 +55,18 @@ static int vertices(struct gllc_entity *ent, double scale, struct ev *ver)
         return 0;
 }
 
+static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymin, double *xmax, double *ymax);
+
 static int selected(struct gllc_entity *ent, int mode, double scale, double x0, double y0, double x1, double y1)
 {
+        if (mode == 0)
+        {
+                double bx0, bx1, by0, by1;
+                bbox(ent, scale, &bx0, &by0, &bx1, &by1);
+                if (bx0 >= x0 && bx1 <= x1 && by0 >= y0 && by1 <= y1)
+                        return 1;
+                return 0;
+        }
         return 0;
 }
 
@@ -78,41 +86,75 @@ static int clone(struct gllc_entity *ent, struct gllc_entity **clone)
 
 static int picked(struct gllc_entity *ent, double scale, double x, double y, double *dis)
 {
-        double n0[2], n1[2], n2[2];
+        double n0[2], n1[2];
         double v0[2];
         double w;
         if (ent->flags & GLLC_ENT_LW_THIN)
-                w = 10.0f * scale;
+        {
+                w = 5.0f * scale;
+        }
         else if (ent->flags & GLLC_ENT_LW_SCREEN)
-                w = (ent->lwidth + 10.0f) * scale;
+        {
+                w = (ent->lwidth + 5.0f) * scale;
+        }
         else
-                w = ent->lwidth + (10.0f * scale);
-        COPY(n0, (double[]){1.0f, 0.0f});
-        COPY(n1, (double[]){1.0f, 0.0f});
-        ROT(n0, ARC(ent)->start_angle - (ARC(ent)->arc_angle / 2.0f));
-        ROT(n1, ARC(ent)->start_angle + (ARC(ent)->arc_angle / 2.0f));
+        {
+                w = ent->lwidth + (5.0f * scale);
+        }
         VEC(v0, (double[]){ARC(ent)->x, ARC(ent)->y}, (double[]){x, y});
-        COPY(n2, v0);
-        NORM(n2);
         double len = LEN(v0);
         if (len > ARC(ent)->radius + w || len < ARC(ent)->radius - w)
+        {
                 return 0;
-        if (CROSS(n0, n2) > 0 || CROSS(n1, n2) < 0)
+        }
+        NORMTO(v0, n0);
+        COPY(n1, (double[]){1.0f, 0.0f});
+        ROT(n1, ARC(ent)->start_angle);
+        if (DOT(n0, n1) < cos(ARC(ent)->arc_angle / 2.0f))
+        {
                 return 0;
+        }
+        
         return 1;
 }
 
 static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymin, double *xmax, double *ymax)
 {
-        double x0, y0, x1, y1;
+        double minx = 1e300;
+        double miny = 1e300;
+        double maxx = -1e300;
+        double maxy = -1e300;
+        double n0[2] = {1.0f, 0.0f};
+        int segcnt = SEGCNT * (ARC(ent)->arc_angle / M_PI);
+        if (segcnt == 0)
+        {
+                segcnt = 2;
+        }
+        ROT(n0, ARC(ent)->start_angle);
+        ROT(n0, -ARC(ent)->arc_angle / 2);
+        double step = ARC(ent)->arc_angle / (segcnt - 1);
+        for (int i = 0; i <= segcnt; i++)
+        {
+                double p[2];
+                ADDSCALETO((double[]){ARC(ent)->x, ARC(ent)->y}, n0, ARC(ent)->radius, p);
+                ROT(n0, step);
+                if (p[0] < minx)
+                        minx = p[0];
+                if (p[1] < miny)
+                        miny = p[1];
+                if (p[0] > maxx)
+                        maxx = p[0];
+                if (p[1] > maxy)
+                        maxy = p[1];
+        }
         if (xmin)
-                *xmin = ARC(ent)->x - ARC(ent)->radius;
+                *xmin = minx;
         if (ymin)
-                *ymin = ARC(ent)->y - ARC(ent)->radius;
+                *ymin = miny;
         if (xmax)
-                *xmax = ARC(ent)->x + ARC(ent)->radius;
+                *xmax = maxx;
         if (ymax)
-                *ymax = ARC(ent)->y + ARC(ent)->radius;
+                *ymax = maxy;
         return 1;
 }
 
