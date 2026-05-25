@@ -38,8 +38,30 @@ struct gllc_layer *gllc_layer_create(struct gllc_drawing *drw, const char *name,
 
 void gllc_layer_set_entity(struct gllc_layer *layer, struct gllc_entity *ent)
 {
+        if (layer->entcap <= layer->entcnt)
+        {
+                size_t newcap = layer->entcap ? layer->entcap * 2 : 8;
+                struct gllc_entity **ents = realloc(layer->ents, newcap * sizeof(struct gllc_entity *));
+                if (!ents)
+                {
+                        return;
+                }
+                layer->ents = ents;
+                layer->entcap = newcap;
+        }
+        layer->ents[layer->entcnt] = ent;
+        layer->entcnt++;
 }
 
 void gllc_layer_unset_entity(struct gllc_layer *layer, struct gllc_entity *ent)
 {
+        for (int i = 0; i < layer->entcnt; i++)
+        {
+                if (layer->ents[i] == ent)
+                {
+                        layer->ents[i] = layer->ents[layer->entcnt - 1];
+                        layer->entcnt--;
+                        return;
+                }
+        }
 }

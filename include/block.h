@@ -54,6 +54,7 @@ void gllc_block_destroy(struct gllc_block *block);
 
 void gllc_block_set_window(struct gllc_block *block, struct gllc_window *window);
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden);
+int gllc_block_ent_filter_point(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden , int limit);
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled);
 struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2]);
 struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle, double arc_angle);
@@ -73,4 +74,7 @@ void gllc_block_ent_remove(struct gllc_block *block, struct gllc_entity *ent);
 void gllc_block_bbox(struct gllc_block *block, double *x0, double *y0, double *x1, double *y1);
 void gllc_block_sel_bbox(struct gllc_block *block, double *x0, double *y0, double *x1, double *y1);
 void gllc_block_visbox(struct gllc_block *block, double *x0, double *y0, double *x1, double *y1);
+struct gllc_entity *gllc_block_get_ent_by_id(struct gllc_block *block, uint64_t ID);
+struct gllc_entity *gllc_block_get_ent_by_idh(struct gllc_block *block, char *IDh);
+struct gllc_entity *gllc_block_get_ent_by_key(struct gllc_block *block, int key);
 #endif

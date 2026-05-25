@@ -404,6 +404,7 @@ static int _ent_fcolor_SET(struct gllc_object *obj, int prop, int type, union gl
         {
                 return gllc_entity_set_fcolor_string((struct gllc_entity *)obj, value.string_);
         }
+        return 1;
 }
 
 static union gllc_variant _ent_fcolori_GET(struct gllc_object *obj, int prop, int type)
@@ -496,19 +497,6 @@ static union gllc_variant _ent_locked_GET(struct gllc_object *obj, int prop, int
         union gllc_variant v;
         v.bool_ = gllc_entity_locked((struct gllc_entity *)obj);
         return v;
-}
-
-static int _ent_locked_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
-{
-        if (value.bool_)
-        {
-                ((struct gllc_entity *)obj)->flags |= GLLC_ENT_LOCKED;
-        }
-        else
-        {
-                ((struct gllc_entity *)obj)->flags &= ~GLLC_ENT_LOCKED;
-        }
-        return 1;
 }
 
 static union gllc_variant _ent_visible_GET(struct gllc_object *obj, int prop, int type)
@@ -664,7 +652,7 @@ struct gllc_prop G_entity_props[] = {
     P_STRING(LC_PROP_ENT_LINFILL, _ent_linfill_GET, _ent_linfill_SET),
     P_INT_RO(LC_PROP_ENT_LINFILLNL, _ent_linfillnl_GET),
     P_BOOL(LC_PROP_ENT_WIPEOUT, _ent_wipeout_GET, _ent_wipeout_SET),
-    P_BOOL(LC_PROP_ENT_LOCKED, _ent_locked_GET, _ent_locked_SET),
+    P_BOOL_RO(LC_PROP_ENT_LOCKED, _ent_locked_GET),
     P_BOOL_RO(LC_PROP_ENT_VISIBLE, _ent_visible_GET),
     P_BOOL(LC_PROP_ENT_HIDDEN, _ent_hidden_GET, _ent_hidden_SET),
     P_BOOL(LC_PROP_ENT_DELETED, _ent_deleted_GET, _ent_deleted_SET),
@@ -683,6 +671,11 @@ struct gllc_prop G_entity_props[] = {
 static void obj_entity_destroy(struct gllc_object *obj)
 {
         struct gllc_entity *ent = (struct gllc_entity *)obj;
+        if (ent->layer)
+        {
+                gllc_layer_unset_entity(ent->layer, ent);
+                gllc_nobject_decref((struct gllc_nobject *)(ent->layer));
+        }
         if (ent->vtable && ent->vtable->destroy)
         {
                 ent->vtable->destroy(ent);
@@ -1162,7 +1155,7 @@ int gllc_entity_set_hidden(struct gllc_entity *ent, int enable)
         {
                 ent->flags &= ~GLLC_ENT_HIDDEN;
         }
-        gllc_entity_set_modified(ent, 0);
+        gllc_entity_set_modified(ent, 1);
         return 1;
 }
 

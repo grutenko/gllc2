@@ -721,17 +721,43 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
         {
                 if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
                         continue;
-                // double x0, y0, x1, y1;
-                // gllc_entity_bbox(ents[i], wnd_scale(block), &x0, &y0, &x1, &y1);
-                // double tol = 10.0f * wnd_scale(block);
-                // if (x + tol < x0 || x - tol > x1 || y + tol < y0 || y - tol > y1)
-                //   continue;
                 if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL))
                 {
                         return ents[i];
                 }
         }
         return NULL;
+}
+
+static inline void push_filter_ent(struct gllc_block *block, struct gllc_entity *ent);
+
+int gllc_block_ent_filter_point(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden, int limit)
+{
+        NONULL(block, 0);
+        for (int i = 0; i < block->filcnt; i++)
+                block->fil[i]->flags &= ~GLLC_ENT_FILTER;
+        block->filcnt = 0;
+        struct sg_cell *cell = sg_pick_cell(block->sg, x, y);
+        if (!cell)
+                return 1;
+        int i;
+        struct gllc_entity **ents = sg_cell_ents(cell);
+        int cnt = sg_cell_ents_cnt(cell);
+        int total = 0;
+        for (i = 0; i < cnt; i++)
+        {
+                if (total >= limit)
+                        return 1;
+                if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
+                        continue;
+                if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL))
+                {
+                        ents[i]->flags |= GLLC_ENT_FILTER;
+                        push_filter_ent(block, ents[i]);
+                        total++;
+                }
+        }
+        return 1;
 }
 
 void gllc_block_sync_gpu(struct gllc_block *block, struct ds_gpu *gpu)
@@ -992,7 +1018,7 @@ static void arr_remove_ent(struct gllc_entity **arr, int *size, struct gllc_enti
         {
                 if (arr[i] == ent)
                 {
-                        memmove(&arr[i], &arr[i + 1], (n - i - 1) * sizeof(*arr));
+                        memmove(&arr[i], &arr[i + 1], (n - i - 1) * sizeof(struct gllc_entity *));
                         (*size)--;
                         return;
                 }
@@ -1122,4 +1148,40 @@ void gllc_block_visbox(struct gllc_block *block, double *x0, double *y0, double 
         {
                 *x0 = *y0 = *x1 = *y1 = 0.0;
         }
+}
+
+struct gllc_entity *gllc_block_get_ent_by_id(struct gllc_block *block, uint64_t ID)
+{
+        for (struct gllc_entity *ent = block->h; ent; ent = ent->next)
+        {
+                if (ent->ID == ID)
+                {
+                        return ent;
+                }
+        }
+        return NULL;
+}
+
+struct gllc_entity *gllc_block_get_ent_by_idh(struct gllc_block *block, char *IDh)
+{
+        for (struct gllc_entity *ent = block->h; ent; ent = ent->next)
+        {
+                if (strcmp(ent->ID_hex, IDh) == 0)
+                {
+                        return ent;
+                }
+        }
+        return NULL;
+}
+
+struct gllc_entity *gllc_block_get_ent_by_key(struct gllc_block *block, int key)
+{
+        for (struct gllc_entity *ent = block->h; ent; ent = ent->next)
+        {
+                if (ent->key == key)
+                {
+                        return ent;
+                }
+        }
+        return NULL;
 }
