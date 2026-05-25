@@ -19,11 +19,10 @@ static void destroy(struct gllc_object *obj)
         free(obj);
 }
 
-static struct gllc_object_vtable vtable = {
-    .type = GLLC_NAMED_OBJECT,
-    .destroy = destroy};
+static struct gllc_object_vtable vtable = {.type = GLLC_NAMED_OBJECT, .destroy = destroy};
 
-struct gllc_layer *gllc_layer_create(struct gllc_drawing *drw, const char *name, const char *color, struct gllc_linetype *linetype, int linewidth)
+struct gllc_layer *gllc_layer_create(struct gllc_drawing *drw, const char *name, const char *color,
+                                     struct gllc_linetype *linetype, int linewidth)
 {
         NONULL(drw, NULL);
         OBJGUARD(drw, GLLC_DRAWING, NULL);

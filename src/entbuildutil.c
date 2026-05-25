@@ -2,9 +2,10 @@
 #include "draw.h"
 #include "entity.h"
 #include "linebuild.h"
-#include "object.h"
+#include "tess2/tess2.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 
 static void resolv_color(struct gllc_entity *ent, unsigned char *color)
 {
@@ -23,6 +24,15 @@ static void resolv_color(struct gllc_entity *ent, unsigned char *color)
                 color[2] = BLUE(colorint);
                 color[3] = 255;
         }
+}
+
+static void resolv_fcolor(struct gllc_entity *ent, unsigned char *color)
+{
+        int colorint = gllc_entity_fcolor(ent);
+        color[0] = RED(colorint);
+        color[1] = GREEN(colorint);
+        color[2] = BLUE(colorint);
+        color[3] = (unsigned char)(ent->falpha * 255);
 }
 
 void resolv_flags(struct gllc_entity *ent, int *flags)
@@ -74,7 +84,6 @@ void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int 
         conf.nroundsegs = 8;
         conf.lw = resolv_pixwidth(ent);
         conf.lrealw = resolv_realwidth(ent);
-        resolv_flags(ent, &u->flags);
         conf.off = ds_unit_vcnt(u);
         int vcnt, icnt;
         int oldvcnt = ds_unit_vcnt(u);
@@ -89,6 +98,68 @@ void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int 
 
 void build_filltess(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt)
 {
+        TESStesselator *tess = tessNewTess(NULL);
+        if (tess)
+        {
+                float stackbuf[32];
+                float *heapbuf = NULL;
+                float *bufp = NULL;
+                if (cnt < 16)
+                {
+                        bufp = stackbuf;
+                }
+                else
+                {
+                        heapbuf = malloc(sizeof(float) * 2 * cnt);
+                        if (!heapbuf)
+                                return;
+                        bufp = heapbuf;
+                }
+                for (int i = 0; i < cnt; i++)
+                {
+                        bufp[i * 2] = (float)v[i].p[0];
+                        bufp[i * 2 + 1] = (float)v[i].p[1];
+                }
+                unsigned char color[4];
+                resolv_fcolor(ent, color);
+                tessAddContour(tess, 2, bufp, sizeof(GLfloat) * 2, cnt);
+                if (tessTesselate(tess, TESS_WINDING_POSITIVE, TESS_POLYGONS, 3, 2, NULL))
+                {
+                        const float *verts = tessGetVertices(tess);
+                        int vert_count = tessGetVertexCount(tess);
+                        int indices_count = tessGetElementCount(tess);
+                        const int *indices = tessGetElements(tess);
+                        int oldvcnt = ds_unit_vcnt(u);
+                        int oldicnt = ds_unit_icnt(u);
+                        struct ds_vertex *V = ds_unit_reserve_vertex(u, oldvcnt + vert_count);
+                        GLuint *I = ds_unit_reserve_index(u, oldicnt + indices_count * 3);
+                        for (int i = 0; i < vert_count; i++)
+                        {
+                                V[oldvcnt + i].p[0] = verts[i * 2];
+                                V[oldvcnt + i].p[1] = verts[i * 2 + 1];
+                                V[oldvcnt + i].c[0] = color[0];
+                                V[oldvcnt + i].c[1] = color[1];
+                                V[oldvcnt + i].c[2] = color[2];
+                                V[oldvcnt + i].c[3] = color[3];
+                                V[oldvcnt + i].n[0] = 0;
+                                V[oldvcnt + i].n[1] = 0;
+                                V[oldvcnt + i].l = 0.0f;
+                                V[oldvcnt + i].th = 0.0f;
+                                V[oldvcnt + i].thmul = 0.0f;
+                                V[oldvcnt + i].uv[0] = 0;
+                                V[oldvcnt + i].uv[1] = 0;
+                        }
+                        for (int i = 0; i < indices_count * 3; i++)
+                        {
+                                I[i] = indices[i];
+                        }
+                }
+                if (heapbuf)
+                {
+                        free(heapbuf);
+                }
+                tessDeleteTess(tess);
+        }
 }
 
 void soft_update_contur(struct gllc_entity *ent, struct ds_unit *u)

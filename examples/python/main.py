@@ -72,7 +72,7 @@ elif sys.platform == "linux":
     hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
 
 lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
-lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0x0)
+lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0xffffff)
 
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcPropGetHandle(hDrw, lc.LC_PROP_DRW_BLOCK_MODEL)
@@ -89,8 +89,8 @@ def on_size(event):
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 600
-M = 600
+N = 400
+M = 400
 min_v = -6000.0
 max_v = 6000.0
 
@@ -185,19 +185,24 @@ for i in range(N - 1):
         i2 = ((i + 1) * M + (j + 1)) * 2
         i3 = (i * M + (j + 1)) * 2
 
-        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, random.randint(0, 1))
+        pline = lc.lcBlockAddPolyline(hBlock, 0, 1, 1)
 
         lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
         lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
         lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
         lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
-
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x000000)
-        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 75)
+        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FCOLOR, 0x000000)
+        lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 125)
 
         lc.lcPlineEnd(pline)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
+
+def on_select(hEvent):
+    print(hEvent)
+
+lc.lcEventSetProc(lc.LC_EVENT_SELECT, lc.F_LCEVENT(on_select), 0, None)
 
 # ---------------- FINAL ----------------
 mgr.Update()

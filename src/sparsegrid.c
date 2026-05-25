@@ -164,7 +164,8 @@ static void cell_remove_ent(struct sg_cell *cell, struct gllc_entity *ent)
         {
                 if (cell->ent[i] == ent)
                 {
-                        memmove(&cell->ent[i], &cell->ent[i + 1], (cell->ent_size - i - 1) * sizeof(struct gllc_entity *));
+                        memmove(&cell->ent[i], &cell->ent[i + 1],
+                                (cell->ent_size - i - 1) * sizeof(struct gllc_entity *));
                         cell->ent_size--;
                         return;
                 }

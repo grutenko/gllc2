@@ -4,7 +4,8 @@
 #include "draw.h"
 #include "object.h"
 
-struct gllc_glyph_geom {
+struct gllc_glyph_geom
+{
         struct ds_vertex *V;
         GLuint *I;
         GLuint Vcnt;

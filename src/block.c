@@ -519,50 +519,49 @@ static union gllc_variant _block_paper_h_GET(struct gllc_object *obj, int prop, 
         return v;
 }
 
-static struct gllc_prop props[] = {
-    P_STRING_RO(LC_PROP_BLOCK_ID, _block_id_GET),
-    P_STRING(LC_PROP_BLOCK_NAME, _block_name_GET, _block_name_SET),
-    P_STRING(LC_PROP_BLOCK_DESCR, _block_descr_GET, _block_descr_SET),
-    P_HANDLE_RO(LC_PROP_BLOCK_DRW, _block_drw_GET),
-    P_FLOAT(LC_PROP_BLOCK_X, _block_x_GET, _block_x_SET),
-    P_FLOAT(LC_PROP_BLOCK_Y, _block_y_GET, _block_y_SET),
-    P_BOOL(LC_PROP_BLOCK_UFSCALING, _block_ufscaling_GET, _block_ufscaling_SET),
-    P_INT(LC_PROP_BLOCK_UNITS, _block_units_GET, _block_units_SET),
-    P_FLOAT_RO(LC_PROP_BLOCK_UNITSCALE, _block_unitscale_GET),
-    P_BOOL_RO(LC_PROP_BLOCK_MODEL, _block_model_GET),
-    P_BOOL_RO(LC_PROP_BLOCK_PAPER, _block_paper_GET),
-    P_BOOL_RO(LC_PROP_BLOCK_STANDARD, _block_standard_GET),
-    P_STRING(LC_PROP_BLOCK_LAYOUTNAME, _block_layoutname_GET, _block_layoutname_SET),
-    P_INT(LC_PROP_BLOCK_LAYOUTORDER, _block_layoutorder_GET, _block_layoutorder_SET),
-    P_BOOL_RO(LC_PROP_BLOCK_HIDDEN, _block_hidden_GET),
-    P_INT_RO(LC_PROP_BLOCK_NENTS, _block_nents_GET),
-    P_INT_RO(LC_PROP_BLOCK_NSELENTS, _block_nselents_GET),
-    P_BOOL_RO(LC_PROP_BLOCK_ATTRIBS, _block_attribs_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_XMIN, _block_xmin_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_YMIN, _block_ymin_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_XMAX, _block_xmax_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_YMAX, _block_ymax_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_XCEN, _block_xcen_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_YCEN, _block_ycen_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_DX, _block_dx_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_DY, _block_dy_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_VISLEF, _block_vislef_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_VISBOT, _block_visbot_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_VISRIG, _block_visrig_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_VISTOP, _block_vistop_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_SELXMIN, _block_selxmin_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_SELYMIN, _block_selymin_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_SELXMAX, _block_selxmax_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_SELYMAX, _block_selymax_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_SELXCEN, _block_selxcen_GET),
-    P_FLOAT_RO(LC_PROP_BLOCK_SELYCEN, _block_selycen_GET),
-    P_FLOAT(LC_PROP_PAPER_X0, _block_paper_x0_GET, _block_paper_x0_SET),
-    P_FLOAT(LC_PROP_PAPER_Y0, _block_paper_y0_GET, _block_paper_y0_SET),
-    P_INT_RO(LC_PROP_PAPER_SIZE, _block_paper_size_GET),
-    P_INT_RO(LC_PROP_PAPER_ORIENT, _block_paper_orient_GET),
-    P_FLOAT_RO(LC_PROP_PAPER_W, _block_paper_w_GET),
-    P_FLOAT_RO(LC_PROP_PAPER_H, _block_paper_h_GET),
-    P_END};
+static struct gllc_prop props[] = {P_STRING_RO(LC_PROP_BLOCK_ID, _block_id_GET),
+                                   P_STRING(LC_PROP_BLOCK_NAME, _block_name_GET, _block_name_SET),
+                                   P_STRING(LC_PROP_BLOCK_DESCR, _block_descr_GET, _block_descr_SET),
+                                   P_HANDLE_RO(LC_PROP_BLOCK_DRW, _block_drw_GET),
+                                   P_FLOAT(LC_PROP_BLOCK_X, _block_x_GET, _block_x_SET),
+                                   P_FLOAT(LC_PROP_BLOCK_Y, _block_y_GET, _block_y_SET),
+                                   P_BOOL(LC_PROP_BLOCK_UFSCALING, _block_ufscaling_GET, _block_ufscaling_SET),
+                                   P_INT(LC_PROP_BLOCK_UNITS, _block_units_GET, _block_units_SET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_UNITSCALE, _block_unitscale_GET),
+                                   P_BOOL_RO(LC_PROP_BLOCK_MODEL, _block_model_GET),
+                                   P_BOOL_RO(LC_PROP_BLOCK_PAPER, _block_paper_GET),
+                                   P_BOOL_RO(LC_PROP_BLOCK_STANDARD, _block_standard_GET),
+                                   P_STRING(LC_PROP_BLOCK_LAYOUTNAME, _block_layoutname_GET, _block_layoutname_SET),
+                                   P_INT(LC_PROP_BLOCK_LAYOUTORDER, _block_layoutorder_GET, _block_layoutorder_SET),
+                                   P_BOOL_RO(LC_PROP_BLOCK_HIDDEN, _block_hidden_GET),
+                                   P_INT_RO(LC_PROP_BLOCK_NENTS, _block_nents_GET),
+                                   P_INT_RO(LC_PROP_BLOCK_NSELENTS, _block_nselents_GET),
+                                   P_BOOL_RO(LC_PROP_BLOCK_ATTRIBS, _block_attribs_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_XMIN, _block_xmin_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_YMIN, _block_ymin_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_XMAX, _block_xmax_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_YMAX, _block_ymax_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_XCEN, _block_xcen_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_YCEN, _block_ycen_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_DX, _block_dx_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_DY, _block_dy_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_VISLEF, _block_vislef_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_VISBOT, _block_visbot_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_VISRIG, _block_visrig_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_VISTOP, _block_vistop_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_SELXMIN, _block_selxmin_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_SELYMIN, _block_selymin_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_SELXMAX, _block_selxmax_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_SELYMAX, _block_selymax_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_SELXCEN, _block_selxcen_GET),
+                                   P_FLOAT_RO(LC_PROP_BLOCK_SELYCEN, _block_selycen_GET),
+                                   P_FLOAT(LC_PROP_PAPER_X0, _block_paper_x0_GET, _block_paper_x0_SET),
+                                   P_FLOAT(LC_PROP_PAPER_Y0, _block_paper_y0_GET, _block_paper_y0_SET),
+                                   P_INT_RO(LC_PROP_PAPER_SIZE, _block_paper_size_GET),
+                                   P_INT_RO(LC_PROP_PAPER_ORIENT, _block_paper_orient_GET),
+                                   P_FLOAT_RO(LC_PROP_PAPER_W, _block_paper_w_GET),
+                                   P_FLOAT_RO(LC_PROP_PAPER_H, _block_paper_h_GET),
+                                   P_END};
 static struct gllc_prop *all_props[] = {props, G_nobject_props, NULL};
 
 static void destroy(struct gllc_object *obj)
@@ -570,9 +569,7 @@ static void destroy(struct gllc_object *obj)
         gllc_block_destroy((struct gllc_block *)obj);
 }
 
-static struct gllc_object_vtable vtable = {
-    .type = GLLC_NAMED_OBJECT,
-    .destroy = destroy};
+static struct gllc_object_vtable vtable = {.type = GLLC_NAMED_OBJECT, .destroy = destroy};
 
 struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *name, double x, double y)
 {
@@ -719,7 +716,8 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
         int cnt = sg_cell_ents_cnt(cell);
         for (i = 0; i < cnt; i++)
         {
-                if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
+                if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) ||
+                    (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
                         continue;
                 if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL))
                 {
@@ -748,7 +746,8 @@ int gllc_block_ent_filter_point(struct gllc_block *block, double x, double y, in
         {
                 if (total >= limit)
                         return 1;
-                if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
+                if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) ||
+                    (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
                         continue;
                 if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL))
                 {
@@ -882,7 +881,7 @@ static inline void _swapf(double *a, double *b)
         *b = t;
 }
 
-int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, double y0, double x1, double y1, int skiplocked, int skiphidden)
+int gllc_block_ent_filter_rect(struct gllc_block *block, double x0, double y0, double x1, double y1, int flags)
 {
         NONULL(block, 0);
         for (int i = 0; i < block->filcnt; i++)
@@ -918,17 +917,16 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, int mode, double x0, do
                         int entcnt = sg_cell_ents_cnt(cell);
                         for (int i = 0; i < entcnt; i++)
                         {
-                                if (ents[i]->flags & GLLC_ENT_FILTER)
-                                        continue;
-                                if (skiplocked && ents[i]->flags & GLLC_ENT_LOCKED)
+                                struct gllc_entity *ent = ents[i];
+                                if ((ent->flags & GLLC_ENT_FILTER) ||
+                                    (flags & BF_SKIPLOCKED && ent->flags & GLLC_ENT_LOCKED) ||
+                                    (flags & BF_SKIPHIDDEN && ent->flags & GLLC_ENT_HIDDEN) ||
+                                    (flags & BF_SELONLY && !(ent->flags & GLLC_ENT_SELECTED)))
                                 {
                                         continue;
                                 }
-                                if (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN)
-                                {
-                                        continue;
-                                }
-                                if (ents[i]->vtable->selected(ents[i], mode, wnd_scale(block), x0, y0, x1, y1))
+                                if (ents[i]->vtable->selected(ents[i], flags & BF_CROSS ? 1 : 0, wnd_scale(block), x0,
+                                                              y0, x1, y1))
                                 {
                                         ents[i]->flags |= GLLC_ENT_FILTER;
                                         push_filter_ent(block, ents[i]);
@@ -999,7 +997,8 @@ struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index
         return block->sel[index];
 }
 
-struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle, double arc_angle)
+struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle,
+                                    double arc_angle)
 {
         NONULL(block, NULL);
         struct gllc_arc *r = gllc_arc_create(block, &block->draw, x, y, radius, start_angle, arc_angle);

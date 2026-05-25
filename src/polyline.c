@@ -69,7 +69,8 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
         struct gllc_polyline *pl = (struct gllc_polyline *)ent;
         double bx0, by0, bx1, by1;
         bbox(ent, scale, &bx0, &by0, &bx1, &by1);
-        int inside = (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
+        int inside =
+            (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
         if (mode == 0)
         {
                 return inside;
@@ -93,24 +94,24 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
                         {
                                 break;
                         }
-#define TEST(_x0, _y0, _x1, _y1)                                                   \
-        do                                                                         \
-        {                                                                          \
-                double T, S;                                                       \
-                double n0[2], n1[2], len0, len1;                                   \
-                VEC(n0, (double[]){_x0, _y0}, (double[]){_x1, _y1});               \
-                VEC(n1, pl->pts[i].p, pl->pts[ni].p);                              \
-                len0 = LEN(n0);                                                    \
-                len1 = LEN(n1);                                                    \
-                NORM(n0);                                                          \
-                NORM(n1);                                                          \
-                if (RAYINSECT((double[]){_x0, _y0}, n0, pl->pts[i].p, n1, &T, &S)) \
-                {                                                                  \
-                        if (S >= 0 && S <= len1 && T >= 0 && T <= len0)            \
-                        {                                                          \
-                                return 1;                                          \
-                        }                                                          \
-                }                                                                  \
+#define TEST(_x0, _y0, _x1, _y1)                                                                                       \
+        do                                                                                                             \
+        {                                                                                                              \
+                double T, S;                                                                                           \
+                double n0[2], n1[2], len0, len1;                                                                       \
+                VEC(n0, (double[]){_x0, _y0}, (double[]){_x1, _y1});                                                   \
+                VEC(n1, pl->pts[i].p, pl->pts[ni].p);                                                                  \
+                len0 = LEN(n0);                                                                                        \
+                len1 = LEN(n1);                                                                                        \
+                NORM(n0);                                                                                              \
+                NORM(n1);                                                                                              \
+                if (RAYINSECT((double[]){_x0, _y0}, n0, pl->pts[i].p, n1, &T, &S))                                     \
+                {                                                                                                      \
+                        if (S >= 0 && S <= len1 && T >= 0 && T <= len0)                                                \
+                        {                                                                                              \
+                                return 1;                                                                              \
+                        }                                                                                              \
+                }                                                                                                      \
         } while (0)
                         TEST(x0, y0, x1, y0);
                         TEST(x1, y0, x1, y1);
@@ -162,37 +163,61 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
         double n0[2], n1[2];
         double T, S;
         int cnt = pl->cnt;
-        for (i = 0; i < cnt; i++)
+        if (ent->flags & GLLC_ENT_CLOSED && ent->flags & GLLC_ENT_FILLED)
         {
+                int insectcnt = 0;
                 int ni;
-                double len;
-                if (ent->flags & GLLC_ENT_CLOSED)
+                for (i = 0; i < cnt; i++)
                 {
                         ni = (i + 1) % pl->cnt;
-                }
-                else if (i < pl->cnt - 1)
-                {
-                        ni = i + 1;
-                }
-                else
-                {
-                        break;
-                }
-                VEC(n0, pl->pts[i].p, pl->pts[ni].p);
-                len = LEN(n0);
-                NORM(n0);
-                COPY(n1, n0);
-                PERP(n1);
-                if (RAYINSECT(pl->pts[i].p, n0, (double[]){x, y}, n1, &T, &S))
-                {
-                        if (T >= 0.0f && T <= len && fabs(S) <= w / 2)
+                        double x1 = pl->pts[i].p[0], y1 = pl->pts[i].p[1];
+                        double x2 = pl->pts[ni].p[0], y2 = pl->pts[ni].p[1];
+
+                        if ((y1 > y) != (y2 > y))
                         {
-                                if (dis)
-                                        *dis = fabs(S);
-                                return 1;
+                                double xint = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
+                                if (xint > x)
+                                        insectcnt++;
+                        }
+                }
+
+                return insectcnt % 2 == 1;
+        }
+        else
+        {
+                for (i = 0; i < cnt; i++)
+                {
+                        int ni;
+                        double len;
+                        if (ent->flags & GLLC_ENT_CLOSED)
+                        {
+                                ni = (i + 1) % pl->cnt;
+                        }
+                        else if (i < pl->cnt - 1)
+                        {
+                                ni = i + 1;
+                        }
+                        else
+                        {
+                                break;
+                        }
+                        VEC(n0, pl->pts[i].p, pl->pts[ni].p);
+                        len = LEN(n0);
+                        NORM(n0);
+                        COPY(n1, n0);
+                        PERP(n1);
+                        if (RAYINSECT(pl->pts[i].p, n0, (double[]){x, y}, n1, &T, &S))
+                        {
+                                if (T >= 0.0f && T <= len && fabs(S) <= w / 2)
+                                {
+                                        if (dis)
+                                                *dis = fabs(S);
+                                        return 1;
+                                }
                         }
                 }
         }
+
         return 0;
 }
 
@@ -251,19 +276,17 @@ static int len(struct gllc_entity *ent, double *len)
         return 1;
 }
 
-static struct gllc_entity_vtable vtable = {
-    .type = GLLC_ENT_POLYLINE,
-    .build = build,
-    .destroy = destroy,
-    .vertices = vertices,
-    .selected = selected,
-    .picked = picked,
-    .bbox = bbox,
-    .len = len,
-    .clone = clone};
+static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_POLYLINE,
+                                           .build = build,
+                                           .destroy = destroy,
+                                           .vertices = vertices,
+                                           .selected = selected,
+                                           .picked = picked,
+                                           .bbox = bbox,
+                                           .len = len,
+                                           .clone = clone};
 
-static struct gllc_prop pline_props[] = {
-    P_END};
+static struct gllc_prop pline_props[] = {P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 

@@ -21,19 +21,19 @@
 
 #define WND(obj) ((struct gllc_window *)obj)
 
-#define COLORI2F(C, CP)                             \
-        do                                          \
-        {                                           \
-                (CP)[0] = (float)((C) >> 16) / 255; \
-                (CP)[1] = (float)((C) >> 8) / 255;  \
-                (CP)[2] = (float)(C) / 255;         \
-                (CP)[3] = 1.0f;                     \
+#define COLORI2F(C, CP)                                                                                                \
+        do                                                                                                             \
+        {                                                                                                              \
+                (CP)[0] = (float)((C) >> 16) / 255;                                                                    \
+                (CP)[1] = (float)((C) >> 8) / 255;                                                                     \
+                (CP)[2] = (float)(C) / 255;                                                                            \
+                (CP)[3] = 1.0f;                                                                                        \
         } while (0)
 
-#define COLORF2I(CP, C)                                                                                  \
-        do                                                                                               \
-        {                                                                                                \
-                (C) = ((int)((CP)[0] * 255) << 16) | ((int)((CP)[1] * 255) << 8) | (int)((CP)[2] * 255); \
+#define COLORF2I(CP, C)                                                                                                \
+        do                                                                                                             \
+        {                                                                                                              \
+                (C) = ((int)((CP)[0] * 255) << 16) | ((int)((CP)[1] * 255) << 8) | (int)((CP)[2] * 255);               \
         } while (0)
 
 static struct gllc_window *_last_filter_wnd = NULL;
@@ -902,88 +902,85 @@ static int _wnd_colorbg_SET(struct gllc_object *obj, int prop, int type, union g
         return 1;
 }
 
-struct gllc_prop _props[] = {
-    P_INT(LC_PROP_WND_ID, _wnd_id_GET, _wnd_id_SET),
-    P_INT_RO(LC_PROP_WND_WIDTH, _wnd_width_GET),
-    P_INT_RO(LC_PROP_WND_HEIGHT, _wnd_height_GET),
-    P_INT_RO(LC_PROP_WND_FRAME_LEFT, _wnd_frame_left_GET),
-    P_INT_RO(LC_PROP_WND_FRAME_TOP, _wnd_frame_top_GET),
-    P_INT_RO(LC_PROP_WND_FRAME_WIDTH, _wnd_frame_width_GET),
-    P_INT_RO(LC_PROP_WND_FRAME_HEIGHT, _wnd_frame_height_GET),
-    P_INT(LC_PROP_WND_COLORBG, _wnd_colorbg_GET, _wnd_colorbg_SET),
-    P_HANDLE_RO(LC_PROP_WND_HWND, _wnd_HWND_GET),
-    P_HANDLE_RO(LC_PROP_WND_VIEWBLOCK, _wnd_block_GET),
-    P_HANDLE_RO(LC_PROP_WND_DRW, _wnd_drw_GET),
-    P_BOOL_RO(LC_PROP_WND_HASFOCUS, _wnd_hasfocus_GET),
-    P_FLOAT(LC_PROP_WND_PIXELSIZE, _wnd_pixelsize_GET, _wnd_pixelsize_SET),
-    P_BOOL(LC_PROP_WND_SELECT, _wnd_select_GET, _wnd_select_SET),
-    P_INT_RO(LC_PROP_WND_DTIME, _wnd_dtime_GET),
-    P_BOOL(LC_PROP_WND_FROZEN, _wnd_frozen_GET, _wnd_frozen_SET),
-    P_BOOL(LC_PROP_WND_FROZENVIEW, _wnd_frozenview_GET, _wnd_frozenview_SET),
-    P_INT_RO(LC_PROP_WND_CMD, _wnd_cmd_id_GET),
-    P_HANDLE_RO(LC_PROP_WND_CMD, _wnd_cmd_handle_GET),
-    P_BOOL_RO(LC_PROP_WND_CMD, _wnd_cmd_active_GET),
-    P_BOOL(LC_PROP_WND_CMDENT1, _wnd_cmdent1_GET, _wnd_cmdent1_SET),
-    P_INT(LC_PROP_WND_OSNAP, _wnd_osnap_mode_GET, _wnd_osnap_mode_SET),
-    P_BOOL(LC_PROP_WND_OSNAP, _wnd_osnap_on_GET, _wnd_osnap_on_SET),
-    P_BOOL(LC_PROP_WND_OSNAPMENU, _wnd_osnapmenu_GET, _wnd_osnapmenu_SET),
-    P_BOOL(LC_PROP_WND_PTRACK, _wnd_ptrack_GET, _wnd_ptrack_SET),
-    P_FLOAT(LC_PROP_WND_PTRACK_ANGLE, _wnd_ptrack_angle_GET, _wnd_ptrack_angle_SET),
-    P_BOOL(LC_PROP_WND_PTRACK_ANGREL, _wnd_ptrack_angrel_GET, _wnd_ptrack_angrel_SET),
-    P_BOOL(LC_PROP_WND_PTRACK_DIST, _wnd_ptrack_dist_enable_GET, _wnd_ptrack_dist_enable_SET),
-    P_FLOAT(LC_PROP_WND_PTRACK_DIST, _wnd_ptrack_dist_value_GET, _wnd_ptrack_dist_value_SET),
-    P_BOOL_RO(LC_PROP_WND_BASEPT, _wnd_basept_GET),
-    P_FLOAT_RO(LC_PROP_WND_BASEX, _wnd_basex_GET),
-    P_FLOAT_RO(LC_PROP_WND_BASEY, _wnd_basey_GET),
-    P_BOOL(LC_PROP_WND_ORTHO, _wnd_ortho_GET, _wnd_ortho_SET),
-    P_STRING(LC_PROP_WND_BGIMAGE, _wnd_bgimage_GET, _wnd_bgimage_SET),
-    P_BOOL(LC_PROP_WND_BGIMAGE, _wnd_bgimage_visible_GET, _wnd_bgimage_visible_SET),
-    P_BOOL_RO(LC_PROP_WND_HASFILETABS, _wnd_hasfiletabs_GET),
-    P_INT_RO(LC_PROP_WND_NUMFILETABS, _wnd_numfiletabs_GET),
-    P_INT_RO(LC_PROP_WND_NUMDRW, _wnd_numdrw_GET),
-    P_HANDLE_RO(LC_PROP_WND_ENT, _wnd_ent_GET),
-    P_BOOL(LC_PROP_WND_DROPFILES, _wnd_dropfiles_GET, _wnd_dropfiles_SET),
-    P_BOOL(LC_PROP_WND_ZOOMWHEEL, _wnd_zoomwheel_GET, _wnd_zoomwheel_SET),
-    P_BOOL(LC_PROP_WND_RULERS, _wnd_rulers_GET, _wnd_rulers_SET),
-    P_BOOL(LC_PROP_WND_MAGNIFIER, _wnd_magnifier_GET, _wnd_magnifier_SET),
-    P_BOOL(LC_PROP_WND_NAVIGATOR, _wnd_navigator_GET, _wnd_navigator_SET),
-    P_BOOL(LC_PROP_WND_ALPHABLEND, _wnd_alphablend_GET, _wnd_alphablend_SET),
-    P_BOOL(LC_PROP_WND_CURSORARROW, _wnd_cursorarrow_GET, _wnd_cursorarrow_SET),
-    P_INT(LC_PROP_WND_CURSORSYS, _wnd_cursorsys_GET, _wnd_cursorsys_SET),
-    P_HANDLE(LC_PROP_WND_CURSORSYS, _wnd_cursorhandle_GET, _wnd_cursorhandle_SET),
-    P_BOOL(LC_PROP_WND_CURSORCROSS, _wnd_cursorcross_GET, _wnd_cursorcross_SET),
-    P_INT(LC_PROP_WND_CURSORSIZE, _wnd_cursorsize_GET, _wnd_cursorsize_SET),
-    P_BOOL(LC_PROP_WND_CURSORPBOX, _wnd_cursorpbox_GET, _wnd_cursorpbox_SET),
-    P_FLOAT_RO(LC_PROP_WND_PICKBOXSIZE, _wnd_pickboxsize_GET),
-    P_INT_RO(LC_PROP_WND_CURX, _wnd_curx_px_GET),
-    P_FLOAT_RO(LC_PROP_WND_CURX, _wnd_curx_unit_GET),
-    P_INT_RO(LC_PROP_WND_CURY, _wnd_cury_px_GET),
-    P_FLOAT_RO(LC_PROP_WND_CURY, _wnd_cury_unit_GET),
-    P_FLOAT_RO(LC_PROP_WND_XMIN, _wnd_xmin_GET),
-    P_FLOAT_RO(LC_PROP_WND_YMIN, _wnd_ymin_GET),
-    P_FLOAT_RO(LC_PROP_WND_XMAX, _wnd_xmax_GET),
-    P_FLOAT_RO(LC_PROP_WND_YMAX, _wnd_ymax_GET),
-    P_FLOAT_RO(LC_PROP_WND_XCEN, _wnd_xcen_GET),
-    P_FLOAT_RO(LC_PROP_WND_YCEN, _wnd_ycen_GET),
-    P_FLOAT_RO(LC_PROP_WND_DX, _wnd_dx_GET),
-    P_FLOAT_RO(LC_PROP_WND_DY, _wnd_dy_GET),
-    P_BOOL(LC_PROP_WND_GRIDSNAP, _wnd_gridsnap_GET, _wnd_gridsnap_SET),
-    P_BOOL(LC_PROP_WND_GRIDSHOW, _wnd_gridshow_GET, _wnd_gridshow_SET),
-    P_FLOAT(LC_PROP_WND_GRIDDX, _wnd_griddx_GET, _wnd_griddx_SET),
-    P_FLOAT(LC_PROP_WND_GRIDDY, _wnd_griddy_GET, _wnd_griddy_SET),
-    P_INT(LC_PROP_WND_GRIDCOLOR, _wnd_gridcolor_GET, _wnd_gridcolor_SET),
-    P_INT(LC_PROP_WND_GRIDCOLOR2, _wnd_gridcolor2_GET, _wnd_gridcolor2_SET),
-    P_FLOAT(LC_PROP_WND_GRIDX0, _wnd_gridx0_GET, _wnd_gridx0_SET),
-    P_FLOAT(LC_PROP_WND_GRIDY0, _wnd_gridy0_GET, _wnd_gridy0_SET),
-    P_INT(LC_PROP_WND_GRIDBOLDX, _wnd_gridboldx_GET, _wnd_gridboldx_SET),
-    P_INT(LC_PROP_WND_GRIDBOLDY, _wnd_gridboldy_GET, _wnd_gridboldy_SET),
-    P_BOOL(LC_PROP_WND_GRIDDOTTED, _wnd_griddotted_GET, _wnd_griddotted_SET),
-    P_BOOL(LC_PROP_WND_GRIDDOTTED2, _wnd_griddotted2_GET, _wnd_griddotted2_SET),
-    P_END};
+struct gllc_prop _props[] = {P_INT(LC_PROP_WND_ID, _wnd_id_GET, _wnd_id_SET),
+                             P_INT_RO(LC_PROP_WND_WIDTH, _wnd_width_GET),
+                             P_INT_RO(LC_PROP_WND_HEIGHT, _wnd_height_GET),
+                             P_INT_RO(LC_PROP_WND_FRAME_LEFT, _wnd_frame_left_GET),
+                             P_INT_RO(LC_PROP_WND_FRAME_TOP, _wnd_frame_top_GET),
+                             P_INT_RO(LC_PROP_WND_FRAME_WIDTH, _wnd_frame_width_GET),
+                             P_INT_RO(LC_PROP_WND_FRAME_HEIGHT, _wnd_frame_height_GET),
+                             P_INT(LC_PROP_WND_COLORBG, _wnd_colorbg_GET, _wnd_colorbg_SET),
+                             P_HANDLE_RO(LC_PROP_WND_HWND, _wnd_HWND_GET),
+                             P_HANDLE_RO(LC_PROP_WND_VIEWBLOCK, _wnd_block_GET),
+                             P_HANDLE_RO(LC_PROP_WND_DRW, _wnd_drw_GET),
+                             P_BOOL_RO(LC_PROP_WND_HASFOCUS, _wnd_hasfocus_GET),
+                             P_FLOAT(LC_PROP_WND_PIXELSIZE, _wnd_pixelsize_GET, _wnd_pixelsize_SET),
+                             P_BOOL(LC_PROP_WND_SELECT, _wnd_select_GET, _wnd_select_SET),
+                             P_INT_RO(LC_PROP_WND_DTIME, _wnd_dtime_GET),
+                             P_BOOL(LC_PROP_WND_FROZEN, _wnd_frozen_GET, _wnd_frozen_SET),
+                             P_BOOL(LC_PROP_WND_FROZENVIEW, _wnd_frozenview_GET, _wnd_frozenview_SET),
+                             P_INT_RO(LC_PROP_WND_CMD, _wnd_cmd_id_GET),
+                             P_HANDLE_RO(LC_PROP_WND_CMD, _wnd_cmd_handle_GET),
+                             P_BOOL_RO(LC_PROP_WND_CMD, _wnd_cmd_active_GET),
+                             P_BOOL(LC_PROP_WND_CMDENT1, _wnd_cmdent1_GET, _wnd_cmdent1_SET),
+                             P_INT(LC_PROP_WND_OSNAP, _wnd_osnap_mode_GET, _wnd_osnap_mode_SET),
+                             P_BOOL(LC_PROP_WND_OSNAP, _wnd_osnap_on_GET, _wnd_osnap_on_SET),
+                             P_BOOL(LC_PROP_WND_OSNAPMENU, _wnd_osnapmenu_GET, _wnd_osnapmenu_SET),
+                             P_BOOL(LC_PROP_WND_PTRACK, _wnd_ptrack_GET, _wnd_ptrack_SET),
+                             P_FLOAT(LC_PROP_WND_PTRACK_ANGLE, _wnd_ptrack_angle_GET, _wnd_ptrack_angle_SET),
+                             P_BOOL(LC_PROP_WND_PTRACK_ANGREL, _wnd_ptrack_angrel_GET, _wnd_ptrack_angrel_SET),
+                             P_BOOL(LC_PROP_WND_PTRACK_DIST, _wnd_ptrack_dist_enable_GET, _wnd_ptrack_dist_enable_SET),
+                             P_FLOAT(LC_PROP_WND_PTRACK_DIST, _wnd_ptrack_dist_value_GET, _wnd_ptrack_dist_value_SET),
+                             P_BOOL_RO(LC_PROP_WND_BASEPT, _wnd_basept_GET),
+                             P_FLOAT_RO(LC_PROP_WND_BASEX, _wnd_basex_GET),
+                             P_FLOAT_RO(LC_PROP_WND_BASEY, _wnd_basey_GET),
+                             P_BOOL(LC_PROP_WND_ORTHO, _wnd_ortho_GET, _wnd_ortho_SET),
+                             P_STRING(LC_PROP_WND_BGIMAGE, _wnd_bgimage_GET, _wnd_bgimage_SET),
+                             P_BOOL(LC_PROP_WND_BGIMAGE, _wnd_bgimage_visible_GET, _wnd_bgimage_visible_SET),
+                             P_BOOL_RO(LC_PROP_WND_HASFILETABS, _wnd_hasfiletabs_GET),
+                             P_INT_RO(LC_PROP_WND_NUMFILETABS, _wnd_numfiletabs_GET),
+                             P_INT_RO(LC_PROP_WND_NUMDRW, _wnd_numdrw_GET),
+                             P_HANDLE_RO(LC_PROP_WND_ENT, _wnd_ent_GET),
+                             P_BOOL(LC_PROP_WND_DROPFILES, _wnd_dropfiles_GET, _wnd_dropfiles_SET),
+                             P_BOOL(LC_PROP_WND_ZOOMWHEEL, _wnd_zoomwheel_GET, _wnd_zoomwheel_SET),
+                             P_BOOL(LC_PROP_WND_RULERS, _wnd_rulers_GET, _wnd_rulers_SET),
+                             P_BOOL(LC_PROP_WND_MAGNIFIER, _wnd_magnifier_GET, _wnd_magnifier_SET),
+                             P_BOOL(LC_PROP_WND_NAVIGATOR, _wnd_navigator_GET, _wnd_navigator_SET),
+                             P_BOOL(LC_PROP_WND_ALPHABLEND, _wnd_alphablend_GET, _wnd_alphablend_SET),
+                             P_BOOL(LC_PROP_WND_CURSORARROW, _wnd_cursorarrow_GET, _wnd_cursorarrow_SET),
+                             P_INT(LC_PROP_WND_CURSORSYS, _wnd_cursorsys_GET, _wnd_cursorsys_SET),
+                             P_HANDLE(LC_PROP_WND_CURSORSYS, _wnd_cursorhandle_GET, _wnd_cursorhandle_SET),
+                             P_BOOL(LC_PROP_WND_CURSORCROSS, _wnd_cursorcross_GET, _wnd_cursorcross_SET),
+                             P_INT(LC_PROP_WND_CURSORSIZE, _wnd_cursorsize_GET, _wnd_cursorsize_SET),
+                             P_BOOL(LC_PROP_WND_CURSORPBOX, _wnd_cursorpbox_GET, _wnd_cursorpbox_SET),
+                             P_FLOAT_RO(LC_PROP_WND_PICKBOXSIZE, _wnd_pickboxsize_GET),
+                             P_INT_RO(LC_PROP_WND_CURX, _wnd_curx_px_GET),
+                             P_FLOAT_RO(LC_PROP_WND_CURX, _wnd_curx_unit_GET),
+                             P_INT_RO(LC_PROP_WND_CURY, _wnd_cury_px_GET),
+                             P_FLOAT_RO(LC_PROP_WND_CURY, _wnd_cury_unit_GET),
+                             P_FLOAT_RO(LC_PROP_WND_XMIN, _wnd_xmin_GET),
+                             P_FLOAT_RO(LC_PROP_WND_YMIN, _wnd_ymin_GET),
+                             P_FLOAT_RO(LC_PROP_WND_XMAX, _wnd_xmax_GET),
+                             P_FLOAT_RO(LC_PROP_WND_YMAX, _wnd_ymax_GET),
+                             P_FLOAT_RO(LC_PROP_WND_XCEN, _wnd_xcen_GET),
+                             P_FLOAT_RO(LC_PROP_WND_YCEN, _wnd_ycen_GET),
+                             P_FLOAT_RO(LC_PROP_WND_DX, _wnd_dx_GET),
+                             P_FLOAT_RO(LC_PROP_WND_DY, _wnd_dy_GET),
+                             P_BOOL(LC_PROP_WND_GRIDSNAP, _wnd_gridsnap_GET, _wnd_gridsnap_SET),
+                             P_BOOL(LC_PROP_WND_GRIDSHOW, _wnd_gridshow_GET, _wnd_gridshow_SET),
+                             P_FLOAT(LC_PROP_WND_GRIDDX, _wnd_griddx_GET, _wnd_griddx_SET),
+                             P_FLOAT(LC_PROP_WND_GRIDDY, _wnd_griddy_GET, _wnd_griddy_SET),
+                             P_INT(LC_PROP_WND_GRIDCOLOR, _wnd_gridcolor_GET, _wnd_gridcolor_SET),
+                             P_INT(LC_PROP_WND_GRIDCOLOR2, _wnd_gridcolor2_GET, _wnd_gridcolor2_SET),
+                             P_FLOAT(LC_PROP_WND_GRIDX0, _wnd_gridx0_GET, _wnd_gridx0_SET),
+                             P_FLOAT(LC_PROP_WND_GRIDY0, _wnd_gridy0_GET, _wnd_gridy0_SET),
+                             P_INT(LC_PROP_WND_GRIDBOLDX, _wnd_gridboldx_GET, _wnd_gridboldx_SET),
+                             P_INT(LC_PROP_WND_GRIDBOLDY, _wnd_gridboldy_GET, _wnd_gridboldy_SET),
+                             P_BOOL(LC_PROP_WND_GRIDDOTTED, _wnd_griddotted_GET, _wnd_griddotted_SET),
+                             P_BOOL(LC_PROP_WND_GRIDDOTTED2, _wnd_griddotted2_GET, _wnd_griddotted2_SET),
+                             P_END};
 static struct gllc_prop *_all_props[] = {_props, NULL};
-static struct gllc_object_vtable _vtable = {
-    .type = GLLC_WINDOW,
-    .destroy = _destroy};
+static struct gllc_object_vtable _vtable = {.type = GLLC_WINDOW, .destroy = _destroy};
 
 static inline void screen_to_world(struct gllc_window *W, double x, double y, double *xd, double *yd)
 {
@@ -1147,12 +1144,14 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data)
                         }
                         if (WND(data)->block)
                         {
-                                gllc_block_ent_filter_rect(WND(data)->block, invert, x0, y0, x1, y1, 1, 1);
+                                gllc_block_ent_filter_rect(WND(data)->block, x0, y0, x1, y1,
+                                                           BF_SKIPLOCKED | BF_SKIPHIDDEN | (invert ? BF_CROSS : 0));
                                 gllc_block_ent_hover(WND(data)->block, NULL, 1);
                                 int filcnt = gllc_block_ent_get_filter_cnt(WND(data)->block);
                                 for (int i = 0; i < filcnt; i++)
                                 {
-                                        gllc_block_ent_hover(WND(data)->block, gllc_block_ent_get_filter_at(WND(data)->block, i), 0);
+                                        gllc_block_ent_hover(WND(data)->block,
+                                                             gllc_block_ent_get_filter_at(WND(data)->block, i), 0);
                                 }
                                 gllc_block_update(WND(data)->block);
                         }
@@ -1223,7 +1222,8 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
                                         invert = 1;
                                 }
                                 gllc_block_ent_hover(W->block, NULL, 1);
-                                gllc_block_ent_filter_rect(WND(data)->block, invert, x0, y0, x1, y1, 1, 1);
+                                gllc_block_ent_filter_rect(WND(data)->block, x0, y0, x1, y1,
+                                                           BF_SKIPLOCKED | BF_SKIPHIDDEN | (invert ? BF_CROSS : 0));
                                 int fcnt = gllc_block_ent_get_filter_cnt(W->block);
                                 if (fcnt == 0)
                                 {
@@ -1238,9 +1238,21 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
                                         gllc_block_select(W->block, NULL, 1);
                                         for (int i = 0; i < fcnt; i++)
                                         {
-                                                gllc_block_select(W->block, gllc_block_ent_get_filter_at(W->block, i), 0);
+                                                gllc_block_select(W->block, gllc_block_ent_get_filter_at(W->block, i),
+                                                                  0);
                                         }
                                 }
+                                struct gllc_event evt;
+                                gllc_event_init(&evt);
+                                evt.type = LC_EVENT_SELECT;
+                                evt.block = W->block;
+                                evt.drawing = W->block->_nobj.drawing;
+                                int selcnt = gllc_block_get_select_cnt(W->block);
+                                evt.entity = selcnt > 0 ? gllc_block_get_select_at(W->block, 0) : NULL;
+                                evt._int1 = 1;
+                                evt._int2 = selcnt;
+                                evt._int3 = selcnt;
+                                gllc_event_send(LC_EVENT_SELECT, &evt);
                                 gllc_block_update(W->block);
                         }
                 }
@@ -1364,11 +1376,11 @@ static void load_GL_program(struct gllc_window *W)
 
 static void load_GL_uniform_loc(struct gllc_window *w)
 {
-#define LOADLOC(out, var)                                        \
-        out = glGetUniformLocation(w->program, var);             \
-        if (out == -1)                                           \
-        {                                                        \
-                fprintf(stderr, "Uniform %s not found!\n", var); \
+#define LOADLOC(out, var)                                                                                              \
+        out = glGetUniformLocation(w->program, var);                                                                   \
+        if (out == -1)                                                                                                 \
+        {                                                                                                              \
+                fprintf(stderr, "Uniform %s not found!\n", var);                                                       \
         }
         LOADLOC(w->loc_umvp, "uMVP");
         LOADLOC(w->loc_uscale, "uScale");
@@ -1447,14 +1459,13 @@ void on_ready(struct nw *NW, void *data)
         nw_release_current_context(NW);
 }
 
-static struct nw_callback_vtable nw_callback_vtable = {
-    .ready = on_ready,
-    .paint = on_paint,
-    .size = on_size,
-    .mouse_move = on_mouse_move,
-    .mouse_click = on_mouse_click,
-    .mouse_scroll = on_mouse_scroll,
-    .mouse_leave = on_mouse_leave};
+static struct nw_callback_vtable nw_callback_vtable = {.ready = on_ready,
+                                                       .paint = on_paint,
+                                                       .size = on_size,
+                                                       .mouse_move = on_mouse_move,
+                                                       .mouse_click = on_mouse_click,
+                                                       .mouse_scroll = on_mouse_scroll,
+                                                       .mouse_leave = on_mouse_leave};
 
 static struct gllc_window *Wnew()
 {
@@ -1614,7 +1625,7 @@ int gllc_window_destroy(struct gllc_window *W)
                 ui_cursor_cleanup(&W->cursor);
                 ui_selection_cleanup(&W->sel);
         }
-        if(_last_filter_wnd == W)
+        if (_last_filter_wnd == W)
         {
                 _last_filter_wnd = NULL;
         }
@@ -1708,7 +1719,8 @@ int gllc_window_wait_point(struct gllc_window *W, const char *text, double *x, d
         return 1;
 }
 
-int gllc_window_wait_point_2(struct gllc_window *W, const char *text, double *x, double *y, F_WAITPOINT pFunc, int FuncPrm)
+int gllc_window_wait_point_2(struct gllc_window *W, const char *text, double *x, double *y, F_WAITPOINT pFunc,
+                             int FuncPrm)
 {
         NONULL(W, 0);
         return 1;
@@ -1811,12 +1823,16 @@ int gllc_window_coord_to_wnd(struct gllc_window *W, double wx, double wy, int *x
         return 1;
 }
 
-int gllc_window_get_ents_by_rect(struct gllc_window *W, double x0, double y0, double x1, double y1, int cross, int max_ents)
+int gllc_window_get_ents_by_rect(struct gllc_window *W, double x0, double y0, double x1, double y1, int cross,
+                                 int max_ents)
 {
         NONULL(W, 0);
         NONULL(W->block, 0);
         _last_filter_wnd = W;
-        return gllc_block_ent_filter_rect(W->block, cross == 1 ? 1 : 0, x0, y0, x1, y1, 1, 1);
+        int flags = BF_SKIPLOCKED | BF_SKIPHIDDEN;
+        if (cross == 1)
+                flags |= BF_CROSS;
+        return gllc_block_ent_filter_rect(W->block, x0, y0, x1, y1, flags);
 }
 
 struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *W, int x, int y)

@@ -28,6 +28,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                 if (ent->flags & GLLC_ENT_FILLED)
                 {
                         build_filltess(ent, CIRCLE(ent)->u, pts, SEGCNT + 1);
+                        ent->offset = ds_unit_vcnt(CIRCLE(ent)->u);
                 }
                 build_contur(ent, CIRCLE(ent)->u, pts, SEGCNT + 1);
                 CIRCLE(ent)->u->dirty = 1;
@@ -69,7 +70,8 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
 {
         double bx0, by0, bx1, by1;
         bbox(ent, scale, &bx0, &by0, &bx1, &by1);
-        int inside = (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
+        int inside =
+            (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
         if (mode == 0)
         {
                 return inside;
@@ -80,29 +82,29 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
                 {
                         return 1;
                 }
-#define TEST(_x0, _y0, _x1, _y1)                                                                    \
-        do                                                                                          \
-        {                                                                                           \
-                double T, S;                                                                        \
-                double n0[2], n1[2], len0;                                                          \
-                VEC(n0, (double[]){_x0, _y0}, (double[]){_x1, _y1});                                \
-                len0 = LEN(n0);                                                                     \
-                NORM(n0);                                                                           \
-                PERPTO(n0, n1);                                                                     \
-                NORM(n1);                                                                           \
-                if (RAYINSECT((double[]){_x0, _y0}, n0, CIRCLE(ent)->p, n1, &T, &S))                \
-                {                                                                                   \
-                        if (fabs(S) <= CIRCLE(ent)->radius && T >= 0 && T <= len0)                  \
-                        {                                                                           \
-                                double v0[2], v1[2];                                                \
-                                VEC(v0, (double[]){_x0, _y0}, CIRCLE(ent)->p);                      \
-                                VEC(v1, (double[]){_x1, _y1}, CIRCLE(ent)->p);                      \
-                                if (LEN(v0) > CIRCLE(ent)->radius || LEN(v1) > CIRCLE(ent)->radius) \
-                                {                                                                   \
-                                        return 1;                                                   \
-                                }                                                                   \
-                        }                                                                           \
-                }                                                                                   \
+#define TEST(_x0, _y0, _x1, _y1)                                                                                       \
+        do                                                                                                             \
+        {                                                                                                              \
+                double T, S;                                                                                           \
+                double n0[2], n1[2], len0;                                                                             \
+                VEC(n0, (double[]){_x0, _y0}, (double[]){_x1, _y1});                                                   \
+                len0 = LEN(n0);                                                                                        \
+                NORM(n0);                                                                                              \
+                PERPTO(n0, n1);                                                                                        \
+                NORM(n1);                                                                                              \
+                if (RAYINSECT((double[]){_x0, _y0}, n0, CIRCLE(ent)->p, n1, &T, &S))                                   \
+                {                                                                                                      \
+                        if (fabs(S) <= CIRCLE(ent)->radius && T >= 0 && T <= len0)                                     \
+                        {                                                                                              \
+                                double v0[2], v1[2];                                                                   \
+                                VEC(v0, (double[]){_x0, _y0}, CIRCLE(ent)->p);                                         \
+                                VEC(v1, (double[]){_x1, _y1}, CIRCLE(ent)->p);                                         \
+                                if (LEN(v0) > CIRCLE(ent)->radius || LEN(v1) > CIRCLE(ent)->radius)                    \
+                                {                                                                                      \
+                                        return 1;                                                                      \
+                                }                                                                                      \
+                        }                                                                                              \
+                }                                                                                                      \
         } while (0)
                 TEST(x0, y0, x1, y0);
                 TEST(x1, y0, x1, y1);
@@ -163,23 +165,22 @@ static int len(struct gllc_entity *ent, double *len)
         return CIRCLE(ent)->radius * 2 * M_PI;
 }
 
-static struct gllc_entity_vtable vtable = {
-    .type = GLLC_ENT_POLYLINE,
-    .build = build,
-    .destroy = destroy,
-    .vertices = vertices,
-    .selected = selected,
-    .picked = picked,
-    .bbox = bbox,
-    .len = len,
-    .clone = clone};
+static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_POLYLINE,
+                                           .build = build,
+                                           .destroy = destroy,
+                                           .vertices = vertices,
+                                           .selected = selected,
+                                           .picked = picked,
+                                           .bbox = bbox,
+                                           .len = len,
+                                           .clone = clone};
 
-static struct gllc_prop circle_props[] = {
-    P_END};
+static struct gllc_prop circle_props[] = {P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, circle_props, NULL};
 
-struct gllc_circle *gllc_circle_create(struct gllc_block *block, struct ds_draw *draw, double x, double y, double radius, int filled)
+struct gllc_circle *gllc_circle_create(struct gllc_block *block, struct ds_draw *draw, double x, double y,
+                                       double radius, int filled)
 {
         struct gllc_circle *c = malloc(sizeof(struct gllc_circle));
         if (c)

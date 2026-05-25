@@ -87,19 +87,19 @@ static const char *objstrtype(int type)
         }
 }
 
-#define OBJGUARD(ptr, typ, retval)                                              \
-        do                                                                      \
-        {                                                                       \
-                if (OBJCAST(ptr)->magic != GLLC_OBJMAGIC)                       \
-                {                                                               \
-                        FMTWARN("\"%s\" is not valid GLLC object.", #ptr);         \
-                        return retval;                                          \
-                }                                                               \
-                if ((typ) && OBJCAST(ptr)->vtable->type != typ)                 \
-                {                                                               \
-                        FMTWARN("\"%s\" is not valid %s.", #ptr, objstrtype(typ)); \
-                        return retval;                                          \
-                }                                                               \
+#define OBJGUARD(ptr, typ, retval)                                                                                     \
+        do                                                                                                             \
+        {                                                                                                              \
+                if (OBJCAST(ptr)->magic != GLLC_OBJMAGIC)                                                              \
+                {                                                                                                      \
+                        FMTWARN("\"%s\" is not valid GLLC object.", #ptr);                                             \
+                        return retval;                                                                                 \
+                }                                                                                                      \
+                if ((typ) && OBJCAST(ptr)->vtable->type != typ)                                                        \
+                {                                                                                                      \
+                        FMTWARN("\"%s\" is not valid %s.", #ptr, objstrtype(typ));                                     \
+                        return retval;                                                                                 \
+                }                                                                                                      \
         } while (0)
 
 extern struct g_props_object G_props_object;
@@ -116,12 +116,12 @@ extern struct g_props_object G_props_object;
 #define P_HANDLE_RO(P, G) {(P), T_PROP_HANDLE, (G), 0, 1}
 #define P_END {-1, -1, 0, 0, -1}
 
-#define GLLC_OBJECT_INIT(O, PROPS, VTABLE)                        \
-        do                                                        \
-        {                                                         \
-                OBJCAST(O)->magic = GLLC_OBJMAGIC;                \
-                OBJCAST(O)->props = (struct gllc_prop **)(PROPS); \
-                OBJCAST(O)->vtable = (VTABLE);                    \
+#define GLLC_OBJECT_INIT(O, PROPS, VTABLE)                                                                             \
+        do                                                                                                             \
+        {                                                                                                              \
+                OBJCAST(O)->magic = GLLC_OBJMAGIC;                                                                     \
+                OBJCAST(O)->props = (struct gllc_prop **)(PROPS);                                                      \
+                OBJCAST(O)->vtable = (VTABLE);                                                                         \
         } while (0)
 
 void gllc_object_destroy(struct gllc_object *obj);

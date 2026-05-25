@@ -20,7 +20,8 @@ void BISEC(double n[static 2], const double p0[static 2], const double p1[static
 void ROTTO(const double n[static 2], double angle, double out[static 2]);
 void ROT(double n[static 2], double angle);
 void MULSCAL(double n[static 2], double scal);
-int RAYINSECT(const double p0[static 2], const double n0[static 2], const double p1[static 2], const double n1[static 2], double *pT, double *pS);
+int RAYINSECT(const double p0[static 2], const double n0[static 2], const double p1[static 2],
+              const double n1[static 2], double *pT, double *pS);
 void ADDSCALETO(const double p0[static 2], const double n0[static 2], double l, double p1[static 2]);
 void COPY(double *out, const double *v0);
 

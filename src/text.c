@@ -66,19 +66,17 @@ static int len(struct gllc_entity *ent, double *len)
         return 1;
 }
 
-static struct gllc_entity_vtable vtable = {
-    .type = GLLC_ENT_POLYLINE,
-    .build = build,
-    .destroy = destroy,
-    .vertices = vertices,
-    .selected = selected,
-    .picked = picked,
-    .bbox = bbox,
-    .len = len,
-    .clone = clone};
+static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_POLYLINE,
+                                           .build = build,
+                                           .destroy = destroy,
+                                           .vertices = vertices,
+                                           .selected = selected,
+                                           .picked = picked,
+                                           .bbox = bbox,
+                                           .len = len,
+                                           .clone = clone};
 
-static struct gllc_prop text_props[] = {
-    P_END};
+static struct gllc_prop text_props[] = {P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, text_props, NULL};
 

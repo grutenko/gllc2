@@ -23,7 +23,8 @@ struct gllc_layer
         int entcap;
 };
 
-struct gllc_layer *gllc_layer_create(struct gllc_drawing *drw, const char *name, const char *color, struct gllc_linetype *linetype, int linewidth);
+struct gllc_layer *gllc_layer_create(struct gllc_drawing *drw, const char *name, const char *color,
+                                     struct gllc_linetype *linetype, int linewidth);
 void gllc_layer_set_entity(struct gllc_layer *layer, struct gllc_entity *ent);
 void gllc_layer_unset_entity(struct gllc_layer *layer, struct gllc_entity *ent);
 char *gllc_layer_get_color(struct gllc_layer *layer);
@@ -32,6 +33,5 @@ int gllc_layer_get_colori(struct gllc_layer *layer);
 int gllc_layer_color_is_index(struct gllc_layer *layer);
 int gllc_layer_get_colort(struct gllc_layer *layer);
 int gllc_layer_color_is_true(struct gllc_layer *layer);
-
 
 #endif

@@ -14,6 +14,7 @@ struct gllc_rect
         struct ds_unit *u;
 };
 
-struct gllc_rect *gllc_rect_create(struct gllc_block *block, struct ds_draw *draw, double *p, double w, double h, double angle, int filled);
+struct gllc_rect *gllc_rect_create(struct gllc_block *block, struct ds_draw *draw, double *p, double w, double h,
+                                   double angle, int filled);
 
 #endif

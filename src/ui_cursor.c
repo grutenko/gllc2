@@ -39,20 +39,20 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height)
         unsigned char a = 255 * c->color[3];
         static struct ds_vertex V[CURSOR_VCOUNT];
 
-#define SET_VER(I, X, Y)                    \
-        do                                  \
-        {                                   \
-                V[(I)].p[0] = (GLfloat)(X); \
-                V[(I)].p[1] = (GLfloat)(Y); \
-                V[(I)].n[0] = 1.0f;         \
-                V[(I)].n[1] = 1.0f;         \
-                V[(I)].uv[0] = 0.0f;        \
-                V[(I)].uv[1] = 0.0f;        \
-                V[(I)].c[0] = r;            \
-                V[(I)].c[1] = g;            \
-                V[(I)].c[2] = b;            \
-                V[(I)].c[3] = a;            \
-                V[(I)].th = 0.0f;           \
+#define SET_VER(I, X, Y)                                                                                               \
+        do                                                                                                             \
+        {                                                                                                              \
+                V[(I)].p[0] = (GLfloat)(X);                                                                            \
+                V[(I)].p[1] = (GLfloat)(Y);                                                                            \
+                V[(I)].n[0] = 1.0f;                                                                                    \
+                V[(I)].n[1] = 1.0f;                                                                                    \
+                V[(I)].uv[0] = 0.0f;                                                                                   \
+                V[(I)].uv[1] = 0.0f;                                                                                   \
+                V[(I)].c[0] = r;                                                                                       \
+                V[(I)].c[1] = g;                                                                                       \
+                V[(I)].c[2] = b;                                                                                       \
+                V[(I)].c[3] = a;                                                                                       \
+                V[(I)].th = 0.0f;                                                                                      \
         } while (0)
 
         SET_VER(0, mx, (double)my - 99.5f);
@@ -68,12 +68,8 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height)
         SET_VER(10, (double)mx - 4.5f, (double)my + 4.5f);
         SET_VER(11, (double)mx - 4.0f, (double)my - 4.0f);
 
-        void *ptr = glMapBufferRange(
-            GL_ARRAY_BUFFER,
-            0,
-            CURSOR_VBO_SIZE,
-            GL_MAP_WRITE_BIT |
-                GL_MAP_INVALIDATE_BUFFER_BIT);
+        void *ptr =
+            glMapBufferRange(GL_ARRAY_BUFFER, 0, CURSOR_VBO_SIZE, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
         memcpy(ptr, V, CURSOR_VBO_SIZE);
         glUnmapBuffer(GL_ARRAY_BUFFER);
         glDrawArrays(GL_LINES, 0, CURSOR_VCOUNT);

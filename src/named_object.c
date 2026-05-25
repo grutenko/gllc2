@@ -244,29 +244,28 @@ static int _table_float4_SET(struct gllc_object *obj, int prop, int type, union 
         return 1;
 }
 
-struct gllc_prop G_nobject_props[] = {
-    P_STRING_RO(LC_PROP_TABLE_ID, _table_id_GET),
-    P_STRING(LC_PROP_TABLE_NAME, _table_name_GET, _table_name_SET),
-    P_STRING(LC_PROP_TABLE_DESCR, _table_descr_GET, _table_descr_SET),
-    P_INT_RO(LC_PROP_TABLE_TYPE, _table_type_GET),
-    P_BOOL_RO(LC_PROP_TABLE_DELETED, _table_deleted_GET),
-    P_HANDLE_RO(LC_PROP_TABLE_DRW, _table_drw_GET),
-    P_INT(LC_PROP_TABLE_PRIORITY, _table_priority_GET, _table_priority_SET),
-    P_INT_RO(LC_PROP_TABLE_NREFS, _table_nrefs_GET),
-    P_INT(LC_PROP_TABLE_XDATASIZE, _table_xdatasize_GET, _table_xdatasize_SET),
-    P_HANDLE(LC_PROP_TABLE_XDATA, _table_xdata_GET, _table_xdata_SET),
-    P_STRING(LC_PROP_TABLE_XSTR, _table_xstr_GET, _table_xstr_SET),
-    P_INT(LC_PROP_TABLE_INT0, _table_int0_GET, _table_int0_SET),
-    P_INT(LC_PROP_TABLE_INT1, _table_int1_GET, _table_int1_SET),
-    P_INT(LC_PROP_TABLE_INT2, _table_int2_GET, _table_int2_SET),
-    P_INT(LC_PROP_TABLE_INT3, _table_int3_GET, _table_int3_SET),
-    P_INT(LC_PROP_TABLE_INT4, _table_int4_GET, _table_int4_SET),
-    P_FLOAT(LC_PROP_TABLE_FLOAT0, _table_float0_GET, _table_float0_SET),
-    P_FLOAT(LC_PROP_TABLE_FLOAT1, _table_float1_GET, _table_float1_SET),
-    P_FLOAT(LC_PROP_TABLE_FLOAT2, _table_float2_GET, _table_float2_SET),
-    P_FLOAT(LC_PROP_TABLE_FLOAT3, _table_float3_GET, _table_float3_SET),
-    P_FLOAT(LC_PROP_TABLE_FLOAT4, _table_float4_GET, _table_float4_SET),
-    P_END};
+struct gllc_prop G_nobject_props[] = {P_STRING_RO(LC_PROP_TABLE_ID, _table_id_GET),
+                                      P_STRING(LC_PROP_TABLE_NAME, _table_name_GET, _table_name_SET),
+                                      P_STRING(LC_PROP_TABLE_DESCR, _table_descr_GET, _table_descr_SET),
+                                      P_INT_RO(LC_PROP_TABLE_TYPE, _table_type_GET),
+                                      P_BOOL_RO(LC_PROP_TABLE_DELETED, _table_deleted_GET),
+                                      P_HANDLE_RO(LC_PROP_TABLE_DRW, _table_drw_GET),
+                                      P_INT(LC_PROP_TABLE_PRIORITY, _table_priority_GET, _table_priority_SET),
+                                      P_INT_RO(LC_PROP_TABLE_NREFS, _table_nrefs_GET),
+                                      P_INT(LC_PROP_TABLE_XDATASIZE, _table_xdatasize_GET, _table_xdatasize_SET),
+                                      P_HANDLE(LC_PROP_TABLE_XDATA, _table_xdata_GET, _table_xdata_SET),
+                                      P_STRING(LC_PROP_TABLE_XSTR, _table_xstr_GET, _table_xstr_SET),
+                                      P_INT(LC_PROP_TABLE_INT0, _table_int0_GET, _table_int0_SET),
+                                      P_INT(LC_PROP_TABLE_INT1, _table_int1_GET, _table_int1_SET),
+                                      P_INT(LC_PROP_TABLE_INT2, _table_int2_GET, _table_int2_SET),
+                                      P_INT(LC_PROP_TABLE_INT3, _table_int3_GET, _table_int3_SET),
+                                      P_INT(LC_PROP_TABLE_INT4, _table_int4_GET, _table_int4_SET),
+                                      P_FLOAT(LC_PROP_TABLE_FLOAT0, _table_float0_GET, _table_float0_SET),
+                                      P_FLOAT(LC_PROP_TABLE_FLOAT1, _table_float1_GET, _table_float1_SET),
+                                      P_FLOAT(LC_PROP_TABLE_FLOAT2, _table_float2_GET, _table_float2_SET),
+                                      P_FLOAT(LC_PROP_TABLE_FLOAT3, _table_float3_GET, _table_float3_SET),
+                                      P_FLOAT(LC_PROP_TABLE_FLOAT4, _table_float4_GET, _table_float4_SET),
+                                      P_END};
 
 static char ID_hex_tab[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
@@ -291,7 +290,8 @@ static inline void ID_hexify(uint64_t ID, char *ID_hex)
         ID_hex[16] = '\0';
 }
 
-void gllc_nobject_init(struct gllc_nobject *nobj, struct gllc_drawing *drawing, struct gllc_prop **props, struct gllc_object_vtable *vtable, int type, const char *name)
+void gllc_nobject_init(struct gllc_nobject *nobj, struct gllc_drawing *drawing, struct gllc_prop **props,
+                       struct gllc_object_vtable *vtable, int type, const char *name)
 {
         memset(nobj, 0, sizeof(struct gllc_nobject));
         GLLC_OBJECT_INIT(nobj, props, vtable);

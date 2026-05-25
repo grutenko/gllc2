@@ -95,11 +95,8 @@ static gboolean on_ready(GtkGLArea *area, gpointer data)
         GdkWindow *win = gtk_widget_get_window(gl);
         if (win)
         {
-                gdk_window_set_events(win, gdk_window_get_events(win) |
-                                               GDK_POINTER_MOTION_MASK |
-                                               GDK_BUTTON_PRESS_MASK |
-                                               GDK_BUTTON_RELEASE_MASK |
-                                               GDK_SCROLL_MASK |
+                gdk_window_set_events(win, gdk_window_get_events(win) | GDK_POINTER_MOTION_MASK |
+                                               GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_SCROLL_MASK |
                                                GDK_LEAVE_NOTIFY_MASK);
 
                 gdk_window_set_event_compression(win, FALSE);
@@ -140,12 +137,7 @@ static int get_cursor_pos(struct nw *nw, int *x, int *y)
         GdkSeat *seat = gdk_display_get_default_seat(display);
         GdkDevice *pointer = gdk_seat_get_pointer(seat);
         double px, py;
-        gdk_window_get_device_position_double(
-            gtk_widget_get_window(GTK_WIDGET(nw->area)),
-            pointer,
-            &px,
-            &py,
-            NULL);
+        gdk_window_get_device_position_double(gtk_widget_get_window(GTK_WIDGET(nw->area)), pointer, &px, &py, NULL);
         if (x)
                 *x = (int)px;
         if (y)
@@ -245,7 +237,8 @@ int nw_create_gtk(struct nw *nw, struct nw_callback_vtable *vtable, GtkWindow *p
         gtk_gl_area_set_required_version(nw->area, 3, 3);
         gtk_gl_area_set_has_depth_buffer(nw->area, FALSE);
         GtkWidget *gl = GTK_WIDGET(nw->area);
-        gtk_widget_add_events(gl, GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_SCROLL_MASK);
+        gtk_widget_add_events(gl, GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
+                                      GDK_LEAVE_NOTIFY_MASK | GDK_SCROLL_MASK);
         g_signal_connect(gl, "realize", G_CALLBACK(on_ready), nw);
         g_signal_connect(gl, "render", G_CALLBACK(on_render), nw);
         g_signal_connect(gl, "size-allocate", G_CALLBACK(on_configure), nw);

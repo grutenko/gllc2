@@ -85,23 +85,22 @@ static int len(struct gllc_entity *ent, double *len)
         return 1;
 }
 
-static struct gllc_entity_vtable vtable = {
-    .type = GLLC_ENT_RECT,
-    .build = build,
-    .destroy = destroy,
-    .vertices = vertices,
-    .selected = selected,
-    .picked = picked,
-    .bbox = bbox,
-    .len = len,
-    .clone = clone};
+static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_RECT,
+                                           .build = build,
+                                           .destroy = destroy,
+                                           .vertices = vertices,
+                                           .selected = selected,
+                                           .picked = picked,
+                                           .bbox = bbox,
+                                           .len = len,
+                                           .clone = clone};
 
-static struct gllc_prop rect_props[] = {
-    P_END};
+static struct gllc_prop rect_props[] = {P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, rect_props, NULL};
 
-struct gllc_rect *gllc_rect_create(struct gllc_block *block, struct ds_draw *draw, double *p, double w, double h, double angle, int filled)
+struct gllc_rect *gllc_rect_create(struct gllc_block *block, struct ds_draw *draw, double *p, double w, double h,
+                                   double angle, int filled)
 {
         struct gllc_rect *rect = malloc(sizeof(struct gllc_rect));
         if (rect)

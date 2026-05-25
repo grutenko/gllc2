@@ -159,23 +159,22 @@ static int len(struct gllc_entity *ent, double *len)
         return 0;
 }
 
-static struct gllc_entity_vtable vtable = {
-    .type = GLLC_ENT_ARC,
-    .build = build,
-    .destroy = destroy,
-    .vertices = vertices,
-    .selected = selected,
-    .picked = picked,
-    .bbox = bbox,
-    .len = len,
-    .clone = clone};
+static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_ARC,
+                                           .build = build,
+                                           .destroy = destroy,
+                                           .vertices = vertices,
+                                           .selected = selected,
+                                           .picked = picked,
+                                           .bbox = bbox,
+                                           .len = len,
+                                           .clone = clone};
 
-static struct gllc_prop pline_props[] = {
-    P_END};
+static struct gllc_prop pline_props[] = {P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 
-struct gllc_arc *gllc_arc_create(struct gllc_block *block, struct ds_draw *draw, double x, double y, double radius, double start_angle, double arc_angle)
+struct gllc_arc *gllc_arc_create(struct gllc_block *block, struct ds_draw *draw, double x, double y, double radius,
+                                 double start_angle, double arc_angle)
 {
         struct gllc_arc *pl = malloc(sizeof(struct gllc_arc));
         if (pl)

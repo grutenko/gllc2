@@ -289,7 +289,8 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                 GLuint i_offset = 0;
                 if (gpu->batch_cap < draw->unit_cnt)
                 {
-                        struct ds_gpu_batch *new_batches = realloc(gpu->batches, draw->unit_cnt * sizeof(struct ds_gpu_batch));
+                        struct ds_gpu_batch *new_batches =
+                            realloc(gpu->batches, draw->unit_cnt * sizeof(struct ds_gpu_batch));
                         if (!new_batches)
                         {
                                 // Handle allocation failure
@@ -356,14 +357,12 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                 }
                 if (gpu->VBO_capacity < gpu->V_data_size)
                 {
-                        glBufferData(GL_ARRAY_BUFFER, gpu->V_data_size * sizeof(struct ds_vertex), NULL, GL_STATIC_DRAW);
+                        glBufferData(GL_ARRAY_BUFFER, gpu->V_data_size * sizeof(struct ds_vertex), NULL,
+                                     GL_STATIC_DRAW);
                         gpu->VBO_capacity = gpu->V_data_size;
                 }
-                void *ptr = glMapBufferRange(
-                    GL_ARRAY_BUFFER,
-                    0,
-                    gpu->V_data_size * sizeof(struct ds_vertex),
-                    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+                void *ptr = glMapBufferRange(GL_ARRAY_BUFFER, 0, gpu->V_data_size * sizeof(struct ds_vertex),
+                                             GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
                 memcpy(ptr, gpu->V_data, gpu->V_data_size * sizeof(struct ds_vertex));
                 glUnmapBuffer(GL_ARRAY_BUFFER);
                 if (gpu->I_data_size > gpu->EBO_capacity)
@@ -371,11 +370,8 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                         glBufferData(GL_ELEMENT_ARRAY_BUFFER, gpu->I_data_size * sizeof(GLuint), NULL, GL_STATIC_DRAW);
                         gpu->EBO_capacity = gpu->I_data_size;
                 }
-                ptr = glMapBufferRange(
-                    GL_ELEMENT_ARRAY_BUFFER,
-                    0,
-                    gpu->I_data_size * sizeof(GLuint),
-                    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+                ptr = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, gpu->I_data_size * sizeof(GLuint),
+                                       GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
                 memcpy(ptr, gpu->I_data, gpu->I_data_size * sizeof(GLuint));
                 glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
                 gpu->batch_cnt = bi;
@@ -393,8 +389,11 @@ void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags)
                 for (i = 0; i < gpu->batch_cnt; i++)
                 {
                         struct ds_gpu_batch *batch = &gpu->batches[i];
+                        if (batch->count == 0)
+                                continue;
                         glUniform1i(loc_uFlags, batch->flags);
-                        glDrawElements(GL_TRIANGLES, batch->count, GL_UNSIGNED_INT, (void *)(batch->offset * sizeof(GLuint)));
+                        glDrawElements(GL_TRIANGLES, batch->count, GL_UNSIGNED_INT,
+                                       (void *)(batch->offset * sizeof(GLuint)));
                         GL_CHECK();
                 }
                 glUniform1i(loc_uFlags, 0);

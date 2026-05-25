@@ -21,16 +21,19 @@ static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char 
         v->l = (GLfloat)l;
 }
 
-static inline void ver_extr(struct ds_vertex *v, double *p0, double *n0, double w, unsigned char *c, double th, double thmul, double l)
+static inline void ver_extr(struct ds_vertex *v, double *p0, double *n0, double w, unsigned char *c, double th,
+                            double thmul, double l)
 {
         double pt[2];
         ADDSCALETO(p0, n0, w, pt);
         ver(v, pt, n0, c, th, thmul, l);
 }
 
-// строит сегмент круга с центром в p0, радиусом R, центральным вектором n, углом A, и добавляет вершины в массив V и индексы в массив I, начиная с vi и ii соответственно
-// увеличивает vi и ii на количество добавленных вершин и индексов соответственно
-static inline void arc(int cnt, double *p0, double *n, double R, double A, unsigned char *c, double th, struct ds_vertex *V, GLuint *I, int *vi, int *ii)
+// строит сегмент круга с центром в p0, радиусом R, центральным вектором n, углом A, и добавляет вершины в массив V и
+// индексы в массив I, начиная с vi и ii соответственно увеличивает vi и ii на количество добавленных вершин и индексов
+// соответственно
+static inline void arc(int cnt, double *p0, double *n, double R, double A, unsigned char *c, double th,
+                       struct ds_vertex *V, GLuint *I, int *vi, int *ii)
 {
         double angle_step = A / (double)cnt;
         double angle = -A / 2.0f;

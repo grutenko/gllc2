@@ -88,9 +88,11 @@ struct gllc_entity
 extern struct gllc_prop G_entity_props[];
 extern struct gllc_object_vtable G_entity_obj_vtable;
 
-void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props, struct gllc_entity_vtable *vtable);
+void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props,
+                       struct gllc_entity_vtable *vtable);
 
-#define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE) _gllc_entity_init((struct gllc_entity *)(E), (BLOCK), (PROPS), (VTABLE))
+#define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE)                                                                      \
+        _gllc_entity_init((struct gllc_entity *)(E), (BLOCK), (PROPS), (VTABLE))
 
 #define RED(C) (((C) >> 16) & 0xFF)
 #define GREEN(C) (((C) >> 8) & 0xFF)

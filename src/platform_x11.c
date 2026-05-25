@@ -67,11 +67,7 @@ static int swap_buffers(struct nw *nw)
 static int dirty(struct nw *nw)
 {
         Display *dpy = (Display *)nw->egl_display;
-        XExposeEvent ev = {
-            .type = Expose,
-            .display = (Display *)nw->egl_display,
-            .window = nw->xwindow,
-            .count = 0};
+        XExposeEvent ev = {.type = Expose, .display = (Display *)nw->egl_display, .window = nw->xwindow, .count = 0};
         XLockDisplay(dpy);
         XSendEvent((Display *)nw->egl_display, nw->xwindow, False, ExposureMask, (XEvent *)&ev);
         XFlush(dpy);
@@ -157,7 +153,8 @@ static int poll_events(struct nw *nw)
                                 {
                                         int mode = ev.xbutton.button; // 1-ЛКМ, 2-СКМ, 3-ПКМ
                                         int action = (ev.type == ButtonPress) ? 1 : 0;
-                                        nw->cb_vtable_p->mouse_click(nw, ev.xbutton.x, ev.xbutton.y, mode, action, nw->data);
+                                        nw->cb_vtable_p->mouse_click(nw, ev.xbutton.x, ev.xbutton.y, mode, action,
+                                                                     nw->data);
                                 }
                         }
                         break;
@@ -188,19 +185,22 @@ int nw_create_x11(struct nw *nw, struct nw_callback_vtable *vtable, Display *dis
         nw->vtable.poll_events = poll_events;
         nw->egl_display = eglGetDisplay((EGLNativeDisplayType)display);
         eglInitialize(nw->egl_display, NULL, NULL);
-        EGLint attribs[] = {
-            EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
-            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-            EGL_RED_SIZE, 8,
-            EGL_GREEN_SIZE, 8,
-            EGL_BLUE_SIZE, 8,
-            EGL_DEPTH_SIZE, 24,
-            EGL_NONE};
+        EGLint attribs[] = {EGL_RENDERABLE_TYPE,
+                            EGL_OPENGL_BIT,
+                            EGL_SURFACE_TYPE,
+                            EGL_WINDOW_BIT,
+                            EGL_RED_SIZE,
+                            8,
+                            EGL_GREEN_SIZE,
+                            8,
+                            EGL_BLUE_SIZE,
+                            8,
+                            EGL_DEPTH_SIZE,
+                            24,
+                            EGL_NONE};
         EGLint num_configs;
         eglChooseConfig(nw->egl_display, attribs, &nw->egl_config, 1, &num_configs);
-        EGLint context_attribs[] = {
-            EGL_CONTEXT_CLIENT_VERSION, 3,
-            EGL_NONE};
+        EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
         eglBindAPI(EGL_OPENGL_API);
         nw->egl_context = eglCreateContext(nw->egl_display, nw->egl_config, EGL_NO_CONTEXT, context_attribs);
         EGLint vid;
@@ -212,12 +212,12 @@ int nw_create_x11(struct nw *nw, struct nw_callback_vtable *vtable, Display *dis
             .colormap = XCreateColormap(display, RootWindow(display, vinfo->screen), vinfo->visual, AllocNone),
             .event_mask = StructureNotifyMask | ExposureMask | KeyPressMask | PointerMotionMask};
 
-        nw->xwindow = XCreateWindow(display, parent,
-                                    0, 0, 800, 600, 0, vinfo->depth, InputOutput,
-                                    vinfo->visual, CWColormap | CWEventMask, &swa);
+        nw->xwindow = XCreateWindow(display, parent, 0, 0, 800, 600, 0, vinfo->depth, InputOutput, vinfo->visual,
+                                    CWColormap | CWEventMask, &swa);
         XMapWindow(display, nw->xwindow);
         XFree(vinfo);
-        nw->egl_surface = eglCreateWindowSurface(nw->egl_display, nw->egl_config, (EGLNativeWindowType)nw->xwindow, NULL);
+        nw->egl_surface =
+            eglCreateWindowSurface(nw->egl_display, nw->egl_config, (EGLNativeWindowType)nw->xwindow, NULL);
         long mask = ExposureMask          // для paint
                     | StructureNotifyMask // для size
                     | PointerMotionMask   // для mouse_move

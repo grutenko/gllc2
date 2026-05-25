@@ -47,20 +47,20 @@ void ui_selection_draw(struct ui_selection *sel, double x0, double y0, double x1
                 b = 255 - b;
         }
 
-#define SET_VER(I, X, Y, _r, _g, _b, _a)    \
-        do                                  \
-        {                                   \
-                v[(I)].p[0] = (GLfloat)(X); \
-                v[(I)].p[1] = (GLfloat)(Y); \
-                v[(I)].c[0] = _r;           \
-                v[(I)].c[1] = _g;           \
-                v[(I)].c[2] = _b;           \
-                v[(I)].c[3] = _a;           \
-                v[(I)].n[0] = 127;          \
-                v[(I)].n[1] = 127;          \
-                v[(I)].uv[0] = 0;           \
-                v[(I)].uv[1] = 0;           \
-                v[(I)].th = 0;              \
+#define SET_VER(I, X, Y, _r, _g, _b, _a)                                                                               \
+        do                                                                                                             \
+        {                                                                                                              \
+                v[(I)].p[0] = (GLfloat)(X);                                                                            \
+                v[(I)].p[1] = (GLfloat)(Y);                                                                            \
+                v[(I)].c[0] = _r;                                                                                      \
+                v[(I)].c[1] = _g;                                                                                      \
+                v[(I)].c[2] = _b;                                                                                      \
+                v[(I)].c[3] = _a;                                                                                      \
+                v[(I)].n[0] = 127;                                                                                     \
+                v[(I)].n[1] = 127;                                                                                     \
+                v[(I)].uv[0] = 0;                                                                                      \
+                v[(I)].uv[1] = 0;                                                                                      \
+                v[(I)].th = 0;                                                                                         \
         } while (0)
 
         SET_VER(0, x0, y0, r, g, b, a);
@@ -85,11 +85,13 @@ void ui_selection_draw(struct ui_selection *sel, double x0, double y0, double x1
 
                 ds_attrib_ptr();
 
-    glBufferData(GL_ARRAY_BUFFER, VBO_SIZE, NULL, GL_DYNAMIC_DRAW);
-  } else {
-    glBindVertexArray(sel->VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, sel->VBO);
-  }
+                glBufferData(GL_ARRAY_BUFFER, VBO_SIZE, NULL, GL_DYNAMIC_DRAW);
+        }
+        else
+        {
+                glBindVertexArray(sel->VAO);
+                glBindBuffer(GL_ARRAY_BUFFER, sel->VBO);
+        }
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, VBO_SIZE, v);
         glDrawArrays(GL_LINE_LOOP, 0, 4);

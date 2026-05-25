@@ -43,6 +43,7 @@ LCAPI int lcInitialize()
 LCAPI int lcUninitialize(int bSaveConfig)
 {
         gllc_fonts_clear();
+        gllc_events_cleanup();
         return 1;
 }
 

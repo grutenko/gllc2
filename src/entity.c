@@ -12,117 +12,118 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ENT(obj) ((struct gllc_entity *)(obj))
+
 static struct coloritab
 {
         int index;
         const char *name;
         int color;
-} _coloritab[] = {
-    {0, "Black", 0x000000},
-    {1, "90% Black", 0x191919},
-    {2, "80% Black", 0x333333},
-    {3, "70% Black", 0x4D4D4D},
-    {4, "60% Black", 0x666666},
-    {5, "50% Black", 0x808080},
-    {6, "40% Black", 0x999999},
-    {7, "30% Black", 0xB3B3B3},
-    {8, "20% Black", 0xCCCCCC},
-    {9, "10% Black", 0xE6E6E6},
-    {10, "White", 0xFFFFFF},
-    {11, "Blue", 0x0000FF},
-    {12, "Cyan", 0x00FFFF},
-    {13, "Green", 0x00FF00},
-    {14, "Yellow", 0xFFFF00},
-    {15, "Red", 0xFF0000},
-    {16, "Magenta", 0xFF00FF},
-    {17, "Purple", 0x9900CC},
-    {18, "Orange", 0xFF6600},
-    {19, "Pink", 0xFF99CC},
-    {20, "Dark Brown", 0x663333},
-    {21, "Powder Blue", 0xCCCCFF},
-    {22, "Pastel Blue", 0x9999FF},
-    {23, "Baby Blue", 0x6699FF},
-    {24, "Electric Blue", 0x6666FF},
-    {25, "Twilight Blue", 0x6666CC},
-    {26, "Navy Blue", 0x003399},
-    {27, "Deep Navy Blue", 0x000066},
-    {28, "Desert Blue", 0x336699},
-    {29, "Dodger Blue", 0x1389FF},
-    {30, "Sky Blue", 0x00CCFF},
-    {31, "Ice Blue", 0x99FFFF},
-    {32, "Smalt Blue", 0x0068D0},
-    {33, "Light BlueGreen", 0x99CCCC},
-    {34, "Ocean Green", 0x669999},
-    {35, "Moss Green", 0x336666},
-    {36, "Dark Green", 0x003333},
-    {37, "Forest Green", 0x006633},
-    {38, "Grass Green", 0x009933},
-    {39, "Wild Willow", 0xB5CC61},
-    {40, "Kentucky Green", 0x339966},
-    {41, "Light Green", 0x33CC66},
-    {42, "Spring Green", 0x33CC33},
-    {43, "Turquoise", 0x66FFCC},
-    {44, "Sea Green", 0x33CC99},
-    {45, "Faded Green", 0x99CC99},
-    {46, "Ghost Green", 0xCCFFCC},
-    {47, "Mint Green", 0x99FF99},
-    {48, "Army Green", 0x669966},
-    {49, "Avocado Green", 0x669933},
-    {50, "Martian Green", 0x99CC33},
-    {51, "Dull Green", 0x99CC66},
-    {52, "Chartreuse", 0x99FF00},
-    {53, "Moon Green", 0xCCFF66},
-    {54, "Murky Green", 0x333300},
-    {55, "Olive Drab", 0x666633},
-    {56, "Khaki", 0x999966},
-    {57, "Olive", 0x999933},
-    {58, "Banana Yellow", 0xCCCC33},
-    {59, "Light Yellow", 0xFFFF66},
-    {60, "Chalk", 0xFFFF99},
-    {61, "Pale Yellow", 0xFFFFCC},
-    {62, "Brown", 0x996633},
-    {63, "Red Brown", 0xCC6633},
-    {64, "Gold", 0xCC9933},
-    {65, "Autumn Orange", 0xFF6633},
-    {66, "Light Orange", 0xFF9933},
-    {67, "Peach", 0xFF9966},
-    {68, "Deep Yellow", 0xFFCC00},
-    {69, "Sand", 0xFFCC99},
-    {70, "Walnut", 0x663300},
-    {71, "Ruby Red", 0x990000},
-    {72, "Brick Red", 0xCC3300},
-    {73, "Tropical Pink", 0xFF6666},
-    {74, "Soft Pink", 0xFF9999},
-    {75, "Faded Pink", 0xFFCCCC},
-    {76, "Dark Red", 0x800000},
-    {77, "Crimson", 0x993366},
-    {78, "Regal Red", 0xCC3366},
-    {79, "Deep Rose", 0xCC3399},
-    {80, "Neon Red", 0xFF0066},
-    {81, "Deep Pink", 0xFF6699},
-    {82, "Hot Pink", 0xFF3399},
-    {83, "Dusty Rose", 0xCC6699},
-    {84, "Plum", 0x660066},
-    {85, "Deep Violet", 0x990099},
-    {86, "Light Violet", 0xFF99FF},
-    {87, "Violet", 0xCC66CC},
-    {88, "Dusty Plum", 0x996699},
-    {89, "Pale Purple", 0xCC99CC},
-    {90, "Majestic Purple", 0x9933CC},
-    {91, "Neon Purple", 0xCC33FF},
-    {92, "Light Purple", 0xCC66FF},
-    {93, "Twilight Violet", 0x9966CC},
-    {94, "Easter Purple", 0xCC99FF},
-    {95, "Deep Purple", 0x330066},
-    {96, "Grape", 0x663399},
-    {97, "Blue Violet", 0x9966FF},
-    {98, "Blue Purple", 0x9900FF},
-    {99, "Deep River", 0x6600CC},
-    {100, "Deep Azure", 0x6633FF},
-    {101, "Storm Blue", 0x330099},
-    {102, "Deep Blue", 0x3300CC},
-    {103, "Dark Blue", 0x000080},
-    {-1, NULL, 0}};
+} _coloritab[] = {{0, "Black", 0x000000},
+                  {1, "90% Black", 0x191919},
+                  {2, "80% Black", 0x333333},
+                  {3, "70% Black", 0x4D4D4D},
+                  {4, "60% Black", 0x666666},
+                  {5, "50% Black", 0x808080},
+                  {6, "40% Black", 0x999999},
+                  {7, "30% Black", 0xB3B3B3},
+                  {8, "20% Black", 0xCCCCCC},
+                  {9, "10% Black", 0xE6E6E6},
+                  {10, "White", 0xFFFFFF},
+                  {11, "Blue", 0x0000FF},
+                  {12, "Cyan", 0x00FFFF},
+                  {13, "Green", 0x00FF00},
+                  {14, "Yellow", 0xFFFF00},
+                  {15, "Red", 0xFF0000},
+                  {16, "Magenta", 0xFF00FF},
+                  {17, "Purple", 0x9900CC},
+                  {18, "Orange", 0xFF6600},
+                  {19, "Pink", 0xFF99CC},
+                  {20, "Dark Brown", 0x663333},
+                  {21, "Powder Blue", 0xCCCCFF},
+                  {22, "Pastel Blue", 0x9999FF},
+                  {23, "Baby Blue", 0x6699FF},
+                  {24, "Electric Blue", 0x6666FF},
+                  {25, "Twilight Blue", 0x6666CC},
+                  {26, "Navy Blue", 0x003399},
+                  {27, "Deep Navy Blue", 0x000066},
+                  {28, "Desert Blue", 0x336699},
+                  {29, "Dodger Blue", 0x1389FF},
+                  {30, "Sky Blue", 0x00CCFF},
+                  {31, "Ice Blue", 0x99FFFF},
+                  {32, "Smalt Blue", 0x0068D0},
+                  {33, "Light BlueGreen", 0x99CCCC},
+                  {34, "Ocean Green", 0x669999},
+                  {35, "Moss Green", 0x336666},
+                  {36, "Dark Green", 0x003333},
+                  {37, "Forest Green", 0x006633},
+                  {38, "Grass Green", 0x009933},
+                  {39, "Wild Willow", 0xB5CC61},
+                  {40, "Kentucky Green", 0x339966},
+                  {41, "Light Green", 0x33CC66},
+                  {42, "Spring Green", 0x33CC33},
+                  {43, "Turquoise", 0x66FFCC},
+                  {44, "Sea Green", 0x33CC99},
+                  {45, "Faded Green", 0x99CC99},
+                  {46, "Ghost Green", 0xCCFFCC},
+                  {47, "Mint Green", 0x99FF99},
+                  {48, "Army Green", 0x669966},
+                  {49, "Avocado Green", 0x669933},
+                  {50, "Martian Green", 0x99CC33},
+                  {51, "Dull Green", 0x99CC66},
+                  {52, "Chartreuse", 0x99FF00},
+                  {53, "Moon Green", 0xCCFF66},
+                  {54, "Murky Green", 0x333300},
+                  {55, "Olive Drab", 0x666633},
+                  {56, "Khaki", 0x999966},
+                  {57, "Olive", 0x999933},
+                  {58, "Banana Yellow", 0xCCCC33},
+                  {59, "Light Yellow", 0xFFFF66},
+                  {60, "Chalk", 0xFFFF99},
+                  {61, "Pale Yellow", 0xFFFFCC},
+                  {62, "Brown", 0x996633},
+                  {63, "Red Brown", 0xCC6633},
+                  {64, "Gold", 0xCC9933},
+                  {65, "Autumn Orange", 0xFF6633},
+                  {66, "Light Orange", 0xFF9933},
+                  {67, "Peach", 0xFF9966},
+                  {68, "Deep Yellow", 0xFFCC00},
+                  {69, "Sand", 0xFFCC99},
+                  {70, "Walnut", 0x663300},
+                  {71, "Ruby Red", 0x990000},
+                  {72, "Brick Red", 0xCC3300},
+                  {73, "Tropical Pink", 0xFF6666},
+                  {74, "Soft Pink", 0xFF9999},
+                  {75, "Faded Pink", 0xFFCCCC},
+                  {76, "Dark Red", 0x800000},
+                  {77, "Crimson", 0x993366},
+                  {78, "Regal Red", 0xCC3366},
+                  {79, "Deep Rose", 0xCC3399},
+                  {80, "Neon Red", 0xFF0066},
+                  {81, "Deep Pink", 0xFF6699},
+                  {82, "Hot Pink", 0xFF3399},
+                  {83, "Dusty Rose", 0xCC6699},
+                  {84, "Plum", 0x660066},
+                  {85, "Deep Violet", 0x990099},
+                  {86, "Light Violet", 0xFF99FF},
+                  {87, "Violet", 0xCC66CC},
+                  {88, "Dusty Plum", 0x996699},
+                  {89, "Pale Purple", 0xCC99CC},
+                  {90, "Majestic Purple", 0x9933CC},
+                  {91, "Neon Purple", 0xCC33FF},
+                  {92, "Light Purple", 0xCC66FF},
+                  {93, "Twilight Violet", 0x9966CC},
+                  {94, "Easter Purple", 0xCC99FF},
+                  {95, "Deep Purple", 0x330066},
+                  {96, "Grape", 0x663399},
+                  {97, "Blue Violet", 0x9966FF},
+                  {98, "Blue Purple", 0x9900FF},
+                  {99, "Deep River", 0x6600CC},
+                  {100, "Deep Azure", 0x6633FF},
+                  {101, "Storm Blue", 0x330099},
+                  {102, "Deep Blue", 0x3300CC},
+                  {103, "Dark Blue", 0x000080},
+                  {-1, NULL, 0}};
 
 static struct coloritab *find_color_by_name(const char *name)
 {
@@ -163,7 +164,7 @@ static struct coloritab *find_color_by_index(int index)
 static union gllc_variant _ent_type_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = ((struct gllc_entity *)obj)->vtable->type;
+        v.int_ = ENT(obj)->vtable->type;
         return v;
 }
 
@@ -172,11 +173,11 @@ static union gllc_variant _ent_id_GET(struct gllc_object *obj, int prop, int typ
         union gllc_variant v;
         if (type == T_PROP_INT)
         {
-                v.int_ = gllc_entity_get_id((struct gllc_entity *)obj);
+                v.int_ = gllc_entity_get_id(ENT(obj));
         }
         else if (type == T_PROP_STRING)
         {
-                v.string_ = gllc_entity_get_id_string((struct gllc_entity *)obj);
+                v.string_ = gllc_entity_get_id_string(ENT(obj));
         }
         return v;
 }
@@ -184,25 +185,25 @@ static union gllc_variant _ent_id_GET(struct gllc_object *obj, int prop, int typ
 static union gllc_variant _ent_key_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = gllc_entity_get_id((struct gllc_entity *)obj);
+        v.int_ = gllc_entity_get_id(ENT(obj));
         return v;
 }
 
 static int _ent_key_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_key((struct gllc_entity *)obj, value.int_);
+        return gllc_entity_set_key(ENT(obj), value.int_);
 }
 
 static union gllc_variant _ent_block_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.handle_ = ((struct gllc_entity *)obj)->block;
+        v.handle_ = (ENT(obj))->block;
         return v;
 }
 
 static int _ent_block_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        ((struct gllc_entity *)obj)->block = value.handle_;
+        ENT(obj)->block = value.handle_;
         return 1;
 }
 
@@ -214,37 +215,37 @@ static union gllc_variant _ent_drw_GET(struct gllc_object *obj, int prop, int ty
 static union gllc_variant _ent_layer_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.handle_ = gllc_entity_get_layer((struct gllc_entity *)obj);
+        v.handle_ = gllc_entity_get_layer(ENT(obj));
         return v;
 }
 
 static int _ent_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_layer((struct gllc_entity *)obj, (struct gllc_layer *)value.handle_);
+        return gllc_entity_set_layer(ENT(obj), (struct gllc_layer *)value.handle_);
 }
 
 static union gllc_variant _ent_linetype_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.handle_ = gllc_entity_linetype((struct gllc_entity *)obj);
+        v.handle_ = gllc_entity_linetype(ENT(obj));
         return v;
 }
 
 static int _ent_linetype_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_linetype((struct gllc_entity *)obj, value.handle_);
+        return gllc_entity_set_linetype(ENT(obj), value.handle_);
 }
 
 static union gllc_variant _ent_ltscale_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.float_ = gllc_entity_ltscale((struct gllc_entity *)obj);
+        v.float_ = gllc_entity_ltscale(ENT(obj));
         return v;
 }
 
 static int _ent_ltscale_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_ltscale((struct gllc_entity *)obj, value.float_);
+        return gllc_entity_set_ltscale(ENT(obj), value.float_);
 }
 
 static union gllc_variant _ent_lwidth_GET(struct gllc_object *obj, int prop, int type)
@@ -252,11 +253,11 @@ static union gllc_variant _ent_lwidth_GET(struct gllc_object *obj, int prop, int
         union gllc_variant v;
         if (type == T_PROP_INT)
         {
-                v.int_ = gllc_entity_lwidth_mode((struct gllc_entity *)obj);
+                v.int_ = gllc_entity_lwidth_mode(ENT(obj));
         }
         else if (type == T_PROP_FLOAT)
         {
-                v.float_ = gllc_entity_lwidth((struct gllc_entity *)obj);
+                v.float_ = gllc_entity_lwidth(ENT(obj));
         }
         return v;
 }
@@ -265,11 +266,11 @@ static int _ent_lwidth_SET(struct gllc_object *obj, int prop, int type, union gl
 {
         if (type == T_PROP_INT)
         {
-                gllc_entity_set_lwidth_mode((struct gllc_entity *)obj, value.int_);
+                gllc_entity_set_lwidth_mode(ENT(obj), value.int_);
         }
         else if (type == T_PROP_FLOAT)
         {
-                gllc_entity_set_lwidth((struct gllc_entity *)obj, value.float_);
+                gllc_entity_set_lwidth(ENT(obj), value.float_);
         }
         return 1;
 }
@@ -284,11 +285,11 @@ static union gllc_variant _ent_color_GET(struct gllc_object *obj, int prop, int 
         union gllc_variant v;
         if (type == T_PROP_INT)
         {
-                v.int_ = gllc_entity_color((struct gllc_entity *)obj);
+                v.int_ = gllc_entity_color(ENT(obj));
         }
         else if (type == T_PROP_STRING)
         {
-                v.string_ = gllc_entity_color_string((struct gllc_entity *)obj);
+                v.string_ = gllc_entity_color_string(ENT(obj));
         }
         return v;
 }
@@ -297,11 +298,11 @@ static int _ent_color_SET(struct gllc_object *obj, int prop, int type, union gll
 {
         if (type == T_PROP_INT)
         {
-                return gllc_entity_set_color((struct gllc_entity *)obj, value.int_);
+                return gllc_entity_set_color(ENT(obj), value.int_);
         }
         else if (type == T_PROP_STRING)
         {
-                return gllc_entity_set_color_by_string((struct gllc_entity *)obj, value.string_);
+                return gllc_entity_set_color_by_string(ENT(obj), value.string_);
         }
         return 0;
 }
@@ -311,18 +312,18 @@ static union gllc_variant _ent_colori_GET(struct gllc_object *obj, int prop, int
         union gllc_variant v;
         if (type == T_PROP_BOOL)
         {
-                v.bool_ = gllc_entity_is_colori((struct gllc_entity *)obj);
+                v.bool_ = gllc_entity_is_colori(ENT(obj));
         }
         else if (type == T_PROP_INT)
         {
-                v.int_ = gllc_entity_colori((struct gllc_entity *)obj);
+                v.int_ = gllc_entity_colori(ENT(obj));
         }
         return v;
 }
 
 static int _ent_colori_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_colori((struct gllc_entity *)obj, value.int_);
+        return gllc_entity_set_colori(ENT(obj), value.int_);
 }
 
 static union gllc_variant _ent_colort_GET(struct gllc_object *obj, int prop, int type)
@@ -330,54 +331,54 @@ static union gllc_variant _ent_colort_GET(struct gllc_object *obj, int prop, int
         union gllc_variant v;
         if (type == T_PROP_BOOL)
         {
-                v.bool_ = gllc_entity_is_colort((struct gllc_entity *)obj);
+                v.bool_ = gllc_entity_is_colort(ENT(obj));
         }
         else if (type == T_PROP_INT)
         {
-                v.int_ = gllc_entity_color((struct gllc_entity *)obj);
+                v.int_ = gllc_entity_color(ENT(obj));
         }
         return v;
 }
 
 static int _ent_colort_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_color((struct gllc_entity *)obj, value.int_);
+        return gllc_entity_set_color(ENT(obj), value.int_);
 }
 
 static union gllc_variant _ent_color_by_layer_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.bool_ = gllc_entity_color_by_layer((struct gllc_entity *)obj);
+        v.bool_ = gllc_entity_color_by_layer(ENT(obj));
         return v;
 }
 
 static int _ent_color_by_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_color_by_layer((struct gllc_entity *)obj, value.bool_);
+        return gllc_entity_set_color_by_layer(ENT(obj), value.bool_);
 }
 
 static union gllc_variant _ent_color_by_block_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.bool_ = gllc_entity_color_by_block((struct gllc_entity *)obj);
+        v.bool_ = gllc_entity_color_by_block(ENT(obj));
         return v;
 }
 
 static int _ent_color_by_block_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_color_by_block((struct gllc_entity *)obj, value.bool_);
+        return gllc_entity_set_color_by_block(ENT(obj), value.bool_);
 }
 
 static union gllc_variant _ent_filled_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.bool_ = gllc_entity_filled((struct gllc_entity *)obj);
+        v.bool_ = gllc_entity_filled(ENT(obj));
         return v;
 }
 
 static int _ent_filled_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_filled((struct gllc_entity *)obj, value.bool_);
+        return gllc_entity_set_filled(ENT(obj), value.bool_);
 }
 
 static union gllc_variant _ent_fcolor_GET(struct gllc_object *obj, int prop, int type)
@@ -385,11 +386,11 @@ static union gllc_variant _ent_fcolor_GET(struct gllc_object *obj, int prop, int
         union gllc_variant v;
         if (type == T_PROP_INT)
         {
-                v.int_ = gllc_entity_fcolor((struct gllc_entity *)obj);
+                v.int_ = gllc_entity_fcolor(ENT(obj));
         }
         else if (type == T_PROP_STRING)
         {
-                v.string_ = gllc_entity_get_fcolor_string((struct gllc_entity *)obj);
+                v.string_ = gllc_entity_get_fcolor_string(ENT(obj));
         }
         return v;
 }
@@ -398,11 +399,11 @@ static int _ent_fcolor_SET(struct gllc_object *obj, int prop, int type, union gl
 {
         if (type == T_PROP_INT)
         {
-                return gllc_entity_set_fcolor((struct gllc_entity *)obj, value.int_);
+                return gllc_entity_set_fcolor(ENT(obj), value.int_);
         }
         else if (type == T_PROP_STRING)
         {
-                return gllc_entity_set_fcolor_string((struct gllc_entity *)obj, value.string_);
+                return gllc_entity_set_fcolor_string(ENT(obj), value.string_);
         }
         return 1;
 }
@@ -410,61 +411,61 @@ static int _ent_fcolor_SET(struct gllc_object *obj, int prop, int type, union gl
 static union gllc_variant _ent_fcolori_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = gllc_entity_fcolori((struct gllc_entity *)obj);
+        v.int_ = gllc_entity_fcolori(ENT(obj));
         return v;
 }
 
 static int _ent_fcolori_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_fcolori((struct gllc_entity *)obj, value.int_);
+        return gllc_entity_set_fcolori(ENT(obj), value.int_);
 }
 
 static union gllc_variant _ent_fcolort_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = gllc_entity_fcolort((struct gllc_entity *)obj);
+        v.int_ = gllc_entity_fcolort(ENT(obj));
         return v;
 }
 
 static int _ent_fcolort_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_fcolort((struct gllc_entity *)obj, value.int_);
+        return gllc_entity_set_fcolort(ENT(obj), value.int_);
 }
 
 static union gllc_variant _ent_fcolor_by_layer_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = gllc_entity_fcolor_by_layer((struct gllc_entity *)obj);
+        v.int_ = gllc_entity_fcolor_by_layer(ENT(obj));
         return v;
 }
 
 static int _ent_fcolor_by_layer_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_fcolor_by_layer((struct gllc_entity *)obj, value.bool_);
+        return gllc_entity_set_fcolor_by_layer(ENT(obj), value.bool_);
 }
 
 static union gllc_variant _ent_fcolor_by_block_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = gllc_entity_fcolor_by_block((struct gllc_entity *)obj);
+        v.int_ = gllc_entity_fcolor_by_block(ENT(obj));
         return v;
 }
 
 static int _ent_fcolor_by_block_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_fcolor_by_block((struct gllc_entity *)obj, value.bool_);
+        return gllc_entity_set_fcolor_by_block(ENT(obj), value.bool_);
 }
 
 static union gllc_variant _ent_falpha_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = (int)(gllc_entity_falpha((struct gllc_entity *)obj) * 255.0f);
+        v.int_ = (int)(gllc_entity_falpha(ENT(obj)) * 255.0f);
         return v;
 }
 
 static int _ent_falpha_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_falpha((struct gllc_entity *)obj, value.int_ / 255.0f);
+        return gllc_entity_set_falpha(ENT(obj), value.int_ / 255.0f);
 }
 
 static union gllc_variant _ent_linfill_GET(struct gllc_object *obj, int prop, int type)
@@ -495,27 +496,27 @@ static int _ent_wipeout_SET(struct gllc_object *obj, int prop, int type, union g
 static union gllc_variant _ent_locked_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.bool_ = gllc_entity_locked((struct gllc_entity *)obj);
+        v.bool_ = gllc_entity_locked(ENT(obj));
         return v;
 }
 
 static union gllc_variant _ent_visible_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.bool_ = gllc_entity_visible((struct gllc_entity *)obj);
+        v.bool_ = gllc_entity_visible(ENT(obj));
         return v;
 }
 
 static union gllc_variant _ent_hidden_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.bool_ = gllc_entity_hidden((struct gllc_entity *)obj);
+        v.bool_ = gllc_entity_hidden(ENT(obj));
         return v;
 }
 
 static int _ent_hidden_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return gllc_entity_set_hidden((struct gllc_entity *)obj, value.bool_);
+        return gllc_entity_set_hidden(ENT(obj), value.bool_);
 }
 
 static union gllc_variant _ent_deleted_GET(struct gllc_object *obj, int prop, int type)
@@ -541,35 +542,35 @@ static int _ent_immortal_SET(struct gllc_object *obj, int prop, int type, union 
 static union gllc_variant _ent_selected_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.bool_ = gllc_entity_selected((struct gllc_entity *)obj);
+        v.bool_ = gllc_entity_selected(ENT(obj));
         return v;
 }
 
 static union gllc_variant _ent_xmin_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, &v.float_, NULL, NULL, NULL);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, &v.float_, NULL, NULL, NULL);
         return v;
 }
 
 static union gllc_variant _ent_ymin_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, NULL, &v.float_, NULL, NULL);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, NULL, &v.float_, NULL, NULL);
         return v;
 }
 
 static union gllc_variant _ent_xmax_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, NULL, NULL, &v.float_, NULL);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, NULL, NULL, &v.float_, NULL);
         return v;
 }
 
 static union gllc_variant _ent_ymax_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, NULL, NULL, NULL, &v.float_);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, NULL, NULL, NULL, &v.float_);
         return v;
 }
 
@@ -577,7 +578,7 @@ static union gllc_variant _ent_xcen_GET(struct gllc_object *obj, int prop, int t
 {
         union gllc_variant v;
         double xmin, xmax;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, &xmin, NULL, &xmax, NULL);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, &xmin, NULL, &xmax, NULL);
         v.float_ = xmin + (xmax - xmin) / 2.0f;
         return v;
 }
@@ -586,7 +587,7 @@ static union gllc_variant _ent_ycen_GET(struct gllc_object *obj, int prop, int t
 {
         union gllc_variant v;
         double ymin, ymax;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, NULL, &ymin, NULL, &ymax);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, NULL, &ymin, NULL, &ymax);
         v.float_ = ymin + (ymax - ymin) / 2.0f;
         return v;
 }
@@ -595,7 +596,7 @@ static union gllc_variant _ent_dx_GET(struct gllc_object *obj, int prop, int typ
 {
         union gllc_variant v;
         double xmin, xmax;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, &xmin, NULL, &xmax, NULL);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, &xmin, NULL, &xmax, NULL);
         v.float_ = fabs(xmax - xmin);
         return v;
 }
@@ -604,7 +605,7 @@ static union gllc_variant _ent_dy_GET(struct gllc_object *obj, int prop, int typ
 {
         union gllc_variant v;
         double ymin, ymax;
-        ((struct gllc_entity *)obj)->vtable->bbox((struct gllc_entity *)obj, 1.0f, NULL, &ymin, NULL, &ymax);
+        ENT(obj)->vtable->bbox(ENT(obj), 1.0f, NULL, &ymin, NULL, &ymax);
         v.float_ = fabs(ymax - ymin);
         return v;
 }
@@ -612,7 +613,7 @@ static union gllc_variant _ent_dy_GET(struct gllc_object *obj, int prop, int typ
 static union gllc_variant _ent_len_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        ((struct gllc_entity *)obj)->vtable->len((struct gllc_entity *)obj, &v.float_);
+        ENT(obj)->vtable->len(ENT(obj), &v.float_);
         return v;
 }
 
@@ -670,7 +671,7 @@ struct gllc_prop G_entity_props[] = {
 
 static void obj_entity_destroy(struct gllc_object *obj)
 {
-        struct gllc_entity *ent = (struct gllc_entity *)obj;
+        struct gllc_entity *ent = ENT(obj);
         if (ent->layer)
         {
                 gllc_layer_unset_entity(ent->layer, ent);
@@ -682,9 +683,7 @@ static void obj_entity_destroy(struct gllc_object *obj)
         }
 }
 
-struct gllc_object_vtable G_entity_obj_vtable = {
-    .type = GLLC_ENTITY,
-    .destroy = obj_entity_destroy};
+struct gllc_object_vtable G_entity_obj_vtable = {.type = GLLC_ENTITY, .destroy = obj_entity_destroy};
 
 uint64_t gllc_entity_get_id(struct gllc_entity *ent)
 {
@@ -792,7 +791,8 @@ static inline void ID_hexify(uint64_t ID, char *ID_hex)
         ID_hex[16] = '\0';
 }
 
-void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props, struct gllc_entity_vtable *vtable)
+void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct gllc_prop **props,
+                       struct gllc_entity_vtable *vtable)
 {
         memset(ent, 0, sizeof(struct gllc_entity));
         ent->block = block;

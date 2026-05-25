@@ -23,7 +23,8 @@ wglSwapIntervalEXT_type *wglSwapIntervalEXT;
 #define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
 #define WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB 0x2
 
-typedef BOOL WINAPI wglChoosePixelFormatARB_type(HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
+typedef BOOL WINAPI wglChoosePixelFormatARB_type(HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList,
+                                                 UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
 wglChoosePixelFormatARB_type *wglChoosePixelFormatARB;
 
 #define WGL_DRAW_TO_WINDOW_ARB 0x2001
@@ -53,7 +54,9 @@ static int init_opengl_extensions(void)
                 fprintf(stderr, "Failed to register dummy OpenGL window.");
                 return 0;
         }
-        HWND dummy_window = CreateWindowExA(0, window_class.lpszClassName, "Dummy OpenGL Window", 0, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, window_class.hInstance, 0);
+        HWND dummy_window =
+            CreateWindowExA(0, window_class.lpszClassName, "Dummy OpenGL Window", 0, CW_USEDEFAULT, CW_USEDEFAULT,
+                            CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, window_class.hInstance, 0);
         if (!dummy_window)
         {
                 fprintf(stderr, "Failed to create dummy OpenGL window.");
@@ -117,16 +120,27 @@ static HGLRC init_opengl(HDC real_dc)
         {
                 return 0;
         }
-        int pixel_format_attribs[] = {
-            WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
-            WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
-            WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
-            WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
-            WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
-            WGL_COLOR_BITS_ARB, 32, WGL_DEPTH_BITS_ARB, 24, WGL_STENCIL_BITS_ARB, 8,
-            WGL_SAMPLE_BUFFERS_ARB, 1, // включаем MSAA
-            WGL_SAMPLES_ARB, 4,        // 4x сглаживание
-            0};
+        int pixel_format_attribs[] = {WGL_DRAW_TO_WINDOW_ARB,
+                                      GL_TRUE,
+                                      WGL_SUPPORT_OPENGL_ARB,
+                                      GL_TRUE,
+                                      WGL_DOUBLE_BUFFER_ARB,
+                                      GL_TRUE,
+                                      WGL_ACCELERATION_ARB,
+                                      WGL_FULL_ACCELERATION_ARB,
+                                      WGL_PIXEL_TYPE_ARB,
+                                      WGL_TYPE_RGBA_ARB,
+                                      WGL_COLOR_BITS_ARB,
+                                      32,
+                                      WGL_DEPTH_BITS_ARB,
+                                      24,
+                                      WGL_STENCIL_BITS_ARB,
+                                      8,
+                                      WGL_SAMPLE_BUFFERS_ARB,
+                                      1, // включаем MSAA
+                                      WGL_SAMPLES_ARB,
+                                      4, // 4x сглаживание
+                                      0};
 
         int pixel_format;
         UINT num_formats;
@@ -431,18 +445,8 @@ int nw_create_win32(struct nw *nw, HWND parent, struct nw_callback_vtable *vtabl
                 rc.right = 800;
                 rc.bottom = 600;
         }
-        nw->w = CreateWindowEx(
-            0,
-            MAKEINTATOM(wndClass),
-            "OpenGL Window",
-            WS_CHILD | WS_VISIBLE,
-            rc.left, rc.top,
-            rc.right - rc.left,
-            rc.bottom - rc.top,
-            (HWND)parent,
-            NULL,
-            GetModuleHandle(NULL),
-            NULL);
+        nw->w = CreateWindowEx(0, MAKEINTATOM(wndClass), "OpenGL Window", WS_CHILD | WS_VISIBLE, rc.left, rc.top,
+                               rc.right - rc.left, rc.bottom - rc.top, (HWND)parent, NULL, GetModuleHandle(NULL), NULL);
         nw->vtable.destroy = destroy;
         nw->vtable.dirty = dirty;
         nw->vtable.focus = focus;

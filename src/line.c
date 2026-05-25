@@ -65,7 +65,8 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
         double n1[2];
         double n0[2];
         double len;
-        int inside = (x0 <= l->p0[0] && x1 >= l->p0[0] && y0 <= l->p0[1] && y1 >= l->p0[1]) && (x0 <= l->p1[0] && x1 >= l->p1[0] && y0 <= l->p1[1] && y1 >= l->p1[1]);
+        int inside = (x0 <= l->p0[0] && x1 >= l->p0[0] && y0 <= l->p0[1] && y1 >= l->p0[1]) &&
+                     (x0 <= l->p1[0] && x1 >= l->p1[0] && y0 <= l->p1[1] && y1 >= l->p1[1]);
         if (mode == 1)
         {
                 if (inside)
@@ -74,20 +75,20 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
                 len = LEN(n0);
                 NORM(n0);
                 // Ищем сторону прямоугольника, которая пересекает линию, если находим - линия частично выделена
-#define TEST(_x0, _y0, _x1, _y1)                                            \
-        do                                                                  \
-        {                                                                   \
-                n1[0] = _x1 - _x0;                                          \
-                n1[1] = _y1 - _y0;                                          \
-                double lenside = LEN(n1);                                   \
-                NORM(n1);                                                   \
-                if (RAYINSECT(l->p0, n0, (double[]){_x0, _y0}, n1, &T, &S)) \
-                {                                                           \
-                        if (S >= 0 && S <= lenside && T >= 0 && T <= len)   \
-                        {                                                   \
-                                return 1;                                   \
-                        }                                                   \
-                }                                                           \
+#define TEST(_x0, _y0, _x1, _y1)                                                                                       \
+        do                                                                                                             \
+        {                                                                                                              \
+                n1[0] = _x1 - _x0;                                                                                     \
+                n1[1] = _y1 - _y0;                                                                                     \
+                double lenside = LEN(n1);                                                                              \
+                NORM(n1);                                                                                              \
+                if (RAYINSECT(l->p0, n0, (double[]){_x0, _y0}, n1, &T, &S))                                            \
+                {                                                                                                      \
+                        if (S >= 0 && S <= lenside && T >= 0 && T <= len)                                              \
+                        {                                                                                              \
+                                return 1;                                                                              \
+                        }                                                                                              \
+                }                                                                                                      \
         } while (0)
                 TEST(x0, y0, x1, y0);
                 TEST(x1, y0, x1, y1);
@@ -187,19 +188,17 @@ static int len(struct gllc_entity *ent, double *len)
         return 1;
 }
 
-static struct gllc_entity_vtable vtable = {
-    .type = GLLC_ENT_LINE,
-    .build = build,
-    .destroy = destroy,
-    .vertices = vertices,
-    .selected = selected,
-    .picked = picked,
-    .bbox = bbox,
-    .len = len,
-    .clone = clone};
+static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_LINE,
+                                           .build = build,
+                                           .destroy = destroy,
+                                           .vertices = vertices,
+                                           .selected = selected,
+                                           .picked = picked,
+                                           .bbox = bbox,
+                                           .len = len,
+                                           .clone = clone};
 
-static struct gllc_prop pline_props[] = {
-    P_END};
+static struct gllc_prop pline_props[] = {P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 

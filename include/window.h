@@ -88,7 +88,8 @@ int gllc_window_message(struct gllc_window *wnd, const char *text, int type);
 int gllc_window_magnifier(struct gllc_window *wnd, int bOn, int Width, int Height, int Zoom, int Flags);
 int gllc_window_pick_ent(struct gllc_window *wnd, const char *text, const char *cursor_text);
 int gllc_window_wait_point(struct gllc_window *wnd, const char *text, double *x, double *y);
-int gllc_window_wait_point_2(struct gllc_window *wnd, const char *text, double *x, double *y, F_WAITPOINT pFunc, int FuncPrm);
+int gllc_window_wait_point_2(struct gllc_window *wnd, const char *text, double *x, double *y, F_WAITPOINT pFunc,
+                             int FuncPrm);
 int gllc_window_update(struct gllc_window *wnd, int mode);
 int gllc_window_input_str(struct gllc_window *wnd);
 int gllc_window_zoom_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1);
@@ -100,7 +101,8 @@ void gllc_window_wnd_to_drw(struct gllc_window *w, double x, double y, double *x
 int gllc_window_get_cursor_coord(struct gllc_window *wnd, int *x, int *y, double *wx, double *wy);
 int gllc_window_coord_to_drw(struct gllc_window *wnd, int x, int y, double *wx, double *wy);
 int gllc_window_coord_to_wnd(struct gllc_window *wnd, double wx, double wy, int *x, int *y);
-int gllc_window_get_ents_by_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1, int cross, int max_ents);
+int gllc_window_get_ents_by_rect(struct gllc_window *wnd, double x0, double y0, double x1, double y1, int cross,
+                                 int max_ents);
 struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *wnd, int x, int y);
 int gllc_window_get_ents_by_point(struct gllc_window *wnd, int x, int y, int max_ents);
 struct gllc_entity *gllc_window_get_ent_by_id(struct gllc_window *wnd, int id);
