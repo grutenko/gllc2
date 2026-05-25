@@ -28,6 +28,7 @@ struct gllc_block
         int cnt;
         int bqcnt;
         int bqcap;
+        int selindex;
         struct gllc_entity **sel;
         struct gllc_entity **hov;
         int selcnt;
@@ -77,6 +78,8 @@ struct gllc_line *gllc_block_add_line(struct gllc_block *block, double *p0, doub
 void gllc_block_select(struct gllc_block *block, struct gllc_entity *ent, int exclusive);
 int gllc_block_get_select_cnt(struct gllc_block *block);
 struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index);
+struct gllc_entity *gllc_block_get_first_sel(struct gllc_block *block);
+struct gllc_entity *gllc_block_get_next_sel(struct gllc_block *block);
 void gllc_block_ent_remove(struct gllc_block *block, struct gllc_entity *ent);
 void gllc_block_bbox(struct gllc_block *block, double *x0, double *y0, double *x1, double *y1);
 void gllc_block_sel_bbox(struct gllc_block *block, double *x0, double *y0, double *x1, double *y1);

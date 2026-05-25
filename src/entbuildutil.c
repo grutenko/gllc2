@@ -180,7 +180,13 @@ void soft_update_contur(struct gllc_entity *ent, struct ds_unit *u)
 
 void soft_update_filltess(struct gllc_entity *ent, struct ds_unit *u)
 {
-        for (int i = ent->offset; i < ds_unit_vcnt(u); i++)
+        GLubyte color[4];
+        resolv_fcolor(ent, color);
+        for (int i = 0; i < ent->offset && i < ds_unit_vcnt(u); i++)
         {
+                u->V[i].c[0] = color[0];
+                u->V[i].c[1] = color[1];
+                u->V[i].c[2] = color[2];
+                u->V[i].c[3] = color[3];
         }
 }

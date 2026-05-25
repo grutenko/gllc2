@@ -1242,6 +1242,7 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
                                                                   0);
                                         }
                                 }
+                                gllc_block_update(W->block);
                                 struct gllc_event evt;
                                 gllc_event_init(&evt);
                                 evt.type = LC_EVENT_SELECT;
@@ -1253,7 +1254,6 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
                                 evt._int2 = selcnt;
                                 evt._int3 = selcnt;
                                 gllc_event_send(LC_EVENT_SELECT, &evt);
-                                gllc_block_update(W->block);
                         }
                 }
         }

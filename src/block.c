@@ -1184,3 +1184,23 @@ struct gllc_entity *gllc_block_get_ent_by_key(struct gllc_block *block, int key)
         }
         return NULL;
 }
+
+struct gllc_entity *gllc_block_get_first_sel(struct gllc_block *block)
+{
+        struct gllc_entity *ent = gllc_block_get_select_at(block, 0);
+        if (ent)
+        {
+                block->selindex = 1;
+        }
+        return ent;
+}
+
+struct gllc_entity *gllc_block_get_next_sel(struct gllc_block *block)
+{
+        struct gllc_entity *ent = gllc_block_get_select_at(block, block->selindex);
+        if (ent)
+        {
+                block->selindex++;
+        }
+        return ent;
+}

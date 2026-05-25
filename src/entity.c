@@ -757,6 +757,7 @@ int gllc_entity_set_color(struct gllc_entity *ent, int color)
 
 int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor)
 {
+
         if (ent)
         {
                 ent->props.fcolor = fcolor;

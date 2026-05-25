@@ -89,8 +89,8 @@ def on_size(event):
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 400
-M = 400
+N = 600
+M = 600
 min_v = -6000.0
 max_v = 6000.0
 
@@ -200,7 +200,12 @@ for i in range(N - 1):
 lc.lcBlockUpdate(hBlock, 0, 0)
 
 def on_select(hEvent):
-    print(hEvent)
+    hEnt = lc.lcBlockGetFirstSel(hBlock)
+    while hEnt :
+        lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FCOLOR, 0xffffff)
+        hEnt = lc.lcBlockGetNextSel(hBlock)
+
+    lc.lcBlockUpdate(hBlock, 0, 0)
 
 lc.lcEventSetProc(lc.LC_EVENT_SELECT, lc.F_LCEVENT(on_select), 0, None)
 
