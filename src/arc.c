@@ -59,14 +59,10 @@ static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymi
 
 static int selected(struct gllc_entity *ent, int mode, double scale, double x0, double y0, double x1, double y1)
 {
-        if (mode == 0)
-        {
-                double bx0, bx1, by0, by1;
-                bbox(ent, scale, &bx0, &by0, &bx1, &by1);
-                if (bx0 >= x0 && bx1 <= x1 && by0 >= y0 && by1 <= y1)
-                        return 1;
-                return 0;
-        }
+        double bx0, bx1, by0, by1;
+        bbox(ent, scale, &bx0, &by0, &bx1, &by1);
+        if (bx0 >= x0 && bx1 <= x1 && by0 >= y0 && by1 <= y1)
+                return 1;
         return 0;
 }
 
@@ -114,7 +110,7 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
         {
                 return 0;
         }
-        
+
         return 1;
 }
 
