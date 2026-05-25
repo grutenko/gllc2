@@ -2,6 +2,7 @@
 #include "block.h"
 #include "drawing.h"
 #include "event.h"
+#include "font.h"
 #include "line.h"
 #include "linetype.h"
 #include "object.h"
@@ -35,12 +36,14 @@ LCAPI int lcInitialize()
 #ifdef NDEBUG
         printf("RELEASE build\n");
 #endif
+        gllc_fonts_scan();
         return 0;
 }
 
 LCAPI int lcUninitialize(int bSaveConfig)
 {
-        return 0;
+        gllc_fonts_clear();
+        return 1;
 }
 
 // GUI strings
@@ -135,10 +138,11 @@ LCAPI int lcPropPutHandle(void *hObject, int idProp, void *hValue)
 LCAPI void *lcCreateWindow(void *hWndParent, int Style)
 {
 #if defined(_WIN32) || defined(__EMSCRIPTEN__)
-  if (Style & XLC_WINDOW_GTK_BACKEND || Style & XLC_WINDOW_WAYLAND_BACKEND || Style & XLC_WINDOW_X11_BACKEND) {
-    FMTERROR("Using XLC_WINDOW_*_BACKEND allowed only for linux build.");
-    return NULL;
-  }
+        if (Style & XLC_WINDOW_GTK_BACKEND || Style & XLC_WINDOW_WAYLAND_BACKEND || Style & XLC_WINDOW_X11_BACKEND)
+        {
+                FMTERROR("Using XLC_WINDOW_*_BACKEND allowed only for linux build.");
+                return NULL;
+        }
 #elif defined(__linux__)
         int backends = Style & (XLC_WINDOW_GTK_BACKEND |
                                 XLC_WINDOW_WAYLAND_BACKEND |
@@ -280,7 +284,7 @@ LCAPI int lcWndInputStr(void *hLcWnd)
 
 LCAPI int lcWndUpdate(void *hLcWnd, int Mode)
 {
-        return 1;
+        return gllc_window_redraw((struct gllc_window *)hLcWnd);
 }
 
 LCAPI void *lcWndDrwAdd(void *hLcWnd, char *szFileName)
@@ -301,38 +305,38 @@ LCAPI void *lcWndDrwGet(void *hLcWnd, int Index)
 // zoom
 LCAPI int lcWndZoomRect(void *hLcWnd, double Left, double Bottom, double Right, double Top)
 {
-        return 1;
+        return gllc_window_zoom_rect((struct gllc_window *)hLcWnd, Left, Bottom, Right, Top);
 }
 
 LCAPI int lcWndZoomScale(void *hLcWnd, double Scal)
 {
-        return 1;
+        return gllc_window_zoom_scale((struct gllc_window *)hLcWnd, Scal);
 }
 
 LCAPI int lcWndZoomMove(void *hLcWnd, double DX, double DY)
 {
-        return 1;
+        return gllc_window_zoom_move((struct gllc_window *)hLcWnd, DX, DY);
 }
 
 LCAPI int lcWndZoomPos(void *hLcWnd, double Xc, double Yc, double PixSize)
 {
-        return 1;
+        return gllc_window_zoom_pos((struct gllc_window *)hLcWnd, Xc, Yc, PixSize);
 }
 
 LCAPI int lcWndZoomEnt(void *hLcWnd, void *hEnt, double Scal)
 {
-        return 1;
+        return gllc_window_zoom_ent((struct gllc_window *)hLcWnd, (struct gllc_entity *)hEnt);
 }
 
 // coordinates
 LCAPI int lcWndGetCursorCoord(void *hLcWnd, int *pXwin, int *pYwin, double *pXdrw, double *pYdrw)
 {
-        return 1;
+        return gllc_window_get_cursor_coord((struct gllc_window *)hLcWnd, pXwin, pYwin, pXdrw, pYdrw);
 }
 
 LCAPI int lcCoordDrwToWnd(void *hLcWnd, double Xdrw, double Ydrw, int *pXwnd, int *pYwnd)
 {
-        return 1;
+        return gllc_window_coord_to_wnd((struct gllc_window *)hLcWnd, Xdrw, Ydrw, pXwnd, pYwnd);
 }
 
 LCAPI int lcCoordWndToDrw(void *hLcWnd, int Xwnd, int Ywnd, double *pXdrw, double *pYdrw)
@@ -347,7 +351,7 @@ LCAPI int lcWndCoordFromDrw(void *hLcWnd, double Xdrw, double Ydrw, int *pXwin, 
 
 LCAPI int lcWndCoordToDrw(void *hLcWnd, int Xwin, int Ywin, double *pXdrw, double *pYdrw)
 {
-        return 1;
+        return gllc_window_coord_to_drw((struct gllc_window *)hLcWnd, Xwin, Ywin, pXdrw, pYdrw);
 }
 
 // retrieve entities
@@ -362,27 +366,32 @@ LCAPI void *lcWndGetEntByPoint2(void *hLcWnd, double X, double Y, double Delta)
 }
 LCAPI int lcWndGetEntsByPoint(void *hLcWnd, int Xwin, int Ywin, int nMaxEnts)
 {
-        return 0;
+        return gllc_window_get_ents_by_point((struct gllc_window *)hLcWnd, Xwin, Ywin, nMaxEnts);
 }
 LCAPI int lcWndGetEntsByRect(void *hLcWnd, double Lef, double Bot, double Rig, double Top, int bCross, int nMaxEnts)
 {
-        return 0;
+        return gllc_window_get_ents_by_rect((struct gllc_window *)hLcWnd, Lef, Bot, Rig, Top, bCross, nMaxEnts);
 }
 LCAPI void *lcWndGetEntity(int iEnt)
 {
+        struct gllc_window *wnd = gllc_window_get_last_filtered();
+        if(wnd)
+        {
+                return gllc_window_get_entity(wnd, iEnt);       
+        }
         return NULL;
 }
 LCAPI void *lcWndGetEntByID(void *hLcWnd, int Id)
 {
-        return NULL;
+        return gllc_window_get_ent_by_id((struct gllc_window *)hLcWnd, Id);
 }
 LCAPI void *lcWndGetEntByIDH(void *hLcWnd, char *szId)
 {
-        return NULL;
+        return gllc_window_get_ent_by_idh((struct gllc_window *)hLcWnd, szId);
 }
 LCAPI void *lcWndGetEntByKey(void *hLcWnd, int Key)
 {
-        return NULL;
+        return gllc_window_get_ent_by_key((struct gllc_window *)hLcWnd, Key);
 }
 LCAPI int lcWndPickEnt(void *hLcWnd, char *szTitle, char *szCursorText)
 {
@@ -392,11 +401,11 @@ LCAPI int lcWndPickEnt(void *hLcWnd, char *szTitle, char *szCursorText)
 // Font functions
 LCAPI void *lcFontGetFirst()
 {
-        return NULL;
+        return gllc_font_first();
 }
 LCAPI void *lcFontGetNext(void *hFont)
 {
-        return NULL;
+        return gllc_font_next((struct gllc_font *)hFont);
 }
 LCAPI void *lcFontAddRes(char *szFontName, void *hModule, int idResource)
 {
@@ -404,11 +413,11 @@ LCAPI void *lcFontAddRes(char *szFontName, void *hModule, int idResource)
 }
 LCAPI void *lcFontAddFile(char *szFontName, char *szFilename, char *szOutFontName)
 {
-        return NULL;
+        return gllc_font_create(1, szFontName, szFilename);
 }
 LCAPI void *lcFontAddBin(char *szFontName, void *hData)
 {
-        return NULL;
+        return gllc_font_create_binary(1, szFontName, hData);
 }
 LCAPI void *lcFontGetChar(void *hFont, int CharCode)
 {

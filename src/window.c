@@ -12,8 +12,12 @@
 #include "ui_selection.h"
 #include "vert.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
+
+#define SCALEMIN 0.0001f
+#define SCALEMAX 1000.0f
 
 #define WND(obj) ((struct gllc_window *)obj)
 
@@ -31,6 +35,8 @@
         {                                                                                                \
                 (C) = ((int)((CP)[0] * 255) << 16) | ((int)((CP)[1] * 255) << 8) | (int)((CP)[2] * 255); \
         } while (0)
+
+static struct gllc_window *_last_filter_wnd = NULL;
 
 static void _destroy(struct gllc_object *obj)
 {
@@ -126,7 +132,7 @@ static inline void update_camera(struct gllc_window *w);
 
 static int _wnd_pixelsize_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        if (value.float_ < 1000.0f && value.float_ < 0.0001f)
+        if (value.float_ < SCALEMAX && value.float_ < SCALEMIN)
         {
                 WND(obj)->scale = value.float_;
                 update_camera(WND(obj));
@@ -1244,12 +1250,12 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
 
 static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data)
 {
-        if (dy >= 10)
+        if (dy > 10)
                 dy = 10;
-        if (dy <= -10)
+        if (dy < -10)
                 dy = -10;
         double _scale = WND(data)->scale;
-        if ((_scale > 1000.0f && dy < 0) || (_scale < 0.0001f && dy > 0))
+        if ((_scale > SCALEMAX && dy < 0) || (_scale < SCALEMIN && dy > 0))
         {
                 return;
         }
@@ -1260,7 +1266,7 @@ static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data)
         double old_scale = WND(data)->scale;
         double _dy = WND(data)->dy;
         double _ddy = (double)dy;
-        WND(data)->scale *= 1.0f - (_ddy * 0.2f);
+        WND(data)->scale *= 1.0f - fmax(fmin(_ddy * 0.2f, 0.90f), -0.90f);
         _scale = WND(data)->scale;
         WND(data)->dx += (_curx - (int)(_w / 2)) * (_scale - old_scale);
         WND(data)->dy += ((_h - _cury) - (int)(_h / 2)) * (_scale - old_scale);
@@ -1608,6 +1614,10 @@ int gllc_window_destroy(struct gllc_window *W)
                 ui_cursor_cleanup(&W->cursor);
                 ui_selection_cleanup(&W->sel);
         }
+        if(_last_filter_wnd == W)
+        {
+                _last_filter_wnd = NULL;
+        }
         nw_destroy(&W->nw);
         free(W);
         return 1;
@@ -1707,6 +1717,7 @@ int gllc_window_wait_point_2(struct gllc_window *W, const char *text, double *x,
 int gllc_window_update(struct gllc_window *W, int mode)
 {
         NONULL(W, 0);
+        nw_dirty(&W->nw);
         return 1;
 }
 
@@ -1719,36 +1730,70 @@ int gllc_window_input_str(struct gllc_window *W)
 int gllc_window_zoom_rect(struct gllc_window *W, double x0, double y0, double x1, double y1)
 {
         NONULL(W, 0);
-        return 1;
+        if (x0 > x1)
+                _fswap(&x0, &x1);
+        if (y0 > y1)
+                _fswap(&y0, &y1);
+        double dx = fabs(x1 - x0);
+        double dy = fabs(y1 - y0);
+        double scale = fmax(dx / W->width, dy / W->height);
+        return gllc_window_zoom_pos(W, x0 + (dx / 2.0f), y0 + (dy / 2.0f), scale);
 }
 
 int gllc_window_zoom_scale(struct gllc_window *W, double scale)
 {
         NONULL(W, 0);
+
+        W->scale = fmax(fmin(scale, SCALEMAX), SCALEMIN);
+        update_camera(W);
         return 1;
 }
 
 int gllc_window_zoom_move(struct gllc_window *W, double dx, double dy)
 {
         NONULL(W, 0);
+        W->dx = fmax(fmin(W->dx + dx, FLT_MAX), FLT_MIN);
+        W->dy = fmax(fmin(W->dy + dy, FLT_MAX), FLT_MIN);
+
+        update_camera(W);
         return 1;
 }
 
 int gllc_window_zoom_pos(struct gllc_window *W, double x, double y, double scale)
 {
         NONULL(W, 0);
+
+        W->scale = fmax(fmin(scale, SCALEMAX), SCALEMIN);
+        W->dx = fmax(fmin(x, FLT_MAX), FLT_MIN);
+        W->dy = fmax(fmin(y, FLT_MAX), FLT_MIN);
+
+        update_camera(W);
+
         return 1;
 }
 
 int gllc_window_zoom_ent(struct gllc_window *W, struct gllc_entity *ent)
 {
         NONULL(W, 0);
-        return 1;
+        NONULL(ent, 0);
+        double x0, y0, x1, y1;
+        ent->vtable->bbox(ent, W->scale, &x0, &y0, &x1, &y1);
+        return gllc_window_zoom_rect(W, x0, y0, x1, y1);
 }
 
 int gllc_window_get_cursor_coord(struct gllc_window *W, int *x, int *y, double *wx, double *wy)
 {
         NONULL(W, 0);
+        if (x)
+                *x = W->curx;
+        if (y)
+                *y = W->cury;
+        double _wx, _wy;
+        screen_to_world(W, W->curx, W->cury, &_wx, &_wy);
+        if (wx)
+                *wx = _wx;
+        if (wy)
+                *wy = _wy;
         return 1;
 }
 
@@ -1769,12 +1814,15 @@ int gllc_window_coord_to_wnd(struct gllc_window *W, double wx, double wy, int *x
 int gllc_window_get_ents_by_rect(struct gllc_window *W, double x0, double y0, double x1, double y1, int cross, int max_ents)
 {
         NONULL(W, 0);
-        return 1;
+        NONULL(W->block, 0);
+        _last_filter_wnd = W;
+        return gllc_block_ent_filter_rect(W->block, cross == 1 ? 1 : 0, x0, y0, x1, y1, 1, 1);
 }
 
 struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *W, int x, int y)
 {
         NONULL(W, 0);
+        NONULL(W->block, 0);
         double xd, yd;
         screen_to_world(W, x, y, &xd, &yd);
         return gllc_block_pick_ent(W->block, xd, yd, 1, 1);
@@ -1783,29 +1831,53 @@ struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *W, int x, i
 int gllc_window_get_ents_by_point(struct gllc_window *W, int x, int y, int max_ents)
 {
         NONULL(W, 0);
-        return 1;
+        NONULL(W->block, 0);
+        double xd, yd;
+        screen_to_world(W, x, y, &xd, &yd);
+        _last_filter_wnd = W;
+        return gllc_block_ent_filter_point(W->block, xd, yd, 1, 1, max_ents);
 }
 
 struct gllc_entity *gllc_window_get_ent_by_id(struct gllc_window *W, int id)
 {
         NONULL(W, 0);
-        return NULL;
+        NONULL(W->block, 0);
+        return gllc_block_get_ent_by_id(W->block, id);
 }
 
 struct gllc_entity *gllc_window_get_ent_by_idh(struct gllc_window *W, const char *idh)
 {
         NONULL(W, 0);
-        return NULL;
+        NONULL(W->block, 0);
+        return gllc_block_get_ent_by_idh(W->block, (char *)idh);
 }
 
-struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *W, const char *key)
+struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *W, int key)
 {
         NONULL(W, 0);
-        return NULL;
+        NONULL(W->block, 0);
+        return gllc_block_get_ent_by_key(W->block, key);
 }
 
 int gllc_window_poll_events(struct gllc_window *W)
 {
         nw_poll_events(&W->nw);
         return 1;
+}
+
+struct gllc_entity *gllc_window_get_entity(struct gllc_window *wnd, int iEnt)
+{
+        NONULL(wnd, NULL);
+        NONULL(wnd->block, NULL);
+        int cnt = gllc_block_ent_get_filter_cnt(wnd->block);
+        if (iEnt < 0 || cnt <= iEnt)
+        {
+                return NULL;
+        }
+        return gllc_block_ent_get_filter_at(wnd->block, iEnt);
+}
+
+struct gllc_window *gllc_window_get_last_filtered()
+{
+        return _last_filter_wnd;
 }

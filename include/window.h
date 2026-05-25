@@ -105,8 +105,10 @@ struct gllc_entity *gllc_window_get_ent_by_point(struct gllc_window *wnd, int x,
 int gllc_window_get_ents_by_point(struct gllc_window *wnd, int x, int y, int max_ents);
 struct gllc_entity *gllc_window_get_ent_by_id(struct gllc_window *wnd, int id);
 struct gllc_entity *gllc_window_get_ent_by_idh(struct gllc_window *wnd, const char *idh);
-struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *wnd, const char *key);
+struct gllc_entity *gllc_window_get_ent_by_key(struct gllc_window *W, int key);
 void gllc_window_get_viewport(struct gllc_window *wnd, double *x0, double *y0, double *x1, double *y1);
 int gllc_window_poll_events(struct gllc_window *wnd);
+struct gllc_entity *gllc_window_get_entity(struct gllc_window *wnd, int iEnt);
+struct gllc_window *gllc_window_get_last_filtered();
 
 #endif
