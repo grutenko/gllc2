@@ -38,7 +38,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         }
         else
         {
-                if (ent->flags & GLLC_ENT_CLOSED && ent->flags & GLLC_ENT_FILLED)
+                if (ent->flags & GLLC_ENT_FILLED)
                 {
                         soft_update_filltess(ent, CIRCLE(ent)->u);
                 }

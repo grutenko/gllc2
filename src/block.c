@@ -13,6 +13,7 @@
 #include "sparsegrid.h"
 #include "window.h"
 
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -652,7 +653,7 @@ static void push_ent(struct gllc_block *block, struct gllc_entity *ent)
 {
         if (block->h)
         {
-                block->h->next = ent;
+                block->t->next = ent;
                 ent->prev = block->t;
                 block->t = ent;
         }
@@ -716,8 +717,7 @@ struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, doub
         int cnt = sg_cell_ents_cnt(cell);
         for (i = 0; i < cnt; i++)
         {
-                if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) ||
-                    (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
+                if ((skiplocked && gllc_entity_locked(ents[i])) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
                         continue;
                 if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL))
                 {
@@ -746,7 +746,7 @@ int gllc_block_ent_filter_point(struct gllc_block *block, double x, double y, in
         {
                 if (total >= limit)
                         return 1;
-                if ((skiplocked && ents[i]->flags & GLLC_ENT_LOCKED) ||
+                if ((skiplocked && gllc_entity_locked(ents[i])) ||
                     (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
                         continue;
                 if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL))
@@ -919,7 +919,7 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, double x0, double y0, d
                         {
                                 struct gllc_entity *ent = ents[i];
                                 if ((ent->flags & GLLC_ENT_FILTER) ||
-                                    (flags & BF_SKIPLOCKED && ent->flags & GLLC_ENT_LOCKED) ||
+                                    (flags & BF_SKIPLOCKED && gllc_entity_locked(ent)) ||
                                     (flags & BF_SKIPHIDDEN && ent->flags & GLLC_ENT_HIDDEN) ||
                                     (flags & BF_SELONLY && !(ent->flags & GLLC_ENT_SELECTED)))
                                 {
@@ -1055,15 +1055,15 @@ void gllc_block_bbox(struct gllc_block *block, double *x0, double *y0, double *x
                         *y1 = 0.0f;
                 return;
         }
-        double minx = 1e300;
-        double miny = 1e300;
-        double maxx = -1e300;
-        double maxy = -1e300;
-        struct gllc_entity *e = block->h;
-        for (; e; e = e->next)
+        double minx = FLT_MAX;
+        double miny = FLT_MAX;
+        double maxx = -FLT_MAX;
+        double maxy = -FLT_MAX;
+        int cnt = 0;
+        for (struct gllc_entity *ent = block->h; ent; ent = ent->next)
         {
                 double ex0, ey0, ex1, ey1;
-                gllc_entity_bbox(e, wnd_scale(block), &ex0, &ey0, &ex1, &ey1);
+                gllc_entity_bbox(ent, wnd_scale(block), &ex0, &ey0, &ex1, &ey1);
                 if (ex0 < minx)
                         minx = ex0;
                 if (ey0 < miny)

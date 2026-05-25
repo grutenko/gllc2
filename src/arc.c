@@ -2,6 +2,7 @@
 #include "entbuildutil.h"
 #include "linalg.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,7 +16,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         if (gllc_entity_geometry_modified(ent))
         {
                 ds_unit_reset(ARC(ent)->u);
-                int segcnt = SEGCNT * (ARC(ent)->arc_angle / M_PI);
+                int segcnt = fabs(SEGCNT * (ARC(ent)->arc_angle / M_PI));
                 double n0[2] = {1.0f, 0.0f};
                 ROT(n0, ARC(ent)->start_angle);
                 ROT(n0, -ARC(ent)->arc_angle / 2);

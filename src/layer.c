@@ -1,10 +1,37 @@
 #include "layer.h"
+#include "entity.h"
+#include "litecad.h"
 #include "named_object.h"
 #include "object.h"
 #include <stdlib.h>
 #include <string.h>
 
-static struct gllc_prop props[] = {};
+#define LAYER(obj) ((struct gllc_layer *)(obj))
+
+static union gllc_variant _locked_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.bool_ = !!(((struct gllc_layer *)obj)->flags & GLLC_LAYER_LOCKED);
+        return v;
+}
+
+static int _locked_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        if (value.bool_)
+        {
+                LAYER(obj)->flags |= GLLC_LAYER_LOCKED;
+        }
+        else
+        {
+                LAYER(obj)->flags &= ~GLLC_LAYER_LOCKED;
+        }
+        for (int i = 0; i < LAYER(obj)->entcnt; i++)
+        {
+                gllc_entity_set_modified(LAYER(obj)->ents[i], 0);
+        }
+}
+
+static struct gllc_prop props[] = {P_BOOL(LC_PROP_LAYER_LOCKED, _locked_GET, _locked_SET)};
 static struct gllc_prop *all_props[] = {props, G_nobject_props, NULL};
 
 #define LAYER(obj) ((struct gllc_layer *)(obj))

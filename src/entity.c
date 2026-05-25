@@ -1133,7 +1133,7 @@ int gllc_entity_set_fcolor_string(struct gllc_entity *ent, char *color)
 
 int gllc_entity_locked(struct gllc_entity *ent)
 {
-        return (ent->flags & GLLC_ENT_LOCKED) > 0;
+        return ent->layer && (ent->layer->flags & GLLC_LAYER_LOCKED);
 }
 
 int gllc_entity_visible(struct gllc_entity *ent)

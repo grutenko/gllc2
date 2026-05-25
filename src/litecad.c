@@ -1318,7 +1318,8 @@ LCAPI void *lcBlockGetTIN(void *hBlock, char *szName)
 // Selection
 LCAPI int lcBlockUnselect(void *hBlock)
 {
-        return 0;
+        gllc_block_select((struct gllc_block *)hBlock, NULL, 0);
+        return 1;
 }
 LCAPI int lcBlockSelectEnt(void *hBlock, void *hEntity, int bSelect)
 {

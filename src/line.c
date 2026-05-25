@@ -157,24 +157,15 @@ static inline void swapf(double *a, double *b)
 
 static int bbox(struct gllc_entity *ent, double scale, double *xmin, double *ymin, double *xmax, double *ymax)
 {
-        double min[2], max[2];
         struct gllc_line *line = (struct gllc_line *)ent;
-        min[0] = line->p0[0];
-        min[1] = line->p0[1];
-        max[0] = line->p1[0];
-        max[1] = line->p1[1];
-        if (min[0] > max[0])
-                swapf(&min[0], &max[0]);
-        if (min[1] > max[1])
-                swapf(&min[1], &max[1]);
         if (xmin)
-                *xmin = min[0];
+                *xmin = fmin(line->p0[0], line->p1[0]);
         if (ymin)
-                *ymin = min[1];
+                *ymin = fmin(line->p0[1], line->p1[1]);
         if (xmax)
-                *xmax = max[0];
+                *xmax = fmax(line->p0[0], line->p1[0]);
         if (ymax)
-                *ymax = max[1];
+                *ymax = fmax(line->p0[1], line->p1[1]);
         return 1;
 }
 

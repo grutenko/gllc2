@@ -1749,7 +1749,7 @@ int gllc_window_zoom_rect(struct gllc_window *W, double x0, double y0, double x1
         double dx = fabs(x1 - x0);
         double dy = fabs(y1 - y0);
         double scale = fmax(dx / W->width, dy / W->height);
-        return gllc_window_zoom_pos(W, x0 + (dx / 2.0f), y0 + (dy / 2.0f), scale);
+        return gllc_window_zoom_pos(W, (x0 + x1) * 0.5, (y0 + y1) * 0.5, scale);
 }
 
 int gllc_window_zoom_scale(struct gllc_window *W, double scale)
@@ -1764,8 +1764,8 @@ int gllc_window_zoom_scale(struct gllc_window *W, double scale)
 int gllc_window_zoom_move(struct gllc_window *W, double dx, double dy)
 {
         NONULL(W, 0);
-        W->dx = fmax(fmin(W->dx + dx, FLT_MAX), FLT_MIN);
-        W->dy = fmax(fmin(W->dy + dy, FLT_MAX), FLT_MIN);
+        W->dx = fmax(fmin(W->dx + dx, FLT_MAX), -FLT_MAX);
+        W->dy = fmax(fmin(W->dy + dy, FLT_MAX), -FLT_MAX);
 
         update_camera(W);
         return 1;
@@ -1774,13 +1774,14 @@ int gllc_window_zoom_move(struct gllc_window *W, double dx, double dy)
 int gllc_window_zoom_pos(struct gllc_window *W, double x, double y, double scale)
 {
         NONULL(W, 0);
-
+        x = -x;
+        y = -y;
         W->scale = fmax(fmin(scale, SCALEMAX), SCALEMIN);
-        W->dx = fmax(fmin(x, FLT_MAX), FLT_MIN);
-        W->dy = fmax(fmin(y, FLT_MAX), FLT_MIN);
+        W->dx = fmax(fmin(x, FLT_MAX), -FLT_MAX);
+        W->dy = fmax(fmin(y, FLT_MAX), -FLT_MAX);
 
         update_camera(W);
-
+        nw_dirty(&W->nw);
         return 1;
 }
 

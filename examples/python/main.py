@@ -12,7 +12,7 @@ import sys
 app = wx.App(0)
 
 f = wx.Frame(None, title="LiteCAD AUI")
-f.SetSize(wx.Size(800, 600))
+f.SetSize(wx.Size(1280, 720))
 
 # ---------------- AUI ----------------
 mgr = aui.AuiManager()
@@ -128,16 +128,18 @@ def get_color_int(e, doc):
 # ---------------- DXF TO LC ----------------
 total_points = 0
 
+L = lc.lcDrwAddLayer(hDrw, "0", "0", None, 1)
+lc.lcPropPutBool(L, lc.LC_PROP_LAYER_LOCKED, True)
 for entity in msp:
     color = get_color_int(entity, dxf)
     h = None
-
     if entity.dxftype() == "LINE":
         start = entity.dxf.start
         end = entity.dxf.end
 
         h = lc.lcBlockAddLine(hBlock, start.x, start.y, end.x, end.y)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
     elif entity.dxftype() in ("LWPOLYLINE", "POLYLINE"):
         if entity.dxftype() == "LWPOLYLINE":
@@ -153,7 +155,8 @@ for entity in msp:
             lc.lcPlineAddVer(h, 0, x, y)
 
         lc.lcPlineEnd(h)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
     elif entity.dxftype() == "ARC":
         center = entity.dxf.center
@@ -166,15 +169,17 @@ for entity in msp:
         a *= math.pi / 180
         a -= arc_angle / 2
 
-        h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, a, arc_angle)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        h = lc.lcBlockAddArc(hBlock, center.x, center.y, radius, a, abs(arc_angle))
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
     elif entity.dxftype() == "CIRCLE":
         center = entity.dxf.center
         radius = entity.dxf.radius
 
-        h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 1)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0x0)
+        h = lc.lcBlockAddCircle(hBlock, center.x, center.y, radius, 0)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
 # ---------------- GRID ----------------
 for i in range(N - 1):
@@ -197,17 +202,13 @@ for i in range(N - 1):
 
         lc.lcPlineEnd(pline)
 
+x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)
+y0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMIN)
+x1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMAX)
+y1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMAX)
+wx.CallAfter(lc.lcWndZoomRect, hWnd, x0, y0, x1, y1)
+
 lc.lcBlockUpdate(hBlock, 0, 0)
-
-def on_select(hEvent):
-    hEnt = lc.lcBlockGetFirstSel(hBlock)
-    while hEnt :
-        lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FCOLOR, 0xffffff)
-        hEnt = lc.lcBlockGetNextSel(hBlock)
-
-    lc.lcBlockUpdate(hBlock, 0, 0)
-
-lc.lcEventSetProc(lc.LC_EVENT_SELECT, lc.F_LCEVENT(on_select), 0, None)
 
 # ---------------- FINAL ----------------
 mgr.Update()
