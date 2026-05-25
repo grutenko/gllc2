@@ -358,7 +358,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                 if (gpu->VBO_capacity < gpu->V_data_size)
                 {
                         glBufferData(GL_ARRAY_BUFFER, gpu->V_data_size * sizeof(struct ds_vertex), NULL,
-                                     GL_STATIC_DRAW);
+                                     GL_DYNAMIC_DRAW);
                         gpu->VBO_capacity = gpu->V_data_size;
                 }
                 void *ptr = glMapBufferRange(GL_ARRAY_BUFFER, 0, gpu->V_data_size * sizeof(struct ds_vertex),
@@ -367,7 +367,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                 glUnmapBuffer(GL_ARRAY_BUFFER);
                 if (gpu->I_data_size > gpu->EBO_capacity)
                 {
-                        glBufferData(GL_ELEMENT_ARRAY_BUFFER, gpu->I_data_size * sizeof(GLuint), NULL, GL_STATIC_DRAW);
+                        glBufferData(GL_ELEMENT_ARRAY_BUFFER, gpu->I_data_size * sizeof(GLuint), NULL, GL_DYNAMIC_DRAW);
                         gpu->EBO_capacity = gpu->I_data_size;
                 }
                 ptr = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, gpu->I_data_size * sizeof(GLuint),

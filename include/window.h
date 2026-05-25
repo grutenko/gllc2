@@ -3,6 +3,7 @@
 
 #include "draw.h"
 #include "entity.h"
+#include "ui_ptbuf.h"
 #if defined(_WIN32)
 #include "glad.h"
 #elif defined(__linux__)
@@ -62,6 +63,7 @@ struct gllc_window
         struct ui_grid grid;
         struct ui_cursor cursor;
         struct ui_selection sel;
+        struct ui_ptbuf ptbuf;
 };
 
 #if defined(_WIN32)

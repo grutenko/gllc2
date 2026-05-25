@@ -69,6 +69,7 @@ struct gllc_entity
         struct gllc_object _obj;
         int flags;
         float falpha;
+        float alpha;
         float lwidth;
         int order;
         uint64_t ID;
@@ -125,6 +126,8 @@ int gllc_entity_is_fcolort(struct gllc_entity *ent);
 int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor);
 int gllc_entity_set_falpha(struct gllc_entity *ent, float falpha);
 float gllc_entity_falpha(struct gllc_entity *ent);
+int gllc_entity_set_alpha(struct gllc_entity *ent, float alpha);
+float gllc_entity_alpha(struct gllc_entity *ent);
 int gllc_entity_set_ltscale(struct gllc_entity *ent, float ltscale);
 int gllc_entity_set_lwidth_mode(struct gllc_entity *ent, int mode);
 int gllc_entity_set_lwidth(struct gllc_entity *ent, float lwidth);

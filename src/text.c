@@ -7,6 +7,7 @@
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
 {
+        
 }
 
 static void destroy(struct gllc_entity *ent)

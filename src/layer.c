@@ -29,6 +29,7 @@ static int _locked_SET(struct gllc_object *obj, int prop, int type, union gllc_v
         {
                 gllc_entity_set_modified(LAYER(obj)->ents[i], 0);
         }
+        return 1;
 }
 
 static struct gllc_prop props[] = {P_BOOL(LC_PROP_LAYER_LOCKED, _locked_GET, _locked_SET)};

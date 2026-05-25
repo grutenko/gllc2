@@ -22285,3 +22285,8 @@ try:
     XLC_WINDOW_GTK_BACKEND = 1
 except NameError:
     pass
+
+try:
+    XLC_PROP_ENT_ALPHA = 1000001
+except NameError:
+    pass

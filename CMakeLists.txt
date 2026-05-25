@@ -18,6 +18,8 @@ set(CGLM_STATIC ON)
 add_subdirectory(cglm)
 add_subdirectory(freetype)
 add_subdirectory(utf8proc)
+set(HB_BUILD_GPU ON)
+add_subdirectory(harfbuzz)
 if(NOT EMSCRIPTEN)
 add_subdirectory(examples)
 endif()
@@ -90,7 +92,7 @@ target_compile_definitions(gllc PRIVATE
 target_compile_options(gllc PRIVATE
     $<$<CONFIG:Release>:-O2>
 )
-target_link_libraries(gllc PRIVATE cglm freetype utf8proc)
+target_link_libraries(gllc PRIVATE cglm freetype utf8proc harfbuzz harfbuzz-gpu)
 
 if (WIN32)
     target_link_libraries(gllc PRIVATE opengl32 gdi32 user32 kernel32)

@@ -22,7 +22,7 @@ static void resolv_color(struct gllc_entity *ent, unsigned char *color)
                 color[0] = RED(colorint);
                 color[1] = GREEN(colorint);
                 color[2] = BLUE(colorint);
-                color[3] = 255;
+                color[3] = (unsigned char)(ent->alpha * 255);
         }
 }
 

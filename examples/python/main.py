@@ -91,18 +91,20 @@ p.Bind(wx.EVT_SIZE, on_size)
 # ---------------- DXF + DATA ----------------
 N = 600
 M = 600
-min_v = -6000.0
-max_v = 6000.0
+min_vx = -6000.0
+max_vx = -2000.0
+min_vy = -2500.0
+max_vy = 1500.0
 
-step = (max_v - min_v) / float(N)
+step = (max_vx - min_vx) / float(N)
 
 tab = (ct.c_double * (2 * N * M))()
 
 for i in range(N):
     for j in range(M):
         i0 = (i * M + j) * 2
-        tab[i0] = min_v + i * step
-        tab[i0 + 1] = min_v + j * step
+        tab[i0] = min_vx + i * step
+        tab[i0 + 1] = min_vy + j * step
 
 dxf = ezdxf.readfile(dirname(__file__) + "/Отметка -250 каркасы.dxf")
 msp = dxf.modelspace()
@@ -145,17 +147,22 @@ for entity in msp:
         if entity.dxftype() == "LWPOLYLINE":
             points = entity.get_points("xy")
             closed = entity.closed
+            filled = getattr(entity, "fill", False)
         else:
             points = [(p.x, p.y) for p in entity.points()]
             closed = entity.is_closed
+            filled = getattr(entity, "fill", False)
 
-        h = lc.lcBlockAddPolyline(hBlock, 0, closed, 0)
+        fillcolor = getattr(entity, "fillcolor", None)
+        h = lc.lcBlockAddPolyline(hBlock, 0, closed, filled)
 
         for x, y in points:
             lc.lcPlineAddVer(h, 0, x, y)
 
         lc.lcPlineEnd(h)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        if fillcolor is not None:
+            lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, int(fillcolor))
         lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
     elif entity.dxftype() == "ARC":
@@ -209,6 +216,26 @@ y1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMAX)
 wx.CallAfter(lc.lcWndZoomRect, hWnd, x0, y0, x1, y1)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
+
+def on_select(evt):
+    hEnt = lc.lcBlockGetFirstSel(hBlock)
+    while hEnt:
+        if lc.lcPropGetInt(evt, lc.LC_PROP_EVENT_INT4) == 1:
+            lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_COLOR, 0x0)
+            lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FCOLOR, 0x0)
+            lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FALPHA, 125)
+            lc.lcPropPutInt(hEnt, lc.XLC_PROP_ENT_ALPHA, 255)
+        else:
+            lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FALPHA, 0)
+            lc.lcPropPutInt(hEnt, lc.XLC_PROP_ENT_ALPHA, 0)
+        hEnt = lc.lcBlockGetNextSel(hBlock)
+    lc.lcBlockUnselect(hBlock)
+    lc.lcBlockUpdate(hBlock, 0, None)
+    lc.lcWndRedraw(hWnd)
+
+on_select_cb = lc.F_LCEVENT(on_select)
+
+lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
 
 # ---------------- FINAL ----------------
 mgr.Update()

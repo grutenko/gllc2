@@ -9,6 +9,7 @@
 #include "platform.h"
 #include "ui_cursor.h"
 #include "ui_grid.h"
+#include "ui_ptbuf.h"
 #include "ui_selection.h"
 #include "vert.h"
 
@@ -1032,7 +1033,7 @@ static void draw(struct gllc_window *W)
                 gllc_block_sync_gpu(W->block, &W->gpucmn);
                 ds_draw(&W->gpucmn, W->loc_uflags);
         }
-        if (W->mpressed && W->mbtn == 1)
+        if (W->mpressed && (W->mbtn == 1 || W->mbtn == 2))
         {
                 double sx0, sy0, sx1, sy1;
                 sx0 = W->mx0;
@@ -1130,7 +1131,7 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data)
                         e.window = WND(data);
                         gllc_event_send(LC_EVENT_WNDVIEW, &e);
                 }
-                if (WND(data)->mbtn == 1)
+                if (WND(data)->mbtn == 1 || WND(data)->mbtn == 2)
                 {
                         double x0, y0, x1, y1;
                         x0 = WND(data)->mx0;
@@ -1155,14 +1156,6 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data)
                                 }
                                 gllc_block_update(WND(data)->block);
                         }
-                }
-        }
-        else
-        {
-                if (WND(data)->block)
-                {
-                        gllc_block_ent_hover(WND(data)->block, gllc_block_pick_ent(WND(data)->block, wx, wy, 1, 1), 1);
-                        gllc_block_update(WND(data)->block);
                 }
         }
         if (!WND(data)->drag)
@@ -1194,7 +1187,7 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
                 {
                         W->drag = 1;
                 }
-                else if (mode == 1)
+                else if (mode == 1 || mode == 2)
                 {
                         W->mpressx = x;
                         W->mpressy = y;
@@ -1210,7 +1203,7 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
                 }
                 if (W->block)
                 {
-                        if (mode == 1)
+                        if (mode == 1 || mode == 2)
                         {
                                 double x0, y0, x1, y1;
                                 int invert = 0;
@@ -1253,6 +1246,7 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
                                 evt._int1 = 1;
                                 evt._int2 = selcnt;
                                 evt._int3 = selcnt;
+                                evt._int4 = (W->mbtn == 2);
                                 gllc_event_send(LC_EVENT_SELECT, &evt);
                         }
                 }
@@ -1485,6 +1479,7 @@ static struct gllc_window *Wnew()
                 ui_grid_init(&W->grid);
                 ui_cursor_init(&W->cursor);
                 ui_selection_init(&W->sel);
+                ui_ptbuf_init(&W->ptbuf);
         }
         return W;
 }

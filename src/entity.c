@@ -468,6 +468,19 @@ static int _ent_falpha_SET(struct gllc_object *obj, int prop, int type, union gl
         return gllc_entity_set_falpha(ENT(obj), value.int_ / 255.0f);
 }
 
+
+static union gllc_variant _ent_color_alpha_GET(struct gllc_object *obj, int prop, int type)
+{
+        union gllc_variant v;
+        v.int_ = (int)(gllc_entity_alpha(ENT(obj)) * 255.0f);
+        return v;
+}
+
+static int _ent_color_alpha_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return gllc_entity_set_alpha(ENT(obj), value.int_ / 255.0f);
+}
+
 static union gllc_variant _ent_linfill_GET(struct gllc_object *obj, int prop, int type)
 {
         return (union gllc_variant)0;
@@ -648,6 +661,7 @@ struct gllc_prop G_entity_props[] = {
     P_INT(LC_PROP_ENT_FCOLORT, _ent_fcolort_GET, _ent_fcolort_SET),
     P_BOOL(LC_PROP_ENT_FCOLORBYLAYER, _ent_fcolor_by_layer_GET, _ent_color_by_layer_SET),
     P_BOOL(LC_PROP_ENT_FCOLORBYBLOCK, _ent_fcolor_by_block_GET, _ent_fcolor_by_block_SET),
+    P_INT(XLC_PROP_ENT_ALPHA, _ent_color_alpha_GET, _ent_color_alpha_SET),
     P_INT(LC_PROP_ENT_FALPHA, _ent_falpha_GET, _ent_falpha_SET),
     P_HANDLE(LC_PROP_ENT_LINFILL, _ent_linfill_GET, _ent_linfill_SET),
     P_STRING(LC_PROP_ENT_LINFILL, _ent_linfill_GET, _ent_linfill_SET),
@@ -806,6 +820,7 @@ void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct
         ent->props.color = 0;
         ent->props.fcolor = 0;
         ent->falpha = 1.0f;
+        ent->alpha = 1.0f;
 }
 
 int gllc_entity_set_falpha(struct gllc_entity *ent, float falpha)
@@ -1260,4 +1275,16 @@ int gllc_entity_set_layer(struct gllc_entity *ent, struct gllc_layer *layer)
 struct gllc_layer *gllc_entity_get_layer(struct gllc_entity *ent)
 {
         return ent->layer;
+}
+
+int gllc_entity_set_alpha(struct gllc_entity *ent, float alpha)
+{
+        ent->alpha = alpha;
+        gllc_entity_set_modified(ent, 0);
+        return 1;
+}
+
+float gllc_entity_alpha(struct gllc_entity *ent)
+{
+        return ent->alpha;
 }
