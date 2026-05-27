@@ -1,3 +1,4 @@
+#include <X11/X.h>
 #if defined(__linux__) && !defined(__EMSCRIPTEN__)
 
 #include "platform.h"
@@ -124,11 +125,31 @@ static int poll_events(struct nw *nw)
 
                 case MotionNotify:
                         if (nw->cb_vtable_p->mouse_move)
-                                nw->cb_vtable_p->mouse_move(nw, ev.xmotion.x, ev.xmotion.y, nw->data);
+                        {
+                                int flags;
+                                if ((ev.xmotion.state & ControlMask) != 0)
+                                {
+                                        flags |= NW_CONTROL;
+                                }
+                                if ((ev.xmotion.state & ShiftMask) != 0)
+                                {
+                                        flags |= NW_SHIFT;
+                                }
+                                nw->cb_vtable_p->mouse_move(nw, ev.xmotion.x, ev.xmotion.y, flags, nw->data);
+                        }
                         break;
 
                 case ButtonPress:
-                case ButtonRelease:
+                case ButtonRelease: {
+                        int flags;
+                        if ((ev.xbutton.state & ControlMask) != 0)
+                        {
+                                flags |= NW_CONTROL;
+                        }
+                        if ((ev.xbutton.state & ShiftMask) != 0)
+                        {
+                                flags |= NW_SHIFT;
+                        }
                         // Обработка скролла (в X11 колесико — это кнопки 4, 5, 6, 7)
                         if (ev.xbutton.button >= 4 && ev.xbutton.button <= 7)
                         {
@@ -143,7 +164,8 @@ static int poll_events(struct nw *nw)
                                                 dx = -1; // Влево
                                         else if (ev.xbutton.button == 7)
                                                 dx = 1; // Вправо
-                                        nw->cb_vtable_p->mouse_scroll(nw, dx, dy, nw->data);
+
+                                        nw->cb_vtable_p->mouse_scroll(nw, dx, dy, flags, nw->data);
                                 }
                         }
                         else
@@ -154,10 +176,11 @@ static int poll_events(struct nw *nw)
                                         int mode = ev.xbutton.button; // 1-ЛКМ, 2-СКМ, 3-ПКМ
                                         int action = (ev.type == ButtonPress) ? 1 : 0;
                                         nw->cb_vtable_p->mouse_click(nw, ev.xbutton.x, ev.xbutton.y, mode, action,
-                                                                     nw->data);
+                                                                     flags, nw->data);
                                 }
                         }
                         break;
+                }
 
                 case LeaveNotify:
                         if (nw->cb_vtable_p->mouse_leave)

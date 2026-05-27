@@ -23,10 +23,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         ent->offset = ds_unit_vcnt(pl->u);
                 }
                 build_contur(ent, pl->u, pl->pts, pl->cnt);
-                pl->u->dirty = 1;
-                pl->u->geometry_dirty = 1;
-                pl->u->draw->dirty = 1;
-                pl->u->draw->geometry_dirty = 1;
+                ds_unit_set_modified(pl->u, 1);
         }
         else
         {
@@ -35,8 +32,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         soft_update_filltess(ent, pl->u);
                 }
                 soft_update_contur(ent, pl->u);
-                pl->u->dirty = 1;
-                pl->u->draw->dirty = 1;
+                ds_unit_set_modified(pl->u, 1);
         }
         resolv_flags(ent, &pl->u->flags);
 }

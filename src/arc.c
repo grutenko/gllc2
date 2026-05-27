@@ -1,4 +1,5 @@
 #include "arc.h"
+#include "draw.h"
 #include "entbuildutil.h"
 #include "linalg.h"
 
@@ -26,16 +27,12 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         ROT(n0, step);
                 }
                 build_contur(ent, ARC(ent)->u, pts, segcnt);
-                ARC(ent)->u->dirty = 1;
-                ARC(ent)->u->geometry_dirty = 1;
-                ARC(ent)->u->draw->dirty = 1;
-                ARC(ent)->u->draw->geometry_dirty = 1;
+                ds_unit_set_modified(ARC(ent)->u, 1);
         }
         else
         {
                 soft_update_contur(ent, ARC(ent)->u);
-                ARC(ent)->u->dirty = 1;
-                ARC(ent)->u->draw->dirty = 1;
+                ds_unit_set_modified(ARC(ent)->u, 1);
         }
         resolv_flags(ent, &ARC(ent)->u->flags);
 }

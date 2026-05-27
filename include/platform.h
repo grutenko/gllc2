@@ -22,6 +22,9 @@
 
 #endif
 
+#define NW_CONTROL 0x1
+#define NW_SHIFT 0x2
+
 struct nw;
 
 struct nw_callback_vtable
@@ -29,9 +32,9 @@ struct nw_callback_vtable
         void (*ready)(struct nw *w, void *data);
         void (*paint)(struct nw *w, void *data);
         void (*size)(struct nw *w, int width, int height, void *data);
-        void (*mouse_move)(struct nw *w, int x, int y, void *data);
-        void (*mouse_click)(struct nw *wn, int x, int y, int mode, int action, void *data);
-        void (*mouse_scroll)(struct nw *wn, int dx, int dy, void *data);
+        void (*mouse_move)(struct nw *w, int x, int y, int flags, void *data);
+        void (*mouse_click)(struct nw *wn, int x, int y, int mode, int action, int flags, void *data);
+        void (*mouse_scroll)(struct nw *wn, int dx, int dy, int flags, void *data);
         void (*mouse_leave)(struct nw *wn, void *data);
 };
 

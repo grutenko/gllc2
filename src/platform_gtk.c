@@ -28,7 +28,16 @@ static gboolean on_configure(GtkWidget *widget, GtkAllocation *allocation, gpoin
 static gboolean on_motion(GtkWidget *widget, GdkEventMotion *event, gpointer data)
 {
         struct nw *w = data;
-        w->cb_vtable_p->mouse_move(w, (int)event->x, (int)event->y, w->data);
+        int flags = 0;
+        if ((event->state & GDK_CONTROL_MASK) != 0)
+        {
+                flags |= NW_CONTROL;
+        }
+        if ((event->state & GDK_SHIFT_MASK) != 0)
+        {
+                flags |= NW_SHIFT;
+        }
+        w->cb_vtable_p->mouse_move(w, (int)event->x, (int)event->y, flags, w->data);
         return FALSE;
 }
 
@@ -36,6 +45,15 @@ static gboolean on_button(GtkWidget *widget, GdkEventButton *event, gpointer dat
 {
         struct nw *w = data;
         gtk_widget_grab_focus(widget);
+        int flags = 0;
+        if ((event->state & GDK_CONTROL_MASK) != 0)
+        {
+                flags |= NW_CONTROL;
+        }
+        if ((event->state & GDK_SHIFT_MASK) != 0)
+        {
+                flags |= NW_SHIFT;
+        }
         int action = (event->type == GDK_BUTTON_PRESS) ? 1 : 0;
         int button = 1;
         if (event->button == 1)
@@ -50,7 +68,7 @@ static gboolean on_button(GtkWidget *widget, GdkEventButton *event, gpointer dat
         {
                 button = 2;
         }
-        w->cb_vtable_p->mouse_click(w, (int)event->x, (int)event->y, button, action, w->data);
+        w->cb_vtable_p->mouse_click(w, (int)event->x, (int)event->y, button, action, flags, w->data);
         return TRUE;
 }
 
@@ -76,7 +94,16 @@ static gboolean on_scroll(GtkWidget *widget, GdkEventScroll *event, gpointer dat
         default:
                 break;
         }
-        w->cb_vtable_p->mouse_scroll(w, dx, dy, w->data);
+        int flags = 0;
+        if ((event->state & GDK_CONTROL_MASK) != 0)
+        {
+                flags |= NW_CONTROL;
+        }
+        if ((event->state & GDK_SHIFT_MASK) != 0)
+        {
+                flags |= NW_SHIFT;
+        }
+        w->cb_vtable_p->mouse_scroll(w, dx, dy, flags, w->data);
 
         return TRUE;
 }
@@ -236,6 +263,7 @@ int nw_create_gtk(struct nw *nw, struct nw_callback_vtable *vtable, GtkWindow *p
         nw->vtable.poll_events = poll_events;
         gtk_gl_area_set_required_version(nw->area, 3, 3);
         gtk_gl_area_set_has_depth_buffer(nw->area, FALSE);
+
         GtkWidget *gl = GTK_WIDGET(nw->area);
         gtk_widget_add_events(gl, GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
                                       GDK_LEAVE_NOTIFY_MASK | GDK_SCROLL_MASK);

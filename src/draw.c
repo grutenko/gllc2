@@ -245,6 +245,17 @@ static void ds_sync_all(struct ds_draw *draw, struct ds_gpu *gpu)
 {
 }
 
+void ds_unit_set_modified(struct ds_unit *unit, int geometry)
+{
+        if (geometry)
+        {
+                unit->geometry_dirty = 1;
+                unit->draw->geometry_dirty = 1;
+        }
+        unit->dirty = 1;
+        unit->draw->dirty = 1;
+}
+
 void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
 {
         if (draw && gpu)
@@ -394,7 +405,6 @@ void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags)
                         glUniform1i(loc_uFlags, batch->flags);
                         glDrawElements(GL_TRIANGLES, batch->count, GL_UNSIGNED_INT,
                                        (void *)(batch->offset * sizeof(GLuint)));
-                        GL_CHECK();
                 }
                 glUniform1i(loc_uFlags, 0);
         }

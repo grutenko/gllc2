@@ -89,6 +89,7 @@ int ds_unit_icnt(struct ds_unit *u);
 struct ds_vertex *ds_unit_reserve_vertex(struct ds_unit *unit, GLuint cnt);
 GLuint *ds_unit_reserve_index(struct ds_unit *unit, GLuint cnt);
 void ds_unit_destroy(struct ds_unit *unit);
+void ds_unit_set_modified(struct ds_unit *unit, int geometry);
 // In draw_proc
 int ds_draw_dirty(struct ds_draw *draw);
 void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu);

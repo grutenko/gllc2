@@ -21,16 +21,12 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                     {LINE(ent)->p1[0], LINE(ent)->p1[1]},
                 };
                 build_contur(ent, LINE(ent)->u, pts, 2);
-                LINE(ent)->u->dirty = 1;
-                LINE(ent)->u->geometry_dirty = 1;
-                LINE(ent)->u->draw->dirty = 1;
-                LINE(ent)->u->draw->geometry_dirty = 1;
+                ds_unit_set_modified(LINE(ent)->u, 1);
         }
         else
         {
                 soft_update_contur(ent, LINE(ent)->u);
-                LINE(ent)->u->dirty = 1;
-                LINE(ent)->u->draw->dirty = 1;
+                ds_unit_set_modified(LINE(ent)->u, 1);
         }
         resolv_flags(ent, &LINE(ent)->u->flags);
 }

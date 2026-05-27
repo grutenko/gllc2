@@ -89,8 +89,8 @@ def on_size(event):
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 600
-M = 600
+N = 300
+M = 300
 min_vx = -6000.0
 max_vx = -2000.0
 min_vy = -2500.0
@@ -131,7 +131,7 @@ def get_color_int(e, doc):
 total_points = 0
 
 L = lc.lcDrwAddLayer(hDrw, "0", "0", None, 1)
-lc.lcPropPutBool(L, lc.LC_PROP_LAYER_LOCKED, True)
+#lc.lcPropPutBool(L, lc.LC_PROP_LAYER_LOCKED, True)
 for entity in msp:
     color = get_color_int(entity, dxf)
     h = None
@@ -235,7 +235,7 @@ def on_select(evt):
 
 on_select_cb = lc.F_LCEVENT(on_select)
 
-lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
+#lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
 
 # ---------------- FINAL ----------------
 mgr.Update()

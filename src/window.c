@@ -1009,7 +1009,6 @@ static void draw(struct gllc_window *W)
 {
         nw_make_context_current(&W->nw);
         glViewport(0, 0, W->width, W->height);
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glClearColor(W->clearcolor[0], W->clearcolor[1], W->clearcolor[2], W->clearcolor[3]);
         double x0, y0, x1, y1;
         float _w = (float)W->width;
@@ -1045,7 +1044,7 @@ static void draw(struct gllc_window *W)
         ui_cursor_draw(&W->cursor, W->curx, W->cury, W->width, W->height);
         // glFinish();
         nw_swap_buffers(&W->nw);
-        nw_release_current_context(&W->nw);
+        //nw_release_current_context(&W->nw);
 }
 
 static void on_paint(struct nw *nw, void *data)
@@ -1113,7 +1112,7 @@ static void send_mouse_event(struct gllc_window *W, int x, int y, double wx, dou
         gllc_event_send(LC_EVENT_MOUSEMOVE, &e);
 }
 
-static void on_mouse_move(struct nw *w, int x, int y, void *data)
+static void on_mouse_move(struct nw *w, int x, int y, int flags, void *data)
 {
         double wx, wy;
         screen_to_world(WND(data), (double)x, (double)y, &wx, &wy);
@@ -1174,7 +1173,7 @@ static void on_mouse_move(struct nw *w, int x, int y, void *data)
         nw_dirty(w);
 }
 
-static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, void *data)
+static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, int flags, void *data)
 {
         struct gllc_window *W = (struct gllc_window *)data;
         W->mbtn = mode;
@@ -1254,7 +1253,7 @@ static void on_mouse_click(struct nw *wn, int x, int y, int mode, int action, vo
         nw_dirty(wn);
 }
 
-static void on_mouse_scroll(struct nw *wn, int dx, int dy, void *data)
+static void on_mouse_scroll(struct nw *wn, int dx, int dy, int flags, void *data)
 {
         if (dy > 10)
                 dy = 10;
@@ -1430,8 +1429,8 @@ void on_ready(struct nw *NW, void *data)
                 glDisable(GL_POINT_SMOOTH);
                 glDisable(GL_POLYGON_SMOOTH);
                 glDisable(GL_DITHER);
-                glEnable(GL_BLEND);
                 glDisable(GL_DEPTH_TEST);
+                glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
