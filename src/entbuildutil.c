@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-static void resolv_color(struct gllc_entity *ent, unsigned char *color)
+void resolv_color(struct gllc_entity *ent, unsigned char *color)
 {
         int colorint = gllc_entity_color(ent);
         if (ent->flags & GLLC_ENT_SELECTED)
@@ -26,7 +26,7 @@ static void resolv_color(struct gllc_entity *ent, unsigned char *color)
         }
 }
 
-static void resolv_fcolor(struct gllc_entity *ent, unsigned char *color)
+void resolv_fcolor(struct gllc_entity *ent, unsigned char *color)
 {
         int colorint = gllc_entity_fcolor(ent);
         color[0] = RED(colorint);
@@ -135,19 +135,19 @@ void build_filltess(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, in
                         GLuint *I = ds_unit_reserve_index(u, oldicnt + indices_count * 3);
                         for (int i = 0; i < vert_count; i++)
                         {
-                                V[oldvcnt + i].p[0] = verts[i * 2];
-                                V[oldvcnt + i].p[1] = verts[i * 2 + 1];
-                                V[oldvcnt + i].c[0] = color[0];
-                                V[oldvcnt + i].c[1] = color[1];
-                                V[oldvcnt + i].c[2] = color[2];
-                                V[oldvcnt + i].c[3] = color[3];
-                                V[oldvcnt + i].n[0] = 0;
-                                V[oldvcnt + i].n[1] = 0;
-                                V[oldvcnt + i].l = 0.0f;
-                                V[oldvcnt + i].th = 0.0f;
-                                V[oldvcnt + i].thmul = 0.0f;
-                                V[oldvcnt + i].uv[0] = 0;
-                                V[oldvcnt + i].uv[1] = 0;
+                                V[oldvcnt + i].pos[0] = verts[i * 2];
+                                V[oldvcnt + i].pos[1] = verts[i * 2 + 1];
+                                V[oldvcnt + i].color[0] = color[0];
+                                V[oldvcnt + i].color[1] = color[1];
+                                V[oldvcnt + i].color[2] = color[2];
+                                V[oldvcnt + i].color[3] = color[3];
+                                V[oldvcnt + i].normal[0] = 0;
+                                V[oldvcnt + i].normal[1] = 0;
+                                V[oldvcnt + i].length = 0.0f;
+                                V[oldvcnt + i].thickness = 0.0f;
+                                V[oldvcnt + i].thicknessMiltiplier = 0.0f;
+                                V[oldvcnt + i].textureCoord[0] = 0;
+                                V[oldvcnt + i].textureCoord[1] = 0;
                         }
                         for (int i = 0; i < indices_count * 3; i++)
                         {
@@ -170,11 +170,11 @@ void soft_update_contur(struct gllc_entity *ent, struct ds_unit *u)
         th = resolv_pixwidth(ent);
         for (int i = ent->offset; i < ds_unit_vcnt(u); i++)
         {
-                u->V[i].c[0] = color[0];
-                u->V[i].c[1] = color[1];
-                u->V[i].c[2] = color[2];
-                u->V[i].c[3] = color[3];
-                u->V[i].th = th / 2.0f * u->V[i].thmul;
+                u->V[i].color[0] = color[0];
+                u->V[i].color[1] = color[1];
+                u->V[i].color[2] = color[2];
+                u->V[i].color[3] = color[3];
+                u->V[i].thickness = th / 2.0f * u->V[i].thicknessMiltiplier;
         }
 }
 
@@ -184,9 +184,9 @@ void soft_update_filltess(struct gllc_entity *ent, struct ds_unit *u)
         resolv_fcolor(ent, color);
         for (int i = 0; i < ent->offset && i < ds_unit_vcnt(u); i++)
         {
-                u->V[i].c[0] = color[0];
-                u->V[i].c[1] = color[1];
-                u->V[i].c[2] = color[2];
-                u->V[i].c[3] = color[3];
+                u->V[i].color[0] = color[0];
+                u->V[i].color[1] = color[1];
+                u->V[i].color[2] = color[2];
+                u->V[i].color[3] = color[3];
         }
 }

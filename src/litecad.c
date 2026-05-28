@@ -1,5 +1,6 @@
 #include "litecad.h"
 #include "block.h"
+#include "debug.h"
 #include "drawing.h"
 #include "event.h"
 #include "font.h"
@@ -36,6 +37,10 @@ LCAPI int lcInitialize()
 #ifdef NDEBUG
         printf("RELEASE build\n");
 #endif
+        if (FT_Init_FreeType(&ft))
+        {
+                FMTERROR("Cannot initialize FreeType\n");
+        }
         gllc_fonts_scan();
         return 0;
 }
@@ -44,6 +49,7 @@ LCAPI int lcUninitialize(int bSaveConfig)
 {
         gllc_fonts_clear();
         gllc_events_cleanup();
+        FT_Done_FreeType(ft);
         return 1;
 }
 
@@ -416,7 +422,7 @@ LCAPI void *lcFontAddFile(char *szFontName, char *szFilename, char *szOutFontNam
 }
 LCAPI void *lcFontAddBin(char *szFontName, void *hData)
 {
-        return gllc_font_create_binary(1, szFontName, hData);
+        return NULL;
 }
 LCAPI void *lcFontGetChar(void *hFont, int CharCode)
 {
@@ -1072,7 +1078,7 @@ LCAPI void *lcBlockAddEllipse(void *hBlock, double X, double Y, double R1, doubl
 }
 LCAPI void *lcBlockAddText(void *hBlock, char *szText, double X, double Y)
 {
-        return NULL;
+        return gllc_block_add_text((struct gllc_block *)hBlock, szText, X, Y);
 }
 LCAPI void *lcBlockAddText2(void *hBlock, char *szText, double X, double Y, int Align, double H, double WScale,
                             double RotAngle, double Oblique)

@@ -14,10 +14,14 @@ file(GLOB SOURCES
 file(GLOB TESS2SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/tess2/*.c"
 )
+
+set(BUILD_SHARED_LIBS ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 set(CGLM_STATIC ON)
 add_subdirectory(cglm)
-add_subdirectory(freetype)
 add_subdirectory(utf8proc)
+add_subdirectory(freetype)
 set(HB_BUILD_GPU ON)
 add_subdirectory(harfbuzz)
 if(NOT EMSCRIPTEN)
@@ -63,7 +67,9 @@ add_custom_target(Shaders ALL DEPENDS ${GENERATED_HEADERS})
 
 set(GENERATED_FONT_HEADERS)
 
-set(FONT_FILES fonts/Simplex.ttf)
+set(FONT_FILES
+        fonts/Simplex.ttf
+        fonts/mipgost.ttf)
 
 foreach(FONT ${FONT_FILES})
     get_filename_component(NAME ${FONT} NAME_WE)

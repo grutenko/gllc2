@@ -4,6 +4,7 @@
 #include "draw.h"
 #include "event.h"
 #include "frag.h"
+#include "hb-gpu.h"
 #include "litecad.h"
 #include "object.h"
 #include "platform.h"
@@ -1009,6 +1010,7 @@ static void draw(struct gllc_window *W)
 {
         nw_make_context_current(&W->nw);
         glViewport(0, 0, W->width, W->height);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glClearColor(W->clearcolor[0], W->clearcolor[1], W->clearcolor[2], W->clearcolor[3]);
         double x0, y0, x1, y1;
         float _w = (float)W->width;
@@ -1030,7 +1032,7 @@ static void draw(struct gllc_window *W)
         if (W->block)
         {
                 gllc_block_sync_gpu(W->block, &W->gpucmn);
-                ds_draw(&W->gpucmn, W->loc_uflags);
+                ds_draw(&W->gpucmn, W->loc_uflags, W->loc_uhbgpuatlas);
         }
         if (W->mpressed && (W->mbtn == 1 || W->mbtn == 2))
         {
@@ -1044,7 +1046,7 @@ static void draw(struct gllc_window *W)
         ui_cursor_draw(&W->cursor, W->curx, W->cury, W->width, W->height);
         // glFinish();
         nw_swap_buffers(&W->nw);
-        //nw_release_current_context(&W->nw);
+        // nw_release_current_context(&W->nw);
 }
 
 static void on_paint(struct nw *nw, void *data)
@@ -1287,7 +1289,7 @@ static void on_mouse_leave(struct nw *wn, void *data)
 {
 }
 
-static GLuint load_shader(GLuint type, const char *source)
+static GLuint load_shader(GLuint type, const char **source, int cnt)
 {
         GLuint shader = glCreateShader(type);
         if (shader == 0)
@@ -1295,7 +1297,7 @@ static GLuint load_shader(GLuint type, const char *source)
                 fprintf(stderr, "Failed to create shader\n");
                 return 0;
         }
-        glShaderSource(shader, 1, &source, NULL);
+        glShaderSource(shader, cnt, source, NULL);
         glCompileShader(shader);
         GLint compiled = GL_FALSE;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
@@ -1351,12 +1353,14 @@ static GLuint load_program(GLuint vert_shader, GLuint frag_shader)
 
 static void load_GL_program(struct gllc_window *W)
 {
-        GLuint V_shader = load_shader(GL_VERTEX_SHADER, vert_vert);
+        const char *vert[] = {vert_vert};
+        GLuint V_shader = load_shader(GL_VERTEX_SHADER, vert, 1);
         if (!V_shader)
         {
                 return;
         }
-        GLuint F_shader = load_shader(GL_FRAGMENT_SHADER, frag_frag);
+        const char *frag[] = {frag_frag};
+        GLuint F_shader = load_shader(GL_FRAGMENT_SHADER, frag, 1);
         if (!F_shader)
         {
                 glDeleteShader(V_shader);
@@ -1375,11 +1379,12 @@ static void load_GL_uniform_loc(struct gllc_window *w)
         {                                                                                                              \
                 fprintf(stderr, "Uniform %s not found!\n", var);                                                       \
         }
-        LOADLOC(w->loc_umvp, "uMVP");
-        LOADLOC(w->loc_uscale, "uScale");
-        LOADLOC(w->loc_uviewportsize, "uViewportSize");
-        LOADLOC(w->loc_uflags, "uFlags");
-        LOADLOC(w->loc_uclearcolor, "uClearColor");
+        LOADLOC(w->loc_umvp, "u_modelViewProjection");
+        LOADLOC(w->loc_uscale, "u_scale");
+        LOADLOC(w->loc_uviewportsize, "u_viewportSize");
+        LOADLOC(w->loc_uflags, "u_flags");
+        LOADLOC(w->loc_uclearcolor, "u_clearColor");
+        LOADLOC(w->loc_uhbgpuatlas, "hb_gpu_atlas");
 }
 
 static void gl_dump_startup()

@@ -32,6 +32,7 @@ struct gllc_window
         GLuint loc_uviewportsize;
         GLuint loc_uflags;
         GLuint loc_uclearcolor;
+        GLuint loc_uhbgpuatlas;
         struct ds_gpu gpucmn;
         struct ds_gpu gpuinter;
         struct ds_draw inder;

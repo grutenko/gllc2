@@ -42,17 +42,17 @@ void ui_cursor_draw(struct ui_cursor *c, int mx, int my, int width, int height)
 #define SET_VER(I, X, Y)                                                                                               \
         do                                                                                                             \
         {                                                                                                              \
-                V[(I)].p[0] = (GLfloat)(X);                                                                            \
-                V[(I)].p[1] = (GLfloat)(Y);                                                                            \
-                V[(I)].n[0] = 1.0f;                                                                                    \
-                V[(I)].n[1] = 1.0f;                                                                                    \
-                V[(I)].uv[0] = 0.0f;                                                                                   \
-                V[(I)].uv[1] = 0.0f;                                                                                   \
-                V[(I)].c[0] = r;                                                                                       \
-                V[(I)].c[1] = g;                                                                                       \
-                V[(I)].c[2] = b;                                                                                       \
-                V[(I)].c[3] = a;                                                                                       \
-                V[(I)].th = 0.0f;                                                                                      \
+                V[(I)].pos[0] = (GLfloat)(X);                                                                          \
+                V[(I)].pos[1] = (GLfloat)(Y);                                                                          \
+                V[(I)].normal[0] = 1.0f;                                                                               \
+                V[(I)].normal[1] = 1.0f;                                                                               \
+                V[(I)].textureCoord[0] = 0.0f;                                                                         \
+                V[(I)].textureCoord[1] = 0.0f;                                                                         \
+                V[(I)].color[0] = r;                                                                                   \
+                V[(I)].color[1] = g;                                                                                   \
+                V[(I)].color[2] = b;                                                                                   \
+                V[(I)].color[3] = a;                                                                                   \
+                V[(I)].thickness = 0.0f;                                                                               \
         } while (0)
 
         SET_VER(0, mx, (double)my - 99.5f);

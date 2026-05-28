@@ -11,6 +11,7 @@
 #include "polyline.h"
 #include "rect.h"
 #include "sparsegrid.h"
+#include "text.h"
 #include "window.h"
 
 #include <float.h>
@@ -705,6 +706,18 @@ struct gllc_circle *gllc_block_add_circle(struct gllc_block *block, double x, do
         return circle;
 }
 
+struct gllc_text *gllc_block_add_text(struct gllc_block *block, char *text, double x, double y)
+{
+        NONULL(block, NULL);
+        struct gllc_text *t = gllc_text_create(block, &block->draw, text, x, y);
+        if (t)
+        {
+                push_ent(block, (struct gllc_entity *)t);
+                gllc_block_put_bq(block, (struct gllc_entity *)t);
+        }
+        return t;
+}
+
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden)
 {
         NONULL(block, NULL);
@@ -746,8 +759,7 @@ int gllc_block_ent_filter_point(struct gllc_block *block, double x, double y, in
         {
                 if (total >= limit)
                         return 1;
-                if ((skiplocked && gllc_entity_locked(ents[i])) ||
-                    (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
+                if ((skiplocked && gllc_entity_locked(ents[i])) || (skiphidden && ents[i]->flags & GLLC_ENT_HIDDEN))
                         continue;
                 if (ents[i]->vtable->picked(ents[i], wnd_scale(block), x, y, NULL))
                 {

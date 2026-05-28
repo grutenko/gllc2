@@ -50,17 +50,17 @@ void ui_selection_draw(struct ui_selection *sel, double x0, double y0, double x1
 #define SET_VER(I, X, Y, _r, _g, _b, _a)                                                                               \
         do                                                                                                             \
         {                                                                                                              \
-                v[(I)].p[0] = (GLfloat)(X);                                                                            \
-                v[(I)].p[1] = (GLfloat)(Y);                                                                            \
-                v[(I)].c[0] = _r;                                                                                      \
-                v[(I)].c[1] = _g;                                                                                      \
-                v[(I)].c[2] = _b;                                                                                      \
-                v[(I)].c[3] = _a;                                                                                      \
-                v[(I)].n[0] = 127;                                                                                     \
-                v[(I)].n[1] = 127;                                                                                     \
-                v[(I)].uv[0] = 0;                                                                                      \
-                v[(I)].uv[1] = 0;                                                                                      \
-                v[(I)].th = 0;                                                                                         \
+                v[(I)].pos[0] = (GLfloat)(X);                                                                          \
+                v[(I)].pos[1] = (GLfloat)(Y);                                                                          \
+                v[(I)].color[0] = _r;                                                                                  \
+                v[(I)].color[1] = _g;                                                                                  \
+                v[(I)].color[2] = _b;                                                                                  \
+                v[(I)].color[3] = _a;                                                                                  \
+                v[(I)].normal[0] = 127;                                                                                \
+                v[(I)].normal[1] = 127;                                                                                \
+                v[(I)].textureCoord[0] = 0;                                                                            \
+                v[(I)].textureCoord[1] = 0;                                                                            \
+                v[(I)].thickness = 0;                                                                                  \
         } while (0)
 
         SET_VER(0, x0, y0, r, g, b, a);

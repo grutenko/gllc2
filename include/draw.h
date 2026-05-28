@@ -1,6 +1,8 @@
 #ifndef draw_h
 #define draw_h
 
+#include "font.h"
+#include <setjmp.h>
 #if defined(_WIN32)
 #include "glad.h"
 #elif defined(__linux__)
@@ -9,23 +11,26 @@
 
 struct ds_vertex
 {
-        GLfloat th;
-        GLfloat thmul;
-        GLbyte n[2];
-        GLubyte uv[2];
-        GLubyte c[4];
-        GLfloat p[2];
-        GLfloat l;
+        GLfloat thickness;
+        GLfloat thicknessMiltiplier;
+        GLbyte normal[2];
+        GLfloat textureCoord[2];
+        GLubyte color[4];
+        GLfloat pos[2];
+        GLfloat length;
+        GLuint glyphLoc;
 };
 
 #define DS_UNIT_CHESS 0x1
 #define DS_UNIT_DASH_SCREEN 0x2
 #define DS_UNIT_DASH_REAL 0x4
+#define DS_UNIT_GLYPH 0x8
 
 struct ds_unit
 {
         int flags;
         int id;
+        int font_cache_id;
         struct ds_draw *draw;
         struct ds_vertex *V;
         GLuint *I;
@@ -51,6 +56,13 @@ struct ds_gpu_batch
         GLuint count;
 };
 
+struct ds_gpu_font_cache
+{
+        int ready;
+        GLuint texID;
+        GLuint bufferID;
+};
+
 struct ds_gpu
 {
         struct ds_gpu_batch *batches;
@@ -69,6 +81,27 @@ struct ds_gpu
         GLuint I_data_size;
         GLuint V_data_capacity;
         GLuint I_data_capacity;
+        struct ds_gpu_font_cache *font_glyph_cache;
+        int font_glyph_cache_cnt;
+        int font_glyph_cache_cap;
+};
+
+struct ds_draw_font_cache_glyph
+{
+        int glyph;
+        int offset;
+        int size;
+};
+
+struct ds_draw_font_cache
+{
+        int font_ID;
+        void *buffer;
+        int buffer_size;
+        int buffer_cap;
+        struct ds_draw_font_cache_glyph *glyphs;
+        int glyph_cnt;
+        int modified;
 };
 
 struct ds_draw
@@ -78,6 +111,9 @@ struct ds_draw
         struct ds_unit *head;
         struct ds_unit *tail;
         int unit_cnt;
+        struct ds_draw_font_cache *font_cache;
+        int font_cache_cnt;
+        int font_cache_cap;
 };
 
 void ds_attrib_ptr();
@@ -93,9 +129,11 @@ void ds_unit_set_modified(struct ds_unit *unit, int geometry);
 // In draw_proc
 int ds_draw_dirty(struct ds_draw *draw);
 void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu);
-void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags);
+void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags, GLuint loc_hb_texture_atlas);
 void ds_draw_clear(struct ds_draw *draw);
 void ds_gpu_clear(struct ds_gpu *gpu);
+int ds_draw_get_font_cache_id(struct ds_draw *draw, struct gllc_font *font);
+unsigned int ds_draw_get_font_glyph_loc(struct ds_draw *draw, struct gllc_font *font, int font_cache_id, int glyph_id);
 struct ds_unit *ds_unit_clone(struct ds_unit *unit);
 
 #endif

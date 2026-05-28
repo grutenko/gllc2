@@ -57,6 +57,7 @@ void gllc_block_set_window(struct gllc_block *block, struct gllc_window *window)
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden);
 int gllc_block_ent_filter_point(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden,
                                 int limit);
+struct gllc_text *gllc_block_add_text(struct gllc_block *block, char *text, double x, double y);
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled);
 struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2]);
 struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle,

@@ -188,7 +188,34 @@ for entity in msp:
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
         lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
+    elif entity.dxftype() in ("TEXT", "MTEXT"):
+        if entity.dxftype() == "TEXT":
+            insert = entity.dxf.insert
+            text = entity.dxf.text
+            height = entity.dxf.height
+            rotation = entity.dxf.rotation if entity.dxf.hasattr("rotation") else 0.0
+            print(height)
+        else:
+            insert = entity.dxf.insert
+            text = entity.text
+            height = entity.dxf.char_height if entity.dxf.hasattr("char_height") else 1.0
+            print(height)
+            rotation = entity.dxf.rotation if entity.dxf.hasattr("rotation") else 0.0
+
+        h = lc.lcBlockAddText(
+            hBlock,
+            text,
+            insert.x,
+            insert.y
+        )
+
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
+
 # ---------------- GRID ----------------
+import time
+t0 = time.perf_counter()
+
 for i in range(N - 1):
     for j in range(M - 1):
 
@@ -203,17 +230,24 @@ for i in range(N - 1):
         lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
         lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
         lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
+
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x000000)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FCOLOR, 0x000000)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 125)
 
         lc.lcPlineEnd(pline)
 
+
+t1 = time.perf_counter()
+
+print("time:", t1 - t0)
+
 x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)
 y0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMIN)
 x1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMAX)
 y1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMAX)
-wx.CallAfter(lc.lcWndZoomRect, hWnd, x0, y0, x1, y1)
+
+lc.lcWndZoomRect(hWnd, x0, y0, x1, y1)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
 
@@ -221,13 +255,9 @@ def on_select(evt):
     hEnt = lc.lcBlockGetFirstSel(hBlock)
     while hEnt:
         if lc.lcPropGetInt(evt, lc.LC_PROP_EVENT_INT4) == 1:
-            lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_COLOR, 0x0)
-            lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FCOLOR, 0x0)
             lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FALPHA, 125)
-            lc.lcPropPutInt(hEnt, lc.XLC_PROP_ENT_ALPHA, 255)
         else:
             lc.lcPropPutInt(hEnt, lc.LC_PROP_ENT_FALPHA, 0)
-            lc.lcPropPutInt(hEnt, lc.XLC_PROP_ENT_ALPHA, 0)
         hEnt = lc.lcBlockGetNextSel(hBlock)
     lc.lcBlockUnselect(hBlock)
     lc.lcBlockUpdate(hBlock, 0, None)
@@ -235,7 +265,7 @@ def on_select(evt):
 
 on_select_cb = lc.F_LCEVENT(on_select)
 
-#lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
+lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
 
 # ---------------- FINAL ----------------
 mgr.Update()

@@ -120,17 +120,17 @@ static void render(struct ui_grid *grid, double scale, double x0, double y0, dou
         do                                                                                                             \
         {                                                                                                              \
                 struct ds_vertex *v0 = &grid->v_cache[(I)];                                                            \
-                v0->p[0] = (X);                                                                                        \
-                v0->p[1] = (Y);                                                                                        \
-                v0->c[0] = _r;                                                                                         \
-                v0->c[1] = _g;                                                                                         \
-                v0->c[2] = _b;                                                                                         \
-                v0->c[3] = _a;                                                                                         \
-                v0->n[0] = 127;                                                                                        \
-                v0->n[1] = 127;                                                                                        \
-                v0->uv[0] = 0;                                                                                         \
-                v0->uv[1] = 0;                                                                                         \
-                v0->th = 0;                                                                                            \
+                v0->pos[0] = (X);                                                                                      \
+                v0->pos[1] = (Y);                                                                                      \
+                v0->color[0] = _r;                                                                                     \
+                v0->color[1] = _g;                                                                                     \
+                v0->color[2] = _b;                                                                                     \
+                v0->color[3] = _a;                                                                                     \
+                v0->normal[0] = 127;                                                                                   \
+                v0->normal[1] = 127;                                                                                   \
+                v0->textureCoord[0] = 0;                                                                               \
+                v0->textureCoord[1] = 0;                                                                               \
+                v0->thickness = 0;                                                                                     \
         } while (0)
 
         for (i = 0; X < x1; X += gap_x, i += 2)

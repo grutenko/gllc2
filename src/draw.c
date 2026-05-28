@@ -1,6 +1,11 @@
 #include "draw.h"
+#include "debug.h"
+#include "hb-gpu.h"
+#include "hb.h"
 
+#include <epoxy/gl_generated.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -201,18 +206,21 @@ static void gl_check_error(const char *file, int line)
 void ds_attrib_ptr()
 {
         GLuint stride = sizeof(struct ds_vertex);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, p));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, pos));
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 2, GL_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, n));
+        glVertexAttribPointer(1, 2, GL_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, normal));
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 2, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, uv));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride,
+                              (void *)offsetof(struct ds_vertex, textureCoord));
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, c));
+        glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void *)offsetof(struct ds_vertex, color));
         glEnableVertexAttribArray(3);
-        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, th));
+        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, thickness));
         glEnableVertexAttribArray(4);
-        glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, l));
+        glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(struct ds_vertex, length));
         glEnableVertexAttribArray(5);
+        glVertexAttribIPointer(6, 1, GL_UNSIGNED_INT, stride, (void *)offsetof(struct ds_vertex, glyphLoc));
+        glEnableVertexAttribArray(6);
 }
 
 #ifdef _WIN32
@@ -318,9 +326,50 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                         return;
                 }
                 int flags = ~0;
+                int font_cache_id = ~0;
                 int bi = -1;
                 uint64_t vtotal = 0;
                 uint64_t itotal = 0;
+                if (gpu->font_glyph_cache_cap < draw->font_cache_cnt)
+                {
+                        struct ds_gpu_font_cache *new_cache =
+                            realloc(gpu->font_glyph_cache, draw->font_cache_cnt * sizeof(struct ds_gpu_font_cache));
+                        if (new_cache)
+                        {
+                                memset(&new_cache[gpu->font_glyph_cache_cnt], 0,
+                                       sizeof(struct ds_gpu_font_cache) *
+                                           (draw->font_cache_cnt - gpu->font_glyph_cache_cnt));
+                                gpu->font_glyph_cache = new_cache;
+                                gpu->font_glyph_cache_cap = draw->font_cache_cnt;
+                        }
+                }
+                for (int i = 0; i < draw->font_cache_cnt; i++)
+                {
+                        GL_CHECK();
+                        struct ds_gpu_font_cache *cache = &gpu->font_glyph_cache[i];
+                        if (!gpu->font_glyph_cache[i].ready)
+                        {
+                                glGenBuffers(1, &cache->bufferID);
+                                glBindBuffer(GL_TEXTURE_BUFFER, cache->bufferID);
+                                glBufferData(GL_TEXTURE_BUFFER, draw->font_cache[i].buffer_size,
+                                             draw->font_cache[i].buffer, GL_STATIC_DRAW);
+                                glGenTextures(1, &cache->texID);
+                                glBindTexture(GL_TEXTURE_BUFFER, cache->texID);
+                                glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA16I, cache->bufferID);
+                                printf("%d\n", draw->font_cache[i].buffer_size);
+                                gpu->font_glyph_cache[i].ready = 1;
+                        }
+                        if (draw->font_cache[i].modified)
+                        {
+                                glBindBuffer(GL_TEXTURE_BUFFER, cache->bufferID);
+                                glBufferData(GL_TEXTURE_BUFFER, draw->font_cache[i].buffer_size,
+                                             draw->font_cache[i].buffer, GL_STATIC_DRAW);
+                                glBindTexture(GL_TEXTURE_BUFFER, cache->texID);
+                                draw->font_cache[i].modified = 0;
+                        }
+                        GL_CHECK();
+                }
+                gpu->font_glyph_cache_cnt = draw->font_cache_cnt;
                 for (unit = draw->head; unit; unit = unit->next)
                 {
                         vtotal += unit->V_cnt;
@@ -330,13 +379,21 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                         {
                                 gpu->I_data[i_offset + j] = unit->I[j] + offset;
                         }
-                        if (unit->flags != flags)
+                        if (unit->flags != flags || unit->font_cache_id != font_cache_id)
                         {
                                 bi++;
                                 gpu->batches[bi].flags = unit->flags;
                                 gpu->batches[bi].count = unit->I_cnt;
                                 gpu->batches[bi].offset = i_offset;
+                                gpu->batches[bi].tex_id = -1;
+                                if (unit->flags & DS_UNIT_GLYPH)
+                                {
+                                        if (unit->font_cache_id >= 0 && unit->font_cache_id < gpu->font_glyph_cache_cnt)
+                                                gpu->batches[bi].tex_id =
+                                                    gpu->font_glyph_cache[unit->font_cache_id].texID;
+                                }
                                 flags = unit->flags;
+                                font_cache_id = unit->font_cache_id;
                         }
                         else
                         {
@@ -390,18 +447,24 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
         }
 }
 
-void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags)
+void ds_draw(struct ds_gpu *gpu, GLuint loc_uFlags, GLuint loc_hb_texture_atlas)
 {
         if (gpu)
         {
                 // Bind the VAO
+                glActiveTexture(GL_TEXTURE0);
                 glBindVertexArray(gpu->VAO);
+                glUniform1i(loc_hb_texture_atlas, 0);
                 int i;
                 for (i = 0; i < gpu->batch_cnt; i++)
                 {
                         struct ds_gpu_batch *batch = &gpu->batches[i];
                         if (batch->count == 0)
                                 continue;
+                        if (batch->flags & DS_UNIT_GLYPH)
+                        {
+                                glBindTexture(GL_TEXTURE_BUFFER, batch->tex_id);
+                        }
                         glUniform1i(loc_uFlags, batch->flags);
                         glDrawElements(GL_TRIANGLES, batch->count, GL_UNSIGNED_INT,
                                        (void *)(batch->offset * sizeof(GLuint)));
@@ -427,6 +490,14 @@ void ds_draw_clear(struct ds_draw *draw)
                 draw->tail = NULL;
                 draw->unit_cnt = 0;
                 draw->dirty = 0;
+                for (int i = 0; i < draw->font_cache_cnt; i++)
+                {
+                        free(draw->font_cache[i].buffer);
+                        free(draw->font_cache[i].glyphs);
+                }
+                free(draw->font_cache);
+                draw->font_cache_cnt = 0;
+                draw->font_cache_cap = 0;
         }
 }
 
@@ -447,4 +518,101 @@ void ds_gpu_clear(struct ds_gpu *gpu)
                 gpu->V_data_capacity = 0;
                 gpu->I_data_capacity = 0;
         }
+}
+
+int ds_draw_get_font_cache_id(struct ds_draw *draw, struct gllc_font *font)
+{
+        int cacheID = 0;
+        for (; cacheID < draw->font_cache_cnt; cacheID++)
+        {
+                if (draw->font_cache[cacheID].font_ID == font->ID)
+                {
+                        return cacheID;
+                }
+        }
+        if (draw->font_cache_cap <= draw->font_cache_cnt)
+        {
+                size_t newsize = draw->font_cache_cap ? draw->font_cache_cap * 2 : 8;
+                struct ds_draw_font_cache *newfontcache =
+                    realloc(draw->font_cache, newsize * sizeof(struct ds_draw_font_cache));
+                if (!newfontcache)
+                {
+                        FMTERROR("Cannot allocate memory");
+                        return -1;
+                }
+                draw->font_cache = newfontcache;
+                draw->font_cache_cap = newsize;
+        }
+
+        struct ds_draw_font_cache *cache = &draw->font_cache[draw->font_cache_cnt];
+
+        cache->font_ID = font->ID;
+        cache->buffer = NULL;
+        cache->buffer_size = 0;
+        cache->buffer_cap = 0;
+        cache->glyphs = NULL;
+        cache->glyph_cnt = 0;
+        cache->modified = 1;
+
+        draw->font_cache_cnt++;
+        return draw->font_cache_cnt - 1;
+}
+
+unsigned int ds_draw_get_font_glyph_loc(struct ds_draw *draw, struct gllc_font *font, int font_cache_id, int glyph_id)
+{
+        if (font_cache_id < 0 || font_cache_id >= draw->font_cache_cnt)
+        {
+                FMTERROR("Invalid font cache id");
+                return 0;
+        }
+        struct ds_draw_font_cache *cache = &draw->font_cache[font_cache_id];
+        for (int i = 0; i < cache->glyph_cnt; i++)
+        {
+                if (cache->glyphs[i].glyph == glyph_id)
+                {
+                        return cache->glyphs[i].offset / 8;
+                }
+        }
+
+        hb_gpu_draw_t *hbdraw = hb_gpu_draw_create_or_fail();
+        hb_gpu_draw_glyph(hbdraw, font->font, glyph_id);
+        hb_blob_t *blob = hb_gpu_draw_encode(hbdraw, NULL);
+        unsigned int length = hb_blob_get_length(blob);
+        if (cache->buffer_size + length > cache->buffer_cap)
+        {
+                size_t new_size = cache->buffer_cap ? cache->buffer_cap + length : length * 2;
+                void *new_buffer = realloc(cache->buffer, new_size);
+                if (!new_buffer)
+                {
+                        FMTERROR("Cannot allocate buffer");
+                        hb_gpu_draw_recycle_blob(hbdraw, blob);
+                        hb_gpu_draw_destroy(hbdraw);
+                        return 0;
+                }
+                cache->buffer = new_buffer;
+                cache->buffer_cap = new_size;
+        }
+        unsigned int offset = cache->buffer_size;
+        size_t new_size = cache->glyph_cnt + 1;
+        struct ds_draw_font_cache_glyph *new_glyph_arr =
+            realloc(cache->glyphs, new_size * sizeof(struct ds_draw_font_cache_glyph));
+        if (!new_glyph_arr)
+        {
+                FMTERROR("Cannot allocate buffer");
+                hb_gpu_draw_recycle_blob(hbdraw, blob);
+                hb_gpu_draw_destroy(hbdraw);
+                return 0;
+        }
+        cache->glyphs = new_glyph_arr;
+        cache->glyphs[cache->glyph_cnt].glyph = glyph_id;
+        cache->glyphs[cache->glyph_cnt].offset = cache->buffer_size;
+        cache->glyphs[cache->glyph_cnt].size = length;
+        cache->glyph_cnt++;
+        memmove(cache->buffer + cache->buffer_size, hb_blob_get_data(blob, NULL), length);
+        cache->buffer_size += length;
+        hb_gpu_draw_recycle_blob(hbdraw, blob);
+        hb_gpu_draw_destroy(hbdraw);
+        cache->modified = 1;
+
+        return offset / 8;
 }

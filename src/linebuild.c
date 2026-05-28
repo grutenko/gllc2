@@ -6,19 +6,19 @@
 
 static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double thmul, double l)
 {
-        v->p[0] = (GLfloat)p[0];
-        v->p[1] = (GLfloat)p[1];
-        v->n[0] = (GLbyte)(n[0] * 127.0f);
-        v->n[1] = (GLbyte)(n[1] * 127.0f);
-        v->c[0] = (GLubyte)c[0];
-        v->c[1] = (GLubyte)c[1];
-        v->c[2] = (GLubyte)c[2];
-        v->c[3] = (GLubyte)c[3];
-        v->uv[0] = (GLfloat)0.0f;
-        v->uv[1] = (GLfloat)0.0f;
-        v->th = (GLfloat)th;
-        v->thmul = (GLfloat)thmul;
-        v->l = (GLfloat)l;
+        v->pos[0] = (GLfloat)p[0];
+        v->pos[1] = (GLfloat)p[1];
+        v->normal[0] = (GLbyte)(n[0] * 127.0f);
+        v->normal[1] = (GLbyte)(n[1] * 127.0f);
+        v->color[0] = (GLubyte)c[0];
+        v->color[1] = (GLubyte)c[1];
+        v->color[2] = (GLubyte)c[2];
+        v->color[3] = (GLubyte)c[3];
+        v->textureCoord[0] = (GLfloat)0.0f;
+        v->textureCoord[1] = (GLfloat)0.0f;
+        v->thickness = (GLfloat)th;
+        v->thicknessMiltiplier = (GLfloat)thmul;
+        v->length = (GLfloat)l;
 }
 
 static inline void ver_extr(struct ds_vertex *v, double *p0, double *n0, double w, unsigned char *c, double th,
