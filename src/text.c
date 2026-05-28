@@ -78,8 +78,8 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         struct gllc_font *font = gllc_font_first();
         if (font)
         {
-                FT_Set_Pixel_Sizes(font->ftface, 0, 56);
-                hb_font_set_scale(font->font, 56 * 64, 56 * 64);
+                FT_Set_Pixel_Sizes(font->ftface, 0, 16);
+                hb_font_set_scale(font->font, 16 * 64, 16 * 64);
                 hb_shape(font->font, buf, NULL, 0);
                 unsigned int glyph_count;
                 hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buf, &glyph_count);

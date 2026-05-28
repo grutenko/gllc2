@@ -72,12 +72,11 @@ struct gllc_entity
         float alpha;
         float lwidth;
         int order;
+        int offset;
         uint64_t ID;
         uint64_t key;
         char ID_hex[17];
-        uint64_t unit_ID;
         double bbox[4];
-        int offset;
         struct gllc_entity_props props;
         struct gllc_entity_vtable *vtable;
         struct gllc_block *block;

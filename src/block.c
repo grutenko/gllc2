@@ -814,7 +814,7 @@ static inline void arr_ent_push(struct gllc_entity ***arr, int *cnt, int *cap, s
 {
         if (*cap <= *cnt)
         {
-                size_t sz = *cap ? (*cap) * 2 : 64;
+                size_t sz = *cap ? (*cap) + 256 : 64;
                 struct gllc_entity **narr = realloc(*arr, sz * sizeof(struct gllc_entity *));
                 if (!narr)
                 {

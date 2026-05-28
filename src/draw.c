@@ -51,7 +51,6 @@ struct ds_unit *ds_unit_create(struct ds_draw *draw)
 void ds_unit_reset(struct ds_unit *u)
 {
         u->dirty = 1;
-        u->geometry_dirty = 1;
         u->I_cnt = 0;
         u->V_cnt = 0;
         u->draw->dirty = 1;
@@ -82,8 +81,6 @@ struct ds_unit *ds_unit_clone(struct ds_unit *u)
         memcpy(v, u->V, u->V_cnt * sizeof(struct ds_vertex));
         memcpy(i, u->I, u->I_cnt * sizeof(GLuint));
         nu->dirty = u->dirty;
-        nu->geometry_dirty = u->geometry_dirty;
-        nu->order = u->order;
         nu->flags = u->flags;
         return nu;
 _error:
@@ -257,7 +254,6 @@ void ds_unit_set_modified(struct ds_unit *unit, int geometry)
 {
         if (geometry)
         {
-                unit->geometry_dirty = 1;
                 unit->draw->geometry_dirty = 1;
         }
         unit->dirty = 1;
@@ -370,6 +366,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                         GL_CHECK();
                 }
                 gpu->font_glyph_cache_cnt = draw->font_cache_cnt;
+                size_t total = 0;
                 for (unit = draw->head; unit; unit = unit->next)
                 {
                         vtotal += unit->V_cnt;
@@ -402,6 +399,8 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                         offset += unit->V_cnt;
                         i_offset += unit->I_cnt;
                         unit->dirty = 0;
+                        total += unit->V_cnt * sizeof(struct ds_vertex);
+                        total += unit->I_cnt * 4;
                 }
                 bi++;
                 gpu->V_data_size = offset;

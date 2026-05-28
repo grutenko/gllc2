@@ -85,7 +85,7 @@ static struct sg_cell *push_cell(struct sg *sg, int x, int y)
         }
         if (cap <= cnt)
         {
-                size_t sz = cap ? cap * 2 : 8;
+                size_t sz = cap ? cap + 8 : 8;
                 struct sg_cell *cells = realloc(sg->b[batch], sz * sizeof(struct sg_cell));
                 if (!cells)
                         return NULL;
@@ -144,7 +144,7 @@ static int cell_push_ent(struct sg_cell *cell, struct gllc_entity *ent)
         }
         if (cell->ent_cap <= cell->ent_size)
         {
-                size_t sz = cell->ent_cap ? cell->ent_cap * 2 : 8;
+                size_t sz = cell->ent_cap ? cell->ent_cap + 8 : 8;
                 struct gllc_entity **ents = realloc(cell->ent, sz * sizeof(struct gllc_entity *));
                 if (!ents)
                         return 0;

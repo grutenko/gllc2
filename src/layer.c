@@ -67,7 +67,7 @@ void gllc_layer_set_entity(struct gllc_layer *layer, struct gllc_entity *ent)
 {
         if (layer->entcap <= layer->entcnt)
         {
-                size_t newcap = layer->entcap ? layer->entcap * 2 : 8;
+                size_t newcap = layer->entcap ? layer->entcap + 8 : 8;
                 struct gllc_entity **ents = realloc(layer->ents, newcap * sizeof(struct gllc_entity *));
                 if (!ents)
                 {
