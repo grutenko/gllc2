@@ -82,15 +82,14 @@ lc.lcWndSetBlock(hWnd, hBlock)
 # ---------------- RESIZE SYNC ----------------
 def on_size(event):
     w, h = p.GetClientSize()
-    print(w, h)
     lc.lcWndResize(hWnd, 0, 0, w, h)
     event.Skip()
 
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 300
-M = 300
+N = 200
+M = 200
 min_vx = -6000.0
 max_vx = -2000.0
 min_vy = -2500.0
@@ -194,12 +193,10 @@ for entity in msp:
             text = entity.dxf.text
             height = entity.dxf.height
             rotation = entity.dxf.rotation if entity.dxf.hasattr("rotation") else 0.0
-            print(height)
         else:
             insert = entity.dxf.insert
             text = entity.text
             height = entity.dxf.char_height if entity.dxf.hasattr("char_height") else 1.0
-            print(height)
             rotation = entity.dxf.rotation if entity.dxf.hasattr("rotation") else 0.0
 
         h = lc.lcBlockAddText(
@@ -247,7 +244,7 @@ y0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMIN)
 x1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMAX)
 y1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMAX)
 
-lc.lcWndZoomRect(hWnd, x0, y0, x1, y1)
+wx.CallAfter(lc.lcWndZoomRect, hWnd, x0, y0, x1, y1)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
 
@@ -265,7 +262,7 @@ def on_select(evt):
 
 on_select_cb = lc.F_LCEVENT(on_select)
 
-lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
+#lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
 
 # ---------------- FINAL ----------------
 mgr.Update()

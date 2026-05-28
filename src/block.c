@@ -918,6 +918,7 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, double x0, double y0, d
                 cx1 = bx1;
         if (cy1 > by1)
                 cy1 = by1;
+        int total = 0;
         for (int x = cx0; x <= cx1; x++)
         {
                 for (int y = cy0; y <= cy1; y++)
@@ -929,6 +930,9 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, double x0, double y0, d
                         int entcnt = sg_cell_ents_cnt(cell);
                         for (int i = 0; i < entcnt; i++)
                         {
+                                if (flags & BF_SELONLY && total >= block->selcnt)
+                                        break;
+
                                 struct gllc_entity *ent = ents[i];
                                 if ((ent->flags & GLLC_ENT_FILTER) ||
                                     (flags & BF_SKIPLOCKED && gllc_entity_locked(ent)) ||
@@ -942,6 +946,7 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, double x0, double y0, d
                                 {
                                         ents[i]->flags |= GLLC_ENT_FILTER;
                                         push_filter_ent(block, ents[i]);
+                                        total++;
                                 }
                         }
                 }

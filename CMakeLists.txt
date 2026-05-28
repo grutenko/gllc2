@@ -4,6 +4,12 @@ project(gllc C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(CMAKE_PLATFORM_NO_VERSIONED_SONAME TRUE)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 find_package(Python3)
 
 include_directories(include cglm/include ${CMAKE_BINARY_DIR})
@@ -18,8 +24,9 @@ file(GLOB TESS2SOURCES
 set(BUILD_SHARED_LIBS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(CGLM_STATIC ON)
+set(CGLM_STATIC OFF)
 add_subdirectory(cglm)
+set(UTF8PROC_STATIC OFF)
 add_subdirectory(utf8proc)
 add_subdirectory(freetype)
 set(HB_BUILD_GPU ON)
@@ -27,7 +34,8 @@ add_subdirectory(harfbuzz)
 if(NOT EMSCRIPTEN)
 add_subdirectory(examples)
 endif()
-
+get_target_property(DEPS harfbuzz-gpu INTERFACE_LINK_LIBRARIES)
+message(STATUS "${DEPS}")
 message(STATUS "Python found at: ${Python3_EXECUTABLE}")
 
 function(generate_header INPUT OUTPUT EXTRA_ARGS)
@@ -63,8 +71,6 @@ foreach(SHADER ${SHADERS})
     list(APPEND GENERATED_HEADERS ${OUT})
 endforeach()
 
-add_custom_target(Shaders ALL DEPENDS ${GENERATED_HEADERS})
-
 set(GENERATED_FONT_HEADERS)
 
 set(FONT_FILES
@@ -84,12 +90,10 @@ foreach(FONT ${FONT_FILES})
     list(APPEND GENERATED_FONT_HEADERS ${OUT})
 endforeach()
 
-add_custom_target(Fonts ALL DEPENDS ${GENERATED_FONT_HEADERS})
-
 if(NOT EMSCRIPTEN)
-add_library(gllc SHARED ${SOURCES} ${TESS2SOURCES})
+add_library(gllc SHARED ${SOURCES} ${TESS2SOURCES} ${GENERATED_HEADERS} ${GENERATED_FONT_HEADERS})
 else()
-add_library(gllc STATIC ${SOURCES} ${TESS2SOURCES})
+add_library(gllc STATIC ${SOURCES} ${TESS2SOURCES} ${GENERATED_HEADERS} ${GENERATED_FONT_HEADERS})
 endif()
 target_compile_definitions(gllc PRIVATE
     $<$<CONFIG:Debug>:DEBUG>
@@ -98,7 +102,8 @@ target_compile_definitions(gllc PRIVATE
 target_compile_options(gllc PRIVATE
     $<$<CONFIG:Release>:-O2>
 )
-target_link_libraries(gllc PRIVATE cglm freetype utf8proc harfbuzz harfbuzz-gpu)
+
+target_link_libraries(gllc PRIVATE cglm freetype utf8proc harfbuzz-gpu)
 
 if (WIN32)
     target_link_libraries(gllc PRIVATE opengl32 gdi32 user32 kernel32)
@@ -119,10 +124,27 @@ elseif(UNIX)
 endif()
 
 add_custom_target(copy_lib ALL
-    COMMAND ${CMAKE_COMMAND} -E copy
-        "$<TARGET_FILE:gllc>"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:gllc>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:gllc>"
-    COMMENT "Copying library to python example directory"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:harfbuzz>
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:harfbuzz>"
+
+COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:harfbuzz>
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:harfbuzz-gpu>"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:freetype>
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:freetype>"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:utf8proc>
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:utf8proc>"
+
+    COMMENT "Copying all runtime libs to python directory"
     VERBATIM
 )
 

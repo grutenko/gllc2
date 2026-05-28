@@ -6,7 +6,7 @@
 #include "freetype/freetype.h"
 #include "utf8tools.h"
 
-#include <epoxy/gl_generated.h>
+#include <float.h>
 #include <hb.h>
 #include <stdlib.h>
 #include <string.h>
@@ -79,7 +79,7 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
         if (font)
         {
                 FT_Set_Pixel_Sizes(font->ftface, 0, 56);
-                hb_font_set_scale(font->font, 56*64, 56*64);
+                hb_font_set_scale(font->font, 56 * 64, 56 * 64);
                 hb_shape(font->font, buf, NULL, 0);
                 unsigned int glyph_count;
                 hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buf, &glyph_count);
@@ -89,6 +89,10 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                 ds_unit_reset(TEXT(ent)->u);
                 int cacheID = ds_draw_get_font_cache_id(draw, font);
                 int xs, ys;
+                float text_xmin = FLT_MAX;
+                float text_ymin = FLT_MAX;
+                float text_xmax = -FLT_MAX;
+                float text_ymax = -FLT_MAX;
                 for (unsigned int i = 0; i < glyph_count; i++)
                 {
                         hb_codepoint_t glyphid = glyph_info[i].codepoint;
@@ -114,13 +118,13 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         glyphBbox[3] = (float)bbox.yMax;
                         unsigned char color[4];
                         resolv_color(ent, color);
-
                         unsigned int glyphLoc = ds_draw_get_font_glyph_loc(draw, font, cacheID, glyphid);
                         push_bbox_quad(TEXT(ent)->u, xMin, yMin, xMax, yMax, color, glyphLoc, glyphBbox);
                         cursor_x += x_advance;
                         cursor_y += y_advance;
                 }
                 TEXT(ent)->u->font_cache_id = cacheID;
+                
         }
         hb_buffer_destroy(buf);
         resolv_flags(ent, &TEXT(ent)->u->flags);
