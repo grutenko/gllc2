@@ -144,6 +144,10 @@ COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:utf8proc>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:utf8proc>"
 
+COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:cglm>
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:cglm>"
+
     COMMENT "Copying all runtime libs to python directory"
     VERBATIM
 )
