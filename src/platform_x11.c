@@ -1,6 +1,5 @@
-#include <X11/X.h>
 #if defined(__linux__) && !defined(__EMSCRIPTEN__)
-
+#include <X11/X.h>
 #include "platform.h"
 
 static void destroy(struct nw *nw)

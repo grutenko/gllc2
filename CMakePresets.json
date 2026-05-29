@@ -9,9 +9,11 @@
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "C:/Strawberry/c/bin/gcc.exe",
+                "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
                 "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_MAKE_PROGRAM": "C:/msys64/ucrt64/bin/ninja.exe"
             }
         },
         {
@@ -22,10 +24,12 @@
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "C:/Strawberry/c/bin/gcc.exe",
+                "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_C_FLAGS_RELEASE": "-O2 -DNDEBUG"
+                "CMAKE_C_FLAGS_RELEASE": "-O2 -DNDEBUG",
+                "CMAKE_MAKE_PROGRAM": "C:/msys64/ucrt64/bin/ninja.exe"
             }
         },
         {

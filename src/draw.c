@@ -3,7 +3,6 @@
 #include "hb-gpu.h"
 #include "hb.h"
 
-#include <epoxy/gl_generated.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>

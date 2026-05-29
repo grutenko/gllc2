@@ -241,27 +241,27 @@ static LRESULT CALLBACK wndproc(HWND window, UINT msg, WPARAM wparam, LPARAM lpa
         }
         case WM_LBUTTONDOWN:
                 if (w)
-                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 1, 1, w->data);
+                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 1, 1, 0, w->data);
                 return 0;
         case WM_RBUTTONDOWN:
                 if (w)
-                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 2, 1, w->data);
+                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 2, 1, 0, w->data);
                 return 0;
         case WM_MBUTTONDOWN:
                 if (w)
-                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 3, 1, w->data);
+                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 3, 1, 0, w->data);
                 return 0;
         case WM_LBUTTONUP:
                 if (w)
-                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 1, 0, w->data);
+                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 1, 0, 0, w->data);
                 return 0;
         case WM_RBUTTONUP:
                 if (w)
-                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 2, 0, w->data);
+                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 2, 0, 0, w->data);
                 return 0;
         case WM_MBUTTONUP:
                 if (w)
-                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 3, 0, w->data);
+                        w->cb_vtable_p->mouse_click(w, LOWORD(lparam), HIWORD(lparam), 3, 0, 0, w->data);
                 return 0;
         case WM_SIZE:
                 if (w)
@@ -271,7 +271,7 @@ static LRESULT CALLBACK wndproc(HWND window, UINT msg, WPARAM wparam, LPARAM lpa
                 return 0;
         case WM_MOUSEMOVE:
                 if (w)
-                        w->cb_vtable_p->mouse_move(w, LOWORD(lparam), HIWORD(lparam), w->data);
+                        w->cb_vtable_p->mouse_move(w, LOWORD(lparam), HIWORD(lparam), 0, w->data);
 
                 tme.cbSize = sizeof(TRACKMOUSEEVENT);
                 tme.dwFlags = TME_LEAVE;
@@ -295,7 +295,7 @@ static LRESULT CALLBACK wndproc(HWND window, UINT msg, WPARAM wparam, LPARAM lpa
                         wheel_accum_y -= steps * WHEEL_DELTA;
 
                         if (w)
-                                w->cb_vtable_p->mouse_scroll(w, 0, steps, w->data);
+                                w->cb_vtable_p->mouse_scroll(w, 0, steps, 0, w->data);
                 }
 
                 return 0;
@@ -310,7 +310,7 @@ static LRESULT CALLBACK wndproc(HWND window, UINT msg, WPARAM wparam, LPARAM lpa
                         wheel_accum_X -= steps * WHEEL_DELTA;
 
                         if (w)
-                                w->cb_vtable_p->mouse_scroll(w, steps, 0, w->data);
+                                w->cb_vtable_p->mouse_scroll(w, steps, 0, 0,w->data);
                 }
 
                 return 0;
