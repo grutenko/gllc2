@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(gllc C)
+project(gllc C CXX)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -21,18 +21,30 @@ file(GLOB TESS2SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/tess2/*.c"
 )
 
-set(BUILD_SHARED_LIBS ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+if(MINGW)
+    # Устанавливаем флаги для исполняемых файлов (.exe) и для динамических библиотек (.dll)
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
+    message(STATUS "MinGW detected, enabling static linking for runtime libraries.")
+endif()
 
-set(CGLM_STATIC OFF)
+set(BUILD_SHARED_LIBS ON)
+
 add_subdirectory(cglm)
 set(UTF8PROC_STATIC OFF)
 add_subdirectory(utf8proc)
+set(FT_DISABLE_BROTLI TRUE CACHE BOOL "" FORCE)
+set(FT_DISABLE_ZLIB TRUE CACHE BOOL "" FORCE)
+set(FT_DISABLE_BZIP2 TRUE CACHE BOOL "" FORCE)
+set(FT_DYNAMIC_HARFBUZZ_ENABLED TRUE CACHE BOOL "" FORCE)
 add_subdirectory(freetype)
+set(HB_HAVE_FREETYPE ON)
 set(HB_BUILD_GPU ON)
+if(MINGW AND BUILD_SHARED_LIBS)
+    add_compile_definitions(HB_DLL_EXPORT)
+    # дополнительно можно передать цель
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHB_DLL_EXPORT")
+endif()
 add_subdirectory(harfbuzz)
-
-add_subdirectory(FreeImage)
 if(NOT EMSCRIPTEN)
 add_subdirectory(examples)
 endif()
@@ -100,12 +112,14 @@ endif()
 target_compile_definitions(gllc PRIVATE
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
+    $<$<NOT:$<BOOL:${FREEIMAGE_LIB}>>:>
 )
 target_compile_options(gllc PRIVATE
     $<$<CONFIG:Release>:-O2>
 )
-
-target_link_libraries(gllc PRIVATE cglm freetype utf8proc harfbuzz-gpu)
+target_link_libraries(gllc PRIVATE 
+    cglm freetype utf8proc harfbuzz-gpu
+)
 
 if (WIN32)
     target_link_libraries(gllc PRIVATE opengl32 gdi32 user32 kernel32)
@@ -130,13 +144,14 @@ add_custom_target(copy_lib ALL
         $<TARGET_FILE:gllc>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:gllc>"
 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:harfbuzz>
-        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:harfbuzz>"
 
 COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:harfbuzz>
+        $<TARGET_FILE:harfbuzz-gpu>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:harfbuzz-gpu>"
+
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:harfbuzz>
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:harfbuzz>"
 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:freetype>
@@ -145,10 +160,6 @@ COMMAND ${CMAKE_COMMAND} -E copy_if_different
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:utf8proc>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:utf8proc>"
-
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:FreeImage>
-        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:FreeImage>"
 
 COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:cglm>
