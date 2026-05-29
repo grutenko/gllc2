@@ -210,6 +210,7 @@ for entity in msp:
         lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
 # ---------------- GRID ----------------
+print("START")
 import time
 t0 = time.perf_counter()
 
@@ -234,10 +235,13 @@ for i in range(N - 1):
 
         lc.lcPlineEnd(pline)
 
+        h = lc.lcBlockAddText(
+            hBlock,
+            "99",
+            tab[i0], tab[i0 + 1]
+        )
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffff00)
 
-t1 = time.perf_counter()
-
-print("time:", t1 - t0)
 
 x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)
 y0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMIN)
@@ -247,6 +251,10 @@ y1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMAX)
 wx.CallAfter(lc.lcWndZoomRect, hWnd, x0, y0, x1, y1)
 
 lc.lcBlockUpdate(hBlock, 0, 0)
+
+t1 = time.perf_counter()
+
+print("time:", t1 - t0)
 
 def on_select(evt):
     hEnt = lc.lcBlockGetFirstSel(hBlock)

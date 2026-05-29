@@ -31,6 +31,8 @@ add_subdirectory(utf8proc)
 add_subdirectory(freetype)
 set(HB_BUILD_GPU ON)
 add_subdirectory(harfbuzz)
+
+add_subdirectory(FreeImage)
 if(NOT EMSCRIPTEN)
 add_subdirectory(examples)
 endif()
@@ -143,6 +145,10 @@ COMMAND ${CMAKE_COMMAND} -E copy_if_different
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:utf8proc>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:utf8proc>"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:FreeImage>
+        "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:FreeImage>"
 
 COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:cglm>

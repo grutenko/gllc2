@@ -2,7 +2,6 @@
 #define draw_h
 
 #include "font.h"
-#include <setjmp.h>
 #if defined(_WIN32)
 #include "glad.h"
 #elif defined(__linux__)
@@ -31,18 +30,16 @@ struct ds_unit
         int flags;
         int id;
         int font_cache_id;
-        struct ds_draw *draw;
-        struct ds_vertex *V;
-        GLuint *I;
         GLuint V_cnt;
         GLuint I_cnt;
         GLuint I_cap;
         GLuint V_cap;
+        int dirty;
+        struct ds_draw *draw;
+        struct ds_vertex *V;
+        GLuint *I;
         struct ds_unit *next;
         struct ds_unit *prev;
-        int order;
-        int dirty;
-        int geometry_dirty;
         uint64_t order0;
         uint64_t order1;
         uint64_t order2;

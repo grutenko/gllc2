@@ -93,7 +93,6 @@ void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int 
         GLuint *I = ds_unit_reserve_index(u, oldicnt + icnt);
         lb_build(&conf, &V[oldvcnt], &I[oldicnt], &vcnt, &icnt);
         u->dirty = 1;
-        u->geometry_dirty = 1;
 }
 
 void build_filltess(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt)
