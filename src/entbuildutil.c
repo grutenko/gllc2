@@ -35,7 +35,7 @@ void resolv_fcolor(struct gllc_entity *ent, unsigned char *color)
         color[3] = (unsigned char)(ent->falpha * 255);
 }
 
-void resolv_flags(struct gllc_entity *ent, int *flags)
+void resolv_flags(struct gllc_entity *ent, uint16_t *flags)
 {
         if (ent->flags & GLLC_ENT_HOVER)
         {
@@ -92,7 +92,7 @@ void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int 
         struct ds_vertex *V = ds_unit_reserve_vertex(u, oldvcnt + vcnt);
         GLuint *I = ds_unit_reserve_index(u, oldicnt + icnt);
         lb_build(&conf, &V[oldvcnt], &I[oldicnt], &vcnt, &icnt);
-        u->dirty = 1;
+        u->flags |= DS_UNIT_DIRTY;
 }
 
 void build_filltess(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt)

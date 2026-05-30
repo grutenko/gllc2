@@ -1,124 +1,89 @@
-## Контекст OpenGL
+# GLLC - Graphics Library for CAD
 
-GLLC2 не создаёт верхнеуровневое окно приложения и не управляет жизненным циклом основного окна.
+Кроссплатформенная библиотека для создания OpenGL-окна и реализации CAD-логики.
 
-Внешнее приложение создаёт родительское окно и передаёт его в библиотеку.
+## Описание
+
+GLLC - кроссплатформенная библиотека, предоставляющая:
+
+- Создание OpenGL-окна с возможностью встраивания в wxWidgets/Qt/GTK
+- Базовые примитивы для 2D отрисовки
+- Управление видами (зум, панорамирование)
+- Выбор объектов
 
 ## Системные требования
 
-* C11 совместимый компилятор (GCC / Clang / MSVC)
-* OpenGL 3.3+
-* Поддержка создания OpenGL-контекста на стороне приложения
-* CMake (с поддержкой presets)
-* Windows / Linux (X11 или GTK-based интеграция)
-* Wayland через EGL (опционально, через backend слой)
+| Платформа | Компилятор |
+|-----------|------------|
+| Windows | MinGW (GCC) |
+| Linux | GCC |
 
-## Клонирование
+## Сборка
 
 ```bash
-git clone --recurse-submodules https://github.com/grutenko/gllc2
+git clone https://github.com/grutenko/gllc2.git
+cd gllc
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j4
+sudo make install
 ```
 
-## Сборка (Linux)
+## Сборка
+
+### Linux
+
+Требования:
+
+- GCC 9 или новее
+- CMake 3.10 или новее
+- OpenGL development libraries
+- X11 development libraries
+- GTK development libraries (опционально, для встраивания)
+
+Установка зависимостей:
 
 ```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
+# Ubuntu/Debian
+sudo apt install build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libgtk-3-dev
+
+# Fedora/RHEL
+sudo dnf install gcc-c++ cmake mesa-libGL-devel libX11-devel gtk3-devel
+
+# Arch Linux
+sudo pacman -S gcc cmake mesa libx11 gtk3
 ```
 
-## Сборка (Windows)
+Сборка:
+```bash
+git clone https://github.com/grutenko/gllc2.git
+cd gllc
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)
+sudo make install
+```
 
-### Требования
-
-* Perl toolchain (используется в сборке; включает MinGW-w64 GCC и Perl в составе окружения)
-* CMake с поддержкой presets
-
-### Presets
-
-Доступны конфигурации:
-
-* `debug-win32`
-* `release-win32`
-
-### Сборка через preset
+Требования:
+* MinGW-w64 (GCC)
+* CMake 3.10 или новее
+* OpenGL
+* Windows SDK
+Установка MinGW-w64:
 
 ```bash
-cmake --preset debug-win32
-cmake --build --preset debug-win32
+# Через MSYS2
+pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make
 ```
 
-или
-
+Сборка:
 ```bash
-cmake --preset release-win32
-cmake --build --preset release-win32
+git clone https://github.com/grutenko/gllc2.git
+cd gllc
+mkdir build && cd build
+cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+mingw32-make -j$(nproc)
+mingw32-make install
 ```
 
-## Сборка (Linux)
-
-### Presets
-
-* `debug-linux`
-* `release-linux`
-
-### Сборка через preset
-
-```bash
-cmake --preset debug-linux
-cmake --build --preset debug-linux
-```
-
-или
-
-```bash
-cmake --preset release-linux
-cmake --build --preset release-linux
-```
-
-## Инициализация
-
-### C API
-
-```c
-lcCreateWindow(parent_window_handle, flags);
-```
-
-### Python binding (пример)
-
-```python
-import sys
-import litecad as lc
-
-if sys.platform == "win32":
-    hWnd = lc.lcCreateWindow(int(p.GetHandle()), 0)
-
-elif sys.platform == "linux":
-    hWnd = lc.lcCreateWindow(
-        int(p.GetGtkWidget()),
-        lc.XLC_WINDOW_GTK_BACKEND
-    )
-```
-
-## Модель окна
-
-Библиотека создаёт **дочернее окно внутри переданного родительского окна** и инициализирует в нём OpenGL-контекст.
-
-## platform_handle
-
-`parent_window_handle` — нативный хендл родительского окна:
-
-* Windows: HWND (родительское Win32 окно)
-* Linux (GTK/X11): native widget / X11 Window через GTK backend слой
-* Wayland: интеграция через backend-абстракцию (EGL surface)
-
-OpenGL-контекст создаётся внутри дочернего окна, управляемого библиотекой.
-
-## Модель работы
-
-* внешнее приложение создаёт родительское окно
-* передаёт его в `lcCreateWindow`
-* библиотека создаёт дочернее окно внутри него
-* в дочернем окне создаётся OpenGL-контекст
-* дальнейший рендер выполняется внутри GLLC2
+_Msys MinGW64 должен быть установлен в C:/msys64/mingw64. В переменных среды должна быть запись C:/msys64/mingw64/bin_

@@ -49,7 +49,7 @@ struct ds_unit *ds_unit_create(struct ds_draw *draw)
 
 void ds_unit_reset(struct ds_unit *u)
 {
-        u->dirty = 1;
+        u->flags |= DS_UNIT_DIRTY;
         u->I_cnt = 0;
         u->V_cnt = 0;
         u->draw->dirty = 1;
@@ -79,7 +79,6 @@ struct ds_unit *ds_unit_clone(struct ds_unit *u)
                 goto _error;
         memcpy(v, u->V, u->V_cnt * sizeof(struct ds_vertex));
         memcpy(i, u->I, u->I_cnt * sizeof(GLuint));
-        nu->dirty = u->dirty;
         nu->flags = u->flags;
         return nu;
 _error:
@@ -255,7 +254,7 @@ void ds_unit_set_modified(struct ds_unit *unit, int geometry)
         {
                 unit->draw->geometry_dirty = 1;
         }
-        unit->dirty = 1;
+        unit->flags |= DS_UNIT_DIRTY;
         unit->draw->dirty = 1;
 }
 
@@ -397,7 +396,7 @@ void ds_sync(struct ds_draw *draw, struct ds_gpu *gpu)
                         }
                         offset += unit->V_cnt;
                         i_offset += unit->I_cnt;
-                        unit->dirty = 0;
+                        unit->flags &= ~DS_UNIT_DIRTY;
                         total += unit->V_cnt * sizeof(struct ds_vertex);
                         total += unit->I_cnt * 4;
                 }
@@ -572,13 +571,13 @@ unsigned int ds_draw_get_font_glyph_loc(struct ds_draw *draw, struct gllc_font *
                 }
         }
 
-        hb_gpu_draw_t *hbdraw = hb_gpu_draw_create_or_fail();
+        hb_gpu_draw_t *hbdraw = font->hbdraw;
         hb_gpu_draw_glyph(hbdraw, font->font, glyph_id);
         hb_blob_t *blob = hb_gpu_draw_encode(hbdraw, NULL);
         unsigned int length = hb_blob_get_length(blob);
         if (cache->buffer_size + length > cache->buffer_cap)
         {
-                size_t new_size = cache->buffer_cap ? cache->buffer_cap + length : length * 2;
+                size_t new_size = cache->buffer_cap + length;
                 void *new_buffer = realloc(cache->buffer, new_size);
                 if (!new_buffer)
                 {
@@ -609,7 +608,6 @@ unsigned int ds_draw_get_font_glyph_loc(struct ds_draw *draw, struct gllc_font *
         memmove(cache->buffer + cache->buffer_size, hb_blob_get_data(blob, NULL), length);
         cache->buffer_size += length;
         hb_gpu_draw_recycle_blob(hbdraw, blob);
-        hb_gpu_draw_destroy(hbdraw);
         cache->modified = 1;
 
         return offset / 8;

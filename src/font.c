@@ -1,7 +1,8 @@
 #include "font.h"
-#include "mipgost.h"
 #include "freetype/freetype.h"
 #include "freetype/fttypes.h"
+#include "hb-gpu.h"
+#include "mipgost.h"
 
 #include <hb.h>
 #include <stdlib.h>
@@ -73,6 +74,18 @@ struct gllc_font *gllc_font_create_binary(int ttf, const char *name, void *data,
                 }
                 font->face = hb_face_create(font->data, 0);
                 font->font = hb_font_create(font->face);
+                font->hbdraw = hb_gpu_draw_create_or_fail();
+                font->hbbuffer = hb_buffer_create();
+                if (!font->hbdraw)
+                {
+                        free(font->name);
+                        hb_font_destroy(font->font);
+                        hb_face_destroy(font->face);
+                        hb_blob_destroy(font->data);
+                        free(font);
+                        FMTERROR("Cannot create HBGPUDRAW");
+                        return NULL;
+                }
                 int err = FT_New_Memory_Face(ft, (const FT_Byte *)hb_blob_get_data(font->data, NULL), data_size, 0,
                                              &font->ftface);
                 if (err != 0)
@@ -81,7 +94,10 @@ struct gllc_font *gllc_font_create_binary(int ttf, const char *name, void *data,
                         hb_font_destroy(font->font);
                         hb_face_destroy(font->face);
                         hb_blob_destroy(font->data);
+                        hb_gpu_draw_destroy(font->hbdraw);
+                        free(font);
                         FMTERROR("FT_New_Memory_Face failed: %d", err);
+                        return NULL;
                 }
                 _font_last_id++;
         }
@@ -114,6 +130,9 @@ void gllc_fonts_clear()
                 hb_font_destroy(font->font);
                 hb_face_destroy(font->face);
                 hb_blob_destroy(font->data);
+                hb_gpu_draw_destroy(font->hbdraw);
+                hb_buffer_destroy(font->hbbuffer);
+                free(font);
                 font = t;
         }
         _fonts = NULL;

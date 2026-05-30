@@ -71,62 +71,67 @@ static inline void push_bbox_quad(struct ds_unit *u, float x0, float y0, float x
 
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
 {
-        hb_buffer_t *buf;
-        buf = hb_buffer_create();
-        hb_buffer_add_utf8(buf, TEXT(ent)->text, -1, 0, -1);
-        hb_buffer_guess_segment_properties(buf);
-        struct gllc_font *font = gllc_font_first();
-        if (font)
+        if (!TEXT(ent)->text)
         {
-                FT_Set_Pixel_Sizes(font->ftface, 0, 16);
-                hb_font_set_scale(font->font, 16 * 64, 16 * 64);
-                hb_shape(font->font, buf, NULL, 0);
-                unsigned int glyph_count;
-                hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buf, &glyph_count);
-                hb_glyph_position_t *glyph_pos = hb_buffer_get_glyph_positions(buf, &glyph_count);
-                hb_position_t cursor_x = 0;
-                hb_position_t cursor_y = 0;
                 ds_unit_reset(TEXT(ent)->u);
-                int cacheID = ds_draw_get_font_cache_id(draw, font);
-                int xs, ys;
-                float text_xmin = FLT_MAX;
-                float text_ymin = FLT_MAX;
-                float text_xmax = -FLT_MAX;
-                float text_ymax = -FLT_MAX;
-                for (unsigned int i = 0; i < glyph_count; i++)
-                {
-                        hb_codepoint_t glyphid = glyph_info[i].codepoint;
-                        hb_position_t x_offset = glyph_pos[i].x_offset;
-                        hb_position_t y_offset = glyph_pos[i].y_offset;
-                        hb_position_t x_advance = glyph_pos[i].x_advance;
-                        hb_position_t y_advance = glyph_pos[i].y_advance;
-                        FT_BBox bbox;
-                        FT_Load_Glyph(font->ftface, glyphid, FT_LOAD_DEFAULT);
-                        FT_Outline_Get_CBox(&font->ftface->glyph->outline, &bbox);
-                        float x = (cursor_x + x_offset) / 64.0f;
-                        float y = (cursor_y + y_offset) / 64.0f;
-                        float xMin = bbox.xMin / 64.0f + x + TEXT(ent)->x;
-                        float yMin = bbox.yMin / 64.0f + y + TEXT(ent)->y;
-                        float xMax = bbox.xMax / 64.0f + x + TEXT(ent)->x;
-                        float yMax = bbox.yMax / 64.0f + y + TEXT(ent)->y;
-                        int xs, ys;
-                        hb_font_get_scale(font->font, &xs, &ys);
-                        float glyphBbox[4];
-                        glyphBbox[0] = (float)bbox.xMin;
-                        glyphBbox[1] = (float)bbox.yMin;
-                        glyphBbox[2] = (float)bbox.xMax;
-                        glyphBbox[3] = (float)bbox.yMax;
-                        unsigned char color[4];
-                        resolv_color(ent, color);
-                        unsigned int glyphLoc = ds_draw_get_font_glyph_loc(draw, font, cacheID, glyphid);
-                        push_bbox_quad(TEXT(ent)->u, xMin, yMin, xMax, yMax, color, glyphLoc, glyphBbox);
-                        cursor_x += x_advance;
-                        cursor_y += y_advance;
-                }
-                TEXT(ent)->u->font_cache_id = cacheID;
-                
         }
-        hb_buffer_destroy(buf);
+        else
+        {
+                struct gllc_font *font = gllc_font_first();
+                if (font)
+                {
+                        hb_buffer_t *buf = font->hbbuffer;
+                        hb_buffer_add_utf8(buf, TEXT(ent)->text, -1, 0, -1);
+                        hb_buffer_guess_segment_properties(buf);
+                        FT_Set_Pixel_Sizes(font->ftface, 0, 56);
+                        hb_font_set_scale(font->font, 56 * 64, 56 * 64);
+                        hb_shape(font->font, buf, NULL, 0);
+                        unsigned int glyph_count;
+                        hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buf, &glyph_count);
+                        hb_glyph_position_t *glyph_pos = hb_buffer_get_glyph_positions(buf, &glyph_count);
+                        hb_position_t cursor_x = 0;
+                        hb_position_t cursor_y = 0;
+                        ds_unit_reset(TEXT(ent)->u);
+                        int cacheID = ds_draw_get_font_cache_id(draw, font);
+                        int xs, ys;
+                        float text_xmin = FLT_MAX;
+                        float text_ymin = FLT_MAX;
+                        float text_xmax = -FLT_MAX;
+                        float text_ymax = -FLT_MAX;
+                        for (unsigned int i = 0; i < glyph_count; i++)
+                        {
+                                hb_codepoint_t glyphid = glyph_info[i].codepoint;
+                                hb_position_t x_offset = glyph_pos[i].x_offset;
+                                hb_position_t y_offset = glyph_pos[i].y_offset;
+                                hb_position_t x_advance = glyph_pos[i].x_advance;
+                                hb_position_t y_advance = glyph_pos[i].y_advance;
+                                FT_BBox bbox;
+                                FT_Load_Glyph(font->ftface, glyphid, FT_LOAD_DEFAULT);
+                                FT_Outline_Get_CBox(&font->ftface->glyph->outline, &bbox);
+                                float x = (cursor_x + x_offset) / 64.0f;
+                                float y = (cursor_y + y_offset) / 64.0f;
+                                float xMin = bbox.xMin / 64.0f + x + TEXT(ent)->x;
+                                float yMin = bbox.yMin / 64.0f + y + TEXT(ent)->y;
+                                float xMax = bbox.xMax / 64.0f + x + TEXT(ent)->x;
+                                float yMax = bbox.yMax / 64.0f + y + TEXT(ent)->y;
+                                int xs, ys;
+                                hb_font_get_scale(font->font, &xs, &ys);
+                                float glyphBbox[4];
+                                glyphBbox[0] = (float)bbox.xMin;
+                                glyphBbox[1] = (float)bbox.yMin;
+                                glyphBbox[2] = (float)bbox.xMax;
+                                glyphBbox[3] = (float)bbox.yMax;
+                                unsigned char color[4];
+                                resolv_color(ent, color);
+                                unsigned int glyphLoc = ds_draw_get_font_glyph_loc(draw, font, cacheID, glyphid);
+                                push_bbox_quad(TEXT(ent)->u, xMin, yMin, xMax, yMax, color, glyphLoc, glyphBbox);
+                                cursor_x += x_advance;
+                                cursor_y += y_advance;
+                        }
+                        TEXT(ent)->u->font_cache_id = cacheID;
+                        hb_buffer_reset(font->hbbuffer);
+                }
+        }
         resolv_flags(ent, &TEXT(ent)->u->flags);
         TEXT(ent)->u->flags |= DS_UNIT_GLYPH;
 }

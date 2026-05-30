@@ -10,11 +10,11 @@
 
 struct ds_vertex
 {
+        GLbyte normal[2];
+        GLubyte color[4];
         GLfloat thickness;
         GLfloat thicknessMiltiplier;
-        GLbyte normal[2];
         GLfloat textureCoord[2];
-        GLubyte color[4];
         GLfloat pos[2];
         GLfloat length;
         GLuint glyphLoc;
@@ -24,25 +24,24 @@ struct ds_vertex
 #define DS_UNIT_DASH_SCREEN 0x2
 #define DS_UNIT_DASH_REAL 0x4
 #define DS_UNIT_GLYPH 0x8
+#define DS_UNIT_DIRTY 0x10
 
 struct ds_unit
 {
-        int flags;
-        int id;
-        int font_cache_id;
+        uint16_t flags;
+        uint16_t font_cache_id;
         GLuint V_cnt;
         GLuint I_cnt;
         GLuint I_cap;
         GLuint V_cap;
-        int dirty;
-        struct ds_draw *draw;
+        uint32_t order0;
+        uint32_t order1;
+        uint32_t order2;
         struct ds_vertex *V;
         GLuint *I;
+        struct ds_draw *draw;
         struct ds_unit *next;
         struct ds_unit *prev;
-        uint64_t order0;
-        uint64_t order1;
-        uint64_t order2;
 };
 
 struct ds_gpu_batch

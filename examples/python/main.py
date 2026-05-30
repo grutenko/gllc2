@@ -71,7 +71,7 @@ if sys.platform == "win32":
 elif sys.platform == "linux":
     hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
 
-lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
+lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, True)
 lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0xffffff)
 
 hDrw = lc.lcCreateDrawing()
@@ -88,8 +88,8 @@ def on_size(event):
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 200
-M = 200
+N = 600
+M = 600
 min_vx = -6000.0
 max_vx = -2000.0
 min_vy = -2500.0
@@ -210,9 +210,8 @@ for entity in msp:
         lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
 
 # ---------------- GRID ----------------
-print("START")
 import time
-t0 = time.perf_counter()
+
 
 for i in range(N - 1):
     for j in range(M - 1):
@@ -233,14 +232,17 @@ for i in range(N - 1):
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FCOLOR, 0x000000)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 125)
 
-        lc.lcPlineEnd(pline)
 
-        h = lc.lcBlockAddText(
-            hBlock,
-            "99",
-            tab[i0], tab[i0 + 1]
-        )
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xffff00)
+        lc.lcPlineEnd(pline)
+#for i in range(N - 1):
+#    for j in range(M - 1):
+#        i0 = (i * M + j) * 2
+#        h = lc.lcBlockAddText(
+#            hBlock,
+#            "99",
+#            tab[i0], tab[i0 + 1]
+#        )
+#        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xff0000)
 
 
 x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)
@@ -250,7 +252,8 @@ y1 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_YMAX)
 
 wx.CallAfter(lc.lcWndZoomRect, hWnd, x0, y0, x1, y1)
 
-lc.lcBlockUpdate(hBlock, 0, 0)
+print("START")
+t0 = time.perf_counter()
 
 t1 = time.perf_counter()
 
@@ -270,7 +273,7 @@ def on_select(evt):
 
 on_select_cb = lc.F_LCEVENT(on_select)
 
-#lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
+lc.lcEventSetProc(lc.LC_EVENT_SELECT, on_select_cb, 0, None)
 
 # ---------------- FINAL ----------------
 mgr.Update()

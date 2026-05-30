@@ -5,7 +5,7 @@
 #include "entity.h"
 
 void resolv_color(struct gllc_entity *ent, unsigned char *color);
-void resolv_flags(struct gllc_entity *ent, int *flags);
+void resolv_flags(struct gllc_entity *ent, uint16_t *flags);
 void build_contur(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt);
 void build_filltess(struct gllc_entity *ent, struct ds_unit *u, struct ev *v, int cnt);
 void soft_update_contur(struct gllc_entity *ent, struct ds_unit *u);

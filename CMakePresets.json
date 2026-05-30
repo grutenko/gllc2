@@ -4,32 +4,32 @@
         {
             "name": "debug-win32",
             "displayName": "Debug GCC 13.2.0 x86_64-w64-mingw32",
-            "description": "Using compilers: C = C:\\Strawberry\\c\\bin\\gcc.exe, CXX = C:\\Strawberry\\c\\bin\\g++.exe",
+            "description": "Using compilers: C = C:/msys64/mingw64/bin/gcc.exe, CXX = C:/msys64/mingw64/bin/g++.exe",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
-                "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
+                "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "CMAKE_MAKE_PROGRAM": "C:/msys64/ucrt64/bin/ninja.exe"
+                "CMAKE_MAKE_PROGRAM": "C:/msys64/mingw64/bin/ninja.exe"
             }
         },
         {
             "name": "release-win32",
             "displayName": "Release GCC 13.2.0 x86_64-w64-mingw32",
-            "description": "Using compilers: C = C:\\Strawberry\\c\\bin\\gcc.exe, CXX = C:\\Strawberry\\c\\bin\\g++.exe",
+            "description": "Using compilers: C = C:/msys64/mingw64/bin/gcc.exe, CXX = C:/msys64/mingw64/bin/g++.exe",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
-                "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
+                "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe",
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_C_FLAGS_RELEASE": "-O2 -DNDEBUG",
-                "CMAKE_MAKE_PROGRAM": "C:/msys64/ucrt64/bin/ninja.exe"
+                "CMAKE_MAKE_PROGRAM": "C:/msys64/mingw64/bin/ninja.exe"
             }
         },
         {

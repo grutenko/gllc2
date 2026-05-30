@@ -1,6 +1,7 @@
 #ifndef font_h
 #define font_h
 
+#include "hb-gpu.h"
 #include "hb.h"
 #include "object.h"
 
@@ -16,6 +17,8 @@ struct gllc_font
         hb_blob_t *data;
         hb_face_t *face;
         hb_font_t *font;
+        hb_gpu_draw_t *hbdraw;
+        hb_buffer_t *hbbuffer;
         FT_Face ftface;
         int nrefs;
         struct gllc_font *prev;

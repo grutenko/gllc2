@@ -98,7 +98,7 @@ void main() {
         vec4 jac = vec4 (emPerPos, 0.0, 0.0, -emPerPos);
         
   if ((u_flags & 8) != 0) {
-        hb_gpu_dilate (pos, tex, a_normal, jac, u_modelViewProjection, u_viewportSize);
+        //hb_gpu_dilate (pos, tex, a_normal, jac, u_modelViewProjection, u_viewportSize);
   }
   vec4 p = u_modelViewProjection * vec4(pos, 0.0, 1.0);
   vec2 pixelToNdc = vec2(2.0) / u_viewportSize;
