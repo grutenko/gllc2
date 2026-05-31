@@ -1,13 +1,19 @@
 #include "text.h"
+#include "cglm/affine-pre.h"
+#include "cglm/mat4.h"
+#include "cglm/types.h"
 #include "debug.h"
 #include "draw.h"
 #include "entbuildutil.h"
 #include "font.h"
 #include "freetype/freetype.h"
+#include "litecad.h"
+#include "object.h"
 #include "utf8tools.h"
 
 #include <float.h>
 #include <hb.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -83,8 +89,8 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         hb_buffer_t *buf = font->hbbuffer;
                         hb_buffer_add_utf8(buf, TEXT(ent)->text, -1, 0, -1);
                         hb_buffer_guess_segment_properties(buf);
-                        FT_Set_Pixel_Sizes(font->ftface, 0, 56);
-                        hb_font_set_scale(font->font, 56 * 64, 56 * 64);
+                        FT_Set_Pixel_Sizes(font->ftface, 0, 16);
+                        hb_font_set_scale(font->font, 16 * 64, 16 * 64);
                         hb_shape(font->font, buf, NULL, 0);
                         unsigned int glyph_count;
                         hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buf, &glyph_count);
@@ -98,6 +104,19 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         float text_ymin = FLT_MAX;
                         float text_xmax = -FLT_MAX;
                         float text_ymax = -FLT_MAX;
+                        float mul;
+                        if (TEXT(ent)->height == 0)
+                        {
+                                mul = 1.0f;
+                        }
+                        else if (TEXT(ent)->height == -1.0f)
+                        {
+                                mul = 1.0f;
+                        }
+                        else
+                        {
+                                mul = TEXT(ent)->height / 16;
+                        }
                         for (unsigned int i = 0; i < glyph_count; i++)
                         {
                                 hb_codepoint_t glyphid = glyph_info[i].codepoint;
@@ -108,12 +127,12 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                                 FT_BBox bbox;
                                 FT_Load_Glyph(font->ftface, glyphid, FT_LOAD_DEFAULT);
                                 FT_Outline_Get_CBox(&font->ftface->glyph->outline, &bbox);
-                                float x = (cursor_x + x_offset) / 64.0f;
-                                float y = (cursor_y + y_offset) / 64.0f;
-                                float xMin = bbox.xMin / 64.0f + x + TEXT(ent)->x;
-                                float yMin = bbox.yMin / 64.0f + y + TEXT(ent)->y;
-                                float xMax = bbox.xMax / 64.0f + x + TEXT(ent)->x;
-                                float yMax = bbox.yMax / 64.0f + y + TEXT(ent)->y;
+                                float x = (cursor_x + x_offset) / 64.0f * mul;
+                                float y = (cursor_y + y_offset) / 64.0f * mul;
+                                float xMin = bbox.xMin / 64.0f * mul + x;
+                                float yMin = bbox.yMin / 64.0f * mul + y;
+                                float xMax = bbox.xMax / 64.0f * mul + x;
+                                float yMax = bbox.yMax / 64.0f * mul + y;
                                 int xs, ys;
                                 hb_font_get_scale(font->font, &xs, &ys);
                                 float glyphBbox[4];
@@ -121,6 +140,14 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                                 glyphBbox[1] = (float)bbox.yMin;
                                 glyphBbox[2] = (float)bbox.xMax;
                                 glyphBbox[3] = (float)bbox.yMax;
+                                if (xMin < text_xmin)
+                                        text_xmin = xMin;
+                                if (yMin < text_ymin)
+                                        text_ymin = yMin;
+                                if (xMax > text_xmax)
+                                        text_xmax = xMax;
+                                if (yMax > text_ymax)
+                                        text_ymax = yMax;
                                 unsigned char color[4];
                                 resolv_color(ent, color);
                                 unsigned int glyphLoc = ds_draw_get_font_glyph_loc(draw, font, cacheID, glyphid);
@@ -130,6 +157,22 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                         }
                         TEXT(ent)->u->font_cache_id = cacheID;
                         hb_buffer_reset(font->hbbuffer);
+                        double w = fabs(text_xmax - text_xmin);
+                        double h = fabs(text_ymax - text_ymin);
+                        mat4 affine = GLM_MAT4_IDENTITY_INIT;
+                        glm_translate(affine, (vec3){TEXT(ent)->x - (w / 2), TEXT(ent)->y - (h / 2), 0});
+                        for (int i = 0; i < ds_unit_vcnt(TEXT(ent)->u); i++)
+                        {
+                                vec4 in;
+                                vec4 out;
+                                in[0] = TEXT(ent)->u->V[i].pos[0];
+                                in[1] = TEXT(ent)->u->V[i].pos[1];
+                                in[2] = 0.0f;
+                                in[3] = 1.0f;
+                                glm_mat4_mulv3(affine, in, 1.0f, out);
+                                TEXT(ent)->u->V[i].pos[0] = out[0];
+                                TEXT(ent)->u->V[i].pos[1] = out[1];
+                        }
                 }
         }
         resolv_flags(ent, &TEXT(ent)->u->flags);
@@ -203,7 +246,186 @@ static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_TEXT,
                                            .len = len,
                                            .clone = clone};
 
-static struct gllc_prop text_props[] = {P_END};
+static union gllc_variant GET_style(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_style(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_str(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_str(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_len(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_align(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_align(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_x(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_x(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_y(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_y(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_dx(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_dx(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_dy(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_dy(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_h(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_h(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_wscale(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_wscale(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_angle(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_angle(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_oblique(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_oblique(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_charspace(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_charspace(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_wrect(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_x0(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_y0(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_xfit(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_xfit(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_yfit(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_yfit(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static struct gllc_prop text_props[] = {P_HANDLE(LC_PROP_TEXT_STYLE, GET_style, SET_style),
+                                        P_STRING(LC_PROP_TEXT_STYLE, GET_style, SET_style),
+                                        P_STRING(LC_PROP_TEXT_STR, GET_str, SET_str),
+                                        P_INT_RO(LC_PROP_TEXT_LEN, GET_len),
+                                        P_INT(LC_PROP_TEXT_ALIGN, GET_align, SET_align),
+                                        P_FLOAT(LC_PROP_TEXT_X, GET_x, SET_x),
+                                        P_FLOAT(LC_PROP_TEXT_Y, GET_y, SET_y),
+                                        P_INT(LC_PROP_TEXT_DX, GET_dx, SET_dx),
+                                        P_INT(LC_PROP_TEXT_DX, GET_dy, SET_dy),
+                                        P_FLOAT(LC_PROP_TEXT_H, GET_h, SET_h),
+                                        P_FLOAT(LC_PROP_TEXT_WSCALE, GET_wscale, SET_wscale),
+                                        P_FLOAT(LC_PROP_TEXT_ANGLE, GET_angle, SET_angle),
+                                        P_FLOAT(LC_PROP_TEXT_OBLIQUE, GET_oblique, SET_oblique),
+                                        P_FLOAT(LC_PROP_TEXT_CHARSPACE, GET_charspace, SET_charspace),
+                                        P_FLOAT_RO(LC_PROP_TEXT_WRECT, GET_wrect),
+                                        P_FLOAT_RO(LC_PROP_TEXT_X0, GET_x0),
+                                        P_FLOAT_RO(LC_PROP_TEXT_Y0, GET_y0),
+                                        P_FLOAT(LC_PROP_TEXT_XFIT, GET_xfit, SET_xfit),
+                                        P_FLOAT(LC_PROP_TEXT_XFIT, GET_yfit, SET_yfit),
+                                        P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, text_props, NULL};
 
@@ -236,4 +458,124 @@ struct gllc_text *gllc_text_create(struct gllc_block *block, struct ds_draw *dra
                 pl->y = y;
         }
         return pl;
+}
+
+struct gllc_text_style *gllc_text_get_style(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_style(struct gllc_text *text, struct gllc_text_style *style)
+{
+}
+
+char *gllc_text_get_str(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_str(struct gllc_text *text, char *str)
+{
+}
+
+int gllc_text_get_len(struct gllc_text *text)
+{
+}
+
+int gllc_text_get_align(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_align(struct gllc_text *text, int align)
+{
+}
+
+double gllc_text_get_x(struct gllc_text *text)
+{
+}
+
+double gllc_text_get_y(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_x(struct gllc_text *text, double x)
+{
+}
+
+int gllc_text_set_y(struct gllc_text *text, double y)
+{
+}
+
+int gllc_text_get_dx(struct gllc_text *text)
+{
+}
+
+int gllc_text_get_dy(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_dx(struct gllc_text *text, int dx)
+{
+}
+
+int gllc_text_set_dy(struct gllc_text *text, int dy)
+{
+}
+
+float gllc_text_get_height(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_height(struct gllc_text *text, float height)
+{
+}
+
+float gllc_text_get_wscale(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_wscale(struct gllc_text *text, float wscale)
+{
+}
+
+float gllc_text_get_angle(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_angle(struct gllc_text *text, float angle)
+{
+}
+
+float gllc_text_get_oblique(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_oblique(struct gllc_text *text, float oblique)
+{
+}
+
+float gllc_text_get_charspace(struct gllc_text *text)
+{
+}
+
+int gllc_text_set_charspace(struct gllc_text *text, float charspace)
+{
+}
+
+float gllc_text_get_wrect(struct gllc_text *text)
+{
+}
+
+float gllc_text_get_x0(struct gllc_text *text)
+{
+}
+
+float gllc_text_get_y0(struct gllc_text *text)
+{
+}
+
+float gllc_text_get_xfit(struct gllc_text *text)
+{
+}
+
+float gllc_text_get_yfit(struct gllc_text *text)
+{
 }

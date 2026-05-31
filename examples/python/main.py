@@ -88,8 +88,8 @@ def on_size(event):
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 600
-M = 600
+N = 200
+M = 200
 min_vx = -6000.0
 max_vx = -2000.0
 min_vy = -2500.0
@@ -208,6 +208,8 @@ for entity in msp:
 
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
         lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
+        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, height)
+        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_ANGLE, rotation)
 
 # ---------------- GRID ----------------
 import time
@@ -254,7 +256,7 @@ wx.CallAfter(lc.lcWndZoomRect, hWnd, x0, y0, x1, y1)
 
 print("START")
 t0 = time.perf_counter()
-
+lc.lcBlockUpdate(hBlock, 0, 0)
 t1 = time.perf_counter()
 
 print("time:", t1 - t0)
