@@ -59,7 +59,7 @@ static double resolv_realwidth(struct gllc_entity *ent)
 {
         if (ent->flags & GLLC_ENT_LW_REAL)
                 return ent->lwidth;
-        return 0.0001f;
+        return 0.0000f;
 }
 
 static double resolv_pixwidth(struct gllc_entity *ent)
