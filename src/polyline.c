@@ -4,6 +4,8 @@
 #include "entbuildutil.h"
 #include "entity.h"
 #include "linalg.h"
+#include "litecad.h"
+#include "object.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -282,7 +284,127 @@ static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_POLYLINE,
                                            .len = len,
                                            .clone = clone};
 
-static struct gllc_prop pline_props[] = {P_END};
+static union gllc_variant GET_fit(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_fit(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_nvers(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_closed(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_closed(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_width(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_width(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_radius(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_radius(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_chamfer(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_chamfer(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_len(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_area(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_hasang0(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_hasang0(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_ang0(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_ang0(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_hasang2(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static int SET_hasang2(struct gllc_object *obj, int prop, int type, union gllc_variant value)
+{
+        return 0;
+}
+
+static union gllc_variant GET_cw(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static union gllc_variant GET_ccw(struct gllc_object *obj, int prop, int type)
+{
+        return (union gllc_variant)0;
+}
+
+static struct gllc_prop pline_props[] = {P_INT(LC_PROP_PLINE_FIT, GET_fit, SET_fit),
+                                         P_INT_RO(LC_PROP_PLINE_NVERS, GET_nvers),
+                                         P_BOOL(LC_PROP_PLINE_CLOSED, GET_closed, SET_closed),
+                                         P_FLOAT(LC_PROP_PLINE_WIDTH, GET_width, SET_width),
+                                         P_BOOL(LC_PROP_PLINE_WIDTH, GET_width, SET_width),
+                                         P_FLOAT(LC_PROP_PLINE_RADIUS, GET_radius, SET_radius),
+                                         P_BOOL(LC_PROP_PLINE_RADIUS, GET_radius, SET_radius),
+                                         P_BOOL(LC_PROP_PLINE_CHAMFER, GET_chamfer, SET_chamfer),
+                                         P_FLOAT_RO(LC_PROP_PLINE_LEN, GET_len),
+                                         P_FLOAT_RO(LC_PROP_PLINE_AREA, GET_area),
+                                         P_BOOL(LC_PROP_PLINE_HASANG0, GET_hasang0, SET_hasang0),
+                                         P_FLOAT(LC_PROP_PLINE_ANG0, GET_ang0, SET_ang0),
+                                         P_BOOL(LC_PROP_PLINE_HASANG2, GET_hasang2, SET_hasang2),
+                                         P_BOOL_RO(LC_PROP_PLINE_CW, GET_cw),
+                                         P_BOOL_RO(LC_PROP_PLINE_CCW, GET_ccw),
+                                         P_END};
 
 static struct gllc_prop *all_props[] = {G_entity_props, pline_props, NULL};
 

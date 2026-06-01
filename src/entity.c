@@ -122,41 +122,34 @@ static struct coloritab
                   {100, "Deep Azure", 0x6633FF},
                   {101, "Storm Blue", 0x330099},
                   {102, "Deep Blue", 0x3300CC},
-                  {103, "Dark Blue", 0x000080},
-                  {-1, NULL, 0}};
+                  {103, "Dark Blue", 0x000080}};
 
 static struct coloritab *find_color_by_name(const char *name)
 {
-        int i = 0;
-        while (_coloritab[i].index == -1)
+        for (int i = 0; i < 104; i++)
         {
                 if (strcmp(_coloritab[i].name, name) == 0)
                         return &_coloritab[i];
-                i++;
         }
         return NULL;
 }
 
 static struct coloritab *find_color_by_color(int color)
 {
-        int i = 0;
-        while (_coloritab[i].index == -1)
+        for (int i = 0; i < 104; i++)
         {
                 if (_coloritab[i].color == color)
                         return &_coloritab[i];
-                i++;
         }
         return NULL;
 }
 
 static struct coloritab *find_color_by_index(int index)
 {
-        int i = 0;
-        while (_coloritab[i].index == -1)
+        for (int i = 0; i < 104; i++)
         {
                 if (_coloritab[i].index == index)
                         return &_coloritab[i];
-                i++;
         }
         return NULL;
 }

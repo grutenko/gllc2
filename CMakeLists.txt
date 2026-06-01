@@ -199,20 +199,20 @@ endif()
 if(BUILD_TESTING)
 enable_testing()
 
-add_executable(test_entity test/test_entity.c)
-target_include_directories(test_entity PRIVATE include)
-target_link_libraries(test_entity PRIVATE gllc)
+macro(add_gllc_test name)
+    add_executable(${name} test/${name}.c)
 
-add_executable(test_block test/test_block.c)
-target_include_directories(test_block PRIVATE include)
-target_link_libraries(test_block PRIVATE gllc)
+    target_include_directories(${name} PRIVATE include)
 
-add_executable(test_layer test/test_layer.c)
-target_include_directories(test_layer PRIVATE include)
-target_link_libraries(test_layer PRIVATE gllc)
+    target_link_libraries(${name} PRIVATE gllc)
 
-add_test(NAME test_entity COMMAND test_entity)
-add_test(NAME test_block COMMAND test_block)
-add_test(NAME test_layer COMMAND test_layer)
+    add_test(NAME ${name} COMMAND ${name})
+endmacro()
+
+add_gllc_test(test_block_init)
+add_gllc_test(test_color_behavior)
+add_gllc_test(test_entity_init)
+add_gllc_test(test_layer_init)
+add_gllc_test(test_named_object_behavior)
 
 endif()

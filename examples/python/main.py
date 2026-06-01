@@ -23,12 +23,12 @@ left = wx.Panel(f)
 mgr.AddPane(
     left,
     aui.AuiPaneInfo()
-        .Left()
-        .Caption("Left Tools")
-        .BestSize((200, -1))
-        .MinSize((150, -1))
-        .Name("left")
-        .CloseButton(True)
+    .Left()
+    .Caption("Left Tools")
+    .BestSize((200, -1))
+    .MinSize((150, -1))
+    .Name("left")
+    .CloseButton(True),
 )
 
 # ---------------- BOTTOM PANEL ----------------
@@ -37,22 +37,17 @@ bottom = wx.Panel(f)
 mgr.AddPane(
     bottom,
     aui.AuiPaneInfo()
-        .Bottom()
-        .Caption("Log")
-        .BestSize((-1, 150))
-        .MinSize((-1, 100))
-        .Name("bottom")
-        .CloseButton(True)
+    .Bottom()
+    .Caption("Log")
+    .BestSize((-1, 150))
+    .MinSize((-1, 100))
+    .Name("bottom")
+    .CloseButton(True),
 )
 
 p = wx.Panel(f)
 
-mgr.AddPane(
-    p,
-    aui.AuiPaneInfo()
-        .CenterPane()
-        .Name("cad")
-)
+mgr.AddPane(p, aui.AuiPaneInfo().CenterPane().Name("cad"))
 
 mgr.Update()
 
@@ -72,12 +67,13 @@ elif sys.platform == "linux":
     hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
 
 lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, True)
-lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0xffffff)
+lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0xFFFFFF)
 
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcPropGetHandle(hDrw, lc.LC_PROP_DRW_BLOCK_MODEL)
 
 lc.lcWndSetBlock(hWnd, hBlock)
+
 
 # ---------------- RESIZE SYNC ----------------
 def on_size(event):
@@ -85,11 +81,12 @@ def on_size(event):
     lc.lcWndResize(hWnd, 0, 0, w, h)
     event.Skip()
 
+
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 200
-M = 200
+N = 300
+M = 300
 min_vx = -6000.0
 max_vx = -2000.0
 min_vy = -2500.0
@@ -130,7 +127,7 @@ def get_color_int(e, doc):
 total_points = 0
 
 L = lc.lcDrwAddLayer(hDrw, "0", "0", None, 1)
-#lc.lcPropPutBool(L, lc.LC_PROP_LAYER_LOCKED, True)
+# lc.lcPropPutBool(L, lc.LC_PROP_LAYER_LOCKED, True)
 for entity in msp:
     color = get_color_int(entity, dxf)
     h = None
@@ -196,15 +193,12 @@ for entity in msp:
         else:
             insert = entity.dxf.insert
             text = entity.text
-            height = entity.dxf.char_height if entity.dxf.hasattr("char_height") else 1.0
+            height = (
+                entity.dxf.char_height if entity.dxf.hasattr("char_height") else 1.0
+            )
             rotation = entity.dxf.rotation if entity.dxf.hasattr("rotation") else 0.0
 
-        h = lc.lcBlockAddText(
-            hBlock,
-            text,
-            insert.x,
-            insert.y
-        )
+        h = lc.lcBlockAddText(hBlock, text, insert.x, insert.y)
 
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
         lc.lcPropPutHandle(h, lc.LC_PROP_ENT_LAYER, L)
@@ -217,7 +211,6 @@ import time
 
 for i in range(N - 1):
     for j in range(M - 1):
-
         i0 = (i * M + j) * 2
         i1 = ((i + 1) * M + j) * 2
         i2 = ((i + 1) * M + (j + 1)) * 2
@@ -234,17 +227,41 @@ for i in range(N - 1):
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FCOLOR, 0x000000)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 125)
 
-
         lc.lcPlineEnd(pline)
-#for i in range(N - 1):
-#    for j in range(M - 1):
-#        i0 = (i * M + j) * 2
-#        h = lc.lcBlockAddText(
-#            hBlock,
-#            "99",
-#            tab[i0], tab[i0 + 1]
-#        )
-#        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, 0xff0000)
+for i in range(N - 1):
+    for j in range(M - 1):
+        i0 = (i * M + j) * 2
+
+        # smooth noise
+        v = (
+            90
+            + 25 * math.sin(i * 0.15)
+            + 15 * math.cos(j * 0.12)
+            + 10 * math.sin((i + j) * 0.08)
+        )
+
+        v = max(50, min(130, v))
+
+        # нормализация в [0..1]
+        t = (v - 50.0) / (130.0 - 50.0)
+
+        # градиент: синий -> красный
+        r = int(255 * t)
+        g = 0
+        b = int(255 * (1.0 - t))
+
+        color = (r << 16) | (g << 8) | b
+
+        h = lc.lcBlockAddText(
+            hBlock,
+            f"{v:.0f}",
+            tab[i0],
+            tab[i0 + 1]
+        )
+
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_PIXEL)
+        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, 16.0)
 
 
 x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)
@@ -261,6 +278,7 @@ t1 = time.perf_counter()
 
 print("time:", t1 - t0)
 
+
 def on_select(evt):
     hEnt = lc.lcBlockGetFirstSel(hBlock)
     while hEnt:
@@ -272,6 +290,7 @@ def on_select(evt):
     lc.lcBlockUnselect(hBlock)
     lc.lcBlockUpdate(hBlock, 0, None)
     lc.lcWndRedraw(hWnd)
+
 
 on_select_cb = lc.F_LCEVENT(on_select)
 

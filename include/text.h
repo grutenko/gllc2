@@ -55,5 +55,7 @@ float gllc_text_get_x0(struct gllc_text *text);
 float gllc_text_get_y0(struct gllc_text *text);
 float gllc_text_get_xfit(struct gllc_text *text);
 float gllc_text_get_yfit(struct gllc_text *text);
+int gllc_text_set_xfit(struct gllc_text *text, double xfit);
+int gllc_text_set_yfit(struct gllc_text *text, double yfit);
 
 #endif
