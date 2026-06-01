@@ -55,5 +55,13 @@
                 "CMAKE_C_FLAGS_RELEASE": "-O2 -DNDEBUG"
             }
         }
+    ],
+    "testPresets": [
+        {
+            "name": "test",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "debug-linux"
+        }
     ]
 }

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.18)
 project(gllc C CXX)
 
+include(CTest)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -10,9 +12,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_package(Python3)
+add_compile_options(-Wno-stringop-overread)
 
-include_directories(include cglm/include ${CMAKE_BINARY_DIR})
+find_package(Python3)
 
 file(GLOB SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
@@ -41,10 +43,19 @@ set(HB_HAVE_FREETYPE ON)
 set(HB_BUILD_GPU ON)
 if(MINGW AND BUILD_SHARED_LIBS)
     add_compile_definitions(HB_DLL_EXPORT)
-    # дополнительно можно передать цель
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHB_DLL_EXPORT")
 endif()
 add_subdirectory(harfbuzz)
+
+include(ExternalProject)
+
+#ExternalProject_Add(fontconfig_ext
+#    SOURCE_DIR ${CMAKE_SOURCE_DIR}/fontconfig
+#    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/fontconfig/autogen.sh --prefix=<INSTALL_DIR>
+#    BUILD_COMMAND make
+#    INSTALL_COMMAND make install
+#)
+
 if(NOT EMSCRIPTEN)
 add_subdirectory(examples)
 endif()
@@ -120,6 +131,7 @@ target_compile_options(gllc PRIVATE
 target_link_libraries(gllc PRIVATE 
     cglm freetype utf8proc harfbuzz-gpu
 )
+target_include_directories(gllc PRIVATE include ${CMAKE_BINARY_DIR})
 
 if (WIN32)
     target_link_libraries(gllc PRIVATE opengl32 gdi32 user32 kernel32)
@@ -138,6 +150,9 @@ elseif(UNIX)
       target_compile_options(gllc PUBLIC -DGL_GLEXT_PROTOTYPES) 
     endif()
 endif()
+
+#ExternalProject_Get_Property(fontconfig_ext install_dir)
+#set(FC_LIB ${install_dir}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}fontconfig${CMAKE_SHARED_LIBRARY_SUFFIX})
 
 add_custom_target(copy_lib ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -165,6 +180,10 @@ COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:cglm>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:cglm>"
 
+#COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#        ${FC_LIB}
+#        ${CMAKE_SOURCE_DIR}/examples/python/
+
     COMMENT "Copying all runtime libs to python directory"
     VERBATIM
 )
@@ -177,4 +196,25 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
         COMMENT "Copying compile_commands.json to source directory"
         VERBATIM
     )
+endif()
+
+if(BUILD_TESTING)
+enable_testing()
+
+macro(add_gllc_test name)
+    add_executable(${name} test/${name}.c)
+
+    target_include_directories(${name} PRIVATE include)
+
+    target_link_libraries(${name} PRIVATE gllc)
+
+    add_test(NAME ${name} COMMAND ${name})
+endmacro()
+
+add_gllc_test(test_block_init)
+add_gllc_test(test_color_behavior)
+add_gllc_test(test_entity_init)
+add_gllc_test(test_layer_init)
+add_gllc_test(test_named_object_behavior)
+
 endif()

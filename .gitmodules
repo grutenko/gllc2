@@ -10,3 +10,6 @@
 [submodule "FreeImage"]
 	path = FreeImage
 	url = https://github.com/danoli3/FreeImage.git
+[submodule "fontconfig"]
+	path = fontconfig
+	url = https://github.com/behdad/fontconfig.git

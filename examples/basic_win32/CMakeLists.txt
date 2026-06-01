@@ -1,5 +1,5 @@
 add_executable(basic_example main.c)
-target_include_directories(basic_example PUBLIC ../../)
+target_include_directories(basic_example PUBLIC ../../include)
 target_link_libraries(basic_example PRIVATE gllc)
 
 add_custom_command(TARGET basic_example POST_BUILD

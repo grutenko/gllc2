@@ -1,4 +1,5 @@
 add_executable(basic_gtk main.c)
+target_include_directories(basic_gtk PRIVATE ../../include)
 target_link_libraries(basic_gtk PRIVATE gllc)
 find_package(PkgConfig REQUIRED)
 set(OpenGL_GL_PREFERENCE GLVND)

@@ -397,10 +397,10 @@ void main() {
   vec4 c = v_color;
   if ((u_flags & 8) != 0) {
         float coverage = hb_gpu_draw (v_texcoord, v_glyphLoc);
-        float brightness = dot (v_color.rgb, vec3 (1.0 / 3.0));
-        float ppem = 1.0 / max (fwidth (v_texcoord).x,
-                                fwidth (v_texcoord).y);
-        coverage = hb_gpu_stem_darken (coverage, brightness, ppem);
+        //float brightness = dot (v_color.rgb, vec3 (1.0 / 3.0));
+        //float ppem = 1.0 / max (fwidth (v_texcoord).x,
+        //                        fwidth (v_texcoord).y);
+        //coverage = hb_gpu_stem_darken (coverage, brightness, ppem);
         c.w = coverage;
   }
   if ((u_flags & 1) != 0) {

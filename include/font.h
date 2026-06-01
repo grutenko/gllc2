@@ -1,8 +1,8 @@
 #ifndef font_h
 #define font_h
 
-#include "hb-gpu.h"
-#include "hb.h"
+#include <hb-gpu.h>
+#include <hb.h>
 #include "object.h"
 
 #include <ft2build.h>
