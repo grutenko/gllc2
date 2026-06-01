@@ -1429,7 +1429,7 @@ void on_ready(struct nw *NW, void *data)
         if (gladLoadGL())
         {
 #endif
-                glEnable(GL_MULTISAMPLE);
+                glDisable(GL_MULTISAMPLE);
                 glDisable(GL_LINE_SMOOTH);
                 glDisable(GL_POINT_SMOOTH);
                 glDisable(GL_POLYGON_SMOOTH);
