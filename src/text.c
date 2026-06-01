@@ -13,7 +13,6 @@
 #include "textstyle.h"
 #include "utf8tools.h"
 
-#include <epoxy/gl_generated.h>
 #include <float.h>
 #include <hb.h>
 #include <math.h>

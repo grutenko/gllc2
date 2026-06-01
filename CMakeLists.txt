@@ -12,6 +12,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+add_compile_options(-Wno-stringop-overread)
+
 find_package(Python3)
 
 file(GLOB SOURCES
@@ -47,12 +49,12 @@ add_subdirectory(harfbuzz)
 
 include(ExternalProject)
 
-ExternalProject_Add(fontconfig_ext
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/fontconfig
-    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/fontconfig/autogen.sh --prefix=<INSTALL_DIR>
-    BUILD_COMMAND make
-    INSTALL_COMMAND make install
-)
+#ExternalProject_Add(fontconfig_ext
+#    SOURCE_DIR ${CMAKE_SOURCE_DIR}/fontconfig
+#    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/fontconfig/autogen.sh --prefix=<INSTALL_DIR>
+#    BUILD_COMMAND make
+#    INSTALL_COMMAND make install
+#)
 
 if(NOT EMSCRIPTEN)
 add_subdirectory(examples)
@@ -149,8 +151,8 @@ elseif(UNIX)
     endif()
 endif()
 
-ExternalProject_Get_Property(fontconfig_ext install_dir)
-set(FC_LIB ${install_dir}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}fontconfig${CMAKE_SHARED_LIBRARY_SUFFIX})
+#ExternalProject_Get_Property(fontconfig_ext install_dir)
+#set(FC_LIB ${install_dir}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}fontconfig${CMAKE_SHARED_LIBRARY_SUFFIX})
 
 add_custom_target(copy_lib ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -178,9 +180,9 @@ COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:cglm>
         "${CMAKE_SOURCE_DIR}/examples/python/$<TARGET_FILE_NAME:cglm>"
 
-COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${FC_LIB}
-        ${CMAKE_SOURCE_DIR}/examples/python/
+#COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#        ${FC_LIB}
+#        ${CMAKE_SOURCE_DIR}/examples/python/
 
     COMMENT "Copying all runtime libs to python directory"
     VERBATIM

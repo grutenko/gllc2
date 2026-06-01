@@ -3,6 +3,7 @@
 #include "freetype/fttypes.h"
 #include "hb-gpu.h"
 #include "mipgost.h"
+#include "debug.h"
 
 #include <hb.h>
 #include <stdlib.h>

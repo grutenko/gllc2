@@ -3,6 +3,7 @@
 
 void fmt_impl(const char *level, const char *file, int line, const char *func, const char *fmt, ...);
 
+#if defined(DEBUG)
 #define FMTINFO(fmt, ...) fmt_impl("INFO", __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 #define FMTWARN(fmt, ...) fmt_impl("WARN", __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 #define FMTERROR(fmt, ...) fmt_impl("ERROR", __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
@@ -16,5 +17,14 @@ void fmt_impl(const char *level, const char *file, int line, const char *func, c
                         return retval;                                                                                 \
                 }                                                                                                      \
         } while (0)
+#else
+
+#define FMTINFO(fmt, ...)
+#define FMTWARN(fmt, ...)
+#define FMTERROR(fmt, ...)
+
+#define NONULL(ptr, retval)
+
+#endif
 
 #endif
