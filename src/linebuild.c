@@ -232,10 +232,9 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
                                         double w = conf->lrealw / 2.0f;
                                         double th = conf->lw / 2.0f;
                                         double nt0[2], nt1[2], nt2[2];
-                                        double acosp1 = acos(cosp1) / 2;
                                         double p0[2];
-                                        ROTTO(n0, acosp1, nt0);
-                                        ROTTO(n0, -acosp1, nt1);
+                                        perp_seg(nt0, vin[i - 1].p, vin[i].p);
+                                        perp_seg(nt1, vin[i].p, vin[i + 1].p);
                                         INVTO(n0, nt2);
                                         ADDSCALETO(vin[i].p, nt2, w, p0);
                                         ver(&V[vi], p0, nt2, conf->c, th, 1.0f, len);
