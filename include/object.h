@@ -1,8 +1,6 @@
 #ifndef object_h
 #define object_h
 
-#include "debug.h"
-
 #include <stdint.h>
 struct gllc_object;
 
@@ -87,6 +85,8 @@ static const char *objstrtype(int type)
         }
 }
 
+#if defined(DEBUG)
+
 #define OBJGUARD(ptr, typ, retval)                                                                                     \
         do                                                                                                             \
         {                                                                                                              \
@@ -101,6 +101,11 @@ static const char *objstrtype(int type)
                         return retval;                                                                                 \
                 }                                                                                                      \
         } while (0)
+#else
+
+#define OBJGUARD(ptr, typ, retval)
+
+#endif
 
 extern struct g_props_object G_props_object;
 

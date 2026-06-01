@@ -3,6 +3,8 @@
 #include "litecad.h"
 #include "named_object.h"
 #include "object.h"
+#include "debug.h"
+
 #include <stdlib.h>
 #include <string.h>
 
