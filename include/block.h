@@ -38,7 +38,6 @@ struct gllc_block
         struct gllc_entity **fil;
         int filcnt;
         int filcap;
-        struct gllc_entity_props props;
         int units;
         int ufscaling;
         double paper_x0;

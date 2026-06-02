@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define SEGCNT 64
 
@@ -134,9 +135,9 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
         if (ent->flags & GLLC_ENT_LW_THIN)
                 w = 10.0f * scale;
         else if (ent->flags & GLLC_ENT_LW_SCREEN)
-                w = (ent->lwidth + 10.0f) * scale;
+                w = (ent->props.lwidth + 10.0f) * scale;
         else
-                w = ent->lwidth + (10.0f * scale);
+                w = ent->props.lwidth + (10.0f * scale);
         VEC(v0, CIRCLE(ent)->p, (double[]){x, y});
         len = LEN(v0);
         return len >= CIRCLE(ent)->radius - w && len <= CIRCLE(ent)->radius + w;
@@ -161,7 +162,7 @@ static int len(struct gllc_entity *ent, double *len)
         return CIRCLE(ent)->radius * 2 * M_PI;
 }
 
-static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_POLYLINE,
+static struct gllc_entity_vtable vtable = {.type = GLLC_ENT_CIRCLE,
                                            .build = build,
                                            .destroy = destroy,
                                            .vertices = vertices,

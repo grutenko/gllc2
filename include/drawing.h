@@ -13,6 +13,8 @@ struct gllc_drawing
         struct gllc_nobject *oh;
         struct gllc_nobject *ot;
         int ocnt;
+        struct gllc_block *block_modelspace;
+        struct gllc_layer *layer0;
 };
 
 struct gllc_drawing *gllc_drw_create();

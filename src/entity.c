@@ -14,151 +14,28 @@
 
 #define ENT(obj) ((struct gllc_entity *)(obj))
 
-static struct coloritab
+static struct
 {
-        int index;
-        const char *name;
-        int color;
-} _coloritab[] = {{0, "Black", 0x000000},
-                  {1, "90% Black", 0x191919},
-                  {2, "80% Black", 0x333333},
-                  {3, "70% Black", 0x4D4D4D},
-                  {4, "60% Black", 0x666666},
-                  {5, "50% Black", 0x808080},
-                  {6, "40% Black", 0x999999},
-                  {7, "30% Black", 0xB3B3B3},
-                  {8, "20% Black", 0xCCCCCC},
-                  {9, "10% Black", 0xE6E6E6},
-                  {10, "White", 0xFFFFFF},
-                  {11, "Blue", 0x0000FF},
-                  {12, "Cyan", 0x00FFFF},
-                  {13, "Green", 0x00FF00},
-                  {14, "Yellow", 0xFFFF00},
-                  {15, "Red", 0xFF0000},
-                  {16, "Magenta", 0xFF00FF},
-                  {17, "Purple", 0x9900CC},
-                  {18, "Orange", 0xFF6600},
-                  {19, "Pink", 0xFF99CC},
-                  {20, "Dark Brown", 0x663333},
-                  {21, "Powder Blue", 0xCCCCFF},
-                  {22, "Pastel Blue", 0x9999FF},
-                  {23, "Baby Blue", 0x6699FF},
-                  {24, "Electric Blue", 0x6666FF},
-                  {25, "Twilight Blue", 0x6666CC},
-                  {26, "Navy Blue", 0x003399},
-                  {27, "Deep Navy Blue", 0x000066},
-                  {28, "Desert Blue", 0x336699},
-                  {29, "Dodger Blue", 0x1389FF},
-                  {30, "Sky Blue", 0x00CCFF},
-                  {31, "Ice Blue", 0x99FFFF},
-                  {32, "Smalt Blue", 0x0068D0},
-                  {33, "Light BlueGreen", 0x99CCCC},
-                  {34, "Ocean Green", 0x669999},
-                  {35, "Moss Green", 0x336666},
-                  {36, "Dark Green", 0x003333},
-                  {37, "Forest Green", 0x006633},
-                  {38, "Grass Green", 0x009933},
-                  {39, "Wild Willow", 0xB5CC61},
-                  {40, "Kentucky Green", 0x339966},
-                  {41, "Light Green", 0x33CC66},
-                  {42, "Spring Green", 0x33CC33},
-                  {43, "Turquoise", 0x66FFCC},
-                  {44, "Sea Green", 0x33CC99},
-                  {45, "Faded Green", 0x99CC99},
-                  {46, "Ghost Green", 0xCCFFCC},
-                  {47, "Mint Green", 0x99FF99},
-                  {48, "Army Green", 0x669966},
-                  {49, "Avocado Green", 0x669933},
-                  {50, "Martian Green", 0x99CC33},
-                  {51, "Dull Green", 0x99CC66},
-                  {52, "Chartreuse", 0x99FF00},
-                  {53, "Moon Green", 0xCCFF66},
-                  {54, "Murky Green", 0x333300},
-                  {55, "Olive Drab", 0x666633},
-                  {56, "Khaki", 0x999966},
-                  {57, "Olive", 0x999933},
-                  {58, "Banana Yellow", 0xCCCC33},
-                  {59, "Light Yellow", 0xFFFF66},
-                  {60, "Chalk", 0xFFFF99},
-                  {61, "Pale Yellow", 0xFFFFCC},
-                  {62, "Brown", 0x996633},
-                  {63, "Red Brown", 0xCC6633},
-                  {64, "Gold", 0xCC9933},
-                  {65, "Autumn Orange", 0xFF6633},
-                  {66, "Light Orange", 0xFF9933},
-                  {67, "Peach", 0xFF9966},
-                  {68, "Deep Yellow", 0xFFCC00},
-                  {69, "Sand", 0xFFCC99},
-                  {70, "Walnut", 0x663300},
-                  {71, "Ruby Red", 0x990000},
-                  {72, "Brick Red", 0xCC3300},
-                  {73, "Tropical Pink", 0xFF6666},
-                  {74, "Soft Pink", 0xFF9999},
-                  {75, "Faded Pink", 0xFFCCCC},
-                  {76, "Dark Red", 0x800000},
-                  {77, "Crimson", 0x993366},
-                  {78, "Regal Red", 0xCC3366},
-                  {79, "Deep Rose", 0xCC3399},
-                  {80, "Neon Red", 0xFF0066},
-                  {81, "Deep Pink", 0xFF6699},
-                  {82, "Hot Pink", 0xFF3399},
-                  {83, "Dusty Rose", 0xCC6699},
-                  {84, "Plum", 0x660066},
-                  {85, "Deep Violet", 0x990099},
-                  {86, "Light Violet", 0xFF99FF},
-                  {87, "Violet", 0xCC66CC},
-                  {88, "Dusty Plum", 0x996699},
-                  {89, "Pale Purple", 0xCC99CC},
-                  {90, "Majestic Purple", 0x9933CC},
-                  {91, "Neon Purple", 0xCC33FF},
-                  {92, "Light Purple", 0xCC66FF},
-                  {93, "Twilight Violet", 0x9966CC},
-                  {94, "Easter Purple", 0xCC99FF},
-                  {95, "Deep Purple", 0x330066},
-                  {96, "Grape", 0x663399},
-                  {97, "Blue Violet", 0x9966FF},
-                  {98, "Blue Purple", 0x9900FF},
-                  {99, "Deep River", 0x6600CC},
-                  {100, "Deep Azure", 0x6633FF},
-                  {101, "Storm Blue", 0x330099},
-                  {102, "Deep Blue", 0x3300CC},
-                  {103, "Dark Blue", 0x000080}};
-
-static struct coloritab *find_color_by_name(const char *name)
-{
-        for (int i = 0; i < 104; i++)
-        {
-                if (strcmp(_coloritab[i].name, name) == 0)
-                        return &_coloritab[i];
-        }
-        return NULL;
-}
-
-static struct coloritab *find_color_by_color(int color)
-{
-        for (int i = 0; i < 104; i++)
-        {
-                if (_coloritab[i].color == color)
-                        return &_coloritab[i];
-        }
-        return NULL;
-}
-
-static struct coloritab *find_color_by_index(int index)
-{
-        for (int i = 0; i < 104; i++)
-        {
-                if (_coloritab[i].index == index)
-                        return &_coloritab[i];
-        }
-        return NULL;
-}
+        int lc_type;
+        int gllc_type;
+} type_mapping[] = {{LC_ENT_LINE, GLLC_ENT_LINE},
+                    {LC_ENT_CIRCLE, GLLC_ENT_CIRCLE},
+                    {LC_ENT_ARC, GLLC_ENT_ARC},
+                    {LC_ENT_POLYLINE, GLLC_ENT_POLYLINE},
+                    {LC_ENT_TEXT, GLLC_ENT_TEXT}};
 
 static union gllc_variant _ent_type_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.int_ = ENT(obj)->vtable->type;
-        return v;
+        for (size_t i = 0; i < sizeof(type_mapping) / sizeof(type_mapping[0]); i++)
+        {
+                if (type_mapping[i].gllc_type == ENT(obj)->vtable->type)
+                {
+                        v.int_ = type_mapping[i].lc_type;
+                        return v;
+                }
+        }
+        return (union gllc_variant)0;
 }
 
 static union gllc_variant _ent_id_GET(struct gllc_object *obj, int prop, int type)
@@ -623,7 +500,7 @@ static union gllc_variant _ent_len_GET(struct gllc_object *obj, int prop, int ty
 }
 
 struct gllc_prop G_entity_props[] = {
-    P_BOOL_RO(LC_PROP_ENT_TYPE, _ent_type_GET),
+    P_INT_RO(LC_PROP_ENT_TYPE, _ent_type_GET),
     P_INT_RO(LC_PROP_ENT_ID, _ent_id_GET),
     P_STRING_RO(LC_PROP_ENT_ID, _ent_id_GET),
     P_INT(LC_PROP_ENT_KEY, _ent_key_GET, _ent_key_SET),
@@ -651,7 +528,7 @@ struct gllc_prop G_entity_props[] = {
     P_STRING(LC_PROP_ENT_FCOLOR, _ent_fcolor_GET, _ent_fcolor_SET),
     P_INT(LC_PROP_ENT_FCOLORI, _ent_fcolori_GET, _ent_fcolori_SET),
     P_INT(LC_PROP_ENT_FCOLORT, _ent_fcolort_GET, _ent_fcolort_SET),
-    P_BOOL(LC_PROP_ENT_FCOLORBYLAYER, _ent_fcolor_by_layer_GET, _ent_color_by_layer_SET),
+    P_BOOL(LC_PROP_ENT_FCOLORBYLAYER, _ent_fcolor_by_layer_GET, _ent_fcolor_by_layer_SET),
     P_BOOL(LC_PROP_ENT_FCOLORBYBLOCK, _ent_fcolor_by_block_GET, _ent_fcolor_by_block_SET),
     P_INT(XLC_PROP_ENT_ALPHA, _ent_color_alpha_GET, _ent_color_alpha_SET),
     P_INT(LC_PROP_ENT_FALPHA, _ent_falpha_GET, _ent_falpha_SET),
@@ -712,29 +589,13 @@ int gllc_entity_set_key(struct gllc_entity *ent, uint32_t key)
         return 1;
 }
 
-int gllc_entity_color(struct gllc_entity *ent)
+color_t gllc_entity_color(struct gllc_entity *ent)
 {
-        if (ent->layer && ent->flags & GLLC_ENT_COLOR_BY_LAYER)
-        {
-                return ent->layer->props.color;
-        }
-        else if (ent->block && ent->flags & GLLC_ENT_COLOR_BY_BLOCK)
-        {
-                return ent->block->props.color;
-        }
         return ent->props.color;
 }
 
-int gllc_entity_fcolor(struct gllc_entity *ent)
+color_t gllc_entity_fcolor(struct gllc_entity *ent)
 {
-        if (ent->layer && ent->flags & GLLC_ENT_FCOLOR_BY_LAYER)
-        {
-                return ent->layer->props.fcolor;
-        }
-        else if (ent->block && ent->flags & GLLC_ENT_FCOLOR_BY_BLOCK)
-        {
-                return ent->block->props.fcolor;
-        }
         return ent->props.fcolor;
 }
 
@@ -750,7 +611,7 @@ void gllc_entity_destroy(struct gllc_entity *ent)
         }
 }
 
-int gllc_entity_set_color(struct gllc_entity *ent, int color)
+int gllc_entity_set_color(struct gllc_entity *ent, color_t color)
 {
         if (ent)
         {
@@ -761,7 +622,7 @@ int gllc_entity_set_color(struct gllc_entity *ent, int color)
         return 0;
 }
 
-int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor)
+int gllc_entity_set_fcolor(struct gllc_entity *ent, color_t fcolor)
 {
 
         if (ent)
@@ -793,26 +654,27 @@ void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct
         ent->block = block;
         GLLC_OBJECT_INIT(&ent->_obj, props, &G_entity_obj_vtable);
         ent->vtable = vtable;
-        ent->flags |= GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED | GLLC_ENT_LW_THIN | GLLC_ENT_INITIAL;
+        ent->flags |= (GLLC_ENT_MODIFIED | GLLC_ENT_GEOMETRY_MODIFIED | GLLC_ENT_LW_THIN | GLLC_ENT_INITIAL |
+                       GLLC_ENT_COLOR_BY_LAYER | GLLC_ENT_FCOLOR_BY_LAYER);
         ent->ID = last_ID++;
         ID_hexify(ent->ID, ent->ID_hex);
-        ent->props.ltscale = 1.0f;
-        ent->props.color = 0;
-        ent->props.fcolor = 0;
-        ent->falpha = 1.0f;
-        ent->alpha = 1.0f;
+        gllc_entity_set_ltscale(ent, 1.0f);
+        gllc_entity_set_color(ent, 0x000000);
+        gllc_entity_set_fcolor(ent, 0x000000);
+        gllc_entity_set_falpha(ent, 1.0f);
+        gllc_entity_set_alpha(ent, 1.0f);
 }
 
 int gllc_entity_set_falpha(struct gllc_entity *ent, float falpha)
 {
-        ent->falpha = falpha;
+        ent->props.falpha = falpha;
         gllc_entity_set_modified(ent, 0);
         return 1;
 }
 
 float gllc_entity_falpha(struct gllc_entity *ent)
 {
-        return ent->falpha;
+        return ent->props.falpha;
 }
 
 int gllc_entity_set_ltscale(struct gllc_entity *ent, float ltscale)
@@ -847,7 +709,7 @@ int gllc_entity_set_lwidth_mode(struct gllc_entity *ent, int mode)
 
 int gllc_entity_set_lwidth(struct gllc_entity *ent, float lwidth)
 {
-        ent->lwidth = lwidth;
+        ent->props.lwidth = lwidth;
         gllc_entity_set_modified(ent, 1);
         return 1;
 }
@@ -861,10 +723,6 @@ float gllc_entity_ltscale(struct gllc_entity *ent)
         else if (ent->layer && ent->layer->props.ltscale > -1)
         {
                 return ent->layer->props.ltscale;
-        }
-        else if (ent->block && ent->block->props.ltscale > -1)
-        {
-                return ent->block->props.ltscale;
         }
         return 1.0f;
 }
@@ -888,7 +746,7 @@ int gllc_entity_lwidth_mode(struct gllc_entity *ent)
 
 float gllc_entity_lwidth(struct gllc_entity *ent)
 {
-        return ent->lwidth;
+        return ent->props.lwidth;
 }
 
 int gllc_entity_set_linetype(struct gllc_entity *ent, struct gllc_linetype *linetype)
@@ -907,10 +765,6 @@ struct gllc_linetype *gllc_entity_linetype(struct gllc_entity *ent)
         else if (ent->layer->props.linetype)
         {
                 return ent->layer->props.linetype;
-        }
-        else if (ent->block->props.linetype)
-        {
-                return ent->block->props.linetype;
         }
         return NULL;
 }
@@ -1000,26 +854,26 @@ int gllc_entity_set_filled(struct gllc_entity *ent, int filled)
 
 int gllc_entity_is_colori(struct gllc_entity *ent)
 {
-        return find_color_by_color(gllc_entity_color(ent)) != NULL;
+        return color_is_index(ent->props.color);
 }
 
 int gllc_entity_is_colort(struct gllc_entity *ent)
 {
-        return find_color_by_color(gllc_entity_color(ent)) == NULL;
+        return !color_is_index(ent->props.color);
 }
 
-int gllc_entity_set_colori(struct gllc_entity *ent, int color)
+int gllc_entity_set_colori(struct gllc_entity *ent, int index)
 {
-        struct coloritab *c = find_color_by_index(color);
-        if (c)
+        color_t color = color_from_index(index);
+        if (color != COLOR_INVALID)
         {
-                gllc_entity_set_color(ent, c->color);
+                gllc_entity_set_color(ent, color);
                 return 1;
         }
         return 0;
 }
 
-int gllc_entity_set_colort(struct gllc_entity *ent, int color)
+int gllc_entity_set_colort(struct gllc_entity *ent, color_t color)
 {
         gllc_entity_set_color(ent, color);
         return 1;
@@ -1027,103 +881,87 @@ int gllc_entity_set_colort(struct gllc_entity *ent, int color)
 
 int gllc_entity_set_color_by_string(struct gllc_entity *ent, const char *color)
 {
-        struct coloritab *c = find_color_by_name(color);
-        if (c)
+        color_t colorint = color_from_string(color);
+        if (colorint != COLOR_INVALID)
         {
-                gllc_entity_set_color(ent, c->color);
+                gllc_entity_set_color(ent, colorint);
                 return 1;
         }
-        unsigned char r, g, b;
-        int cnt = sscanf(color, "%hhu,%hhu,%hhu", &r, &g, &b);
-        if (cnt != 3)
-        {
-                return 0;
-        }
-        gllc_entity_set_color(ent, (r << 16) | (g << 8) | b);
-        return 1;
+        return 0;
 }
 
 int gllc_entity_colori(struct gllc_entity *ent)
 {
-        struct coloritab *c = find_color_by_color(gllc_entity_color(ent));
-        if (c)
-        {
-                return c->color;
-        }
-        return 0;
+        return color_to_index(gllc_entity_color(ent));
 }
 
 char *gllc_entity_color_string(struct gllc_entity *ent)
 {
-        int colorint = gllc_entity_color(ent);
-        struct coloritab *c = find_color_by_color(colorint);
-        if (c)
+        color_t color = gllc_entity_color(ent);
+        const char *name = color_get_name(color);
+        if (name)
         {
-                return (char *)c->name;
+                return (char *)name;
         }
-        sprintf(ent->props.cstrbuffer, "%hhu,%hhu,%hhu", RED(colorint), GREEN(colorint), BLUE(colorint));
-        return ent->props.cstrbuffer;
+        if (color != COLOR_INVALID)
+        {
+                uint8_t r, g, b;
+                color_to_rgb(color, &r, &g, &b);
+                sprintf(ent->props.cstrbuffer, "%hhu,%hhu,%hhu", r, g, b);
+                return ent->props.cstrbuffer;
+        }
+        return NULL;
 }
 
 int gllc_entity_fcolori(struct gllc_entity *ent)
 {
-        struct coloritab *c = find_color_by_color(gllc_entity_fcolor(ent));
-        if (c)
-        {
-                return c->color;
-        }
-        return 0;
+        return color_to_index(gllc_entity_fcolor(ent));
 }
 
-int gllc_entity_fcolort(struct gllc_entity *ent)
+color_t gllc_entity_fcolort(struct gllc_entity *ent)
 {
         return gllc_entity_fcolor(ent);
 }
 
 int gllc_entity_set_fcolori(struct gllc_entity *ent, int ind)
 {
-        struct coloritab *c = find_color_by_index(ind);
-        if (c)
+        color_t color = color_from_index(ind);
+        if (color != COLOR_INVALID)
         {
-                gllc_entity_set_fcolor(ent, c->color);
+                gllc_entity_set_fcolor(ent, color);
                 return 1;
         }
         return 0;
 }
 
-int gllc_entity_set_fcolort(struct gllc_entity *ent, int color)
+int gllc_entity_set_fcolort(struct gllc_entity *ent, color_t color)
 {
         return gllc_entity_set_fcolor(ent, color);
 }
 
 char *gllc_entity_get_fcolor_string(struct gllc_entity *ent)
 {
-        int colorint = gllc_entity_fcolor(ent);
-        struct coloritab *c = find_color_by_color(colorint);
-        if (c)
+        color_t color = gllc_entity_fcolor(ent);
+        const char *name = color_get_name(color);
+        if (name)
         {
-                return (char *)c->name;
+                return (char *)name;
         }
-        sprintf(ent->props.cstrbuffer, "%hhu,%hhu,%hhu", RED(colorint), GREEN(colorint), BLUE(colorint));
+        int r, g, b;
+        color_to_rgb(color, (uint8_t *)&r, (uint8_t *)&g, (uint8_t *)&b);
+        sprintf(ent->props.cstrbuffer, "%hhu,%hhu,%hhu", r, g, b);
         return ent->props.cstrbuffer;
 }
 
 int gllc_entity_set_fcolor_string(struct gllc_entity *ent, char *color)
 {
-        struct coloritab *c = find_color_by_name(color);
-        if (c)
+        color_t colorint = color_from_string(color);
+        if (colorint != COLOR_INVALID)
         {
-                gllc_entity_set_fcolor(ent, c->color);
+                gllc_entity_set_fcolor(ent, colorint);
                 return 1;
         }
-        unsigned char r, g, b;
-        int cnt = sscanf(color, "%hhu,%hhu,%hhu", &r, &g, &b);
-        if (cnt != 3)
-        {
-                return 0;
-        }
-        gllc_entity_set_fcolor(ent, (r << 16) | (g << 8) | b);
-        return 1;
+        return 0;
 }
 
 int gllc_entity_locked(struct gllc_entity *ent)
@@ -1259,12 +1097,30 @@ struct gllc_layer *gllc_entity_get_layer(struct gllc_entity *ent)
 
 int gllc_entity_set_alpha(struct gllc_entity *ent, float alpha)
 {
-        ent->alpha = alpha;
+        ent->props.alpha = alpha;
         gllc_entity_set_modified(ent, 0);
         return 1;
 }
 
 float gllc_entity_alpha(struct gllc_entity *ent)
 {
-        return ent->alpha;
+        return ent->props.alpha;
+}
+
+color_t gllc_entity_resolv_color(struct gllc_entity *ent)
+{
+        if (ent->layer && gllc_entity_color_by_layer(ent))
+        {
+                return gllc_layer_get_color(ent->layer);
+        }
+        return gllc_entity_color(ent);
+}
+
+color_t gllc_entity_resolv_fcolor(struct gllc_entity *ent)
+{
+        if (ent->layer && gllc_entity_fcolor_by_layer(ent))
+        {
+                return gllc_layer_get_fcolor(ent->layer);
+        }
+        return gllc_entity_fcolor(ent);
 }

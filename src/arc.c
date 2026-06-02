@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define SEGCNT 64
 
@@ -88,11 +89,11 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
         }
         else if (ent->flags & GLLC_ENT_LW_SCREEN)
         {
-                w = (ent->lwidth + 5.0f) * scale;
+                w = (ent->props.lwidth + 5.0f) * scale;
         }
         else
         {
-                w = ent->lwidth + (5.0f * scale);
+                w = ent->props.lwidth + (5.0f * scale);
         }
         VEC(v0, (double[]){ARC(ent)->x, ARC(ent)->y}, (double[]){x, y});
         double len = LEN(v0);

@@ -242,13 +242,18 @@ for i in range(N - 1):
 
         v = max(50, min(130, v))
 
-        # нормализация в [0..1]
         t = (v - 50.0) / (130.0 - 50.0)
 
-        # градиент: синий -> красный
-        r = int(255 * t)
-        g = 0
-        b = int(255 * (1.0 - t))
+        if t < 0.5:
+            k = t * 2.0
+            r = int(255 * k)
+            g = int(255 * k)
+            b = int(255 * (1.0 - k))
+        else:
+            k = (t - 0.5) * 2.0
+            r = 255
+            g = int(255 * (1.0 - k))
+            b = 0
 
         color = (r << 16) | (g << 8) | b
 
@@ -261,7 +266,7 @@ for i in range(N - 1):
 
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_PIXEL)
-        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, 16.0)
+        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, 14.0)
 
 
 x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)

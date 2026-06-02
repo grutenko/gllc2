@@ -583,8 +583,6 @@ struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *n
                 gllc_nobject_init((struct gllc_nobject *)block, drawing, all_props, &vtable, GLLC_OBJ_BLOCK, name);
                 block->x = x;
                 block->y = y;
-                block->props.color = -1;
-                block->props.fcolor = -1;
                 block->sg = sg_create(6);
                 if (!block->sg)
                 {

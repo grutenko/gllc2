@@ -905,7 +905,8 @@ struct gllc_drawing *gllc_drw_create()
         {
                 memset(d, 0, sizeof(struct gllc_drawing));
                 GLLC_OBJECT_INIT(&d->_obj, all_props, &vtable);
-                gllc_drw_add_block(d, "main", 0.0f, 0.0f);
+                d->block_modelspace = gllc_drw_add_block(d, "main", 0.0f, 0.0f);
+                d->layer0 = gllc_drw_add_layer(d, "0", "0,0,0", NULL, 1);
         }
         return d;
 }

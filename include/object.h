@@ -1,6 +1,8 @@
 #ifndef object_h
 #define object_h
 
+#include "debug.h"
+
 #include <stdint.h>
 struct gllc_object;
 

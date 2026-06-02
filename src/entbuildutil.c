@@ -9,7 +9,9 @@
 
 void resolv_color(struct gllc_entity *ent, unsigned char *color)
 {
-        int colorint = gllc_entity_color(ent);
+        uint8_t r, g, b;
+        color_t colorint = gllc_entity_resolv_color(ent);
+        color_to_rgb(colorint, &r, &g, &b);
         if (ent->flags & GLLC_ENT_SELECTED)
         {
                 color[0] = 0;
@@ -19,20 +21,22 @@ void resolv_color(struct gllc_entity *ent, unsigned char *color)
         }
         else
         {
-                color[0] = RED(colorint);
-                color[1] = GREEN(colorint);
-                color[2] = BLUE(colorint);
-                color[3] = (unsigned char)(ent->alpha * 255);
+                color[0] = r;
+                color[1] = g;
+                color[2] = b;
+                color[3] = (unsigned char)(ent->props.alpha * 255);
         }
 }
 
 void resolv_fcolor(struct gllc_entity *ent, unsigned char *color)
 {
-        int colorint = gllc_entity_fcolor(ent);
-        color[0] = RED(colorint);
-        color[1] = GREEN(colorint);
-        color[2] = BLUE(colorint);
-        color[3] = (unsigned char)(ent->falpha * 255);
+        uint8_t r, g, b;
+        color_t colorint = gllc_entity_resolv_fcolor(ent);
+        color_to_rgb(colorint, &r, &g, &b);
+        color[0] = r;
+        color[1] = g;
+        color[2] = b;
+        color[3] = (unsigned char)(ent->props.falpha * 255);
 }
 
 void resolv_flags(struct gllc_entity *ent, uint16_t *flags)
@@ -58,7 +62,7 @@ void resolv_flags(struct gllc_entity *ent, uint16_t *flags)
 static double resolv_realwidth(struct gllc_entity *ent)
 {
         if (ent->flags & GLLC_ENT_LW_REAL)
-                return ent->lwidth;
+                return ent->props.lwidth;
         return 0.0000f;
 }
 
@@ -70,7 +74,7 @@ static double resolv_pixwidth(struct gllc_entity *ent)
                 pl = 2;
         }
         if (ent->flags & GLLC_ENT_LW_SCREEN)
-                return ent->lwidth + pl;
+                return ent->props.lwidth + pl;
         return 1.0f + pl;
 }
 

@@ -1,8 +1,6 @@
 #ifndef linalg_h
 #define linalg_h
 
-#include <math.h>
-
 #define M_PI 3.14159265358979323846
 
 double LEN(const double v[static 2]);

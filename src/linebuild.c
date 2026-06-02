@@ -235,6 +235,10 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
                                         double p0[2];
                                         perp_seg(nt0, vin[i - 1].p, vin[i].p);
                                         perp_seg(nt1, vin[i].p, vin[i + 1].p);
+                                        if(DOT(n0, nt0) < 0)
+                                                INV(nt0);
+                                        if(DOT(n1, nt1) < 0)
+                                                INV(nt1);
                                         INVTO(n0, nt2);
                                         ADDSCALETO(vin[i].p, nt2, w, p0);
                                         ver(&V[vi], p0, nt2, conf->c, th, 1.0f, len);

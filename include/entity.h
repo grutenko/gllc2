@@ -1,7 +1,9 @@
 #ifndef entity_h
 #define entity_h
 
+#include "color.h"
 #include "entity_vertex.h"
+
 #if defined(_WIN32)
 #include "glad.h"
 #elif defined(__linux__)
@@ -57,10 +59,13 @@ struct gllc_entity_vtable
 
 struct gllc_entity_props
 {
-        int color;
-        int fcolor;
+        color_t color;
+        color_t fcolor;
         char cstrbuffer[12];
         float ltscale;
+        float falpha;
+        float alpha;
+        float lwidth;
         struct gllc_linetype *linetype;
 };
 
@@ -68,9 +73,6 @@ struct gllc_entity
 {
         struct gllc_object _obj;
         int flags;
-        float falpha;
-        float alpha;
-        float lwidth;
         int order;
         int offset;
         uint32_t ID;
@@ -94,16 +96,12 @@ void _gllc_entity_init(struct gllc_entity *ent, struct gllc_block *block, struct
 #define GLLC_ENTITY_INIT(E, BLOCK, PROPS, VTABLE)                                                                      \
         _gllc_entity_init((struct gllc_entity *)(E), (BLOCK), (PROPS), (VTABLE))
 
-#define RED(C) (((C) >> 16) & 0xFF)
-#define GREEN(C) (((C) >> 8) & 0xFF)
-#define BLUE(C) ((C) & 0xFF)
-
 uint32_t gllc_entity_get_id(struct gllc_entity *ent);
 char *gllc_entity_get_id_string(struct gllc_entity *ent);
 uint32_t gllc_entity_get_key(struct gllc_entity *ent);
 int gllc_entity_set_key(struct gllc_entity *ent, uint32_t key);
-int gllc_entity_color(struct gllc_entity *ent);
-int gllc_entity_fcolor(struct gllc_entity *ent);
+color_t gllc_entity_color(struct gllc_entity *ent);
+color_t gllc_entity_fcolor(struct gllc_entity *ent);
 char *gllc_entity_color_string(struct gllc_entity *ent);
 int gllc_entity_color_by_layer(struct gllc_entity *ent);
 int gllc_entity_color_by_block(struct gllc_entity *ent);
@@ -118,11 +116,11 @@ int gllc_entity_set_fcolor_string(struct gllc_entity *ent, char *color);
 int gllc_entity_is_colori(struct gllc_entity *ent);
 int gllc_entity_is_colort(struct gllc_entity *ent);
 int gllc_entity_set_colori(struct gllc_entity *ent, int color);
-int gllc_entity_set_colort(struct gllc_entity *ent, int color);
-int gllc_entity_set_color(struct gllc_entity *ent, int color);
+int gllc_entity_set_colort(struct gllc_entity *ent, color_t color);
+int gllc_entity_set_color(struct gllc_entity *ent, color_t color);
 int gllc_entity_is_fcolori(struct gllc_entity *ent);
 int gllc_entity_is_fcolort(struct gllc_entity *ent);
-int gllc_entity_set_fcolor(struct gllc_entity *ent, int fcolor);
+int gllc_entity_set_fcolor(struct gllc_entity *ent, color_t fcolor);
 int gllc_entity_set_falpha(struct gllc_entity *ent, float falpha);
 float gllc_entity_falpha(struct gllc_entity *ent);
 int gllc_entity_set_alpha(struct gllc_entity *ent, float alpha);
@@ -140,9 +138,9 @@ int gllc_entity_set_filled(struct gllc_entity *ent, int filled);
 int gllc_entity_set_color_by_string(struct gllc_entity *ent, const char *color);
 int gllc_entity_colori(struct gllc_entity *ent);
 int gllc_entity_fcolori(struct gllc_entity *ent);
-int gllc_entity_fcolort(struct gllc_entity *ent);
+color_t gllc_entity_fcolort(struct gllc_entity *ent);
 int gllc_entity_set_fcolori(struct gllc_entity *ent, int ind);
-int gllc_entity_set_fcolort(struct gllc_entity *ent, int color);
+int gllc_entity_set_fcolort(struct gllc_entity *ent, color_t color);
 int gllc_entity_locked(struct gllc_entity *ent);
 int gllc_entity_visible(struct gllc_entity *ent);
 int gllc_entity_hidden(struct gllc_entity *ent);
@@ -158,5 +156,9 @@ void gllc_entity_bbox(struct gllc_entity *ent, double scale, double *x0, double 
 void gllc_entity_build(struct gllc_entity *ent, struct ds_draw *draw, double scale);
 int gllc_entity_set_layer(struct gllc_entity *ent, struct gllc_layer *layer);
 struct gllc_layer *gllc_entity_get_layer(struct gllc_entity *ent);
+
+// В отличии от gllc_entity_(f)color который возвращает цвет записаный в примитиве эти функции вернут цвет который имея в виду BYBLOCK/BYLAYER
+color_t gllc_entity_resolv_color(struct gllc_entity *ent);
+color_t gllc_entity_resolv_fcolor(struct gllc_entity *ent);
 
 #endif

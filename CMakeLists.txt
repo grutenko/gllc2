@@ -214,6 +214,7 @@ endmacro()
 add_gllc_test(test_block_init)
 add_gllc_test(test_color_behavior)
 add_gllc_test(test_entity_init)
+add_gllc_test(test_entity_type)
 add_gllc_test(test_layer_init)
 add_gllc_test(test_named_object_behavior)
 

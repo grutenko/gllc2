@@ -121,9 +121,9 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
         if (ent->flags & GLLC_ENT_LW_THIN)
                 w = 10.0f * scale;
         else if (ent->flags & GLLC_ENT_LW_SCREEN)
-                w = (ent->lwidth + 10.0f) * scale;
+                w = (ent->props.lwidth + 10.0f) * scale;
         else
-                w = ent->lwidth + (10.0f * scale);
+                w = ent->props.lwidth + (10.0f * scale);
         double n0[2], n1[2];
         double T, S, len;
         VEC(n0, line->p0, line->p1);
