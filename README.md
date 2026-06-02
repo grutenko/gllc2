@@ -56,7 +56,7 @@ sudo pacman -S gcc cmake mesa libx11 gtk3
 
 Сборка:
 ```bash
-git clone https://github.com/grutenko/gllc2.git
+git clone --recurse-submodules https://github.com/grutenko/gllc2.git
 cd gllc
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -78,7 +78,7 @@ pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make
 
 Сборка:
 ```bash
-git clone https://github.com/grutenko/gllc2.git
+git clone --recurse-submodules https://github.com/grutenko/gllc2.git
 cd gllc
 mkdir build && cd build
 cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
