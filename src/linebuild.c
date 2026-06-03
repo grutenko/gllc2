@@ -242,8 +242,8 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
                                         INVTO(n0, nt2);
                                         ADDSCALETO(vin[i].p, nt2, w, p0);
                                         ver(&V[vi], p0, nt2, conf->c, th, 1.0f, len);
-                                        ver_extr(&V[vi + 1], p0, nt0, w, conf->c, th, 1.0f, len);
-                                        ver_extr(&V[vi + 2], p0, nt1, w, conf->c, th, 1.0f, len);
+                                        ver_extr(&V[vi + 1], p0, nt0, w, conf->c, conf->lw, 1.0f, len);
+                                        ver_extr(&V[vi + 2], p0, nt1, w, conf->c, conf->lw, 1.0f, len);
                                         I[ii] = off + vi;
                                         I[ii + 1] = off + vi + 1;
                                         I[ii + 2] = off + vi + 2;

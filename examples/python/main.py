@@ -85,8 +85,8 @@ def on_size(event):
 p.Bind(wx.EVT_SIZE, on_size)
 
 # ---------------- DXF + DATA ----------------
-N = 200
-M = 200
+N = 600
+M = 600
 min_vx = -6000.0
 max_vx = -2000.0
 min_vy = -2500.0

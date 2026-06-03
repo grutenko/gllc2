@@ -25,6 +25,7 @@ struct ds_vertex
 #define DS_UNIT_DASH_REAL 0x4
 #define DS_UNIT_GLYPH 0x8
 #define DS_UNIT_DIRTY 0x10
+#define DS_UNIT_GLYPH_RASTER 0x20
 
 struct ds_unit
 {
@@ -87,6 +88,12 @@ struct ds_draw_font_cache_glyph
         int glyph;
         int offset;
         int size;
+};
+
+struct ds_draw_font_cache_raster {
+        float height;
+        struct ds_draw_font_cache_glyph *glyphs;
+        int glyph_cnt;
 };
 
 struct ds_draw_font_cache

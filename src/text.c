@@ -94,6 +94,8 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                 {
                         hb_buffer_t *buf = font->hbbuffer;
                         hb_buffer_add_utf8(buf, TEXT(ent)->text, -1, 0, -1);
+                        ds_unit_reserve_vertex(TEXT(ent)->u, hb_buffer_get_length(buf) * 4);
+                        ds_unit_reserve_index(TEXT(ent)->u, hb_buffer_get_length(buf) * 6);
                         hb_buffer_guess_segment_properties(buf);
                         FT_Set_Pixel_Sizes(font->ftface, 0, 16);
                         hb_font_set_scale(font->font, 16 * 64, 16 * 64);
