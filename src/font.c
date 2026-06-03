@@ -2,7 +2,7 @@
 #include "freetype/freetype.h"
 #include "freetype/fttypes.h"
 #include "hb-gpu.h"
-#include "mipgost.h"
+#include "arialmt.h"
 #include "debug.h"
 
 #include <hb.h>

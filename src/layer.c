@@ -11,6 +11,8 @@
 
 #define LAYER(obj) ((struct gllc_layer *)(obj))
 
+static char cstrbuffer[12];
+
 static union gllc_variant _locked_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
@@ -26,13 +28,13 @@ static int _locked_SET(struct gllc_object *obj, int prop, int type, union gllc_v
 static union gllc_variant _descr_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.string_ = LAYER(obj)->_nobj.descr;
+        v.string_ = gllc_layer_get_description((struct gllc_layer *)obj);
         return v;
 }
 
 static int _descr_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return 0;
+        return gllc_layer_set_description((struct gllc_layer *)obj, value.string_);
 }
 
 static union gllc_variant _id_GET(struct gllc_object *obj, int prop, int type)
@@ -45,13 +47,13 @@ static union gllc_variant _id_GET(struct gllc_object *obj, int prop, int type)
 static union gllc_variant _name_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.string_ = LAYER(obj)->_nobj.name;
+        v.string_ = gllc_layer_get_name((struct gllc_layer *)obj);
         return v;
 }
 
 static int _name_SET(struct gllc_object *obj, int prop, int type, union gllc_variant value)
 {
-        return 0;
+        return gllc_layer_set_name((struct gllc_layer *)obj, value.string_);
 }
 
 static union gllc_variant __drw_GET(struct gllc_object *obj, int prop, int type)
@@ -383,8 +385,8 @@ char *gllc_layer_get_color_string(struct gllc_layer *layer)
         {
                 uint8_t r, g, b;
                 color_to_rgb(color, &r, &g, &b);
-                sprintf(layer->props.cstrbuffer, "%hhu,%hhu,%hhu", r, g, b);
-                return layer->props.cstrbuffer;
+                sprintf(cstrbuffer, "%hhu,%hhu,%hhu", r, g, b);
+                return cstrbuffer;
         }
         return 0;
 }
@@ -401,7 +403,7 @@ int gllc_layer_set_color_string(struct gllc_layer *layer, char *color)
 
 int gllc_layer_set_color(struct gllc_layer *layer, color_t color)
 {
-        layer->props.color = color;
+        layer->props.color = color_sanitize(color);
         set_entities_modified(layer, 0);
         return 1;
 }
@@ -472,7 +474,7 @@ int gllc_layer_set_colort(struct gllc_layer *layer, color_t color)
 
 int gllc_layer_set_fcolor(struct gllc_layer *layer, color_t color)
 {
-        layer->props.fcolor = color;
+        layer->props.fcolor = color_sanitize(color);
         set_entities_modified(layer, 1);
         return 1;
 }
@@ -529,8 +531,8 @@ char *gllc_layer_get_fcolor_string(struct gllc_layer *layer)
         {
                 uint8_t r, g, b;
                 color_to_rgb(color, &r, &g, &b);
-                sprintf(layer->props.cstrbuffer, "%hhu,%hhu,%hhu", r, g, b);
-                return layer->props.cstrbuffer;
+                sprintf(cstrbuffer, "%hhu,%hhu,%hhu", r, g, b);
+                return cstrbuffer;
         }
         return 0;
 }
@@ -653,4 +655,24 @@ color_t gllc_layer_get_color(struct gllc_layer *layer)
 color_t gllc_layer_get_fcolor(struct gllc_layer *layer)
 {
         return layer->props.fcolor;
+}
+
+char *gllc_layer_get_name(struct gllc_layer *layer)
+{
+        return gllc_nobject_get_name((struct gllc_nobject *)layer);
+}
+
+char *gllc_layer_get_description(struct gllc_layer *layer)
+{
+        return gllc_nobject_get_description((struct gllc_nobject *)layer);
+}
+
+int gllc_layer_set_name(struct gllc_layer *layer, const char *name)
+{
+        return gllc_nobject_set_name((struct gllc_nobject *)layer, name);
+}
+
+int gllc_layer_set_description(struct gllc_layer *layer, const char *description)
+{
+        return gllc_nobject_set_description((struct gllc_nobject *)layer, description);
 }

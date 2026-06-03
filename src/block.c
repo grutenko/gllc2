@@ -3,6 +3,7 @@
 #include "circle.h"
 #include "debug.h"
 #include "draw.h"
+#include "drawing.h"
 #include "entity.h"
 #include "line.h"
 #include "litecad.h"
@@ -648,6 +649,11 @@ void gllc_block_destroy(struct gllc_block *block)
         free(block);
 }
 
+struct gllc_drawing *gllc_block_get_drawing(struct gllc_block *block)
+{
+        return block->_nobj.drawing;
+}
+
 static void push_ent(struct gllc_block *block, struct gllc_entity *ent)
 {
         if (block->h)
@@ -680,14 +686,20 @@ static void remove_ent(struct gllc_block *block, struct gllc_entity *ent)
         ent->block = NULL;
 }
 
+static void setup_entity(struct gllc_block *block, struct gllc_entity *ent)
+{
+        push_ent(block, ent);
+        gllc_entity_set_layer(ent, gllc_drw_get_layer_current(block->_nobj.drawing));
+        gllc_block_put_bq(block, ent);
+}
+
 struct gllc_polyline *gllc_block_add_polyline(struct gllc_block *block, int closed, int filled)
 {
         NONULL(block, NULL);
         struct gllc_polyline *pline = gllc_polyline_create(block, &block->draw, closed, filled);
         if (pline)
         {
-                push_ent(block, (struct gllc_entity *)pline);
-                gllc_block_put_bq(block, (struct gllc_entity *)pline);
+                setup_entity(block, (struct gllc_entity *)pline);
         }
         return pline;
 }
@@ -698,8 +710,7 @@ struct gllc_circle *gllc_block_add_circle(struct gllc_block *block, double x, do
         struct gllc_circle *circle = gllc_circle_create(block, &block->draw, x, y, r, filled);
         if (circle)
         {
-                push_ent(block, (struct gllc_entity *)circle);
-                gllc_block_put_bq(block, (struct gllc_entity *)circle);
+                setup_entity(block, (struct gllc_entity *)circle);
         }
         return circle;
 }
@@ -710,10 +721,43 @@ struct gllc_text *gllc_block_add_text(struct gllc_block *block, char *text, doub
         struct gllc_text *t = gllc_text_create(block, &block->draw, text, x, y);
         if (t)
         {
-                push_ent(block, (struct gllc_entity *)t);
-                gllc_block_put_bq(block, (struct gllc_entity *)t);
+                setup_entity(block, (struct gllc_entity *)t);
         }
         return t;
+}
+
+struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2])
+{
+        NONULL(block, NULL);
+        struct gllc_line *line = gllc_line_create(block, &block->draw, p0, p1);
+        if (line)
+        {
+                setup_entity(block, (struct gllc_entity *)line);
+        }
+        return line;
+}
+
+struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle,
+                                    double arc_angle)
+{
+        NONULL(block, NULL);
+        struct gllc_arc *r = gllc_arc_create(block, &block->draw, x, y, radius, start_angle, arc_angle);
+        if (r)
+        {
+                setup_entity(block, (struct gllc_entity *)r);
+        }
+        return r;
+}
+
+struct gllc_rect *gllc_block_add_rect(struct gllc_block *block, double *p, double w, double h, double angle, int filled)
+{
+        NONULL(block, 0);
+        struct gllc_rect *r = gllc_rect_create(block, &block->draw, p, w, h, angle, filled);
+        if (r)
+        {
+                setup_entity(block, (struct gllc_entity *)r);
+        }
+        return r;
 }
 
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden)
@@ -794,18 +838,6 @@ void gllc_block_put_bq(struct gllc_block *block, struct gllc_entity *ent)
         }
         block->bq[block->bqcnt] = ent;
         block->bqcnt++;
-}
-
-struct gllc_line *gllc_block_add_line(struct gllc_block *block, double p0[2], double p1[2])
-{
-        NONULL(block, NULL);
-        struct gllc_line *line = gllc_line_create(block, &block->draw, p0, p1);
-        if (line)
-        {
-                push_ent(block, (struct gllc_entity *)line);
-                gllc_block_put_bq(block, (struct gllc_entity *)line);
-        }
-        return line;
 }
 
 static inline void arr_ent_push(struct gllc_entity ***arr, int *cnt, int *cap, struct gllc_entity *ent)
@@ -952,18 +984,6 @@ int gllc_block_ent_filter_rect(struct gllc_block *block, double x0, double y0, d
         return 1;
 }
 
-struct gllc_rect *gllc_block_add_rect(struct gllc_block *block, double *p, double w, double h, double angle, int filled)
-{
-        NONULL(block, 0);
-        struct gllc_rect *r = gllc_rect_create(block, &block->draw, p, w, h, angle, filled);
-        if (r)
-        {
-                push_ent(block, (struct gllc_entity *)r);
-                gllc_block_put_bq(block, (struct gllc_entity *)r);
-        }
-        return r;
-}
-
 static void push_select(struct gllc_block *block, struct gllc_entity *ent)
 {
         arr_ent_push(&block->sel, &block->selcnt, &block->selcap, ent);
@@ -1010,19 +1030,6 @@ struct gllc_entity *gllc_block_get_select_at(struct gllc_block *block, int index
         if (index < 0 || block->selcnt <= index)
                 return NULL;
         return block->sel[index];
-}
-
-struct gllc_arc *gllc_block_add_arc(struct gllc_block *block, double x, double y, double radius, double start_angle,
-                                    double arc_angle)
-{
-        NONULL(block, NULL);
-        struct gllc_arc *r = gllc_arc_create(block, &block->draw, x, y, radius, start_angle, arc_angle);
-        if (r)
-        {
-                push_ent(block, (struct gllc_entity *)r);
-                gllc_block_put_bq(block, (struct gllc_entity *)r);
-        }
-        return r;
 }
 
 static void arr_remove_ent(struct gllc_entity **arr, int *size, struct gllc_entity *ent)
@@ -1176,11 +1183,23 @@ struct gllc_entity *gllc_block_get_ent_by_id(struct gllc_block *block, uint64_t 
         return NULL;
 }
 
+static inline void ID_hexify(uint32_t ID, char *ID_hex)
+{
+        static char ID_hex_tab[] = "0123456789ABCDEF";
+        for (int i = 0, j = 28; i <= 8; i++, j -= 4)
+        {
+                ID_hex[i] = ID_hex_tab[(ID >> j) & 0xF];
+        }
+        ID_hex[8] = '\0';
+}
+
 struct gllc_entity *gllc_block_get_ent_by_idh(struct gllc_block *block, char *IDh)
 {
+        static char idhex[12];
         for (struct gllc_entity *ent = block->h; ent; ent = ent->next)
         {
-                if (strcmp(ent->ID_hex, IDh) == 0)
+                ID_hexify(ent->ID, idhex);
+                if (strcmp(idhex, IDh) == 0)
                 {
                         return ent;
                 }

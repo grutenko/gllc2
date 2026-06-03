@@ -22,5 +22,6 @@ void color_to_string(color_t color, char *buffer, size_t buflen);
 int color_to_index(color_t color);
 int color_is_index(color_t color);
 const char *color_get_name(color_t color);
+color_t color_sanitize(color_t color);
 
 #endif // color_h

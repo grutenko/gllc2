@@ -100,7 +100,8 @@ set(GENERATED_FONT_HEADERS)
 
 set(FONT_FILES
         fonts/Simplex.ttf
-        fonts/mipgost.ttf)
+        fonts/mipgost.ttf
+        fonts/arialmt.ttf)
 
 foreach(FONT ${FONT_FILES})
     get_filename_component(NAME ${FONT} NAME_WE)
@@ -217,5 +218,7 @@ add_gllc_test(test_entity_init)
 add_gllc_test(test_entity_type)
 add_gllc_test(test_layer_init)
 add_gllc_test(test_named_object_behavior)
+add_gllc_test(test_drawing_named_object_manipulation)
+add_gllc_test(test_entity_attributes_inheritance)
 
 endif()

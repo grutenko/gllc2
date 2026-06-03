@@ -64,5 +64,9 @@ int gllc_layer_nodlg(struct gllc_layer *layer);
 int gllc_layer_set_nodlg(struct gllc_layer *layer, int nodlg);
 int gllc_layer_is0(struct gllc_layer *layer);
 int gllc_layer_set_is0(struct gllc_layer *layer, int is0);
+char *gllc_layer_get_name(struct gllc_layer *layer);
+char *gllc_layer_get_description(struct gllc_layer *layer);
+int gllc_layer_set_name(struct gllc_layer *layer, const char *name);
+int gllc_layer_set_description(struct gllc_layer *layer, const char *description);
 
 #endif // layer_h

@@ -61,7 +61,6 @@ struct gllc_entity_props
 {
         color_t color;
         color_t fcolor;
-        char cstrbuffer[12];
         float ltscale;
         float falpha;
         float alpha;
@@ -77,7 +76,6 @@ struct gllc_entity
         int offset;
         uint32_t ID;
         uint32_t key;
-        char ID_hex[9];
         double bbox[4];
         struct gllc_entity_props props;
         struct gllc_entity_vtable *vtable;
@@ -156,8 +154,11 @@ void gllc_entity_bbox(struct gllc_entity *ent, double scale, double *x0, double 
 void gllc_entity_build(struct gllc_entity *ent, struct ds_draw *draw, double scale);
 int gllc_entity_set_layer(struct gllc_entity *ent, struct gllc_layer *layer);
 struct gllc_layer *gllc_entity_get_layer(struct gllc_entity *ent);
+int gllc_entity_fcolor_is_index(struct gllc_entity *ent);
+int gllc_entity_fcolor_is_true(struct gllc_entity *ent);
 
-// В отличии от gllc_entity_(f)color который возвращает цвет записаный в примитиве эти функции вернут цвет который имея в виду BYBLOCK/BYLAYER
+// В отличии от gllc_entity_(f)color который возвращает цвет записаный в примитиве эти функции вернут цвет который имея
+// в виду BYBLOCK/BYLAYER
 color_t gllc_entity_resolv_color(struct gllc_entity *ent);
 color_t gllc_entity_resolv_fcolor(struct gllc_entity *ent);
 

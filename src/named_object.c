@@ -296,6 +296,7 @@ void gllc_nobject_init(struct gllc_nobject *nobj, struct gllc_drawing *drawing, 
         memset(nobj, 0, sizeof(struct gllc_nobject));
         GLLC_OBJECT_INIT(nobj, props, vtable);
         strncpy(nobj->name, name, strnlen(name, 31));
+        nobj->drawing = drawing;
         nobj->ID = last_ID++;
         ID_hexify(nobj->ID, nobj->ID_hex);
         nobj->type = type;
@@ -317,4 +318,36 @@ void gllc_nobject_decref(struct gllc_nobject *nobj)
         {
                 nobj->nrefs--;
         }
+}
+
+char *gllc_nobject_get_name(struct gllc_nobject *nobj)
+{
+        return nobj->name;
+}
+
+char *gllc_nobject_get_description(struct gllc_nobject *nobj)
+{
+        return nobj->descr;
+}
+
+int gllc_nobject_set_name(struct gllc_nobject *nobj, const char *name)
+{
+        NONULL(name, 0);
+        if (name)
+        {
+                strncpy(nobj->name, name, 31);
+                return 1;
+        }
+        return 0;
+}
+
+int gllc_nobject_set_description(struct gllc_nobject *nobj, const char *description)
+{
+        NONULL(description, 0);
+        if (description)
+        {
+                strncpy(nobj->descr, description, 63);
+                return 1;
+        }
+        return 0;
 }

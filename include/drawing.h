@@ -15,6 +15,7 @@ struct gllc_drawing
         int ocnt;
         struct gllc_block *block_modelspace;
         struct gllc_layer *layer0;
+        struct gllc_layer *layer_current;
 };
 
 struct gllc_drawing *gllc_drw_create();
@@ -24,5 +25,10 @@ struct gllc_layer *gllc_drw_add_layer(struct gllc_drawing *drw, const char *name
 void gllc_drawing_destroy(struct gllc_drawing *drawing);
 struct gllc_nobject *gllc_drw_get_first_object(struct gllc_drawing *drawing, int objtype);
 struct gllc_nobject *gllc_drw_get_next_object(struct gllc_drawing *drawing, struct gllc_nobject *obj);
+struct gllc_layer *gllc_drw_get_layer0(struct gllc_drawing *drawing);
+struct gllc_block *gllc_drw_get_block_model(struct gllc_drawing *drawing);
+struct gllc_layer *gllc_drw_get_layer_current(struct gllc_drawing *drawing);
+int gllc_drw_set_block_model(struct gllc_drawing *drawing, struct gllc_block *block);
+int gllc_drw_set_layer_current(struct gllc_drawing *drawing, struct gllc_layer *layer);
 
 #endif

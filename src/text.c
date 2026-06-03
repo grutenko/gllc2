@@ -77,6 +77,10 @@ static inline void push_bbox_quad(struct ds_unit *u, float x0, float y0, float x
         I[ibase + 5] = base + 3;
 }
 
+static int makebox(struct gllc_text *text, double scale, double *x0, double *y0, double *x1, double *y1)
+{
+}
+
 static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
 {
         if (!TEXT(ent)->text)
@@ -138,10 +142,10 @@ static void build(struct gllc_entity *ent, struct ds_draw *draw, double scale)
                                 int xs, ys;
                                 hb_font_get_scale(font->font, &xs, &ys);
                                 float glyphBbox[4];
-                                glyphBbox[0] = (float)bbox.xMin;
-                                glyphBbox[1] = (float)bbox.yMin;
-                                glyphBbox[2] = (float)bbox.xMax;
-                                glyphBbox[3] = (float)bbox.yMax;
+                                glyphBbox[0] = (float)bbox.xMin - 20;
+                                glyphBbox[1] = (float)bbox.yMin - 20;
+                                glyphBbox[2] = (float)bbox.xMax + 20;
+                                glyphBbox[3] = (float)bbox.yMax + 20;
                                 if (xMin < text_xmin)
                                         text_xmin = xMin;
                                 if (yMin < text_ymin)

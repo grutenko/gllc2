@@ -66,7 +66,7 @@ if sys.platform == "win32":
 elif sys.platform == "linux":
     hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
 
-lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, True)
+lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
 lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0xFFFFFF)
 
 hDrw = lc.lcCreateDrawing()
@@ -228,6 +228,7 @@ for i in range(N - 1):
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FALPHA, 125)
 
         lc.lcPlineEnd(pline)
+
 for i in range(N - 1):
     for j in range(M - 1):
         i0 = (i * M + j) * 2
@@ -266,7 +267,7 @@ for i in range(N - 1):
 
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
         lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_PIXEL)
-        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, 14.0)
+        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, 12.0)
 
 
 x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)

@@ -52,6 +52,8 @@ struct gllc_block *gllc_block_create(struct gllc_drawing *drawing, const char *n
 void gllc_block_update(struct gllc_block *block);
 void gllc_block_destroy(struct gllc_block *block);
 
+struct gllc_drawing *gllc_block_get_drawing(struct gllc_block *block);
+
 void gllc_block_set_window(struct gllc_block *block, struct gllc_window *window);
 struct gllc_entity *gllc_block_pick_ent(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden);
 int gllc_block_ent_filter_point(struct gllc_block *block, double x, double y, int skiplocked, int skiphidden,

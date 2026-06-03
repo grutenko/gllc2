@@ -14,6 +14,24 @@
                 assert(lcPropGetBool((L), (prop##I)) == 1);                                                            \
                 assert(lcPropGetBool((L), (prop##T)) == 0);                                                            \
                 assert(lcPropGetInt(L, (prop##T)) == (rgb));                                                           \
+                                                                                                                       \
+                assert(lcPropPutInt((L), (prop##I), (idx)) == 1);                                                      \
+                str = lcPropGetStr((L), (prop));                                                                       \
+                assert(str != NULL);                                                                                   \
+                assert(strcmp(str, (name)) == 0);                                                                      \
+                assert(lcPropGetInt((L), (prop##I)) == (idx));                                                         \
+                assert(lcPropGetBool((L), (prop##I)) == 1);                                                            \
+                assert(lcPropGetBool((L), (prop##T)) == 0);                                                            \
+                assert(lcPropGetInt(L, (prop##T)) == (rgb));                                                           \
+                                                                                                                       \
+                assert(lcPropPutInt((L), (prop##T), (rgb)) == 1);                                                      \
+                str = lcPropGetStr((L), (prop));                                                                       \
+                assert(str != NULL);                                                                                   \
+                assert(strcmp(str, (name)) == 0);                                                                      \
+                assert(lcPropGetInt((L), (prop##I)) == (idx));                                                         \
+                assert(lcPropGetBool((L), (prop##I)) == 1);                                                            \
+                assert(lcPropGetBool((L), (prop##T)) == 0);                                                            \
+                assert(lcPropGetInt(L, (prop##T)) == (rgb));                                                           \
         } while (0)
 
 #define TEST_COLORT(L, prop, rgbstr, rgb)                                                                              \
@@ -250,6 +268,11 @@ int main()
         TEST_COLORT(L, LC_PROP_LAYER_FCOLOR, "15,10,44", 0x0F0A2C);
 
         void *hpl = lcBlockAddPolyline(hblock, 0, 0, 0);
+        lcPropPutHandle(hpl, LC_PROP_ENT_LAYER, L);
+        // По умолчанию entity создается с COLORBYLAYER, FCOLORBYLAYER
+        // Установка цвета через String меняет это
+        assert(lcPropGetBool(hpl, LC_PROP_ENT_COLORBYLAYER) == 1);
+        assert(lcPropGetBool(hpl, LC_PROP_ENT_FCOLORBYLAYER) == 1);
 
         TEST_COLORI(hpl, LC_PROP_ENT_COLOR, "Black", 0, 0x000000);
         TEST_COLORI(hpl, LC_PROP_ENT_COLOR, "90% Black", 1, 0x191919);
@@ -462,6 +485,10 @@ int main()
         TEST_COLORI(hpl, LC_PROP_ENT_FCOLOR, "Deep Blue", 102, 0x3300CC);
         TEST_COLORI(hpl, LC_PROP_ENT_FCOLOR, "Dark Blue", 103, 0x000080);
         TEST_COLORT(hpl, LC_PROP_ENT_FCOLOR, "15,10,44", 0x0F0A2C);
+
+        // Изменение цвета только через lcPropPutString если не задано ByBlock/ByLayer убирает наследование цвета
+        assert(lcPropGetBool(hpl, LC_PROP_ENT_COLORBYLAYER) == 0);
+        assert(lcPropGetBool(hpl, LC_PROP_ENT_FCOLORBYLAYER) == 0);
 
         lcDeleteDrawing(drawing);
 }

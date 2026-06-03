@@ -1,4 +1,6 @@
 #include "color.h"
+#include "utf8proc.h"
+#include "utf8tools.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -6,7 +8,7 @@ static struct coloritab
 {
         int index;
         const char *name;
-        int color;
+        color_t color;
 } _coloritab[] = {{0, "Black", 0x000000},
                   {1, "90% Black", 0x191919},
                   {2, "80% Black", 0x333333},
@@ -114,9 +116,11 @@ static struct coloritab
 
 static struct coloritab *find_color_by_name(const char *name)
 {
+        if (!name)
+                return NULL;
         for (int i = 0; i < 104; i++)
         {
-                if (strcmp(_coloritab[i].name, name) == 0)
+                if (utf8caseicmp(_coloritab[i].name, name))
                         return &_coloritab[i];
         }
         return NULL;
@@ -191,6 +195,13 @@ color_t color_from_string(const char *str)
         color_t color = parse_color_rgb(str);
         if (color != COLOR_INVALID)
                 return color;
+        uint8_t index;
+        if (sscanf(str, "%hhu", &index) == 1)
+        {
+                colorstruct = find_color_by_index(index);
+                if (colorstruct)
+                        return colorstruct->color;
+        }
         return COLOR_INVALID;
 }
 
@@ -255,4 +266,9 @@ int color_to_index(color_t color)
 int color_is_index(color_t color)
 {
         return color_to_index(color) != -1;
+}
+
+color_t color_sanitize(color_t color)
+{
+        return color & 0xFFFFFF;
 }

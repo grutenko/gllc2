@@ -1,6 +1,7 @@
 #include "drawing.h"
 #include "block.h"
 #include "debug.h"
+#include "layer.h"
 #include "litecad.h"
 #include "named_object.h"
 #include "object.h"
@@ -753,14 +754,14 @@ static int _drw_lim_maxon_SET(struct gllc_object *obj, int prop, int type, union
 static union gllc_variant _drw_block_model_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.handle_ = gllc_drw_get_first_object((struct gllc_drawing *)obj, GLLC_OBJ_BLOCK);
+        v.handle_ = gllc_drw_get_block_model((struct gllc_drawing *)obj);
         return v;
 }
 
 static union gllc_variant _drw_layer_0_GET(struct gllc_object *obj, int prop, int type)
 {
         union gllc_variant v;
-        v.handle_ = NULL;
+        v.handle_ = gllc_drw_get_layer0((struct gllc_drawing *)obj);
         return v;
 }
 
@@ -907,6 +908,8 @@ struct gllc_drawing *gllc_drw_create()
                 GLLC_OBJECT_INIT(&d->_obj, all_props, &vtable);
                 d->block_modelspace = gllc_drw_add_block(d, "main", 0.0f, 0.0f);
                 d->layer0 = gllc_drw_add_layer(d, "0", "0,0,0", NULL, 1);
+                d->layer_current = d->layer0;
+                gllc_layer_set_is0(d->layer0, 1);
         }
         return d;
 }
@@ -990,4 +993,41 @@ struct gllc_nobject *gllc_drw_get_next_object(struct gllc_drawing *drawing, stru
                 }
         }
         return NULL;
+}
+
+struct gllc_layer *gllc_drw_get_layer0(struct gllc_drawing *drawing)
+{
+        NONULL(drawing, NULL);
+        return drawing->layer0;
+}
+
+struct gllc_block *gllc_drw_get_block_model(struct gllc_drawing *drawing)
+{
+        NONULL(drawing, NULL);
+        return drawing->block_modelspace;
+}
+
+int gllc_drw_set_block_model(struct gllc_drawing *drawing, struct gllc_block *block)
+{
+        NONULL(drawing, 0);
+        NONULL(block, 0);
+        if (block->_nobj.drawing != drawing)
+                return 0;
+        drawing->block_modelspace = block;
+        return 1;
+}
+
+struct gllc_layer *gllc_drw_get_layer_current(struct gllc_drawing *drawing)
+{
+        return drawing->layer_current;
+}
+
+int gllc_drw_set_layer_current(struct gllc_drawing *drawing, struct gllc_layer *layer)
+{
+        NONULL(drawing, 0);
+        NONULL(layer, 0);
+        if (layer->_nobj.drawing != drawing)
+                return 0;
+        drawing->layer_current = layer;
+        return 1;
 }
