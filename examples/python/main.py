@@ -6,8 +6,10 @@ import random
 from os.path import dirname
 import ezdxf
 from ezdxf.colors import aci2rgb
+import numpy as np
 import math
 import sys
+import time
 
 app = wx.App(0)
 
@@ -66,8 +68,8 @@ if sys.platform == "win32":
 elif sys.platform == "linux":
     hWnd = lc.lcCreateWindow(int(p.GetGtkWidget()), lc.XLC_WINDOW_GTK_BACKEND)
 
-lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, False)
-lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0xFFFFFF)
+lc.lcPropPutBool(hWnd, lc.LC_PROP_WND_GRIDSHOW, True)
+lc.lcPropPutInt(hWnd, lc.LC_PROP_WND_COLORBG, 0x87CEEB)
 
 hDrw = lc.lcCreateDrawing()
 hBlock = lc.lcPropGetHandle(hDrw, lc.LC_PROP_DRW_BLOCK_MODEL)
@@ -84,25 +86,7 @@ def on_size(event):
 
 p.Bind(wx.EVT_SIZE, on_size)
 
-# ---------------- DXF + DATA ----------------
-N = 600
-M = 600
-min_vx = -6000.0
-max_vx = -2000.0
-min_vy = -2500.0
-max_vy = 1500.0
-
-step = (max_vx - min_vx) / float(N)
-
-tab = (ct.c_double * (2 * N * M))()
-
-for i in range(N):
-    for j in range(M):
-        i0 = (i * M + j) * 2
-        tab[i0] = min_vx + i * step
-        tab[i0 + 1] = min_vy + j * step
-
-dxf = ezdxf.readfile(dirname(__file__) + "/Отметка -250 каркасы.dxf")
+dxf = ezdxf.readfile(dirname(__file__) + "/DxfFiles/+100 m_2019.dxf")
 msp = dxf.modelspace()
 
 
@@ -206,22 +190,20 @@ for entity in msp:
         lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_ANGLE, rotation)
 
 # ---------------- GRID ----------------
-import time
-
+xyzkji = np.load(dirname(__file__) + "/xyz_kji.npy")
+xy = xyzkji.take(5, axis=1)
+xy = xy[..., [0, 2]]
+N = xy.shape[0]
+M = xy.shape[1]
 
 for i in range(N - 1):
     for j in range(M - 1):
-        i0 = (i * M + j) * 2
-        i1 = ((i + 1) * M + j) * 2
-        i2 = ((i + 1) * M + (j + 1)) * 2
-        i3 = (i * M + (j + 1)) * 2
-
         pline = lc.lcBlockAddPolyline(hBlock, 0, 1, 1)
 
-        lc.lcPlineAddVer(pline, None, tab[i0], tab[i0 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i1], tab[i1 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i2], tab[i2 + 1])
-        lc.lcPlineAddVer(pline, None, tab[i3], tab[i3 + 1])
+        lc.lcPlineAddVer(pline, None, xy[i, j, 1] * 100, -xy[i, j, 0] * 100)
+        lc.lcPlineAddVer(pline, None, xy[i + 1, j, 1] * 100, -xy[i + 1, j, 0] * 100)
+        lc.lcPlineAddVer(pline, None, xy[i + 1, j + 1, 1] * 100, -xy[i + 1, j + 1, 0] * 100)
+        lc.lcPlineAddVer(pline, None, xy[i, j + 1, 1] * 100, -xy[i, j + 1, 0] * 100)
 
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_COLOR, 0x000000)
         lc.lcPropPutInt(pline, lc.LC_PROP_ENT_FCOLOR, 0x000000)
@@ -258,16 +240,15 @@ for i in range(N - 1):
 
         color = (r << 16) | (g << 8) | b
 
-        h = lc.lcBlockAddText(
-            hBlock,
-            f"{v:.0f}",
-            tab[i0],
-            tab[i0 + 1]
-        )
+        #h = lc.lcBlockAddText(
+        #    hBlock,
+        #    f"{v:.0f}",
+        #    xy[i, j, 1] * 100, -xy[i, j, 0] * 100
+        #)
 
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
-        lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_PIXEL)
-        lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, 12.0)
+        #lc.lcPropPutInt(h, lc.LC_PROP_ENT_COLOR, color)
+        #lc.lcPropPutInt(h, lc.LC_PROP_ENT_LWIDTH, lc.LC_LW_PIXEL)
+        #lc.lcPropPutFloat(h, lc.LC_PROP_TEXT_H, 14.0)
 
 
 x0 = lc.lcPropGetFloat(hBlock, lc.LC_PROP_BLOCK_XMIN)
