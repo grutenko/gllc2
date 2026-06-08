@@ -4,6 +4,10 @@
 
 #include <math.h>
 
+/**
+ * НАПИСАНО С БОЖЬЕЙ ПОМОЩЬЮ! Перед правками перекрестится.
+ */
+
 static inline void ver(struct ds_vertex *v, double *p, double *n, unsigned char *c, double th, double thmul, double l)
 {
         v->pos[0] = (GLfloat)p[0];
@@ -235,18 +239,22 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
                                         double p0[2];
                                         perp_seg(nt0, vin[i - 1].p, vin[i].p);
                                         perp_seg(nt1, vin[i].p, vin[i + 1].p);
-                                        if(DOT(n0, nt0) < 0)
+                                        if(DOT(nt0, n0) < 0)
                                                 INV(nt0);
-                                        if(DOT(n1, nt1) < 0)
+                                        if(DOT(nt1, n0) < 0)
                                                 INV(nt1);
                                         INVTO(n0, nt2);
                                         ADDSCALETO(vin[i].p, nt2, w, p0);
                                         ver(&V[vi], p0, nt2, conf->c, th, 1.0f, len);
-                                        ver_extr(&V[vi + 1], p0, nt0, w, conf->c, conf->lw, 1.0f, len);
-                                        ver_extr(&V[vi + 2], p0, nt1, w, conf->c, conf->lw, 1.0f, len);
+                                        ver_extr(&V[vi + 1], p0, nt0, w, conf->c, th, 1.0f, len);
+                                        ver_extr(&V[vi + 2], p0, nt1, w, conf->c, th, 1.0f, len);
                                         I[ii] = off + vi;
                                         I[ii + 1] = off + vi + 1;
                                         I[ii + 2] = off + vi + 2;
+                                        // Где то здесь закрался баг который неправильно ориентирует треугольники на
+                                        // острых углах за которыми следует тупой угол с бисектиссой в другой полуоси:
+                                        // bisec_inv() == 1 Изза этого линия становится L < 1.0 ближе к нему и
+                                        // отрисовывается некорректно.
                                         if (i < vcntin - 1)
                                         {
                                                 if (bisec_inv(n0, n1, n2))
@@ -254,7 +262,7 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
                                                         I[ii + 3] = off + vi;
                                                         I[ii + 4] = off + vi + 2;
                                                         I[ii + 5] = off + vi + 3;
-                                                        I[ii + 6] = off + vi;
+                                                        I[ii + 6] = off + vi + 2;
                                                         I[ii + 7] = off + vi + 3;
                                                         I[ii + 8] = off + vi + 4;
                                                 }
@@ -263,7 +271,7 @@ void lb_build(struct lb_config *conf, struct ds_vertex *V, GLuint *I, int *Vcnt,
                                                         I[ii + 3] = off + vi;
                                                         I[ii + 4] = off + vi + 2;
                                                         I[ii + 5] = off + vi + 3;
-                                                        I[ii + 6] = off + vi + 2;
+                                                        I[ii + 6] = off + vi;
                                                         I[ii + 7] = off + vi + 3;
                                                         I[ii + 8] = off + vi + 4;
                                                 }

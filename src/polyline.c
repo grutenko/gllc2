@@ -66,7 +66,7 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
 {
         struct gllc_polyline *pl = (struct gllc_polyline *)ent;
         double bx0, by0, bx1, by1;
-        bbox(ent, scale, &bx0, &by0, &bx1, &by1);
+        gllc_entity_bbox(ent, scale, &bx0, &by0, &bx1, &by1);
         int inside =
             (x0 <= bx0 && x1 >= bx0 && y0 <= by0 && y1 >= by0) && (x0 <= bx1 && x1 >= bx1 && y0 <= by1 && y1 >= by1);
         if (mode == 0)
@@ -96,16 +96,14 @@ static int selected(struct gllc_entity *ent, int mode, double scale, double x0, 
         do                                                                                                             \
         {                                                                                                              \
                 double T, S;                                                                                           \
-                double n0[2], n1[2], len0, len1;                                                                       \
-                VEC(n0, (double[]){_x0, _y0}, (double[]){_x1, _y1});                                                   \
-                VEC(n1, pl->pts[i].p, pl->pts[ni].p);                                                                  \
-                len0 = LEN(n0);                                                                                        \
-                len1 = LEN(n1);                                                                                        \
-                NORM(n0);                                                                                              \
-                NORM(n1);                                                                                              \
+                double n0[2], n1[2];                                                                                   \
+                n0[0] = _x1 - _x0;                                                                                     \
+                n0[1] = _y1 - _y0;                                                                                     \
+                n1[0] = pl->pts[ni].p[0] - pl->pts[i].p[0];                                                            \
+                n1[1] = pl->pts[ni].p[1] - pl->pts[i].p[1];                                                            \
                 if (RAYINSECT((double[]){_x0, _y0}, n0, pl->pts[i].p, n1, &T, &S))                                     \
                 {                                                                                                      \
-                        if (S >= 0 && S <= len1 && T >= 0 && T <= len0)                                                \
+                        if (S >= 0 && S <= 1.0f && T >= 0 && T <= 1.0f)                                                \
                         {                                                                                              \
                                 return 1;                                                                              \
                         }                                                                                              \
@@ -200,13 +198,12 @@ static int picked(struct gllc_entity *ent, double scale, double x, double y, dou
                                 break;
                         }
                         VEC(n0, pl->pts[i].p, pl->pts[ni].p);
-                        len = LEN(n0);
-                        NORM(n0);
                         COPY(n1, n0);
                         PERP(n1);
+                        NORM(n1);
                         if (RAYINSECT(pl->pts[i].p, n0, (double[]){x, y}, n1, &T, &S))
                         {
-                                if (T >= 0.0f && T <= len && fabs(S) <= w / 2)
+                                if (T >= 0.0f && T <= 1.0f && fabs(S) <= w / 2)
                                 {
                                         if (dis)
                                                 *dis = fabs(S);

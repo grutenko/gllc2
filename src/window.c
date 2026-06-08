@@ -26,9 +26,9 @@
 #define COLORI2F(C, CP)                                                                                                \
         do                                                                                                             \
         {                                                                                                              \
-                (CP)[0] = (float)((C) >> 16) / 255;                                                                    \
-                (CP)[1] = (float)((C) >> 8) / 255;                                                                     \
-                (CP)[2] = (float)(C) / 255;                                                                            \
+                (CP)[0] = (float)(((C) >> 16) & 0xff) / 255;                                                                    \
+                (CP)[1] = (float)(((C) >> 8) & 0xff) / 255;                                                                     \
+                (CP)[2] = (float)((C) & 0xff) / 255;                                                                            \
                 (CP)[3] = 1.0f;                                                                                        \
         } while (0)
 
@@ -1010,7 +1010,7 @@ static void draw(struct gllc_window *W)
 {
         nw_make_context_current(&W->nw);
         glViewport(0, 0, W->width, W->height);
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glClearColor(W->clearcolor[0], W->clearcolor[1], W->clearcolor[2], W->clearcolor[3]);
         double x0, y0, x1, y1;
         float _w = (float)W->width;
